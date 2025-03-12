@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script async src="{{{appclient}}}"></script>
+    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+</head>
+
+<body>
+    <div class="tracker-form-container">
+        <!-- Add Debug Button at the top -->
+        <div class="debug-container">
+            <button id="debugFillForm" class="debug-button">Fill Form with Demo Data</button>
+        </div>
+
+        <form id="trackerForm">
+            <!-- Auto-generated subject field -->
+            <div class="form-group">
+                <label for="subject">Subject*:</label>
+                <input type="text" id="subject" name="subject" required>
+                <div class="hint">Auto-generated based on ticket details and application</div>
+            </div>
+
+            <!-- New application field that will be used for subject generation -->
+            <div class="form-group">
+                <label for="application">Application*:</label>
+                <input type="text" id="application" name="application" required placeholder="e.g. Bookshelves">
+                <div class="hint">The application or system related to this issue</div>
+            </div>
+
+            <!-- Specific issue field that will be used for subject generation -->
+            <div class="form-group">
+                <label for="specificIssue">Specific Issue*:</label>
+                <input type="text" id="specificIssue" name="specificIssue" required
+                    placeholder="e.g. School Customization Folder Missing">
+                <div class="hint">Brief description of the specific issue</div>
+            </div>
+
+            <!-- Separator for description fields -->
+            <div class="form-section-divider">
+                <h3>Description Details</h3>
+                <div class="hint">These fields will be used to generate the description</div>
+            </div>
+
+            <!-- Summary field -->
+            <div class="form-group">
+                <label for="issueSummary">Summary*:</label>
+                <input type="text" id="issueSummary" name="issueSummary" required
+                    placeholder="Short descriptor of the issue being reported">
+                <div class="hint">Brief summary of the issue</div>
+            </div>
+
+            <!-- Description details fields -->
+            <div class="form-group">
+                <label for="reportedIssue">Reported Issue*:</label>
+                <textarea id="reportedIssue" name="reportedIssue" required
+                    placeholder="Describe in detail what the user reported"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="userInfo">User Name and Email/Role:</label>
+                <input type="text" id="userInfo" name="userInfo" placeholder="e.g. John Doe, john@school.edu, Teacher">
+            </div>
+
+            <div class="form-group">
+                <label for="productImpacted">Product/Program Impacted:</label>
+                <input type="text" id="productImpacted" name="productImpacted" placeholder="e.g. Math Workbook 101">
+            </div>
+
+            <div class="form-group">
+                <label for="xcodeInfo">Xcode:</label>
+                <input type="text" id="xcodeInfo" name="xcodeInfo">
+            </div>
+
+            <div class="form-group">
+                <label for="districtState">District State:</label>
+                <input type="text" id="districtState" name="districtState">
+            </div>
+
+            <div class="form-group">
+                <label for="impactType">Digital Only or Print Impacted as Well:</label>
+                <select id="impactType" name="impactType">
+                    <option value="">-- Select --</option>
+                    <option value="Digital Only">Digital Only</option>
+                    <option value="Print Only">Print Only</option>
+                    <option value="Both Digital and Print">Both Digital and Print</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="dateReported">Date issue reported by user:</label>
+                <input type="date" id="dateReported" name="dateReported">
+            </div>
+
+            <div class="form-group">
+                <label for="impactScope">Teacher vs Student impact:</label>
+                <select id="impactScope" name="impactScope">
+                    <option value="">-- Select --</option>
+                    <option value="Teacher Only">Teacher Only</option>
+                    <option value="Student Only">Student Only</option>
+                    <option value="Both Teacher and Student">Both Teacher and Student</option>
+                    <option value="Unknown">Unknown</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="components">Components:</label>
+                <input type="text" id="components" name="components"
+                    placeholder="e.g. Assessment, Assignments, ePlanner">
+                <div class="hint">Specific application or component affected</div>
+            </div>
+
+            <div class="form-group">
+                <label for="stepsToReproduce">Steps To Reproduce:</label>
+                <textarea id="stepsToReproduce" name="stepsToReproduce"
+                    placeholder="Path taken to recreate issue"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="actualResults">Actual Results:</label>
+                <textarea id="actualResults" name="actualResults"
+                    placeholder="What happens currently when following the steps"></textarea>
+            </div>
+
+            <!-- Screenshot upload field -->
+            <div class="form-group">
+                <label for="screenshots">Screenshots:</label>
+                <input type="file" id="screenshots" name="screenshots" multiple accept="image/*">
+                <div class="hint">Upload screenshots to include in the ticket (max 5 images, 15MB total)</div>
+                <div id="screenshotPreview" class="screenshot-preview"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="expectedResults">Expected Results:</label>
+                <textarea id="expectedResults" name="expectedResults"
+                    placeholder="How the system should be functioning if working correctly"></textarea>
+            </div>
+
+            <!-- Preview button for description -->
+            <div class="form-group">
+                <fw-button id="previewDescription" color="secondary" size="small">Preview Description</fw-button>
+                <div class="hint">Click to see how the description will appear</div>
+            </div>
+
+            <!-- Hidden field for the generated description -->
+            <div class="form-group" style="display: none;">
+                <textarea id="description" name="description"></textarea>
+            </div>
+
+            <!-- Email field with dropdown if both emails are available -->
+            <div class="form-group">
+                <label for="email">Requester Email*:</label>
+                <div class="email-selection">
+                    <input type="email" id="email" name="email" required>
+                    <div class="hint">This ticket will be created by you (the logged-in agent)</div>
+                    <div id="emailStatus" class="email-status"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="relatedTickets">Related Ticket IDs*:</label>
+                <input type="text" id="relatedTickets" name="relatedTickets" required>
+                <div class="hint">Comma-separated ticket IDs (e.g., 1,2,3)</div>
+            </div>
+
+            <div class="form-group">
+                <label for="priority">Priority:</label>
+                <select id="priority" name="priority">
+                    <option value="1">Low</option>
+                    <option value="2">Medium</option>
+                    <option value="3">High</option>
+                    <option value="4">Urgent</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" name="status">
+                    <option value="2">Open</option>
+                    <option value="3">Pending</option>
+                    <option value="4">Resolved</option>
+                    <option value="5">Closed</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <fw-button id="cancelTracker" color="secondary">Cancel</fw-button>
+                <fw-button id="createTracker" color="primary" type="submit">Create Tracker</fw-button>
+            </div>
+
+            <!-- Description preview modal -->
+            <div id="descriptionPreviewModal" class="description-preview-modal" style="display: none;">
+                <div class="description-preview-content">
+                    <h3>Description Preview</h3>
+                    <div class="description-preview-text" id="descriptionPreviewText"></div>
+                    <div class="form-actions">
+                        <fw-button id="closePreview" color="secondary">Close</fw-button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Wait for the Freshworks SDK to be available
+            let initRetries = 0;
+            const maxRetries = 10;
+
+            // Store ticket data from parent
+            let ticketData = {
+                isVip: false,
+                districtName: '',
+                currentTicketId: null,
+                requesterEmail: ''
+            };
+
+            function initializeClient() {
+                if (typeof client !== 'undefined') {
+                    setupFormHandlers(client);
+                } else if (typeof app !== 'undefined') {
+                    app.initialized().then(function (clientObj) {
+                        setupFormHandlers(clientObj);
+                    }).catch(handleInitError);
+                } else if (typeof window.frsh !== 'undefined' && window.frsh.init) {
+                    window.frsh.init().then(function (clientObj) {
+                        setupFormHandlers(clientObj);
+                    }).catch(handleInitError);
+                } else if (initRetries < maxRetries) {
+                    initRetries++;
+                    setTimeout(initializeClient, 100);
+                } else {
+                    handleInitError(new Error("Could not initialize client after multiple attempts"));
+                }
+            }
+
+            function handleInitError(error) {
+                console.error("Modal initialization error:", error);
+                document.querySelector('.tracker-form-container').innerHTML =
+                    '<div class="error-card">Failed to initialize app client. Please close and try again.</div>';
+            }
+
+            function setupFormHandlers(client) {
+                window.client = client;
+                console.log("Setting up form handlers");
+
+                async function getLoggedInUserEmail() {
+                    try {
+                        console.log("Fetching agent email directly from modal");
+                        const userData = await client.data.get("loggedInUser");
+                        console.log("Agent data:", userData);
+                        if (userData && userData.loggedInUser && userData.loggedInUser.contact && userData.loggedInUser.contact.email) {
+                            const agentEmail = userData.loggedInUser.contact.email;
+                            console.log("Found agent email:", agentEmail);
+                            document.getElementById('email').value = agentEmail;
+                            document.getElementById('emailStatus').innerHTML =
+                                `<span style="color: green">✓ Email loaded: ${agentEmail}</span>`;
+                            return agentEmail;
+                        } else {
+                            console.warn("Could not get agent email from userData");
+                            document.getElementById('emailStatus').innerHTML =
+                                '<span style="color: orange">⚠️ Email not found in user data</span>';
+                            return null;
+                        }
+                    } catch (error) {
+                        console.error("Error getting logged-in user data:", error);
+                        document.getElementById('emailStatus').innerHTML =
+                            '<span style="color: red">✗ Error loading email</span>';
+                        return null;
+                    }
+                }
+
+                async function getAssignedAgentEmail(ticketId) {
+                    try {
+                        const ticketResponse = await client.request.invokeTemplate("getTicketDetails", {
+                            context: { ticketId: ticketId }
+                        });
+                        const ticketData = JSON.parse(ticketResponse.response);
+                        console.log("Related ticket data:", ticketData);
+                        if (!ticketData.responder_id) {
+                            console.warn("Ticket doesn't have an assigned agent");
+                            return null;
+                        }
+                        const agentResponse = await client.request.invokeTemplate("getAgentDetails", {
+                            context: { agentId: ticketData.responder_id }
+                        });
+                        const agentData = JSON.parse(agentResponse.response);
+                        console.log("Assigned agent data:", agentData);
+                        if (agentData && agentData.contact && agentData.contact.email) {
+                            console.log("Found assigned agent email:", agentData.contact.email);
+                            document.getElementById('email').value = agentData.contact.email;
+                            document.getElementById('emailStatus').innerHTML =
+                                `<span style="color: green">✓ Using assigned agent's email: ${agentData.contact.email}</span>`;
+                            return agentData.contact.email;
+                        } else {
+                            console.warn("Could not get assigned agent email");
+                            return null;
+                        }
+                    } catch (error) {
+                        console.error("Error getting assigned agent email:", error);
+                        return null;
+                    }
+                }
+
+                client.instance.context().then(async function (context) {
+                    console.log("Modal context:", context);
+                    if (context && context.data) {
+                        ticketData = {
+                            isVip: context.data.isVip || false,
+                            districtName: context.data.districtName || '',
+                            currentTicketId: context.data.currentTicketId || null,
+                            requesterEmail: context.data.requesterEmail || '',
+                            ticketRequesterEmail: context.data.ticketRequesterEmail || ''
+                        };
+                        console.log("Received ticket data:", ticketData);
+                        if (ticketData.currentTicketId) {
+                            document.getElementById('relatedTickets').value = ticketData.currentTicketId;
+                            const assignedAgentEmail = await getAssignedAgentEmail(ticketData.currentTicketId);
+                            if (!assignedAgentEmail) {
+                                await getLoggedInUserEmail();
+                            }
+                        } else {
+                            await getLoggedInUserEmail();
+                        }
+                        const today = new Date().toISOString().split('T')[0];
+                        document.getElementById('dateReported').value = today;
+                    } else {
+                        console.log("No context data, fetching agent email directly");
+                        await getLoggedInUserEmail();
+                        const today = new Date().toISOString().split('T')[0];
+                        document.getElementById('dateReported').value = today;
+                    }
+                    setupSubjectGeneration();
+                }).catch(async function (error) {
+                    console.error("Error getting modal context:", error);
+                    await getLoggedInUserEmail();
+                    setupSubjectGeneration();
+                });
+
+                if (!document.getElementById('email').value) {
+                    document.getElementById('email').value = "freshdesk_agent@example.com";
+                    document.getElementById('emailStatus').innerHTML =
+                        '<span style="color: blue">ℹ️ Using placeholder email</span>';
+                }
+
+                function setupSubjectGeneration() {
+                    const applicationField = document.getElementById('application');
+                    const specificIssueField = document.getElementById('specificIssue');
+                    applicationField.addEventListener('input', generateSubject);
+                    specificIssueField.addEventListener('input', generateSubject);
+                    generateSubject();
+                }
+
+                function generateSubject() {
+                    const application = document.getElementById('application').value.trim();
+                    const specificIssue = document.getElementById('specificIssue').value.trim();
+                    let subject = '';
+                    if (ticketData.isVip) {
+                        subject = 'VIP* ';
+                    }
+                    if (ticketData.districtName) {
+                        subject += ticketData.districtName;
+                    }
+                    if (application) {
+                        subject += ' | ' + application;
+                        if (specificIssue) {
+                            subject += '- ' + specificIssue;
+                        }
+                    }
+                    document.getElementById('subject').value = subject;
+                }
+
+                function generateDescription() {
+                    const subject = document.getElementById('subject').value.trim();
+                    const issueSummary = document.getElementById('issueSummary').value.trim();
+                    const reportedIssue = document.getElementById('reportedIssue').value.trim();
+                    const userInfo = document.getElementById('userInfo').value.trim();
+                    const productImpacted = document.getElementById('productImpacted').value.trim();
+                    const xcodeInfo = document.getElementById('xcodeInfo').value.trim();
+                    const districtState = document.getElementById('districtState').value.trim();
+                    const impactType = document.getElementById('impactType').value;
+                    const dateReported = document.getElementById('dateReported').value;
+                    const impactScope = document.getElementById('impactScope').value;
+                    const components = document.getElementById('components').value.trim();
+                    const stepsToReproduce = document.getElementById('stepsToReproduce').value.trim();
+                    const actualResults = document.getElementById('actualResults').value.trim();
+                    const expectedResults = document.getElementById('expectedResults').value.trim();
+
+                    let formattedDate = '';
+                    if (dateReported) {
+                        const date = new Date(dateReported);
+                        formattedDate = date.toLocaleDateString('en-US', {
+                            year: 'numeric', month: 'long', day: 'numeric'
+                        });
+                    }
+
+                    let description = '<div style="font-family: Arial, sans-serif; line-height: 1.5;">';
+                    description += '<h3 style="margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Summary</h3>';
+                    if (issueSummary) {
+                        description += `<p style="margin-top: 5px; margin-bottom: 15px;">${issueSummary}</p>`;
+                    } else {
+                        description += `<p style="margin-top: 5px; margin-bottom: 15px;">${subject}</p>`;
+                    }
+
+                    if (reportedIssue) {
+                        description += '<h3 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Reported Issue</h3>';
+                        description += `<p style="margin-top: 5px; margin-bottom: 15px;">${reportedIssue.replace(/\n/g, '<br>')}</p>`;
+                    }
+
+                    description += '<h3 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Description</h3>';
+                    description += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">';
+
+                    if (userInfo) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee; width: 35%;"><strong>User Name and Email/Role:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${userInfo}</td></tr>`;
+                    if (productImpacted) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Product/Program Impacted:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${productImpacted}</td></tr>`;
+                    if (xcodeInfo) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Xcode:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${xcodeInfo}</td></tr>`;
+                    if (districtState) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>District State:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${districtState}</td></tr>`;
+                    if (impactType) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Digital/Print Impact:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${impactType}</td></tr>`;
+                    if (formattedDate) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Date Reported:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${formattedDate}</td></tr>`;
+                    if (impactScope) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Teacher/Student Impact:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${impactScope}</td></tr>`;
+                    description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>VIP Customer:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${ticketData.isVip ? 'Yes' : 'No'}</td></tr>`;
+                    description += '</table>';
+
+                    if (components) {
+                        description += '<h3 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Components</h3>';
+                        description += `<p style="margin-top: 5px; margin-bottom: 15px;">${components}</p>`;
+                    }
+
+                    if (stepsToReproduce) {
+                        description += '<h3 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Steps To Reproduce</h3>';
+                        description += `<div style="margin-left: 20px;">${stepsToReproduce.replace(/\n/g, '<br>')}</div>`;
+                        if (actualResults) {
+                            description += '<h4 style="margin-top: 15px; margin-bottom: 5px; color: #555;">Actual Results</h4>';
+                            description += `<div style="margin-left: 20px; margin-bottom: 15px;">${actualResults.replace(/\n/g, '<br>')}</div>`;
+                        }
+                        if (expectedResults) {
+                            description += '<h4 style="margin-top: 15px; margin-bottom: 5px; color: #555;">Expected Results</h4>';
+                            description += `<div style="margin-left: 20px; margin-bottom: 15px;">${expectedResults.replace(/\n/g, '<br>')}</div>`;
+                        }
+                    }
+
+                    description += '</div>';
+                    return description;
+                }
+
+                document.getElementById('previewDescription').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const description = generateDescription();
+                    const previewText = document.getElementById('descriptionPreviewText');
+                    previewText.innerHTML = description;
+                    document.getElementById('descriptionPreviewModal').style.display = 'block';
+                });
+
+                // Handle form submission with fixed file upload sequence
+                document.getElementById('trackerForm').addEventListener('submit', async function (e) {
+                    e.preventDefault();
+                    try {
+                        let subdomainCheck;
+                        try {
+                            subdomainCheck = await client.iparams.get("freshdesk_subdomain");
+                            console.log("Subdomain check:", subdomainCheck);
+                            if (!subdomainCheck || !subdomainCheck.freshdesk_subdomain || !subdomainCheck.freshdesk_subdomain.trim()) {
+                                throw new Error("Missing Freshdesk subdomain configuration");
+                            }
+                        } catch (configError) {
+                            console.error("Configuration error:", configError);
+                            client.interface.trigger("showNotify", {
+                                type: "danger",
+                                message: "App configuration error: Freshdesk subdomain is missing or invalid."
+                            });
+                            document.getElementById('createTracker').disabled = false;
+                            return;
+                        }
+
+                        const subject = document.getElementById('subject').value;
+                        const description = generateDescription();
+                        const agentEmail = document.getElementById('email').value || "agent@freshdesk.com";
+                        const relatedTicketsStr = document.getElementById('relatedTickets').value;
+                        const priority = document.getElementById('priority').value;
+                        const status = document.getElementById('status').value;
+                        const screenshotFiles = document.getElementById('screenshots').files;
+
+                        const relatedTicketIds = relatedTicketsStr.split(',')
+                            .map(id => id.trim())
+                            .filter(id => id !== '' && !isNaN(parseInt(id, 10)))
+                            .map(id => parseInt(id, 10));
+
+                        if (relatedTicketIds.length === 0) {
+                            alert('Please enter at least one valid related ticket ID');
+                            return;
+                        }
+
+                        console.log("Form values:", {
+                            subject,
+                            description: description.substring(0, 50) + "...",
+                            email: agentEmail,
+                            relatedTickets: relatedTicketsStr,
+                            relatedTicketIds: relatedTicketIds,
+                            priority,
+                            status,
+                            attachments: screenshotFiles.length > 0 ? `${screenshotFiles.length} files selected` : 'No files'
+                        });
+
+                        // STEP 1: First create the ticket without attachments
+                        const ticketData = {
+                            email: agentEmail,
+                            subject: subject,
+                            description: description,
+                            related_ticket_ids: relatedTicketIds,
+                            priority: parseInt(priority, 10),
+                            status: parseInt(status, 10),
+                            type: "Incident"
+                        };
+
+                        console.log("First creating ticket without attachments");
+
+                        const createResponse = await client.request.invokeTemplate("createfdTicket", {
+                            body: JSON.stringify(ticketData)
+                        });
+
+                        const newTicket = JSON.parse(createResponse.response);
+                        console.log("Created ticket:", newTicket);
+                        const newTicketId = newTicket.id;
+
+                        if (!newTicketId) {
+                            throw new Error("Failed to get ID of newly created ticket");
+                        }
+
+                        // STEP 2: Add attachments as a private note to the ticket
+                        console.log(`Adding ${screenshotFiles.length} attachments as note to ticket #${newTicketId}`);
+
+                        try {
+                            // API credentials
+                            const subdomain = "benchmarkeducationcompany";
+                            const apiKey = "5TMgbcZdRFY70hSpEdj";
+
+                            console.log(`Using subdomain: ${subdomain} to upload attachments`);
+
+                            // Create FormData for the attachment upload
+                            const formData = new FormData();
+                            formData.append('body', 'Screenshots for the tracker ticket');
+                            formData.append('private', 'true');
+
+                            // Add each file to the form data
+                            for (let i = 0; i < screenshotFiles.length; i++) {
+                                const file = screenshotFiles[i];
+                                formData.append('attachments[]', file, file.name);
+                            }
+
+                            // Use XMLHttpRequest for direct API access
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('POST', `https://${subdomain}.freshdesk.com/api/v2/tickets/${newTicketId}/notes`, true);
+
+                            // Set up Basic Auth using the API key
+                            xhr.setRequestHeader('Authorization', 'Basic ' + btoa(`${apiKey}:X`));
+
+                            // Handle response
+                            xhr.onload = function () {
+                                if (xhr.status >= 200 && xhr.status < 300) {
+                                    console.log("Attachments added successfully:", xhr.responseText);
+                                    client.interface.trigger("showNotify", {
+                                        type: "success",
+                                        message: `Tracker #${newTicketId} created successfully with attachment`
+                                    });
+                                } else {
+                                    console.error("Error from API:", xhr.status, xhr.responseText);
+                                    client.interface.trigger("showNotify", {
+                                        type: "warning",
+                                        message: `Tracker #${newTicketId} created, but attachment upload failed`
+                                    });
+                                }
+                                // Close the modal in either case
+                                client.instance.close({ refreshTickets: true });
+                            };
+
+                            // Handle network errors
+                            xhr.onerror = function () {
+                                console.error("Network error while uploading attachments");
+                                client.interface.trigger("showNotify", {
+                                    type: "warning",
+                                    message: `Tracker #${newTicketId} created, but attachment upload failed due to network error`
+                                });
+                                client.instance.close({ refreshTickets: true });
+                            };
+
+                            // Send the form data
+                            xhr.send(formData);
+                            console.log("Attachment request sent via direct XMLHttpRequest");
+
+                        } catch (attachmentError) {
+                            // Log attachment error but don't fail the overall process
+                            console.error("Error adding attachments as note:", attachmentError);
+                            console.warn("Continuing without attachments");
+
+                            client.interface.trigger("showNotify", {
+                                type: "warning",
+                                message: `Tracker #${newTicketId} created, but attachment handling failed: ${attachmentError.message}`
+                            });
+                            client.instance.close({ refreshTickets: true });
+                        }
+                    } catch (error) {
+                        console.error("Error creating tracker:", error);
+                        console.error("Error details:", JSON.stringify(error, null, 2));
+                        let errorMessage = "Failed to create tracker: ";
+                        if (error.response) {
+                            console.log("Raw error response:", error.response);
+                            try {
+                                const errorData = JSON.parse(error.response);
+                                console.log("Parsed error data:", errorData);
+                                errorMessage += errorData.description || error.response;
+                            } catch (e) {
+                                errorMessage += error.response;
+                            }
+                        } else if (error.errors && error.errors.length) {
+                            errorMessage += error.errors.map(e => e.message || JSON.stringify(e)).join("; ");
+                        } else {
+                            errorMessage += error.message || "Unknown error";
+                        }
+                        client.interface.trigger("showNotify", {
+                            type: "danger",
+                            message: errorMessage
+                        });
+                        document.getElementById('createTracker').disabled = false;
+                    }
+                });
+
+                document.getElementById('screenshots').addEventListener('change', function (e) {
+                    const previewContainer = document.getElementById('screenshotPreview');
+                    previewContainer.innerHTML = '';
+                    if (this.files.length > 0) {
+                        const fileCount = Math.min(this.files.length, 5);
+                        for (let i = 0; i < fileCount; i++) {
+                            const file = this.files[i];
+                            if (!file.type.match('image.*')) {
+                                continue;
+                            }
+                            const reader = new FileReader();
+                            reader.onload = (function (theFile) {
+                                return function (e) {
+                                    const previewDiv = document.createElement('div');
+                                    previewDiv.className = 'screenshot-thumbnail';
+                                    previewDiv.innerHTML =
+                                        `<img src="${e.target.result}" title="${theFile.name}">
+                                        <div class="screenshot-filename">${theFile.name}</div>`;
+                                    previewContainer.appendChild(previewDiv);
+                                };
+                            })(file);
+                            reader.readAsDataURL(file);
+                        }
+                        if (this.files.length > 5) {
+                            const noteDiv = document.createElement('div');
+                            noteDiv.className = 'screenshot-note';
+                            noteDiv.textContent = `Note: Only the first 5 images will be previewed. All ${this.files.length} will be uploaded.`;
+                            previewContainer.appendChild(noteDiv);
+                        }
+                    }
+                });
+
+                document.getElementById('debugFillForm').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    fillFormWithDemoData();
+                });
+
+                function fillFormWithDemoData() {
+                    document.getElementById('application').value = 'Bookshelves App';
+                    document.getElementById('specificIssue').value = 'Missing School Folder';
+                    document.getElementById('issueSummary').value = 'Books not appearing in school folder';
+                    document.getElementById('reportedIssue').value = 'User reports that when they log in to the Bookshelves app, the school folder is empty even though content should be visible.';
+                    document.getElementById('userInfo').value = 'Jane Smith, jsmith@example.edu, Teacher';
+                    document.getElementById('productImpacted').value = 'Math Workbook 5';
+                    document.getElementById('xcodeInfo').value = 'XC12345';
+                    document.getElementById('districtState').value = 'Florida';
+                    document.getElementById('impactType').selectedIndex = 1;
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('dateReported').value = today;
+                    document.getElementById('impactScope').selectedIndex = 3;
+                    document.getElementById('components').value = 'Login, Content Display, School Folder';
+                    document.getElementById('stepsToReproduce').value = '1. Log in to Bookshelves app\n2. Navigate to School folder\n3. Observe that the folder appears empty';
+                    document.getElementById('actualResults').value = 'School folder shows no content even though books have been assigned';
+                    document.getElementById('expectedResults').value = 'School folder should display all books assigned to the user';
+                    document.getElementById('relatedTickets').value = '1234, 5678';
+                    document.getElementById('priority').selectedIndex = 1;
+                    document.getElementById('status').selectedIndex = 0;
+                    client.interface.trigger("showNotify", {
+                        type: "success",
+                        message: "Form filled with demo data"
+                    });
+                }
+            }
+
+            initializeClient();
+        });
+    </script>
+
+    <style>
+        .description-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .description-preview-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+
+        .description-preview-text {
+            white-space: pre-wrap;
+            font-family: monospace;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+
+        .form-section-divider {
+            margin: 20px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .form-section-divider h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .screenshot-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .screenshot-thumbnail {
+            width: 100px;
+            text-align: center;
+        }
+
+        .screenshot-thumbnail img {
+            max-width: 100%;
+            max-height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .screenshot-filename {
+            font-size: 10px;
+            color: #555;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 3px;
+        }
+
+        .screenshot-note {
+            width: 100%;
+            font-size: 12px;
+            color: #f57c00;
+            margin-top: 5px;
+        }
+
+        .email-selection {
+            position: relative;
+        }
+
+        .email-controls {
+            margin-top: 5px;
+        }
+
+        .email-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .email-option {
+            flex-grow: 1;
+        }
+
+        .email-option fw-button {
+            width: 100%;
+        }
+
+        #createTracker,
+        #cancelTracker {
+            cursor: pointer;
+            pointer-events: auto;
+            opacity: 1;
+        }
+
+        .form-actions fw-button {
+            display: inline-block !important;
+            cursor: pointer !important;
+        }
+
+        .email-status {
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        .debug-container {
+            margin-bottom: 15px;
+            text-align: right;
+        }
+
+        .debug-button {
+            background-color: #e0f7fa;
+            color: #006064;
+            border: 1px solid #b2ebf2;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .debug-button:hover {
+            background-color: #b2ebf2;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                var createBtn = document.getElementById('createTracker');
+                if (createBtn) {
+                    createBtn.onclick = function (e) {
+                        e.preventDefault();
+                        document.getElementById('trackerForm').dispatchEvent(new Event('submit'));
+                    };
+                }
+                var cancelBtn = document.getElementById('cancelTracker');
+                if (cancelBtn) {
+                    cancelBtn.onclick = function () {
+                        if (window.client) {
+                            window.client.instance.close();
+                        }
+                    };
+                }
+                console.log('Extra event handlers attached to buttons');
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

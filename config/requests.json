@@ -1,0 +1,90 @@
+{
+  "createfdTicket": {
+    "schema": {
+      "method": "POST",
+      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "path": "/api/v2/tickets",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "createfdTicketWithAttachments": {
+    "schema": {
+      "method": "POST",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
+      "path": "/api/v2/tickets",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  },
+  "addNoteToTicket": {
+    "schema": {
+      "method": "POST",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
+      "path": "/api/v2/tickets/<%= context.ticketId %>/notes",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "getAssociatedTickets": {
+    "schema": {
+      "method": "GET",
+      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "path": "/api/v2/tickets/<%= context.ticketId %>/associated_tickets",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "getCompanyDetails": {
+    "schema": {
+      "method": "GET",
+      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "path": "/api/v2/companies/<%= context.companyId %>",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "getPrimeAssociation": {
+    "schema": {
+      "method": "GET",
+      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "path": "/api/v2/tickets/<%= context.ticketId %>/prime_association",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "getTicketDetails": {
+    "schema": {
+      "method": "GET",
+      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "path": "/api/v2/tickets/<%= context.ticketId %>",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "getAgentDetails": {
+    "schema": {
+      "method": "GET",
+      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "path": "/api/v2/agents/<%= context.agentId %>",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
+        "Content-Type": "application/json"
+      }
+    }
+  }
+}

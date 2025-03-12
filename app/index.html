@@ -1,0 +1,53 @@
+<html>
+
+<head>
+  <title>Associated Tickets</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="{{{appclient}}}"></script>
+  <link rel="stylesheet" type="text/css" href="styles/style.css" />
+</head>
+
+<body>
+  <div class="main">
+
+
+    <!-- Container to display company info -->
+    <div id="companyIdsContainer" style="display: none; width: 100%;">
+      <div class="summary-header">
+        <div class="districts-count">Districts: <span id="districtsCount">0</span></div>
+        <div class="tickets-count" id="companyIds">No tickets found</div>
+      </div>
+
+      <!-- First Report information -->
+      <div id="firstReportInfo" class="first-report-info" style="display: none;">
+        <div class="first-report-label">First Report:</div>
+        <div class="first-report-data">
+          <a href="#" id="firstReportTicketId" class="ticket-link"></a>
+          <span id="firstReportDateTime" class="first-report-datetime"></span>
+        </div>
+      </div>
+
+      <!-- Company summary with collapsible ticket lists -->
+      <div id="companySummary" class="company-summary-container"></div>
+
+      <!-- Refresh button at the bottom -->
+      <div class="app-footer">
+        <fw-button id="btnGetAssociated" color="primary" class="refresh-button">
+          Refresh Tickets
+        </fw-button>
+        <div class="create-tracker-container">
+          <a href="#" id="createTrackerLink" class="create-tracker-link">Create a Tracker</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script defer src="scripts/app.js"></script>
+<script async type="module"
+  src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.esm.js"></script>
+<script async nomodule src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.js"></script>
+
+</html>

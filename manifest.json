@@ -1,0 +1,31 @@
+{
+  "platform-version": "3.0",
+  "modules": {
+    "common": {
+      "requests": {
+        "createfdTicket": {},
+        "getAssociatedTickets": {},
+        "getCompanyDetails": {},
+        "getPrimeAssociation": {},
+        "getTicketDetails": {},
+        "getAgentDetails": {},
+        "addNoteToTicket": {}
+      }
+    },
+    "support_ticket": {
+      "location": {
+        "ticket_sidebar": {
+          "url": "index.html",
+          "icon": "styles/images/icon.svg"
+        }
+      }
+    }
+  },
+  "engines": {
+    "node": "18.20.4",
+    "fdk": "9.3.1"
+  },
+  "app": {
+    "tracking_id": "y96p1svcp2bty3c6ch51"
+  }
+}

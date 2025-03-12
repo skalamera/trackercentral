@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .ticket-details {
+            max-width: 100%;
+        }
+
+        .field {
+            margin-bottom: 10px;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .value {
+            color: #333;
+            margin-top: 3px;
+        }
+
+        .ticket-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loader" id="loader">Loading ticket details...</div>
+    <div class="ticket-details" id="ticketDetails" style="display: none;">
+        <div class="field">
+            <div class="label">Subject</div>
+            <div class="value" id="ticketSubject">-</div>
+        </div>
+        <div class="field">
+            <div class="label">Status</div>
+            <div class="value" id="ticketStatus">-</div>
+        </div>
+        <div class="field">
+            <div class="label">Priority</div>
+            <div class="value" id="ticketPriority">-</div>
+        </div>
+        <div class="field">
+            <div class="label">Created</div>
+            <div class="value" id="ticketCreated">-</div>
+        </div>
+        <div class="ticket-actions">
+            <button id="openTicketBtn" class="open-ticket-btn">Open in Freshdesk</button>
+        </div>
+    </div>
+
+    <script>
+        // This will be populated when the modal is opened
+        const ticketId = '<%= data.ticketId %>';
+
+        document.getElementById('openTicketBtn').addEventListener('click', function () {
+            // Open the ticket in Freshdesk
+            window.open(`https://${iparam.freshdesk_subdomain}.freshdesk.com/a/tickets/${ticketId}`, "_blank");
+        });
+
+        // For a real implementation, you would fetch ticket details here
+        // For now, just show some placeholder data
+        setTimeout(() => {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('ticketDetails').style.display = 'block';
+
+            document.getElementById('ticketSubject').textContent = 'Loading ticket information...';
+            document.getElementById('ticketStatus').textContent = 'Please use the "Open in Freshdesk" button';
+            document.getElementById('ticketCreated').textContent = new Date().toLocaleString();
+        }, 500);
+    </script>
+</body>
+
+</html>

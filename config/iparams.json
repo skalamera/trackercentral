@@ -1,0 +1,15 @@
+{
+  "freshdesk_subdomain": {
+    "display_name": "Freshdesk Subdomain",
+    "description": "Please enter your Freshdesk subdomain.",
+    "type": "text",
+    "required": true
+  },
+  "freshdesk_api_key": {
+    "display_name": "Freshdesk API key",
+    "description": "Please enter your Freshdesk API key",
+    "type": "text",
+    "secure": true,
+    "required": true
+  }
+}
