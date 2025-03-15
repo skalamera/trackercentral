@@ -8,6 +8,9 @@
     <script async src="{{{appclient}}}"></script>
     <link rel="stylesheet" type="text/css" href="styles/style.css" />
     <link rel="stylesheet" type="text/css" href="styles/modal.css" />
+    <link rel="stylesheet" type="text/css" href="styles/filepreview.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Add Quill CSS and JS -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
@@ -136,10 +139,13 @@
 
             <!-- Screenshot upload field -->
             <div class="form-group">
-                <label for="screenshots">Screenshots:</label>
-                <input type="file" id="screenshots" name="screenshots" multiple accept="image/*">
-                <div class="hint">Upload screenshots to include in the ticket (max 5 images, 15MB total)</div>
+                <label for="screenshots" data-original-text="Attachments:">Attachments:</label>
+                <div class="attachment-input-container">
+                    <input type="file" id="screenshots" name="screenshots" multiple>
+                    <div class="hint">Upload files to include in the ticket (15MB total)</div>
+                </div>
                 <div id="screenshotPreview" class="screenshot-preview"></div>
+                <div id="attachmentCounter" class="attachment-counter"></div>
             </div>
 
             <div class="form-group">
@@ -483,11 +489,11 @@
 
                 // New function to upload screenshot files to ImgBB and return an array of public URLs
                 async function getScreenshotUrls() {
-                    const screenshotFiles = document.getElementById('screenshots').files;
+                    // Use our aggregated collection instead of the file input's files
                     const urls = [];
                     const IMGBB_API_KEY = "b3da8c974bc40dd87d896d84436dd76e"; // Your ImgBB API key
-                    for (let i = 0; i < screenshotFiles.length; i++) {
-                        const file = screenshotFiles[i];
+                    for (let i = 0; i < aggregatedScreenshotFiles.length; i++) {
+                        const file = aggregatedScreenshotFiles[i];
                         const formData = new FormData();
                         formData.append('image', file);
                         try {
@@ -579,7 +585,8 @@
                         const relatedTicketsStr = document.getElementById('relatedTickets').value;
                         const priority = document.getElementById('priority').value;
                         const status = document.getElementById('status').value;
-                        const screenshotFiles = document.getElementById('screenshots').files;
+                        // Use our aggregated collection instead of the file input's files
+                        const screenshotFiles = aggregatedScreenshotFiles;
                         const groupId = document.getElementById('groupField').value;
                         const agentId = document.getElementById('agentField').value;
 
@@ -663,7 +670,7 @@
 
                             // Create FormData for the attachment upload
                             const formData = new FormData();
-                            formData.append('body', 'Screenshots for the tracker ticket');
+                            formData.append('body', 'Additional Screenshots and other file attachments');
                             formData.append('private', 'true');
 
                             // Add each file to the form data
@@ -747,37 +754,385 @@
                         });
                         document.getElementById('createTracker').disabled = false;
                     }
-                }); // Fixed: Removed the extra closing brace that was causing a syntax error
+                });
 
+                let aggregatedScreenshotFiles = [];
+
+                /**
+                 * Enhanced file type detection for better previews
+                 */
+                function getFileTypeInfo(file) {
+                    // Extract file extension
+                    const fileName = file.name || '';
+                    const fileExtension = fileName.split('.').pop().toLowerCase();
+                    const mimeType = file.type || '';
+
+                    // Default file type info
+                    let iconClass = 'fa-file';
+                    let fileTypeLabel = 'File';
+                    let colorClass = '';
+
+                    // Common document types
+                    if (['doc', 'docx', 'odt', 'rtf'].includes(fileExtension) ||
+                        mimeType.includes('word') || mimeType.includes('opendocument.text')) {
+                        iconClass = 'fa-file-word';
+                        fileTypeLabel = 'Document';
+                        colorClass = 'word-color';
+                    }
+                    // Spreadsheet types
+                    else if (['xls', 'xlsx', 'xlsm', 'csv', 'ods'].includes(fileExtension) ||
+                        mimeType.includes('excel') || mimeType.includes('spreadsheet') ||
+                        mimeType.includes('csv')) {
+                        iconClass = 'fa-file-excel';
+                        fileTypeLabel = 'Spreadsheet';
+                        colorClass = 'excel-color';
+                    }
+                    // Presentation types
+                    else if (['ppt', 'pptx', 'odp'].includes(fileExtension) ||
+                        mimeType.includes('powerpoint') || mimeType.includes('presentation')) {
+                        iconClass = 'fa-file-powerpoint';
+                        fileTypeLabel = 'Presentation';
+                        colorClass = 'powerpoint-color';
+                    }
+                    // PDF files
+                    else if (fileExtension === 'pdf' || mimeType.includes('pdf')) {
+                        iconClass = 'fa-file-pdf';
+                        fileTypeLabel = 'PDF';
+                        colorClass = 'pdf-color';
+                    }
+                    // Archive files
+                    else if (['zip', 'rar', 'tar', 'gz', '7z'].includes(fileExtension) ||
+                        mimeType.includes('zip') || mimeType.includes('compressed')) {
+                        iconClass = 'fa-file-archive';
+                        fileTypeLabel = 'Archive';
+                        colorClass = 'archive-color';
+                    }
+                    // Plain text files
+                    else if (['txt', 'log', 'md'].includes(fileExtension) ||
+                        mimeType.includes('text/plain')) {
+                        iconClass = 'fa-file-alt';
+                        fileTypeLabel = 'Text';
+                        colorClass = 'text-color';
+                    }
+                    // Code files
+                    else if (['html', 'htm', 'xml', 'json', 'js', 'css', 'php', 'py', 'java', 'c', 'cpp'].includes(fileExtension) ||
+                        mimeType.includes('code') || mimeType.includes('javascript') || mimeType.includes('html')) {
+                        iconClass = 'fa-file-code';
+                        fileTypeLabel = 'Code';
+                        colorClass = 'code-color';
+                    }
+                    // Audio files
+                    else if (['mp3', 'wav', 'ogg', 'flac', 'm4a'].includes(fileExtension) ||
+                        mimeType.includes('audio')) {
+                        iconClass = 'fa-file-audio';
+                        fileTypeLabel = 'Audio';
+                        colorClass = 'audio-color';
+                    }
+                    // Video files
+                    else if (['mp4', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'webm'].includes(fileExtension) ||
+                        mimeType.includes('video')) {
+                        iconClass = 'fa-file-video';
+                        fileTypeLabel = 'Video';
+                        colorClass = 'video-color';
+                    }
+                    // HAR files (HTTP Archive)
+                    else if (fileExtension === 'har') {
+                        iconClass = 'fa-file-code';
+                        fileTypeLabel = 'HAR';
+                        colorClass = 'har-color';
+                    }
+
+                    // Image files are handled differently with actual thumbnails
+                    const isImage = file.type.match('image.*');
+
+                    // Get file size in appropriate units
+                    const fileSizeBytes = file.size;
+                    let fileSize = '';
+
+                    if (fileSizeBytes < 1024) {
+                        fileSize = fileSizeBytes + ' B';
+                    } else if (fileSizeBytes < 1024 * 1024) {
+                        fileSize = (fileSizeBytes / 1024).toFixed(1) + ' KB';
+                    } else {
+                        fileSize = (fileSizeBytes / (1024 * 1024)).toFixed(1) + ' MB';
+                    }
+
+                    return {
+                        iconClass,
+                        fileTypeLabel,
+                        colorClass,
+                        isImage,
+                        fileSize,
+                        fileSizeBytes,
+                        extension: fileExtension,
+                        mimeType
+                    };
+                }
+
+                /**
+                 * Function to create a file preview element
+                 */
+                function createFilePreviewElement(file, index) {
+                    const fileInfo = getFileTypeInfo(file);
+                    const previewDiv = document.createElement('div');
+                    previewDiv.className = 'file-thumbnail';
+                    previewDiv.dataset.fileIndex = index;
+
+                    if (fileInfo.isImage) {
+                        // For image files, create a thumbnail preview
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            previewDiv.innerHTML = `
+                                <div class="thumbnail-container">
+                                    <img src="${e.target.result}" title="${file.name}" alt="${file.name}"/>
+                                </div>
+                                <div class="file-filename" title="${file.name}">${file.name}</div>
+                                <div class="file-size">${fileInfo.fileSize}</div>
+                                <div class="file-remove" data-index="${index}">✕</div>`;
+
+                            // Add event listener to the remove button
+                            previewDiv.querySelector('.file-remove').addEventListener('click', function (e) {
+                                e.stopPropagation();
+                                const index = parseInt(this.dataset.index);
+                                removeFile(index);
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        // For non-image files, show appropriate icon based on file type
+                        previewDiv.innerHTML = `
+                            <div class="thumbnail-container file-icon-container ${fileInfo.colorClass}">
+                                <i class="fas ${fileInfo.iconClass} file-icon"></i>
+                                <div class="file-type-label">${fileInfo.fileTypeLabel}</div>
+                            </div>
+                            <div class="file-filename" title="${file.name}">${file.name}</div>
+                            <div class="file-size">${fileInfo.fileSize}</div>
+                            <div class="file-remove" data-index="${index}">✕</div>`;
+
+                        // Add event listener to the remove button
+                        previewDiv.querySelector('.file-remove').addEventListener('click', function (e) {
+                            e.stopPropagation();
+                            const index = parseInt(this.dataset.index);
+                            removeFile(index);
+                        });
+                    }
+
+                    // Make the whole preview clickable to view file details
+                    previewDiv.addEventListener('click', function () {
+                        showFileDetails(file, index);
+                    });
+
+                    return previewDiv;
+                }
+
+                /**
+                 * Function to show file details when a preview is clicked
+                 */
+                function showFileDetails(file, index) {
+                    const fileInfo = getFileTypeInfo(file);
+                    const detailsHtml = `
+                        <div class="file-details-header">
+                            <h3>File Details</h3>
+                            <div class="file-details-close">✕</div>
+                        </div>
+                        <div class="file-details-content">
+                            <div class="file-details-icon">
+                                <i class="fas ${fileInfo.iconClass} file-icon-large"></i>
+                            </div>
+                            <div class="file-details-info">
+                                <p><strong>Name:</strong> ${file.name}</p>
+                                <p><strong>Type:</strong> ${file.type || 'Unknown'}</p>
+                                <p><strong>Size:</strong> ${fileInfo.fileSize}</p>
+                                <p><strong>Last Modified:</strong> ${new Date(file.lastModified).toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <div class="file-details-actions">
+                            <button class="file-details-remove" data-index="${index}">Remove File</button>
+                        </div>
+                    `;
+
+                    // Create or update the details modal
+                    let detailsModal = document.getElementById('fileDetailsModal');
+                    if (!detailsModal) {
+                        detailsModal = document.createElement('div');
+                        detailsModal.id = 'fileDetailsModal';
+                        detailsModal.className = 'file-details-modal';
+                        document.body.appendChild(detailsModal);
+                    }
+
+                    detailsModal.innerHTML = detailsHtml;
+                    detailsModal.style.display = 'block';
+
+                    // Add event listeners
+                    detailsModal.querySelector('.file-details-close').addEventListener('click', function () {
+                        detailsModal.style.display = 'none';
+                    });
+
+                    detailsModal.querySelector('.file-details-remove').addEventListener('click', function () {
+                        const index = parseInt(this.dataset.index);
+                        removeFile(index);
+                        detailsModal.style.display = 'none';
+                    });
+                }
+
+                // Enhanced file preview functionality with attachment totals
                 document.getElementById('screenshots').addEventListener('change', function (e) {
                     const previewContainer = document.getElementById('screenshotPreview');
                     if (this.files.length > 0) {
-                        const fileCount = Math.min(this.files.length, 5);
-                        for (let i = 0; i < fileCount; i++) {
-                            const file = this.files[i];
-                            if (!file.type.match('image.*')) {
-                                continue;
-                            }
-                            const reader = new FileReader();
-                            reader.onload = (function (theFile) {
-                                return function (e) {
-                                    const previewDiv = document.createElement('div');
-                                    previewDiv.className = 'screenshot-thumbnail';
-                                    previewDiv.innerHTML = `<img src="${e.target.result}" title="${theFile.name}" />
-                                        <div class="screenshot-filename">${theFile.name}</div>`;
-                                    previewContainer.appendChild(previewDiv);
-                                };
-                            })(file);
-                            reader.readAsDataURL(file);
+                        // Add new files to our aggregated collection
+                        for (let i = 0; i < this.files.length; i++) {
+                            aggregatedScreenshotFiles.push(this.files[i]);
                         }
-                        if (this.files.length > 5) {
+
+                        // Clear the preview container first to show all files
+                        previewContainer.innerHTML = '';
+
+                        // Add attachments summary at the top
+                        updateAttachmentsSummary(previewContainer);
+
+                        // Preview up to 5 files to avoid overwhelming the UI
+                        const fileCount = Math.min(aggregatedScreenshotFiles.length, 5);
+                        for (let i = 0; i < fileCount; i++) {
+                            const filePreview = createFilePreviewElement(aggregatedScreenshotFiles[i], i);
+                            previewContainer.appendChild(filePreview);
+                        }
+
+                        // Show note if there are more files than we're showing
+                        if (aggregatedScreenshotFiles.length > 5) {
                             const noteDiv = document.createElement('div');
-                            noteDiv.className = 'screenshot-note';
-                            noteDiv.textContent = `Note: Only the first 5 images will be previewed. All ${this.files.length} will be uploaded.`;
+                            noteDiv.className = 'file-note';
+                            noteDiv.textContent = `Note: Only showing the first 5 files. All ${aggregatedScreenshotFiles.length} files will be uploaded.`;
                             previewContainer.appendChild(noteDiv);
                         }
+
+                        // Add a clear all button if there are files
+                        if (aggregatedScreenshotFiles.length > 0) {
+                            const clearAllDiv = document.createElement('div');
+                            clearAllDiv.className = 'clear-files';
+                            clearAllDiv.innerHTML = `<button type="button">Clear All Attachments (${aggregatedScreenshotFiles.length})</button>`;
+                            clearAllDiv.querySelector('button').addEventListener('click', function () {
+                                clearAllFiles();
+                            });
+                            previewContainer.appendChild(clearAllDiv);
+                        }
+
+                        // Update the attachment count indicator
+                        updateAttachmentCountIndicator();
+
+                        // Clear the file input so the same files can be selected again
+                        this.value = '';
                     }
                 });
+
+                /**
+                 * Calculate and display attachment totals information
+                 */
+                function updateAttachmentsSummary(container) {
+                    if (!container) container = document.getElementById('screenshotPreview');
+
+                    // Calculate total size
+                    let totalSizeBytes = 0;
+                    let fileTypes = new Set();
+
+                    aggregatedScreenshotFiles.forEach(file => {
+                        totalSizeBytes += file.size;
+                        const extension = file.name.split('.').pop().toLowerCase();
+                        fileTypes.add(extension);
+                    });
+
+                    // Format size for display
+                    let formattedSize;
+                    if (totalSizeBytes < 1024) {
+                        formattedSize = totalSizeBytes + ' B';
+                    } else if (totalSizeBytes < 1024 * 1024) {
+                        formattedSize = (totalSizeBytes / 1024).toFixed(1) + ' KB';
+                    } else {
+                        formattedSize = (totalSizeBytes / (1024 * 1024)).toFixed(2) + ' MB';
+                    }
+
+                    // Create the summary element
+                    const summaryDiv = document.createElement('div');
+                    summaryDiv.className = 'attachments-summary';
+                    if (totalSizeBytes > 10 * 1024 * 1024) { // Mark as large if over 10MB
+                        summaryDiv.classList.add('large-size');
+                    }
+
+                    summaryDiv.innerHTML = `
+                        <div class="attachments-count">
+                            <strong>${aggregatedScreenshotFiles.length}</strong> file${aggregatedScreenshotFiles.length !== 1 ? 's' : ''} attached
+                            ${fileTypes.size > 1 ? `(${fileTypes.size} different types)` : ''}
+                        </div>
+                        <div class="attachments-size">Total: ${formattedSize}</div>
+                    `;
+
+                    // Insert at the beginning of the container
+                    if (container.firstChild) {
+                        container.insertBefore(summaryDiv, container.firstChild);
+                    } else {
+                        container.appendChild(summaryDiv);
+                    }
+
+                    return summaryDiv;
+                }
+
+                // Function to remove a file by index
+                function removeFile(index) {
+                    if (index >= 0 && index < aggregatedScreenshotFiles.length) {
+                        // Remove the file from our collection
+                        aggregatedScreenshotFiles.splice(index, 1);
+
+                        // Refresh the preview to reflect the change
+                        const previewContainer = document.getElementById('screenshotPreview');
+                        previewContainer.innerHTML = '';
+
+                        // Re-add the summary information
+                        if (aggregatedScreenshotFiles.length > 0) {
+                            updateAttachmentsSummary(previewContainer);
+                        }
+
+                        // Rebuild the preview display
+                        const fileCount = Math.min(aggregatedScreenshotFiles.length, 5);
+                        for (let i = 0; i < fileCount; i++) {
+                            const filePreview = createFilePreviewElement(aggregatedScreenshotFiles[i], i);
+                            previewContainer.appendChild(filePreview);
+                        }
+
+                        // Show note if there are more files than we're showing
+                        if (aggregatedScreenshotFiles.length > 5) {
+                            const noteDiv = document.createElement('div');
+                            noteDiv.className = 'file-note';
+                            noteDiv.textContent = `Note: Only showing the first 5 files. All ${aggregatedScreenshotFiles.length} files will be uploaded.`;
+                            previewContainer.appendChild(noteDiv);
+                        }
+
+                        // Add a clear all button if there are files
+                        if (aggregatedScreenshotFiles.length > 0) {
+                            const clearAllDiv = document.createElement('div');
+                            clearAllDiv.className = 'clear-files';
+                            clearAllDiv.innerHTML = `<button type="button">Clear All Attachments (${aggregatedScreenshotFiles.length})</button>`;
+                            clearAllDiv.querySelector('button').addEventListener('click', function () {
+                                clearAllFiles();
+                            });
+                            previewContainer.appendChild(clearAllDiv);
+                        }
+
+                        // Update the attachment count indicator
+                        updateAttachmentCountIndicator();
+                    }
+                }
+
+                // Function to clear all files
+                function clearAllFiles() {
+                    aggregatedScreenshotFiles = [];
+                    document.getElementById('screenshotPreview').innerHTML = '';
+                    updateAttachmentCountIndicator();
+                }
+
+                // Initialize the original label text when DOM is loaded
+                const screenshotsLabel = document.querySelector('label[for="screenshots"]');
+                if (screenshotsLabel) {
+                    screenshotsLabel.setAttribute('data-original-text', screenshotsLabel.textContent);
+                }
 
                 document.getElementById('debugFillForm').addEventListener('click', function (e) {
                     e.preventDefault();
@@ -1400,6 +1755,8 @@
             }, 500);
         });
     </script>
+
+
 </body>
 
 </html>
