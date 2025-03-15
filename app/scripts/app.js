@@ -673,6 +673,20 @@ function onAppActivate() {
 // Make loadAssociatedTickets globally accessible for the modal
 window.loadAssociatedTickets = loadAssociatedTickets;
 
+// Replace deprecated listener with MutationObserver and ensure the target element exists
+const targetNode = document.getElementById("targetElement"); // choose the element to watch
+if (targetNode) {
+  const observer = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+      // Your callback logic goes here
+      console.log("DOM change detected:", mutation);
+    }
+  });
+  observer.observe(targetNode, { childList: true, subtree: true });
+} else {
+  console.warn("targetElement not found, skipping MutationObserver setup");
+}
+
 document.onreadystatechange = function () {
   if (document.readyState === 'complete') renderApp();
 

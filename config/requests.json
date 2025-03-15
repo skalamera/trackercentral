@@ -86,5 +86,49 @@
         "Content-Type": "application/json"
       }
     }
+  },
+  "getGroups": {
+    "schema": {
+      "method": "GET",
+      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "path": "/api/v2/groups",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "getAgentsInGroup": {
+    "schema": {
+      "method": "GET",
+      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "path": "/api/v2/groups/<%= context.groupId %>/members",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "getTicketFields": {
+    "schema": {
+      "method": "GET",
+      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "path": "/api/v2/ticket_fields",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+"getAllAgents": {
+  "schema": {
+    "method": "GET",
+    "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
+    "path": "/api/v2/agents",
+    "headers": {
+      "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
+      "Content-Type": "application/json"
+    }
   }
+}
 }

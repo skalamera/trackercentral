@@ -70,13 +70,9 @@
                 <input type="text" id="userInfo" name="userInfo" placeholder="e.g. John Doe, john@school.edu, Teacher">
             </div>
 
-            <!-- Replace Product/Program Impacted field with a dropdown -->
             <div class="form-group">
                 <label for="productImpacted">Product/Program Impacted:</label>
-                <select id="productImpacted" name="productImpacted">
-                    <!-- Options will be loaded from the custom field cf_product_type -->
-                </select>
-                <div class="hint">Select the product type</div>
+                <input type="text" id="productImpacted" name="productImpacted" placeholder="e.g. Math Workbook 101">
             </div>
 
             <div class="form-group">
@@ -193,26 +189,6 @@
                     <option value="4">Resolved</option>
                     <option value="5">Closed</option>
                 </select>
-            </div>
-
-            <!-- New Group field -->
-            <div class="form-group">
-                <label for="groupField">Group:</label>
-                <select id="groupField" name="groupField">
-                    <!-- Options will be loaded dynamically -->
-                    <option>Loading groups...</option>
-                </select>
-                <div class="hint">Select a support group</div>
-            </div>
-
-            <!-- New Agent field (dependent on Group) -->
-            <div class="form-group">
-                <label for="agentField">Agent:</label>
-                <select id="agentField" name="agentField">
-                    <!-- Options will be loaded based on the selected group -->
-                    <option>Loading agents...</option>
-                </select>
-                <div class="hint">Select an agent</div>
             </div>
 
             <div class="form-actions">
@@ -407,11 +383,7 @@
                     const issueSummary = document.getElementById('issueSummary').value.trim();
                     const reportedIssue = document.getElementById('reportedIssue').value.trim();
                     const userInfo = document.getElementById('userInfo').value.trim();
-
-                    // Get the full product value from the dataset if available, otherwise fall back to the select value
-                    const productImpacted = document.getElementById('productImpacted').dataset.fullValue ||
-                        document.getElementById('productImpacted').value || '';
-
+                    const productImpacted = document.getElementById('productImpacted').value.trim();
                     const xcodeInfo = document.getElementById('xcodeInfo').value.trim();
                     const districtState = document.getElementById('districtState').value.trim();
                     const impactType = document.getElementById('impactType').value;
@@ -447,10 +419,7 @@
                     description += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">';
 
                     if (userInfo) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee; width: 35%;"><strong>User Name and Email/Role:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${userInfo}</td></tr>`;
-
-                    // Always include the Product/Program field in the description, even if it's empty
-                    description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Product/Program Impacted:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${productImpacted || 'Not specified'}</td></tr>`;
-
+                    if (productImpacted) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Product/Program Impacted:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${productImpacted}</td></tr>`;
                     if (xcodeInfo) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Xcode:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${xcodeInfo}</td></tr>`;
                     if (districtState) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>District State:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${districtState}</td></tr>`;
                     if (impactType) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Digital/Print Impact:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${impactType}</td></tr>`;
@@ -547,11 +516,6 @@
                     document.getElementById('descriptionPreviewModal').style.display = 'block';
                 });
 
-                // Close preview button handler
-                document.getElementById('closePreview').addEventListener('click', function () {
-                    document.getElementById('descriptionPreviewModal').style.display = 'none';
-                });
-
                 // Handle form submission with fixed file upload sequence
                 document.getElementById('trackerForm').addEventListener('submit', async function (e) {
                     e.preventDefault();
@@ -580,13 +544,6 @@
                         const priority = document.getElementById('priority').value;
                         const status = document.getElementById('status').value;
                         const screenshotFiles = document.getElementById('screenshots').files;
-                        const groupId = document.getElementById('groupField').value;
-                        const agentId = document.getElementById('agentField').value;
-
-                        // Get the product value but DON'T add it as a custom field
-                        // We already include this in the description via the generateDescription function
-                        const productImpacted = document.getElementById('productImpacted').dataset.fullValue ||
-                            document.getElementById('productImpacted').value || '';
 
                         const relatedTicketIds = relatedTicketsStr.split(',')
                             .map(id => id.trim())
@@ -606,9 +563,6 @@
                             relatedTicketIds: relatedTicketIds,
                             priority,
                             status,
-                            groupId,
-                            agentId,
-                            productImpacted, // Log it but don't send as custom field
                             attachments: screenshotFiles.length > 0 ? `${screenshotFiles.length} files selected` : 'No files'
                         });
 
@@ -622,20 +576,6 @@
                             status: parseInt(status, 10),
                             type: "Incident"
                         };
-
-                        // Add group ID if selected
-                        if (groupId) {
-                            ticketData.group_id = parseInt(groupId, 10);
-                            console.log(`Setting group_id: ${groupId}`);
-                        }
-
-                        // Add agent ID if selected
-                        if (agentId) {
-                            ticketData.responder_id = parseInt(agentId, 10);
-                            console.log(`Setting responder_id: ${agentId}`);
-                        }
-
-                        console.log("Creating ticket with data:", ticketData);
 
                         console.log("First creating ticket without attachments");
 
@@ -747,10 +687,11 @@
                         });
                         document.getElementById('createTracker').disabled = false;
                     }
-                }); // Fixed: Removed the extra closing brace that was causing a syntax error
+                });
 
                 document.getElementById('screenshots').addEventListener('change', function (e) {
                     const previewContainer = document.getElementById('screenshotPreview');
+                    previewContainer.innerHTML = '';
                     if (this.files.length > 0) {
                         const fileCount = Math.min(this.files.length, 5);
                         for (let i = 0; i < fileCount; i++) {
@@ -763,7 +704,8 @@
                                 return function (e) {
                                     const previewDiv = document.createElement('div');
                                     previewDiv.className = 'screenshot-thumbnail';
-                                    previewDiv.innerHTML = `<img src="${e.target.result}" title="${theFile.name}" />
+                                    previewDiv.innerHTML =
+                                        `<img src="${e.target.result}" title="${theFile.name}">
                                         <div class="screenshot-filename">${theFile.name}</div>`;
                                     previewContainer.appendChild(previewDiv);
                                 };
@@ -819,13 +761,13 @@
 
                 // Before form submission, copy Quill HTML into hidden textareas
                 document.getElementById('trackerForm').addEventListener('submit', async function (e) {
-                    // Update hidden textareas with editor content
+                    // Update hidden textareas with editor content.
                     document.getElementById('reportedIssue').value = quillReported.root.innerHTML;
                     document.getElementById('issueSummary').value = quillSummary.root.innerHTML;
                     document.getElementById('stepsToReproduce').value = quillSteps.root.innerHTML;
                     document.getElementById('actualResults').value = quillActual.root.innerHTML;
                     document.getElementById('expectedResults').value = quillExpected.root.innerHTML;
-                    // Form submission continues with the normal flow
+                    // ...existing submit handling code...
                 });
 
                 // Helper: Upload an image file to ImgBB and return its URL
@@ -883,500 +825,13 @@
                 quillExpected.root.addEventListener('paste', function (e) {
                     handlePasteImage(e, quillExpected);
                 });
-
-                // API-based dropdown functionality
-                // Function to fetch groups from Freshdesk API
-                async function fetchGroups() {
-                    try {
-                        console.log("Fetching groups from Freshdesk API");
-                        // Add a UI indicator that API is being called
-                        const groupSelect = document.getElementById("groupField");
-                        groupSelect.innerHTML = "<option>Loading groups...</option>";
-
-                        const response = await client.request.invokeTemplate("getGroups", {});
-
-                        if (!response || !response.response) {
-                            throw new Error("Empty response from groups API");
-                        }
-
-                        const groups = JSON.parse(response.response);
-                        console.log("Fetched groups:", groups);
-
-                        groupSelect.innerHTML = ""; // Clear existing options
-
-                        // Add a blank option
-                        const blankOption = document.createElement("option");
-                        blankOption.value = "";
-                        blankOption.textContent = "-- Select a Group --";
-                        groupSelect.appendChild(blankOption);
-
-                        groups.forEach(group => {
-                            const option = document.createElement("option");
-                            option.value = group.id;
-                            option.textContent = group.name;
-                            groupSelect.appendChild(option);
-
-                            // Set Escalations group as default
-                            if (group.id === 67000396680) {
-                                option.selected = true;
-                            }
-                        });
-
-                        // After loading groups, instead of fetching agents, 
-                        // always use the hardcoded agent list directly
-                        loadHardcodedAgents();
-
-                    } catch (error) {
-                        console.error("Error fetching groups:", error);
-                        console.error(error.stack);
-                        // Fallback with hardcoded groups in case of API error
-                        loadFallbackGroups();
-                    }
-                }
-
-                // Function to always load the hardcoded agents instead of using the API
-                function loadHardcodedAgents() {
-                    console.log("Loading hardcoded agents list");
-                    const agents = [
-                        { id: 67025683491, name: "Mohammad Azeem" },
-                        { id: 67030529218, name: "Jordan Fields" },
-                        { id: 67031011668, name: "Suriya Iqbal" },
-                        { id: 67040597168, name: "Anson Li" },
-                        { id: 67051499418, name: "Drita Lulgjuraj" }
-                    ];
-
-                    const agentSelect = document.getElementById("agentField");
-                    agentSelect.innerHTML = ""; // Clear existing options
-
-                    // Add a blank option
-                    const blankOption = document.createElement("option");
-                    blankOption.value = "";
-                    blankOption.textContent = "-- Select an Agent --";
-                    agentSelect.appendChild(blankOption);
-
-                    agents.forEach(agent => {
-                        const option = document.createElement("option");
-                        option.value = agent.id;
-                        option.textContent = agent.name;
-                        agentSelect.appendChild(option);
-                    });
-                }
-
-                // Modified to use hardcoded agents instead of API
-                function fetchAgentsForGroup(groupId) {
-                    console.log(`Group selection changed, loading hardcoded agents for group: ${groupId}`);
-                    // Always use the hardcoded list regardless of group
-                    loadHardcodedAgents();
-                }
-
-                // Function to fetch product types
-                function fetchProductTypes() {
-                    console.log("Using hardcoded product types data");
-
-                    // Set up the hardcoded product hierarchy
-                    const productTypeHierarchy = {
-                        "Not Product Specific": {},
-                        "Assess 360": {},
-                        "Benchmark Advance": {
-                            "c2026": [],
-                            "- c2022": [],
-                            "c2022": [],
-                            "c2021": [],
-                            "c2018": [],
-                            "c2017": [],
-                            "Florida c2026": [],
-                            "Florida": [],
-                            "Intervention Resources": [],
-                            "Pilots": [
-                                "National Pilot",
-                                "Units 1-4 Pilot - c2022",
-                                "Units 1-4 Pilot c2022",
-                                "Units 1-2 Pilot - c2022",
-                                "Units 1-2 Pilot c2022",
-                                "Units 3-4 Pilot - c2022",
-                                "Units 3-4 Pilot c2022",
-                                "Units 5-7 Pilot - c2022",
-                                "Units 5-7 Pilot c2022",
-                                "Units 8-10 Pilot - c2022",
-                                "Units 8-10 Pilot c2022",
-                                "Unknown"
-                            ],
-                            "Benchmark Advance": [],
-                            "California c2017": [],
-                            "California": []
-                        },
-                        "Benchmark Adelante": {
-                            "c2026": [],
-                            "c2023": [],
-                            "- c2023": [],
-                            "c2022": [],
-                            "c2018": [],
-                            "c2017": [],
-                            "Florida c2026": [],
-                            "California c2017": [],
-                            "Utah": [],
-                            "Pilots": [
-                                "National Pilot",
-                                "Units 1-4 Pilot - c2023",
-                                "Units 1-4 Pilot c2023",
-                                "Units 1-2 Pilot - c2023",
-                                "Units 1-2 Pilot c2023",
-                                "Units 3-4 Pilot - c2023",
-                                "Units 3-4 Pilot c2023",
-                                "Units 5-7 Pilot - c2023",
-                                "Units 5-7 Pilot c2023",
-                                "Units 8-10 Pilot - c2023",
-                                "Units 8-10 Pilot c2023",
-                                "Unknown"
-                            ],
-                            "Adelante": []
-                        },
-                        "Benchmark Workshop": {},
-                        "Benchmark Taller": {},
-                        "Ready To Advance": {},
-                        "Listos Y Adelante": {
-                            "Listos y Adelante Aprendizaje emergente": [],
-                            "c2022": [],
-                            "Edicion Texas": [],
-                            "Listos Y Adelante": []
-                        },
-                        "Supplemental": {
-                            "Foundational Skills Assessment": [],
-                            "Oral Reading Records": [],
-                            "Registros de lectura en voz alta™": [],
-                            "Hello": [],
-                            "Writer's Workshop": [],
-                            "Reader's Workshop": [],
-                            "4,500+ eBook Library": [],
-                            "123 Andres": [],
-                            "ACT Now!": [],
-                            "Advance ALL": [],
-                            "Advancing Language Learning": [],
-                            "Anchor Comprehension Workshop": [],
-                            "Authentic Voices": [],
-                            "BEC Decodables": [],
-                            "Benchmark Literacy": [],
-                            "Benchmark Literacy 2016": [],
-                            "Steps to Advance": [],
-                            "Benchmark Common Core": [],
-                            "Benchmark Phonics": [],
-                            "SpiralUp Phonics": [],
-                            "BuildUp Phonics": [],
-                            "Phonics Intervention": [],
-                            "Benchmark Phonics & Word Study Workshop": [],
-                            "RIGOR": [],
-                            "Benchmark Writer's Universe": [],
-                            "Comprehension Skill Bags": [],
-                            "Decodable Fluency Builders": [],
-                            "Decodable Readers": [],
-                            "Dynamite Decodables": [],
-                            "Express": [],
-                            "MySELF": [],
-                            "Represent!": [],
-                            "Fonética y gramática": [],
-                            "Avanse": [],
-                            "Mis libros de fonetica": [],
-                            "Soluciones": [],
-                            "Sound Spelling Cards and Videos/Transfer Kits": [],
-                            "Spring Forward": [],
-                            "PD Essentials": [
-                                "Collections",
-                                "Courses and Books"
-                            ],
-                            "PD Training: Curriculum Resources": []
-                        }
-                    };
-
-                    // Create the dropdown structure in the DOM
-                    const productContainer = document.querySelector('.form-group:has(#productImpacted)');
-
-                    // Clean out the existing container
-                    productContainer.innerHTML = '';
-
-                    // Create label
-                    const label = document.createElement('label');
-                    label.setAttribute('for', 'productImpacted');
-                    label.textContent = 'Product/Program Impacted:';
-                    productContainer.appendChild(label);
-
-                    // Create main product select
-                    const mainSelect = document.createElement('select');
-                    mainSelect.id = 'productImpacted';
-                    mainSelect.name = 'productImpacted';
-
-                    // Initialize the dataset property to store the full value
-                    mainSelect.dataset.fullValue = '';
-
-                    // Add the blank option
-                    const blankOption = document.createElement('option');
-                    blankOption.value = '';
-                    blankOption.textContent = '-- Select a Product --';
-                    mainSelect.appendChild(blankOption);
-
-                    // Add product options
-                    Object.keys(productTypeHierarchy).forEach(productName => {
-                        const option = document.createElement('option');
-                        option.value = productName;
-                        option.textContent = productName;
-                        mainSelect.appendChild(option);
-                    });
-
-                    productContainer.appendChild(mainSelect);
-
-                    // Create a container for the second level dropdown (initially hidden)
-                    const secondLevelContainer = document.createElement('div');
-                    secondLevelContainer.id = 'secondLevelContainer';
-                    secondLevelContainer.style.display = 'none';
-                    secondLevelContainer.style.marginTop = '10px';
-
-                    const secondLevelSelect = document.createElement('select');
-                    secondLevelSelect.id = 'secondLevelSelect';
-                    secondLevelSelect.name = 'secondLevelSelect';
-                    secondLevelContainer.appendChild(secondLevelSelect);
-
-                    productContainer.appendChild(secondLevelContainer);
-
-                    // Create a container for the third level dropdown (initially hidden)
-                    const thirdLevelContainer = document.createElement('div');
-                    thirdLevelContainer.id = 'thirdLevelContainer';
-                    thirdLevelContainer.style.display = 'none';
-                    thirdLevelContainer.style.marginTop = '10px';
-
-                    const thirdLevelSelect = document.createElement('select');
-                    thirdLevelSelect.id = 'thirdLevelSelect';
-                    thirdLevelSelect.name = 'thirdLevelSelect';
-                    thirdLevelContainer.appendChild(thirdLevelSelect);
-
-                    productContainer.appendChild(thirdLevelContainer);
-
-                    // Add the hint text
-                    const hintText = document.createElement('div');
-                    hintText.className = 'hint';
-                    hintText.textContent = 'Select the product type';
-                    productContainer.appendChild(hintText);
-
-                    // Event listener for the main product dropdown
-                    mainSelect.addEventListener('change', function () {
-                        const selectedProduct = this.value;
-                        const secondLevel = productTypeHierarchy[selectedProduct];
-
-                        // Update the full product value to include the first level
-                        document.getElementById('productImpacted').dataset.fullValue = selectedProduct;
-
-                        // Reset and hide third level
-                        thirdLevelContainer.style.display = 'none';
-                        thirdLevelSelect.innerHTML = '';
-
-                        // Reset second level
-                        secondLevelSelect.innerHTML = '';
-
-                        if (selectedProduct && Object.keys(secondLevel).length > 0) {
-                            // Add a blank option
-                            const blankOption = document.createElement('option');
-                            blankOption.value = '';
-                            blankOption.textContent = '-- Select a Subcategory --';
-                            secondLevelSelect.appendChild(blankOption);
-
-                            // Add options for second level
-                            Object.keys(secondLevel).forEach(subCategory => {
-                                const option = document.createElement('option');
-                                option.value = subCategory;
-                                option.textContent = subCategory;
-                                secondLevelSelect.appendChild(option);
-                            });
-
-                            // Show second level
-                            secondLevelContainer.style.display = 'block';
-                        } else {
-                            // Hide second level if no subcategories
-                            secondLevelContainer.style.display = 'none';
-                        }
-                    });
-
-                    // Event listener for the second level dropdown
-                    secondLevelSelect.addEventListener('change', function () {
-                        const selectedProduct = mainSelect.value;
-                        const selectedSubCategory = this.value;
-                        const thirdLevel = productTypeHierarchy[selectedProduct][selectedSubCategory];
-
-                        // Update the full product value to include first and second levels
-                        document.getElementById('productImpacted').dataset.fullValue =
-                            selectedProduct + ' - ' + selectedSubCategory;
-
-                        // Reset third level
-                        thirdLevelSelect.innerHTML = '';
-
-                        if (selectedSubCategory && Array.isArray(thirdLevel) && thirdLevel.length > 0) {
-                            // Add a blank option
-                            const blankOption = document.createElement('option');
-                            blankOption.value = '';
-                            blankOption.textContent = '-- Select a Specific Item --';
-                            thirdLevelSelect.appendChild(blankOption);
-
-                            // Add options for third level
-                            thirdLevel.forEach(item => {
-                                const option = document.createElement('option');
-                                option.value = item;
-                                option.textContent = item;
-                                thirdLevelSelect.appendChild(option);
-                            });
-
-                            // Show third level
-                            thirdLevelContainer.style.display = 'block';
-                        } else {
-                            // Hide third level if no items
-                            thirdLevelContainer.style.display = 'none';
-                        }
-                    });
-
-                    // Event listener for the third level dropdown
-                    thirdLevelSelect.addEventListener('change', function () {
-                        const selectedProduct = mainSelect.value;
-                        const selectedSubCategory = secondLevelSelect.value;
-                        const selectedItem = this.value;
-
-                        // Update the full product value to include all three levels
-                        document.getElementById('productImpacted').dataset.fullValue =
-                            selectedProduct + ' - ' + selectedSubCategory + ' - ' + selectedItem;
-                    });
-
-                    // Override the form submission to use the full hierarchical value
-                    const originalSubmitHandler = document.getElementById('trackerForm').onsubmit;
-                    document.getElementById('trackerForm').onsubmit = function (e) {
-                        // Get the full value from all dropdown levels
-                        const fullProductValue = document.getElementById('productImpacted').dataset.fullValue;
-                        if (fullProductValue) {
-                            // Set the product value to the full hierarchical value
-                            document.getElementById('productImpacted').value = fullProductValue;
-                        }
-
-                        // Call the original handler if it exists
-                        if (originalSubmitHandler) {
-                            return originalSubmitHandler.call(this, e);
-                        }
-                    };
-                }
-
-                // Replace the API-based fetchProductTypes with our hardcoded version
-                // Use the loadFallbackProductTypes as a backup method in case of issues
-                function loadFallbackProductTypes() {
-                    // Call the main function to ensure we always use the hardcoded version
-                    fetchProductTypes();
-                }
-
-                // Fallback functions in case the API calls fail
-                function loadFallbackGroups() {
-                    console.log("Using fallback groups data");
-                    const groups = [
-                        { id: 67000396680, name: "Escalations" },
-                        { id: 67000396681, name: "Support" },
-                        { id: 67000396682, name: "Technical" }
-                    ];
-
-                    const groupSelect = document.getElementById("groupField");
-                    groupSelect.innerHTML = ""; // Clear existing options
-
-                    // Add a blank option
-                    const blankOption = document.createElement("option");
-                    blankOption.value = "";
-                    blankOption.textContent = "-- Select a Group --";
-                    groupSelect.appendChild(blankOption);
-
-                    groups.forEach(group => {
-                        const option = document.createElement("option");
-                        option.value = group.id;
-                        option.textContent = group.name;
-                        groupSelect.appendChild(option);
-
-                        // Set Escalations group as default
-                        if (group.id === 67000396680) {
-                            option.selected = true;
-                        }
-                    });
-
-                    // Load fallback agents for the default group
-                    loadFallbackAgents();
-                }
-
-                function loadFallbackAgents() {
-                    console.log("Using fallback agents data");
-                    const agents = [
-                        { id: 67025683491, name: "Mohammad Azeem" },
-                        { id: 67030529218, name: "Jordan Fields" },
-                        { id: 67031011668, name: "Suriya Iqbal" },
-                        { id: 67040597168, name: "Anson Li" },
-                        { id: 67051499418, name: "Drita Lulgjuraj" }
-                    ];
-
-                    const agentSelect = document.getElementById("agentField");
-                    agentSelect.innerHTML = ""; // Clear existing options
-
-                    // Add a blank option
-                    const blankOption = document.createElement("option");
-                    blankOption.value = "";
-                    blankOption.textContent = "-- Select an Agent --";
-                    agentSelect.appendChild(blankOption);
-
-                    agents.forEach(agent => {
-                        const option = document.createElement("option");
-                        option.value = agent.id;
-                        option.textContent = agent.name;
-                        agentSelect.appendChild(option);
-                    });
-                }
-
-                function loadFallbackProductTypes() {
-                    console.log("Using fallback product types data");
-                    const productTypes = [
-                        { id: "book", name: "Book" },
-                        { id: "software", name: "Software" },
-                        { id: "digital_content", name: "Digital Content" },
-                        { id: "print_content", name: "Print Content" },
-                        { id: "assessment", name: "Assessment" }
-                    ];
-
-                    const productSelect = document.getElementById("productImpacted");
-                    productSelect.innerHTML = ""; // Clear existing options
-
-                    // Add a blank option
-                    const blankOption = document.createElement("option");
-                    blankOption.value = "";
-                    blankOption.textContent = "-- Select a Product --";
-                    productSelect.appendChild(blankOption);
-
-                    productTypes.forEach(product => {
-                        const option = document.createElement("option");
-                        option.value = product.id;
-                        option.textContent = product.name;
-                        productSelect.appendChild(option);
-                    });
-                }
-
-                // When group changes, still call the function but it will always load hardcoded agents
-                document.getElementById("groupField").addEventListener("change", function () {
-                    const groupId = this.value;
-                    if (groupId) {
-                        // This will now load the hardcoded agents instead of doing an API call
-                        fetchAgentsForGroup(parseInt(groupId, 10));
-                    } else {
-                        // Clear agents dropdown if no group selected
-                        const agentSelect = document.getElementById("agentField");
-                        agentSelect.innerHTML = "";
-                        const blankOption = document.createElement("option");
-                        blankOption.value = "";
-                        blankOption.textContent = "-- Select a Group First --";
-                        agentSelect.appendChild(blankOption);
-                    }
-                });
-
-                // Initialize the dropdowns when the form loads
-                fetchGroups();
-                fetchProductTypes();
             }
 
             initializeClient();
         });
     </script>
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

@@ -9,7 +9,11 @@
         "getPrimeAssociation": {},
         "getTicketDetails": {},
         "getAgentDetails": {},
-        "addNoteToTicket": {}
+        "addNoteToTicket": {},
+        "getGroups": {},
+        "getAgentsInGroup": {},
+        "getTicketFields": {},
+        "getAllAgents": {}
       }
     },
     "support_ticket": {
