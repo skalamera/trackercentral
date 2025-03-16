@@ -440,3 +440,43 @@ body {
 .form-actions fw-button {
   margin-left: 10px;
 }
+
+/* Add to your CSS files */
+.app-status-indicator {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 12px;
+  background-color: #f5f5f5;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+.status-icon {
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+.status-text {
+  color: #666;
+}
+
+.back-button-container {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+.form-title {
+  position: relative;
+  padding-top: 30px;
+}
+
+fw-button#backButton {
+  background-color: #183247;
+  color: #e7e7e7;
+  padding: 8px 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+

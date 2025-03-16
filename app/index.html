@@ -7,6 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script async src="{{{appclient}}}"></script>
   <link rel="stylesheet" type="text/css" href="styles/style.css" />
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
@@ -34,13 +36,38 @@
 
       <!-- Refresh button at the bottom -->
       <div class="app-footer">
-        <fw-button id="btnGetAssociated" color="primary" class="refresh-button">
-          Refresh Tickets
-        </fw-button>
-        <div class="create-tracker-container">
-          <a href="#" id="createTrackerLink" class="create-tracker-link">Create a Tracker</a>
-        </div>
       </div>
+      <fw-button id="btnGetAssociated" color="primary" class="refresh-button">
+        <i class="fas fa-sync-alt" style="margin-right: 8px;"></i> Refresh
+      </fw-button>
+    </div>
+    <div class="create-tracker-container" style="display: flex; flex-direction: column; align-items: center;">
+      <fw-button id="linkToTrackerLink" color="primary" class="create-tracker-button" style="margin-bottom: 10px;">
+      <i class="fas fa-link" style="margin-right: 8px;"></i> Link to a Tracker
+      </fw-button>
+
+      <fw-button id="createTrackerLink" color="primary" class="create-tracker-button">
+      <i class="fas fa-crosshairs" style="margin-right: 8px;"></i> Create a Tracker
+      </fw-button>
+    </div>
+      <style>
+        .create-tracker-button,
+        .refresh-button {
+          width: 100%;
+        }
+
+        .create-tracker-container {
+          width: 100%;
+          margin-bottom: 2px;
+        }
+
+        .app-footer {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+        }
+      </style>
     </div>
   </div>
 </body>

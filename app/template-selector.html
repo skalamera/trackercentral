@@ -9,210 +9,248 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css" />
     <link rel="stylesheet" type="text/css" href="styles/template-selector.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Freshdesk Tracker Templates</title>
 </head>
 
 <body>
-    <div class="template-selector-container">
-        <div class="selector-header">
-            <h2>Select Tracker Template</h2>
-            <p>Choose the appropriate template for your tracker</p>
+    <div class="container">
+        <div class="page-title">
+            <h1>Tracker Templates</h1>
+            <p>Select a template to create a standardized support ticket for your issue category</p>
+        </div>
+
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="templateSearch" class="search-input" placeholder="Search templates...">
         </div>
 
         <div class="template-groups">
-            <!-- ASSEMBLY TRACKERS -->
+            <!-- ASSEMBLY GROUP -->
             <div class="template-group">
-                <div class="group-header">
-                    <h3>ASSEMBLY TRACKERS</h3>
-                    <span class="template-count">2 Templates</span>
+                <div class="group-header collapsed">
+                    <h2><i class="fas fa-tools"></i> Assembly <span class="template-count">2</span></h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
-                <div class="templates-list">
-                    <div class="template-item" data-template="assembly">
-                        <div class="template-icon"><i class="fas fa-book"></i></div>
-                        <div class="template-details">
-                            <h4>ASSEMBLY</h4>
-                            <p>For issues regarding content missing from library view or other resources where there is
-                                a question about their availability within the particular version the district has
-                                subscribed to.</p>
+                <div class="templates-container collapsed">
+                    <div class="template-list">
+                        <div class="template-item" data-template="assembly">data-template="assembly">
+                            <a href="assembly.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> Assembly
+                                <span class="badge badge-popular">Popular</span>
+                            </a>
+                            <div class="template-description">
+                                For issues regarding content missing from library view or other resources availability.
+                            </div>
                         </div>
-                    </div>
-                    <div class="template-item" data-template="assembly-rollover">
-                        <div class="template-icon"><i class="fas fa-sync"></i></div>
-                        <div class="template-details">
-                            <h4>ASSEMBLY ROLLOVER</h4>
-                            <p>For requests regarding removing legacy assembly codes from a district.</p>
+                        <div class="template-item" data-template="assembly-rollover">data-template="assembly-rollover">
+                            <a href="assembly_rollover.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> Assembly Rollover
+                            </a>
+                            <div class="template-description">
+                                For requests regarding removing legacy assembly codes from a district.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- FEATURE REQUEST -->
+            <!-- FEATURE REQUEST GROUP -->
             <div class="template-group">
                 <div class="group-header">
-                    <h3>FEATURE REQUEST</h3>
-                    <span class="template-count">1 Template</span>
+                    <h2><i class="fas fa-lightbulb"></i> Feature Request <span class="template-count">1</span></h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
-                <div class="templates-list">
-                    <div class="template-item" data-template="feature-request">
-                        <div class="template-icon"><i class="fas fa-lightbulb"></i></div>
-                        <div class="template-details">
-                            <h4>FEATURE REQUEST SUMMARY</h4>
-                            <p>For requests regarding new functionality within Benchmark Universe.</p>
+                <div class="templates-container">
+                    <div class="template-list">
+                        <div class="template-item" data-template="feature-request">data-template="feature-request">
+                            <a href="feature_request.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> Feature Request
+                            </a>
+                            <div class="template-description">
+                                For requests regarding new functionality within Benchmark Universe.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SEDCUST CONTENT/EDITORIAL -->
+            <!-- SEDCUST GROUP -->
             <div class="template-group">
                 <div class="group-header">
-                    <h3>SEDCUST - CONTENT/EDITORIAL</h3>
-                    <span class="template-count">1 Template</span>
+                    <h2><i class="fas fa-book"></i> SEDCUST - Content/Editorial <span class="template-count">1</span>
+                    </h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
-                <div class="templates-list">
-                    <div class="template-item" data-template="sedcust">
-                        <div class="template-icon"><i class="fas fa-edit"></i></div>
-                        <div class="template-details">
-                            <h4>FULL CONTENT/EDITORIAL TRACKER</h4>
-                            <p>For issues regarding typos, grammatical errors, rationale, assessment questions/scoring,
-                                questions with standards/alignment, missing content, broken links in TRS, print icon
-                                missing or non-functional within TRS, interactive learning games, epocket charts, ebooks
-                                not opening, audio with ebooks and assessments, user requesting rationale.</p>
+                <div class="templates-container">
+                    <div class="template-list">
+                        <div class="template-item" data-template="sedcust">data-template="sedcust">
+                            <a href="content_editorial.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> Content/Editorial
+                            </a>
+                            <div class="template-description">
+                                For issues regarding typos, grammatical errors, broken links, and content-related
+                                issues.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SIM TRACKERS -->
+            <!-- SIM TRACKERS GROUP -->
             <div class="template-group">
-                <div class="group-header">
-                    <h3>SIM TRACKERS</h3>
-                    <span class="template-count">8 Templates</span>
+                <div class="group-header collapsed">
+                    <h2><i class="fas fa-chart-line"></i> SIM Trackers <span class="template-count">8</span></h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
-                <div class="templates-list">
-                    <div class="template-item" data-template="sim-assignment">
-                        <div class="template-icon"><i class="fas fa-tasks"></i></div>
-                        <div class="template-details">
-                            <h4>SIM ASSIGNMENT / eASSESSMENT</h4>
-                            <p>For issues regarding assignment and or eAssessment functionality.</p>
+                <div class="templates-container collapsed">
+                    <div class="template-list">
+                        <div class="template-item" data-template="sim_assignment">data-template="sim_assignment">
+                            <a href="sim_assignment.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> SIM Assignment / eAssessment
+                            </a>
+                            <div class="template-description">
+                                For issues regarding assignment and eAssessment functionality.
+                            </div>
                         </div>
-                    </div>
-                    <div class="template-item" data-template="sim-assessment-reports">
-                        <div class="template-icon"><i class="fas fa-chart-bar"></i></div>
-                        <div class="template-details">
-                            <h4>SIM ASSESSMENT REPORTS</h4>
-                            <p>For issues regarding functionality of assessment report.</p>
+                        <div class="template-item" data-template="sim-assessment-reports">
+                            data-template="sim-assessment-reports">
+                            <a href="sim_assessment_reports.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> SIM Assessment Reports
+                            </a>
+                            <div class="template-description">
+                                For issues regarding functionality of assessment report.
+                            </div>
                         </div>
-                    </div>
-                    <div class="template-item" data-template="sim-achievement-levels">
-                        <div class="template-icon"><i class="fas fa-medal"></i></div>
-                        <div class="template-details">
-                            <h4>SIM CUSTOM ACHIEVEMENT LEVELS</h4>
-                            <p>For districts who would like custom achievement levels to display in reports.</p>
+                        <div class="template-item" data-template="sim-achievement-levels">
+                            data-template="sim-achievement-levels">
+                            <a href="sim_custom_achievement.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> SIM Custom Achievement Levels
+                            </a>
+                            <div class="template-description">
+                                For districts who would like custom achievement levels to display in reports.
+                            </div>
                         </div>
-                    </div>
-                    <div class="template-item" data-template="sim-fsa">
-                        <div class="template-icon"><i class="fas fa-book-reader"></i></div>
-                        <div class="template-details">
-                            <h4>SIM FSA</h4>
-                            <p>For issues regarding functionality of foundational skills assessment.</p>
+                        <div class="template-item" data-template="sim-fsa">data-template="sim-fsa">
+                            <a href="sim_fsa.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> SIM FSA
+                            </a>
+                            <div class="template-description">
+                                For issues regarding functionality of foundational skills assessment.
+                            </div>
                         </div>
-                    </div>
-                    <div class="template-item" data-template="sim-library-view">
-                        <div class="template-icon"><i class="fas fa-th-large"></i></div>
-                        <div class="template-details">
-                            <h4>SIM LIBRARY VIEW</h4>
-                            <p>For issues regarding functionality of foundational skills assessment.</p>
+                        <div class="template-item" data-template="sim-library-view">data-template="sim-library-view">
+                            <a href="sim_library_view.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> SIM Library View
+                            </a>
+                            <div class="template-description">
+                                For issues regarding library view functionality.
+                            </div>
                         </div>
-                    </div>
-                    <div class="template-item" data-template="sim-orr">
-                        <div class="template-icon"><i class="fas fa-microphone"></i></div>
-                        <div class="template-details">
-                            <h4>SIM ORR</h4>
-                            <p>For issues regarding functionality of oral reading records (ORR).</p>
+                        <div class="template-item" data-template="sim-orr">data-template="sim-orr">
+                            <a href="sim_orr.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> SIM ORR
+                            </a>
+                            <div class="template-description">
+                                For issues regarding functionality of oral reading records (ORR).
+                            </div>
                         </div>
-                    </div>
-                    <div class="template-item" data-template="sim-plan-teach">
-                        <div class="template-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-                        <div class="template-details">
-                            <h4>SIM PLAN & TEACH</h4>
-                            <p>For issues regarding the functionality of the Plan & Teach Tool.</p>
+                        <div class="template-item" data-template="sim-plan-teach">data-template="sim-plan-teach">
+                            <a href="sim_plan_teach.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> SIM Plan & Teach
+                            </a>
+                            <div class="template-description">
+                                For issues regarding the functionality of the Plan & Teach Tool.
+                            </div>
                         </div>
-                    </div>
-                    <div class="template-item" data-template="sim-reading-log">
-                        <div class="template-icon"><i class="fas fa-book"></i></div>
-                        <div class="template-details">
-                            <h4>SIM READING LOG</h4>
-                            <p>For issues regarding functionality of foundational skills assessment.</p>
+                        <div class="template-item" data-template="sim-reading-log">data-template="sim-reading-log">
+                            <a href="sim_reading_log.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> SIM Reading Log
+                            </a>
+                            <div class="template-description">
+                                For issues regarding reading log functionality.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- BU HELP ARTICLE UPDATE -->
+            <!-- BU HELP GROUP -->
             <div class="template-group">
                 <div class="group-header">
-                    <h3>BU HELP ARTICLE UPDATE</h3>
-                    <span class="template-count">1 Template</span>
+                    <h2><i class="fas fa-question-circle"></i> BU Help Article Update <span
+                            class="template-count">1</span></h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
-                <div class="templates-list">
-                    <div class="template-item" data-template="help-article">
-                        <div class="template-icon"><i class="fas fa-question-circle"></i></div>
-                        <div class="template-details">
-                            <h4>BU HELP ARTICLE UPDATE</h4>
-                            <p>For issues regarding BU Help Articles.</p>
+                <div class="templates-container">
+                    <div class="template-list">
+                        <div class="template-item" data-template="help-article">data-template="help-article">
+                            <a href="bu_help_article.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> BU Help Article Update
+                            </a>
+                            <div class="template-description">
+                                For issues regarding BU Help Articles.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- STUDENT TRANSFER -->
+            <!-- STUDENT TRANSFER GROUP -->
             <div class="template-group">
                 <div class="group-header">
-                    <h3>STUDENT TRANSFER</h3>
-                    <span class="template-count">1 Template</span>
+                    <h2><i class="fas fa-exchange-alt"></i> Student Transfer <span class="template-count">1</span></h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
-                <div class="templates-list">
-                    <div class="template-item" data-template="student-transfer">
-                        <div class="template-icon"><i class="fas fa-exchange-alt"></i></div>
-                        <div class="template-details">
-                            <h4>STUDENT TRANSFER</h4>
-                            <p>For issues regarding the transfer of a student from class(es) to class(es) in which the
-                                assessment data for that student did not transfer correctly.</p>
-                            <span class="placeholder-note">(Placeholder - No Template Available Yet)</span>
+                <div class="templates-container">
+                    <div class="template-list">
+                        <div class="template-item" data-template="student-transfer">data-template="student-transfer">
+                            <a href="student_transfer.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> Student Transfer
+                                <span class="badge badge-new">New</span>
+                            </a>
+                            <div class="template-description">
+                                For issues regarding the transfer of a student between classes and assessment data.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- TIME OUT EXTENSION -->
+            <!-- TIMEOUT EXTENSION GROUP -->
             <div class="template-group">
                 <div class="group-header">
-                    <h3>TIME OUT EXTENSION</h3>
-                    <span class="template-count">1 Template</span>
+                    <h2><i class="fas fa-clock"></i> Time Out Extension <span class="template-count">1</span></h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
-                <div class="templates-list">
-                    <div class="template-item" data-template="timeout-extension">
-                        <div class="template-icon"><i class="fas fa-clock"></i></div>
-                        <div class="template-details">
-                            <h4>TIME OUT EXTENSION TRACKER</h4>
-                            <p>For districts who would like an extended time out setting.</p>
+                <div class="templates-container">
+                    <div class="template-list">
+                        <div class="template-item" data-template="timeout-extension">data-template="timeout-extension">
+                            <a href="timeout_extension.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> Time Out Extension
+                            </a>
+                            <div class="template-description">
+                                For districts who would like an extended time out setting.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- BLANK TRACKER TEMPLATE -->
+            <!-- BLANK TRACKER GROUP -->
             <div class="template-group">
                 <div class="group-header">
-                    <h3>BLANK TRACKER TEMPLATE</h3>
-                    <span class="template-count">1 Template</span>
+                    <h2><i class="fas fa-file"></i> Blank Tracker <span class="template-count">1</span></h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
-                <div class="templates-list">
-                    <div class="template-item" data-template="blank" id="blank-template">
-                        <div class="template-icon"><i class="fas fa-file"></i></div>
-                        <div class="template-details">
-                            <h4>BLANK TRACKER TEMPLATE</h4>
-                            <p>Generic tracker template with basic fields.</p>
+                <div class="templates-container">
+                    <div class="template-list">
+                        <div class="template-item" data-template="blank">data-template="blank">
+                            <a href="blank_tracker.html" class="template-link">
+                                <i class="fas fa-file-alt"></i> Blank Tracker Template
+                            </a>
+                            <div class="template-description">
+                                A free-form template with universal ticket properties.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -241,14 +279,7 @@
                             localStorage.setItem('ticketData', JSON.stringify(ticketData.ticket));
                         }
 
-                        // Add click handlers for template selection
-                        const templateItems = document.querySelectorAll('.template-item');
-                        templateItems.forEach(item => {
-                            item.addEventListener('click', function () {
-                                const templateType = this.getAttribute('data-template');
-                                selectTemplate(templateType);
-                            });
-                        });
+                        setupTemplateHandlers();
 
                     }).catch(function (error) {
                         console.error("Error getting ticket data:", error);
@@ -270,12 +301,46 @@
 
         // Function to set up handlers without ticket data
         function setupTemplateHandlers() {
+            // NEW IMPLEMENTATION: Add click handlers to both the template item div and the anchor tag
             const templateItems = document.querySelectorAll('.template-item');
             templateItems.forEach(item => {
-                item.addEventListener('click', function () {
-                    const templateType = this.getAttribute('data-template');
-                    selectTemplate(templateType);
+                // Get the template type from the data attribute
+                const templateType = item.getAttribute('data-template');
+
+                // Get the link within this item
+                const link = item.querySelector('a.template-link');
+
+                // Add click handler to the entire item div
+                item.addEventListener('click', function (e) {
+                    // Don't trigger if clicking on the link itself (let the link handle that)
+                    if (e.target === link || link.contains(e.target)) {
+                        return;
+                    }
+                    e.preventDefault();
+                    console.log(`Div clicked for template: ${templateType}`);
+                    if (templateType) {
+                        selectTemplate(templateType);
+                    } else {
+                        console.warn("No template type found for clicked item");
+                    }
                 });
+
+                // Also store the template type on the link for direct clicks
+                if (link) {
+                    link.setAttribute('data-template-type', templateType);
+
+                    // Add click handler to prevent default and use our navigation
+                    link.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const linkTemplateType = this.getAttribute('data-template-type');
+                        console.log(`Link clicked for template: ${linkTemplateType}`);
+                        if (linkTemplateType) {
+                            selectTemplate(linkTemplateType);
+                        } else {
+                            console.warn("No template type found for clicked link");
+                        }
+                    });
+                }
             });
         }
 
@@ -286,111 +351,316 @@
             // Instead of trying to open a new modal, we'll navigate directly to the template page
             if (templateType === 'blank') {
                 console.log("Navigating to blank template");
-                // Navigate to modal.html in the same window context
+
+                // Get stored ticket data
+                const ticketData = localStorage.getItem('ticketData');
+
+                if (ticketData) {
+                    try {
+                        const parsedData = JSON.parse(ticketData);
+                        console.log("Processing ticket data for blank:", parsedData);
+
+                        // Prepare data to pass to the modal
+                        const dataToPass = {
+                            currentTicketId: parsedData.id,
+                            isVip: false,
+                            districtName: '',
+                            requesterEmail: parsedData.requester?.email || '',
+                            priority: parsedData.priority || 2 // Default to Medium (2) if not available
+                        };
+
+                        // Try to get VIP status from custom fields
+                        if (parsedData.custom_fields) {
+                            const vipFields = ['cf_vip', 'vip', 'cf_vip_status', 'vip_customer', 'cf_vip_client', 'cf_is_vip'];
+                            for (const field of vipFields) {
+                                if (parsedData.custom_fields[field] !== undefined) {
+                                    const value = parsedData.custom_fields[field];
+                                    dataToPass.isVip = (typeof value === 'boolean') ? value :
+                                        (typeof value === 'string') ? (value.toLowerCase() === 'yes' || value.toLowerCase() === 'true') :
+                                            (typeof value === 'number') ? (value !== 0) : false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Try to get district name from custom fields
+                        if (parsedData.custom_fields) {
+                            const districtFields = ['cf_district509811', 'cf_district', 'district', 'cf_school_district', 'cf_district_name'];
+                            for (const field of districtFields) {
+                                if (parsedData.custom_fields[field]) {
+                                    dataToPass.districtName = parsedData.custom_fields[field];
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Store the processed data in localStorage for modal.html to retrieve
+                        localStorage.setItem('blankData', JSON.stringify(dataToPass));
+                        console.log("Stored blank data in localStorage:", dataToPass);
+                    } catch (error) {
+                        console.error("Error processing ticket data:", error);
+                    }
+                }
+
+                // Navigate directly to modal.html
                 window.location.href = "modal.html";
                 return;
             }
 
             if (templateType === 'sedcust') {
                 console.log("Navigating to sedcust template");
-                // Navigate to sedcust.html in the same window context
+
+                // Get stored ticket data
+                const ticketData = localStorage.getItem('ticketData');
+
+                if (ticketData) {
+                    try {
+                        const parsedData = JSON.parse(ticketData);
+                        console.log("Processing ticket data for sedcust:", parsedData);
+
+                        // Prepare data to pass to the modal
+                        const dataToPass = {
+                            currentTicketId: parsedData.id,
+                            isVip: false,
+                            districtName: '',
+                            requesterEmail: parsedData.requester?.email || '',
+                            priority: parsedData.priority || 2 // Default to Medium (2) if not available
+                        };
+
+                        // Try to get VIP status from custom fields
+                        if (parsedData.custom_fields) {
+                            const vipFields = ['cf_vip', 'vip', 'cf_vip_status', 'vip_customer', 'cf_vip_client', 'cf_is_vip'];
+                            for (const field of vipFields) {
+                                if (parsedData.custom_fields[field] !== undefined) {
+                                    const value = parsedData.custom_fields[field];
+                                    dataToPass.isVip = (typeof value === 'boolean') ? value :
+                                        (typeof value === 'string') ? (value.toLowerCase() === 'yes' || value.toLowerCase() === 'true') :
+                                            (typeof value === 'number') ? (value !== 0) : false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Try to get district name from custom fields
+                        if (parsedData.custom_fields) {
+                            const districtFields = ['cf_district509811', 'cf_district', 'district', 'cf_school_district', 'cf_district_name'];
+                            for (const field of districtFields) {
+                                if (parsedData.custom_fields[field]) {
+                                    dataToPass.districtName = parsedData.custom_fields[field];
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Store the processed data in localStorage for sedcust.html to retrieve
+                        localStorage.setItem('sedcustData', JSON.stringify(dataToPass));
+                        console.log("Stored sedcust data in localStorage:", dataToPass);
+                    } catch (error) {
+                        console.error("Error processing ticket data:", error);
+                    }
+                }
+
+                // Navigate directly to sedcust.html
                 window.location.href = "sedcust.html";
                 return;
             }
 
             if (templateType === 'assembly-rollover') {
-                console.log("Navigating to sedcust template");
-                // Navigate to sedcust.html in the same window context
+                console.log("Navigating to assembly-rollover template");
+
+                // Get stored ticket data
+                const ticketData = localStorage.getItem('ticketData');
+
+                if (ticketData) {
+                    try {
+                        const parsedData = JSON.parse(ticketData);
+                        console.log("Processing ticket data for assembly-rollover:", parsedData);
+
+                        // Prepare data to pass to the modal
+                        const dataToPass = {
+                            currentTicketId: parsedData.id,
+                            isVip: false,
+                            districtName: '',
+                            requesterEmail: parsedData.requester?.email || '',
+                            priority: parsedData.priority || 2 // Default to Medium (2) if not available
+                        };
+
+                        // Try to get VIP status from custom fields
+                        if (parsedData.custom_fields) {
+                            const vipFields = ['cf_vip', 'vip', 'cf_vip_status', 'vip_customer', 'cf_vip_client', 'cf_is_vip'];
+                            for (const field of vipFields) {
+                                if (parsedData.custom_fields[field] !== undefined) {
+                                    const value = parsedData.custom_fields[field];
+                                    dataToPass.isVip = (typeof value === 'boolean') ? value :
+                                        (typeof value === 'string') ? (value.toLowerCase() === 'yes' || value.toLowerCase() === 'true') :
+                                            (typeof value === 'number') ? (value !== 0) : false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Try to get district name from custom fields
+                        if (parsedData.custom_fields) {
+                            const districtFields = ['cf_district509811', 'cf_district', 'district', 'cf_school_district', 'cf_district_name'];
+                            for (const field of districtFields) {
+                                if (parsedData.custom_fields[field]) {
+                                    dataToPass.districtName = parsedData.custom_fields[field];
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Store the processed data in localStorage for assembly_rollover.html to retrieve
+                        localStorage.setItem('assembly-rolloverData', JSON.stringify(dataToPass));
+                        console.log("Stored assembly-rollover data in localStorage:", dataToPass);
+                    } catch (error) {
+                        console.error("Error processing ticket data:", error);
+                    }
+                }
+
+                // Navigate directly to assembly_rollover.html
                 window.location.href = "assembly_rollover.html";
                 return;
             }
 
             if (templateType === 'assembly') {
-                console.log("Navigating to sedcust template");
-                // Navigate to sedcust.html in the same window context
+                console.log("Navigating to assembly template");
+
+                // Get stored ticket data
+                const ticketData = localStorage.getItem('ticketData');
+
+                if (ticketData) {
+                    try {
+                        const parsedData = JSON.parse(ticketData);
+                        console.log("Processing ticket data for assembly:", parsedData);
+
+                        // Prepare data to pass to the modal
+                        const dataToPass = {
+                            currentTicketId: parsedData.id,
+                            isVip: false,
+                            districtName: '',
+                            requesterEmail: parsedData.requester?.email || '',
+                            priority: parsedData.priority || 2 // Default to Medium (2) if not available
+                        };
+
+                        // Try to get VIP status from custom fields
+                        if (parsedData.custom_fields) {
+                            const vipFields = ['cf_vip', 'vip', 'cf_vip_status', 'vip_customer', 'cf_vip_client', 'cf_is_vip'];
+                            for (const field of vipFields) {
+                                if (parsedData.custom_fields[field] !== undefined) {
+                                    const value = parsedData.custom_fields[field];
+                                    dataToPass.isVip = (typeof value === 'boolean') ? value :
+                                        (typeof value === 'string') ? (value.toLowerCase() === 'yes' || value.toLowerCase() === 'true') :
+                                            (typeof value === 'number') ? (value !== 0) : false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Try to get district name from custom fields
+                        if (parsedData.custom_fields) {
+                            const districtFields = ['cf_district509811', 'cf_district', 'district', 'cf_school_district', 'cf_district_name'];
+                            for (const field of districtFields) {
+                                if (parsedData.custom_fields[field]) {
+                                    dataToPass.districtName = parsedData.custom_fields[field];
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Store the processed data in localStorage for assembly.html to retrieve
+                        localStorage.setItem('assemblyData', JSON.stringify(dataToPass));
+                        console.log("Stored assembly data in localStorage:", dataToPass);
+                    } catch (error) {
+                        console.error("Error processing ticket data:", error);
+                    }
+                }
+
+                // Navigate directly to assembly.html
                 window.location.href = "assembly.html";
                 return;
             }
 
+
             if (templateType === 'feature-request') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to feature-request template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "feature_request.html";
                 return;
             }
 
             if (templateType === 'help-article') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to help-article template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "help_article.html";
                 return;
             }
 
             if (templateType === 'sim-achievement-levels') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to sim-achievement-levels template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "sim_achievement_levels.html";
                 return;
             }
 
             if (templateType === 'sim-assessment-reports') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to sim-assessment-reports template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "sim_assessment_reports.html";
                 return;
             }
 
             if (templateType === 'sim_assignment') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to sim_assignment template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "sim_assignment.html";
                 return;
             }
 
             if (templateType === 'sim-fsa') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to sim-fsa template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "sim_fsa.html";
                 return;
             }
 
             if (templateType === 'sim-library-view') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to sim-library-view template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "sim_library_view.html";
                 return;
             }
 
             if (templateType === 'sim-orr') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to sim-orr template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "sim_orr.html";
                 return;
             }
 
             if (templateType === 'sim-plan-teach') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to sim-plan-teach template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "sim_plan_teach.html";
                 return;
             }
 
             if (templateType === 'sim-reading-log') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to sim-reading-log template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "sim_reading_log.html";
                 return;
             }
 
             if (templateType === 'student-transfer') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to student-transfer template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "student_transfer.html";
                 return;
             }
 
             if (templateType === 'timeout-extension') {
-                console.log("Navigating to sedcust template");
+                console.log("Navigating to timeout-extension template");
                 // Navigate to sedcust.html in the same window context
                 window.location.href = "timeout_extension.html";
                 return;
@@ -404,7 +674,58 @@
             window.location.href = "modal.html";
         }
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle collapsible sections
+            const groupHeaders = document.querySelectorAll('.group-header');
 
+            groupHeaders.forEach(header => {
+                header.addEventListener('click', function () {
+                    // Toggle the collapsed class on the header
+                    this.classList.toggle('collapsed');
+
+                    // Find the associated container and toggle its collapsed class
+                    const container = this.nextElementSibling;
+                    container.classList.toggle('collapsed');
+                });
+            });
+
+            // Handle search functionality
+            const searchInput = document.getElementById('templateSearch');
+
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase();
+                const templateItems = document.querySelectorAll('.template-item');
+                const templateGroups = document.querySelectorAll('.template-group');
+
+                templateItems.forEach(item => {
+                    const templateName = item.querySelector('.template-link').textContent.toLowerCase();
+                    const templateDesc = item.querySelector('.template-description').textContent.toLowerCase();
+                    const isMatch = templateName.includes(searchTerm) || templateDesc.includes(searchTerm);
+
+                    item.style.display = isMatch ? 'block' : 'none';
+                });
+
+                // Show/hide groups based on whether they have any visible templates
+                templateGroups.forEach(group => {
+                    const hasVisibleTemplates = [...group.querySelectorAll('.template-item')].some(item =>
+                        item.style.display !== 'none'
+                    );
+
+                    group.style.display = hasVisibleTemplates ? 'block' : 'none';
+
+                    // Expand groups with matches
+                    if (hasVisibleTemplates && searchTerm) {
+                        const header = group.querySelector('.group-header');
+                        const container = group.querySelector('.templates-container');
+
+                        header.classList.remove('collapsed');
+                        container.classList.remove('collapsed');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

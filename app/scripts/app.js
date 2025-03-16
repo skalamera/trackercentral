@@ -502,7 +502,7 @@ function loadAssociatedTickets() {
  */
 function openTrackerModal() {
   client.interface.trigger("showModal", {
-    title: "Select Tracker Template",
+    title: "Tracker Central",
     template: "template-selector.html"
   });
 }
