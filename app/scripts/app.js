@@ -501,76 +501,10 @@ function loadAssociatedTickets() {
  * Opens the tracker creation modal
  */
 function openTrackerModal() {
-  try {
-    console.log("Opening tracker modal");
-    // First get the current agent's information
-    client.data.get("loggedInUser").then(function (userData) {
-      console.log("Got user data:", userData);
-
-      const agentEmail = userData && userData.contact ? userData.contact.email : '';
-      console.log("Agent email:", agentEmail);
-
-      // Then get current ticket data with custom fields
-      client.data.get("ticket").then(function (ticketData) {
-        console.log("Got ticket data:", ticketData);
-
-        if (ticketData && ticketData.ticket && ticketData.ticket.id) {
-          const ticket = ticketData.ticket;
-
-          // Get custom fields
-          const isVip = ticket.custom_fields && ticket.custom_fields.cf_vip === true;
-          const districtName = ticket.custom_fields && ticket.custom_fields.cf_district509811;
-
-          // Pass ticket data to the modal
-          const modalData = {
-            currentTicketId: ticket.id,
-            isVip: isVip,
-            districtName: districtName || '',
-            requesterEmail: agentEmail, // Use the agent's email
-            ticketRequesterEmail: ticket.requester ? ticket.requester.email : '' // Keep original requester as backup
-          };
-
-          console.log("Sending modal data:", modalData);
-
-          client.interface.trigger('showModal', {
-            title: 'Create Tracker Ticket',
-            template: 'modal.html',
-            data: modalData,
-            backdrop: true
-          });
-        } else {
-          // If no ticket ID can be found, still open modal with agent email
-          console.log("No ticket data, opening modal with just agent email");
-          client.interface.trigger('showModal', {
-            title: 'Create Tracker Ticket',
-            template: 'modal.html',
-            data: {
-              requesterEmail: agentEmail
-            },
-            backdrop: true
-          });
-        }
-      }).catch(function (error) {
-        console.error("Error getting ticket data for modal:", error);
-        // Open modal with agent email even if ticket data fails
-        client.interface.trigger('showModal', {
-          title: 'Create Tracker Ticket',
-          template: 'modal.html',
-          data: {
-            requesterEmail: agentEmail
-          },
-          backdrop: true
-        });
-      });
-    }).catch(function (error) {
-      console.error("Error getting agent data:", error);
-      // Fall back to regular modal open if we can't get agent data
-      openModalWithTicketDataOnly();
-    });
-  } catch (error) {
-    console.error("Error opening tracker modal:", error);
-    showNotification("danger", "Failed to open tracker creation form");
-  }
+  client.interface.trigger("showModal", {
+    title: "Select Tracker Template",
+    template: "template-selector.html"
+  });
 }
 
 /**
@@ -578,38 +512,7 @@ function openTrackerModal() {
  * (Helper function for openTrackerModal)
  */
 function openModalWithTicketDataOnly() {
-  client.data.get("ticket").then(function (ticketData) {
-    if (ticketData && ticketData.ticket && ticketData.ticket.id) {
-      const ticket = ticketData.ticket;
-      const isVip = ticket.custom_fields && ticket.custom_fields.cf_vip === true;
-      const districtName = ticket.custom_fields && ticket.custom_fields.cf_district509811;
-
-      client.interface.trigger('showModal', {
-        title: 'Create Tracker Ticket',
-        template: 'modal.html',
-        data: {
-          currentTicketId: ticket.id,
-          isVip: isVip,
-          districtName: districtName || '',
-          requesterEmail: ticket.requester ? ticket.requester.email : ''
-        },
-        backdrop: true
-      });
-    } else {
-      client.interface.trigger('showModal', {
-        title: 'Create Tracker Ticket',
-        template: 'modal.html',
-        backdrop: true
-      });
-    }
-  }).catch(function (error) {
-    console.error("Error in fallback ticket data fetch:", error);
-    client.interface.trigger('showModal', {
-      title: 'Create Tracker Ticket',
-      template: 'modal.html',
-      backdrop: true
-    });
-  });
+  // ...existing code...
 }
 
 function onAppActivate() {

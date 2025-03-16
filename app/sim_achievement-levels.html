@@ -24,15 +24,9 @@
             <button id="debugFillForm" class="debug-button">Fill Form with Demo Data</button>
         </div>
         <div class="form-title">
-            <h2>Blank Tracker Template</h2>
+            <h2>SIM - Achievement-Levels</h2>
             <div class="form-title-underline"></div>
         </div>
-        <div class="form-group">
-            <label for="relatedTickets">Related Ticket IDs*:</label>
-            <input type="text" id="relatedTickets" name="relatedTickets" required>
-            <div class="hint">Comma-separated ticket IDs (e.g., 1,2,3)</div>
-        </div>
-
         <form id="trackerForm">
             <!-- Auto-generated subject field -->
             <div class="form-group">
@@ -148,15 +142,17 @@
                 <textarea id="actualResults" name="actualResults" style="display: none;"></textarea>
             </div>
 
-
-
             <div class="form-group">
                 <label for="expectedResultsEditor">Expected Results:</label>
                 <div id="expectedResultsEditor" style="height: 100px; background-color: white;"></div>
                 <textarea id="expectedResults" name="expectedResults" style="display: none;"></textarea>
             </div>
 
-
+            <!-- Preview button for description -->
+            <div class="form-group">
+                <fw-button id="previewDescription" color="secondary" size="small">Preview Description</fw-button>
+                <div class="hint">Click to see how the description will appear</div>
+            </div>
 
             <!-- Hidden field for the generated description -->
             <div class="form-group" style="display: none;">
@@ -171,6 +167,12 @@
                     <div class="hint">This ticket will be created by you (the logged-in agent)</div>
                     <div id="emailStatus" class="email-status"></div>
                 </div>
+            </div>
+
+            <div class="form-group">
+                <label for="relatedTickets">Related Ticket IDs*:</label>
+                <input type="text" id="relatedTickets" name="relatedTickets" required>
+                <div class="hint">Comma-separated ticket IDs (e.g., 1,2,3)</div>
             </div>
 
             <div class="form-group">
@@ -213,22 +215,11 @@
                 <div class="hint">Select an agent</div>
             </div>
 
-            <!-- Screenshot upload field -->
-            <div class="form-group">
-                <label for="screenshots" data-original-text="Attachments:">Attachments:</label>
-                <div class="attachment-input-container">
-                    <input type="file" id="screenshots" name="screenshots" multiple>
-                    <div class="hint">Upload files to include in the ticket (15MB total)</div>
-                </div>
-                <div id="screenshotPreview" class="screenshot-preview"></div>
-                <div id="attachmentCounter" class="attachment-counter"></div>
+            <div class="form-actions">
+                <fw-button id="cancelTracker" color="secondary">Cancel</fw-button>
+                <fw-button id="createTracker" color="primary" type="submit">Create Tracker</fw-button>
             </div>
 
-            <!-- Preview button for description -->
-            <div class="form-group">
-                <fw-button id="previewDescription" color="secondary" size="small">Preview Description</fw-button>
-                <div class="hint">Click to see how the description will appear</div>
-            </div>
             <!-- Description preview modal -->
             <div id="descriptionPreviewModal" class="description-preview-modal" style="display: none;">
                 <div class="description-preview-content">
@@ -241,10 +232,18 @@
             </div>
         </form>
     </div>
-    <div class="form-actions">
-        <fw-button id="cancelTracker" color="secondary">Cancel</fw-button>
-        <fw-button id="createTracker" color="primary" type="submit">Create Tracker</fw-button>
+
+    <!-- Screenshot upload field -->
+    <div class="form-group">
+        <label for="screenshots" data-original-text="Attachments:">Attachments:</label>
+        <div class="attachment-input-container">
+            <input type="file" id="screenshots" name="screenshots" multiple>
+            <div class="hint">Upload files to include in the ticket (15MB total)</div>
+        </div>
+        <div id="screenshotPreview" class="screenshot-preview"></div>
+        <div id="attachmentCounter" class="attachment-counter"></div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Wait for the Freshworks SDK to be available

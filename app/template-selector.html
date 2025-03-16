@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script async src="{{{appclient}}}"></script>
+    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+    <link rel="stylesheet" type="text/css" href="styles/template-selector.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <div class="template-selector-container">
+        <div class="selector-header">
+            <h2>Select Tracker Template</h2>
+            <p>Choose the appropriate template for your tracker</p>
+        </div>
+
+        <div class="template-groups">
+            <!-- ASSEMBLY TRACKERS -->
+            <div class="template-group">
+                <div class="group-header">
+                    <h3>ASSEMBLY TRACKERS</h3>
+                    <span class="template-count">2 Templates</span>
+                </div>
+                <div class="templates-list">
+                    <div class="template-item" data-template="assembly">
+                        <div class="template-icon"><i class="fas fa-book"></i></div>
+                        <div class="template-details">
+                            <h4>ASSEMBLY</h4>
+                            <p>For issues regarding content missing from library view or other resources where there is
+                                a question about their availability within the particular version the district has
+                                subscribed to.</p>
+                        </div>
+                    </div>
+                    <div class="template-item" data-template="assembly-rollover">
+                        <div class="template-icon"><i class="fas fa-sync"></i></div>
+                        <div class="template-details">
+                            <h4>ASSEMBLY ROLLOVER</h4>
+                            <p>For requests regarding removing legacy assembly codes from a district.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FEATURE REQUEST -->
+            <div class="template-group">
+                <div class="group-header">
+                    <h3>FEATURE REQUEST</h3>
+                    <span class="template-count">1 Template</span>
+                </div>
+                <div class="templates-list">
+                    <div class="template-item" data-template="feature-request">
+                        <div class="template-icon"><i class="fas fa-lightbulb"></i></div>
+                        <div class="template-details">
+                            <h4>FEATURE REQUEST SUMMARY</h4>
+                            <p>For requests regarding new functionality within Benchmark Universe.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEDCUST CONTENT/EDITORIAL -->
+            <div class="template-group">
+                <div class="group-header">
+                    <h3>SEDCUST - CONTENT/EDITORIAL</h3>
+                    <span class="template-count">1 Template</span>
+                </div>
+                <div class="templates-list">
+                    <div class="template-item" data-template="sedcust">
+                        <div class="template-icon"><i class="fas fa-edit"></i></div>
+                        <div class="template-details">
+                            <h4>FULL CONTENT/EDITORIAL TRACKER</h4>
+                            <p>For issues regarding typos, grammatical errors, rationale, assessment questions/scoring,
+                                questions with standards/alignment, missing content, broken links in TRS, print icon
+                                missing or non-functional within TRS, interactive learning games, epocket charts, ebooks
+                                not opening, audio with ebooks and assessments, user requesting rationale.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIM TRACKERS -->
+            <div class="template-group">
+                <div class="group-header">
+                    <h3>SIM TRACKERS</h3>
+                    <span class="template-count">8 Templates</span>
+                </div>
+                <div class="templates-list">
+                    <div class="template-item" data-template="sim-assignment">
+                        <div class="template-icon"><i class="fas fa-tasks"></i></div>
+                        <div class="template-details">
+                            <h4>SIM ASSIGNMENT / eASSESSMENT</h4>
+                            <p>For issues regarding assignment and or eAssessment functionality.</p>
+                        </div>
+                    </div>
+                    <div class="template-item" data-template="sim-assessment-reports">
+                        <div class="template-icon"><i class="fas fa-chart-bar"></i></div>
+                        <div class="template-details">
+                            <h4>SIM ASSESSMENT REPORTS</h4>
+                            <p>For issues regarding functionality of assessment report.</p>
+                        </div>
+                    </div>
+                    <div class="template-item" data-template="sim-achievement-levels">
+                        <div class="template-icon"><i class="fas fa-medal"></i></div>
+                        <div class="template-details">
+                            <h4>SIM CUSTOM ACHIEVEMENT LEVELS</h4>
+                            <p>For districts who would like custom achievement levels to display in reports.</p>
+                        </div>
+                    </div>
+                    <div class="template-item" data-template="sim-fsa">
+                        <div class="template-icon"><i class="fas fa-book-reader"></i></div>
+                        <div class="template-details">
+                            <h4>SIM FSA</h4>
+                            <p>For issues regarding functionality of foundational skills assessment.</p>
+                        </div>
+                    </div>
+                    <div class="template-item" data-template="sim-library-view">
+                        <div class="template-icon"><i class="fas fa-th-large"></i></div>
+                        <div class="template-details">
+                            <h4>SIM LIBRARY VIEW</h4>
+                            <p>For issues regarding functionality of foundational skills assessment.</p>
+                        </div>
+                    </div>
+                    <div class="template-item" data-template="sim-orr">
+                        <div class="template-icon"><i class="fas fa-microphone"></i></div>
+                        <div class="template-details">
+                            <h4>SIM ORR</h4>
+                            <p>For issues regarding functionality of oral reading records (ORR).</p>
+                        </div>
+                    </div>
+                    <div class="template-item" data-template="sim-plan-teach">
+                        <div class="template-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <div class="template-details">
+                            <h4>SIM PLAN & TEACH</h4>
+                            <p>For issues regarding the functionality of the Plan & Teach Tool.</p>
+                        </div>
+                    </div>
+                    <div class="template-item" data-template="sim-reading-log">
+                        <div class="template-icon"><i class="fas fa-book"></i></div>
+                        <div class="template-details">
+                            <h4>SIM READING LOG</h4>
+                            <p>For issues regarding functionality of foundational skills assessment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BU HELP ARTICLE UPDATE -->
+            <div class="template-group">
+                <div class="group-header">
+                    <h3>BU HELP ARTICLE UPDATE</h3>
+                    <span class="template-count">1 Template</span>
+                </div>
+                <div class="templates-list">
+                    <div class="template-item" data-template="help-article">
+                        <div class="template-icon"><i class="fas fa-question-circle"></i></div>
+                        <div class="template-details">
+                            <h4>BU HELP ARTICLE UPDATE</h4>
+                            <p>For issues regarding BU Help Articles.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENT TRANSFER -->
+            <div class="template-group">
+                <div class="group-header">
+                    <h3>STUDENT TRANSFER</h3>
+                    <span class="template-count">1 Template</span>
+                </div>
+                <div class="templates-list">
+                    <div class="template-item" data-template="student-transfer">
+                        <div class="template-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div class="template-details">
+                            <h4>STUDENT TRANSFER</h4>
+                            <p>For issues regarding the transfer of a student from class(es) to class(es) in which the
+                                assessment data for that student did not transfer correctly.</p>
+                            <span class="placeholder-note">(Placeholder - No Template Available Yet)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TIME OUT EXTENSION -->
+            <div class="template-group">
+                <div class="group-header">
+                    <h3>TIME OUT EXTENSION</h3>
+                    <span class="template-count">1 Template</span>
+                </div>
+                <div class="templates-list">
+                    <div class="template-item" data-template="timeout-extension">
+                        <div class="template-icon"><i class="fas fa-clock"></i></div>
+                        <div class="template-details">
+                            <h4>TIME OUT EXTENSION TRACKER</h4>
+                            <p>For districts who would like an extended time out setting.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLANK TRACKER TEMPLATE -->
+            <div class="template-group">
+                <div class="group-header">
+                    <h3>BLANK TRACKER TEMPLATE</h3>
+                    <span class="template-count">1 Template</span>
+                </div>
+                <div class="templates-list">
+                    <div class="template-item" data-template="blank" id="blank-template">
+                        <div class="template-icon"><i class="fas fa-file"></i></div>
+                        <div class="template-details">
+                            <h4>BLANK TRACKER TEMPLATE</h4>
+                            <p>Generic tracker template with basic fields.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Use the same initialization pattern as in app.js
+        document.onreadystatechange = function () {
+            if (document.readyState === 'complete') renderApp();
+
+            function renderApp() {
+                const onInit = app.initialized();
+
+                onInit.then(function (_client) {
+                    window.client = _client;
+                    console.log("Template selector initialized successfully");
+
+                    // Get current ticket details
+                    client.data.get("ticket").then(function (ticketData) {
+                        console.log("Retrieved ticket data:", ticketData);
+
+                        // Store ticket data for templates to use
+                        if (ticketData && ticketData.ticket) {
+                            localStorage.setItem('ticketData', JSON.stringify(ticketData.ticket));
+                        }
+
+                        // Add click handlers for template selection
+                        const templateItems = document.querySelectorAll('.template-item');
+                        templateItems.forEach(item => {
+                            item.addEventListener('click', function () {
+                                const templateType = this.getAttribute('data-template');
+                                selectTemplate(templateType);
+                            });
+                        });
+
+                    }).catch(function (error) {
+                        console.error("Error getting ticket data:", error);
+                        // Still set up click handlers even if ticket data fails
+                        setupTemplateHandlers();
+                    });
+                }).catch(function (error) {
+                    console.error("Error initializing app:", error);
+                    document.body.innerHTML = `
+                            <div style="padding: 20px; background-color: #ffebee; color: #c62828; border-radius: 4px; margin: 10px;">
+                                <h3>Initialization Error</h3>
+                                <p>Failed to initialize template selector.</p>
+                                <p>Error: ${error.message || "Unknown error"}</p>
+                            </div>
+                        `;
+                });
+            }
+        };
+
+        // Function to set up handlers without ticket data
+        function setupTemplateHandlers() {
+            const templateItems = document.querySelectorAll('.template-item');
+            templateItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const templateType = this.getAttribute('data-template');
+                    selectTemplate(templateType);
+                });
+            });
+        }
+
+        // Function to select a template and navigate to the appropriate page
+        function selectTemplate(templateType) {
+            console.log(`Selected template: ${templateType}`);
+
+            // Instead of trying to open a new modal, we'll navigate directly to the template page
+            if (templateType === 'blank') {
+                console.log("Navigating to blank template");
+                // Navigate to modal.html in the same window context
+                window.location.href = "modal.html";
+                return;
+            }
+
+            if (templateType === 'sedcust') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "sedcust.html";
+                return;
+            }
+
+            if (templateType === 'assembly-rollover') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "assembly_rollover.html";
+                return;
+            }
+
+            if (templateType === 'assembly') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "assembly.html";
+                return;
+            }
+
+            if (templateType === 'feature-request') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "feature_request.html";
+                return;
+            }
+
+            if (templateType === 'help-article') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "help_article.html";
+                return;
+            }
+
+            if (templateType === 'sim-achievement-levels') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "sim_achievement_levels.html";
+                return;
+            }
+
+            if (templateType === 'sim-assessment-reports') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "sim_assessment_reports.html";
+                return;
+            }
+
+            if (templateType === 'sim_assignment') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "sim_assignment.html";
+                return;
+            }
+
+            if (templateType === 'sim-fsa') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "sim_fsa.html";
+                return;
+            }
+
+            if (templateType === 'sim-library-view') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "sim_library_view.html";
+                return;
+            }
+
+            if (templateType === 'sim-orr') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "sim_orr.html";
+                return;
+            }
+
+            if (templateType === 'sim-plan-teach') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "sim_plan_teach.html";
+                return;
+            }
+
+            if (templateType === 'sim-reading-log') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "sim_reading_log.html";
+                return;
+            }
+
+            if (templateType === 'student-transfer') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "student_transfer.html";
+                return;
+            }
+
+            if (templateType === 'timeout-extension') {
+                console.log("Navigating to sedcust template");
+                // Navigate to sedcust.html in the same window context
+                window.location.href = "timeout_extension.html";
+                return;
+            }
+
+            // For other templates that are not yet implemented
+            console.log(`Template ${templateType} not implemented yet`);
+            alert(`The ${templateType} template is not yet implemented. Using blank template instead.`);
+
+            // Navigate to the blank template as fallback
+            window.location.href = "modal.html";
+        }
+    </script>
+
+</body>
+
+</html>

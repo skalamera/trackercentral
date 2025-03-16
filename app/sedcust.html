@@ -1,3 +1,14 @@
+<!-- The main changes needed are:
+1. Update the form title to "Content/Editorial Tracker"
+2. Update subject field format according to template
+3. Adjust form fields to match the SEDCUST template requirements
+4. Update placeholder text and hints to match SEDCUST context 
+5. Modify generateSubject() function to follow the format:
+   XCODE | Application Name | Resource Name > Grade > Unit > Week > Day > Lesson - Short Description of Issue
+-->
+
+<!-- Here are the key changes I'm making to the original sedcust.html file: -->
+
 <!DOCTYPE html>
 <html>
 
@@ -24,35 +35,41 @@
             <button id="debugFillForm" class="debug-button">Fill Form with Demo Data</button>
         </div>
         <div class="form-title">
-            <h2>Blank Tracker Template</h2>
+            <h2>Content/Editorial Tracker</h2>
             <div class="form-title-underline"></div>
         </div>
-        <div class="form-group">
-            <label for="relatedTickets">Related Ticket IDs*:</label>
-            <input type="text" id="relatedTickets" name="relatedTickets" required>
-            <div class="hint">Comma-separated ticket IDs (e.g., 1,2,3)</div>
-        </div>
-
         <form id="trackerForm">
             <!-- Auto-generated subject field -->
             <div class="form-group">
                 <h3>Subject</h3>
                 <input type="text" id="subject" name="subject" required>
-                <div class="hint">Auto-generated based on ticket details and application</div>
+                <div class="hint">Format: XCODE | Application Name | Resource Name > Grade > Unit > Week > Day > Lesson
+                    - Short Description of Issue</div>
             </div>
 
-            <!-- New application field that will be used for subject generation -->
+            <!-- Fields for subject generation -->
             <div class="form-group">
-                <label for="application">Application*:</label>
-                <input type="text" id="application" name="application" required placeholder="e.g. Bookshelves">
-                <div class="hint">The application or system related to this issue</div>
+                <label for="xcode">XCODE*:</label>
+                <input type="text" id="xcode" name="xcode" required placeholder="e.g. X56723">
+                <div class="hint">Xcode for this resource</div>
             </div>
 
-            <!-- Specific issue field that will be used for subject generation -->
+            <div class="form-group">
+                <label for="application">Application Name*:</label>
+                <input type="text" id="application" name="application" required placeholder="e.g. BAdvance -c2022">
+                <div class="hint">The application or program name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="resourcePath">Resource Path*:</label>
+                <input type="text" id="resourcePath" name="resourcePath" required
+                    placeholder="e.g. TRS: G5>U1>TRS>W2>L12">
+                <div class="hint">Resource path with Grade > Unit > Week > Day > Lesson</div>
+            </div>
+
             <div class="form-group">
                 <label for="specificIssue">Specific Issue*:</label>
-                <input type="text" id="specificIssue" name="specificIssue" required
-                    placeholder="e.g. School Customization Folder Missing">
+                <input type="text" id="specificIssue" name="specificIssue" required placeholder="e.g. Title Missing">
                 <div class="hint">Brief description of the specific issue</div>
             </div>
 
@@ -70,27 +87,47 @@
                 <div class="hint">These fields will be used to generate the description</div>
             </div>
 
-
-
-            <!-- Description details fields -->
+            <!-- VIP field -->
             <div class="form-group">
-                <label for="reportedIssueEditor">Reported Issue*:</label>
-                <div id="reportedIssueEditor" style="height: 150px; background-color: white;"></div>
-                <textarea id="reportedIssue" name="reportedIssue" style="display: none;"></textarea>
+                <label for="isVIP">VIP:</label>
+                <select id="isVIP" name="isVIP">
+                    <option value="">-- Select --</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
             </div>
 
+            <!-- Username field -->
             <div class="form-group">
-                <label for="userInfo">User Name and Email/Role:</label>
-                <input type="text" id="userInfo" name="userInfo" placeholder="e.g. John Doe, john@school.edu, Teacher">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="e.g. j.smith">
+            </div>
+
+            <!-- Email field -->
+            <div class="form-group">
+                <label for="userEmail">Email:</label>
+                <input type="email" id="userEmail" name="userEmail" placeholder="e.g. john.smith@school.edu">
+            </div>
+
+            <!-- Role field -->
+            <div class="form-group">
+                <label for="userRole">Role:</label>
+                <select id="userRole" name="userRole">
+                    <option value="">-- Select --</option>
+                    <option value="Teacher">Teacher</option>
+                    <option value="Student">Student</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Other">Other</option>
+                </select>
             </div>
 
             <!-- Replace Product/Program Impacted field with a dropdown -->
             <div class="form-group">
-                <label for="productImpacted">Product/Program Impacted:</label>
+                <label for="productImpacted">Application/Program Impacted:</label>
                 <select id="productImpacted" name="productImpacted">
                     <!-- Options will be loaded from the custom field cf_product_type -->
                 </select>
-                <div class="hint">Select the product type</div>
+                <div class="hint">Select the application or program impacted</div>
             </div>
 
             <div class="form-group">
@@ -99,12 +136,12 @@
             </div>
 
             <div class="form-group">
-                <label for="districtState">District State:</label>
+                <label for="districtState">District state:</label>
                 <input type="text" id="districtState" name="districtState">
             </div>
 
             <div class="form-group">
-                <label for="impactType">Digital Only or Print Impacted as Well:</label>
+                <label for="impactType">Digital and/or Print Impact:</label>
                 <select id="impactType" name="impactType">
                     <option value="">-- Select --</option>
                     <option value="Digital Only">Digital Only</option>
@@ -114,49 +151,53 @@
             </div>
 
             <div class="form-group">
-                <label for="dateReported">Date issue reported by user:</label>
+                <label for="dateReported">Date Issue reported by user:</label>
                 <input type="date" id="dateReported" name="dateReported">
             </div>
 
             <div class="form-group">
-                <label for="impactScope">Teacher vs Student impact:</label>
+                <label for="impactScope">Teacher and/or Student impact:</label>
                 <select id="impactScope" name="impactScope">
                     <option value="">-- Select --</option>
                     <option value="Teacher Only">Teacher Only</option>
                     <option value="Student Only">Student Only</option>
                     <option value="Both Teacher and Student">Both Teacher and Student</option>
-                    <option value="Unknown">Unknown</option>
                 </select>
             </div>
 
+            <!-- Program Components field -->
             <div class="form-group">
-                <label for="components">Components:</label>
-                <input type="text" id="components" name="components"
-                    placeholder="e.g. Assessment, Assignments, ePlanner">
-                <div class="hint">Specific application or component affected</div>
+                <h3>Program Components</h3>
+                <div id="componentsEditor" style="height: 100px; background-color: white;"></div>
+                <textarea id="components" name="components" style="display: none;"></textarea>
+            </div>
+
+            <!-- Steps to Reproduce section -->
+            <div class="form-group">
+                <h3>Steps to Reproduce</h3>
+                <label for="pathField">Path:</label>
+                <input type="text" id="pathField" name="pathField"
+                    placeholder="e.g. Login > Click Resources > Select Grade 5">
             </div>
 
             <div class="form-group">
-                <label for="stepsToReproduceEditor">Steps To Reproduce:</label>
-                <div id="stepsToReproduceEditor" style="height: 100px; background-color: white;"></div>
-                <textarea id="stepsToReproduce" name="stepsToReproduce" style="display: none;"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="actualResultsEditor">Actual Results:</label>
+                <label for="actualResultsEditor">Actual results:</label>
                 <div id="actualResultsEditor" style="height: 100px; background-color: white;"></div>
                 <textarea id="actualResults" name="actualResults" style="display: none;"></textarea>
+                <div class="hint">(screenshots and/or videos should include the URL in screen capture)</div>
             </div>
 
-
-
             <div class="form-group">
-                <label for="expectedResultsEditor">Expected Results:</label>
+                <label for="expectedResultsEditor">Expected results:</label>
                 <div id="expectedResultsEditor" style="height: 100px; background-color: white;"></div>
                 <textarea id="expectedResults" name="expectedResults" style="display: none;"></textarea>
             </div>
 
-
+            <!-- Preview button for description -->
+            <div class="form-group">
+                <fw-button id="previewDescription" color="secondary" size="small">Preview Description</fw-button>
+                <div class="hint">Click to see how the description will appear</div>
+            </div>
 
             <!-- Hidden field for the generated description -->
             <div class="form-group" style="display: none;">
@@ -171,6 +212,12 @@
                     <div class="hint">This ticket will be created by you (the logged-in agent)</div>
                     <div id="emailStatus" class="email-status"></div>
                 </div>
+            </div>
+
+            <div class="form-group">
+                <label for="relatedTickets">Related Ticket IDs*:</label>
+                <input type="text" id="relatedTickets" name="relatedTickets" required>
+                <div class="hint">Comma-separated ticket IDs (e.g., 1,2,3)</div>
             </div>
 
             <div class="form-group">
@@ -213,22 +260,11 @@
                 <div class="hint">Select an agent</div>
             </div>
 
-            <!-- Screenshot upload field -->
-            <div class="form-group">
-                <label for="screenshots" data-original-text="Attachments:">Attachments:</label>
-                <div class="attachment-input-container">
-                    <input type="file" id="screenshots" name="screenshots" multiple>
-                    <div class="hint">Upload files to include in the ticket (15MB total)</div>
-                </div>
-                <div id="screenshotPreview" class="screenshot-preview"></div>
-                <div id="attachmentCounter" class="attachment-counter"></div>
+            <div class="form-actions">
+                <fw-button id="cancelTracker" color="secondary">Cancel</fw-button>
+                <fw-button id="createTracker" color="primary" type="submit">Create Tracker</fw-button>
             </div>
 
-            <!-- Preview button for description -->
-            <div class="form-group">
-                <fw-button id="previewDescription" color="secondary" size="small">Preview Description</fw-button>
-                <div class="hint">Click to see how the description will appear</div>
-            </div>
             <!-- Description preview modal -->
             <div id="descriptionPreviewModal" class="description-preview-modal" style="display: none;">
                 <div class="description-preview-content">
@@ -241,10 +277,18 @@
             </div>
         </form>
     </div>
-    <div class="form-actions">
-        <fw-button id="cancelTracker" color="secondary">Cancel</fw-button>
-        <fw-button id="createTracker" color="primary" type="submit">Create Tracker</fw-button>
+
+    <!-- Screenshot upload field -->
+    <div class="form-group">
+        <label for="screenshots" data-original-text="Attachments:">Attachments:</label>
+        <div class="attachment-input-container">
+            <input type="file" id="screenshots" name="screenshots" multiple>
+            <div class="hint">Upload files to include in the ticket (15MB total)</div>
+        </div>
+        <div id="screenshotPreview" class="screenshot-preview"></div>
+        <div id="attachmentCounter" class="attachment-counter"></div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Wait for the Freshworks SDK to be available
@@ -357,6 +401,14 @@
                             ticketRequesterEmail: context.data.ticketRequesterEmail || ''
                         };
                         console.log("Received ticket data:", ticketData);
+
+                        // Set VIP dropdown based on ticket data
+                        if (ticketData.isVip) {
+                            document.getElementById('isVIP').value = 'Yes';
+                        } else {
+                            document.getElementById('isVIP').value = 'No';
+                        }
+
                         if (ticketData.currentTicketId) {
                             document.getElementById('relatedTickets').value = ticketData.currentTicketId;
                             const assignedAgentEmail = await getAssignedAgentEmail(ticketData.currentTicketId);
@@ -388,49 +440,69 @@
                 }
 
                 function setupSubjectGeneration() {
+                    const xcodeField = document.getElementById('xcode');
                     const applicationField = document.getElementById('application');
+                    const resourcePathField = document.getElementById('resourcePath');
                     const specificIssueField = document.getElementById('specificIssue');
+
+                    xcodeField.addEventListener('input', generateSubject);
                     applicationField.addEventListener('input', generateSubject);
+                    resourcePathField.addEventListener('input', generateSubject);
                     specificIssueField.addEventListener('input', generateSubject);
+
                     generateSubject();
                 }
 
                 function generateSubject() {
+                    const xcode = document.getElementById('xcode').value.trim();
                     const application = document.getElementById('application').value.trim();
+                    const resourcePath = document.getElementById('resourcePath').value.trim();
                     const specificIssue = document.getElementById('specificIssue').value.trim();
+
+                    // Format: XCODE | Application Name | Resource Name > Grade > Unit > Week > Day > Lesson - Short Description of Issue
                     let subject = '';
-                    if (ticketData.isVip) {
-                        subject = 'VIP* ';
+
+                    if (xcode) {
+                        subject += xcode + ' | ';
                     }
-                    if (ticketData.districtName) {
-                        subject += ticketData.districtName;
-                    }
+
                     if (application) {
-                        subject += ' | ' + application;
-                        if (specificIssue) {
-                            subject += '- ' + specificIssue;
-                        }
+                        subject += application + ' | ';
                     }
+
+                    if (resourcePath) {
+                        subject += resourcePath;
+                    }
+
+                    if (specificIssue) {
+                        subject += ' | ' + specificIssue;
+                    }
+
                     document.getElementById('subject').value = subject;
                 }
 
                 function generateDescription() {
                     const subject = document.getElementById('subject').value.trim();
                     const issueSummary = document.getElementById('issueSummary').value.trim();
-                    const reportedIssue = document.getElementById('reportedIssue').value.trim();
-                    const userInfo = document.getElementById('userInfo').value.trim();
+
+                    // User info fields
+                    const isVIP = document.getElementById('isVIP').value;
+                    const username = document.getElementById('username').value.trim();
+                    const userEmail = document.getElementById('userEmail').value.trim();
+                    const userRole = document.getElementById('userRole').value;
 
                     // Get the full product value from the dataset if available, otherwise fall back to the select value
                     const productImpacted = document.getElementById('productImpacted').dataset.fullValue ||
                         document.getElementById('productImpacted').value || '';
 
+                    // Other fields
                     const xcodeInfo = document.getElementById('xcodeInfo').value.trim();
                     const districtState = document.getElementById('districtState').value.trim();
                     const impactType = document.getElementById('impactType').value;
                     const dateReported = document.getElementById('dateReported').value;
                     const impactScope = document.getElementById('impactScope').value;
                     const components = document.getElementById('components').value.trim();
-                    const stepsToReproduce = document.getElementById('stepsToReproduce').value.trim();
+                    const pathField = document.getElementById('pathField').value.trim();
                     const actualResults = document.getElementById('actualResults').value.trim();
                     const expectedResults = document.getElementById('expectedResults').value.trim();
 
@@ -443,50 +515,55 @@
                     }
 
                     let description = '<div style="font-family: Arial, sans-serif; line-height: 1.5;">';
-                    description += '<h3 style="margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Summary</h3>';
+
+                    // SUMMARY section
+                    description += '<h3 style="margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">SUMMARY</h3>';
                     if (issueSummary) {
                         description += `<p style="margin-top: 5px; margin-bottom: 15px;">${issueSummary}</p>`;
                     } else {
                         description += `<p style="margin-top: 5px; margin-bottom: 15px;">${subject}</p>`;
                     }
 
-                    if (reportedIssue) {
-                        description += '<h3 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Reported Issue</h3>';
-                        description += `<p style="margin-top: 5px; margin-bottom: 15px;">${reportedIssue.replace(/\n/g, '<br>')}</p>`;
-                    }
-
-                    description += '<h3 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Description</h3>';
+                    // ISSUE DETAILS section
+                    description += '<h3 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">IMPACTED USER INFO</h3>';
                     description += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">';
 
-                    if (userInfo) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee; width: 35%;"><strong>User Name and Email/Role:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${userInfo}</td></tr>`;
+                    if (isVIP) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee; width: 35%;"><strong>VIP:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${isVIP}</td></tr>`;
+                    if (username) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee; width: 35%;"><strong>Username:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${username}</td></tr>`;
+                    if (userEmail) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Email:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${userEmail}</td></tr>`;
+                    if (userRole) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Role:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${userRole}</td></tr>`;
 
                     // Always include the Product/Program field in the description, even if it's empty
-                    description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Product/Program Impacted:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${productImpacted || 'Not specified'}</td></tr>`;
+                    description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Application/Program Impacted:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${productImpacted || 'Not specified'}</td></tr>`;
 
                     if (xcodeInfo) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Xcode:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${xcodeInfo}</td></tr>`;
-                    if (districtState) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>District State:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${districtState}</td></tr>`;
-                    if (impactType) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Digital/Print Impact:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${impactType}</td></tr>`;
-                    if (formattedDate) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Date Reported:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${formattedDate}</td></tr>`;
-                    if (impactScope) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Teacher/Student Impact:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${impactScope}</td></tr>`;
-                    description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>VIP Customer:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${ticketData.isVip ? 'Yes' : 'No'}</td></tr>`;
+                    if (districtState) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>District state:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${districtState}</td></tr>`;
+                    if (impactType) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Digital and/or Print Impact:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${impactType}</td></tr>`;
+                    if (formattedDate) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Date Issue reported by user:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${formattedDate}</td></tr>`;
+                    if (impactScope) description += `<tr><td style="padding: 5px 10px; border-bottom: 1px solid #eee;"><strong>Teacher and/or Student impact:</strong></td><td style="padding: 5px 10px; border-bottom: 1px solid #eee;">${impactScope}</td></tr>`;
+
                     description += '</table>';
 
                     if (components) {
-                        description += '<h3 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Components</h3>';
+                        description += '<h3 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">PROGRAM COMPONENTS</h3>';
                         description += `<p style="margin-top: 5px; margin-bottom: 15px;">${components}</p>`;
                     }
 
-                    if (stepsToReproduce) {
-                        description += '<h3 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Steps To Reproduce</h3>';
-                        description += `<div style="margin-left: 20px;">${stepsToReproduce.replace(/\n/g, '<br>')}</div>`;
-                        if (actualResults) {
-                            description += '<h4 style="margin-top: 15px; margin-bottom: 5px; color: #555;">Actual Results</h4>';
-                            description += `<div style="margin-left: 20px; margin-bottom: 15px;">${actualResults.replace(/\n/g, '<br>')}</div>`;
-                        }
-                        if (expectedResults) {
-                            description += '<h4 style="margin-top: 15px; margin-bottom: 5px; color: #555;">Expected Results</h4>';
-                            description += `<div style="margin-left: 20px; margin-bottom: 15px;">${expectedResults.replace(/\n/g, '<br>')}</div>`;
-                        }
+                    description += '<h3 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">STEPS TO REPRODUCE</h3>';
+
+                    if (pathField) {
+                        description += `<p style="margin-top: 5px; margin-bottom: 15px;"><strong>Path:</strong><br>${pathField}</p>`;
+                    }
+
+                    if (actualResults) {
+                        description += '<h4 style="margin-top: 15px; margin-bottom: 5px; color: #555;">Actual results:</h4>';
+                        description += `<div style="margin-left: 20px; margin-bottom: 15px;">${actualResults}</div>`;
+                        description += '<p style="margin-top: 5px; font-style: italic; color: #666;">(screenshots and/or videos should include the URL in screen capture)</p>';
+                    }
+
+                    if (expectedResults) {
+                        description += '<h4 style="margin-top: 15px; margin-bottom: 5px; color: #555;">Expected results:</h4>';
+                        description += `<div style="margin-left: 20px; margin-bottom: 15px;">${expectedResults}</div>`;
                     }
 
                     description += '</div>';
@@ -528,23 +605,15 @@
                         const imgTags = screenshotUrls.map(url => `<img src="${url}" alt="Screenshot" style="max-width:100%;display:block;margin:10px 0;">`).join("");
                         // For each designated section, append the image tags after the primary content.
                         enhancedDescription = enhancedDescription.replace(
-                            /(<h3[^>]*>\s*Reported Issue\s*<\/h3>[\s\S]*?<p[^>]*>.*?<\/p>)/i,
+                            /(<h3[^>]*>\s*SUMMARY\s*<\/h3>[\s\S]*?<p[^>]*>.*?<\/p>)/i,
                             "$1" + imgTags
                         );
                         enhancedDescription = enhancedDescription.replace(
-                            /(<h3[^>]*>\s*Summary\s*<\/h3>[\s\S]*?<p[^>]*>.*?<\/p>)/i,
+                            /(<h4[^>]*>\s*Actual results\s*<\/h4>[\s\S]*?(<div|<p)[^>]*>.*?(<\/div>|<\/p>))/i,
                             "$1" + imgTags
                         );
                         enhancedDescription = enhancedDescription.replace(
-                            /(<h3[^>]*>\s*Steps To Reproduce\s*<\/h3>[\s\S]*?(<div|<p)[^>]*>.*?(<\/div>|<\/p>))/i,
-                            "$1" + imgTags
-                        );
-                        enhancedDescription = enhancedDescription.replace(
-                            /(<h4[^>]*>\s*Actual Results\s*<\/h4>[\s\S]*?(<div|<p)[^>]*>.*?(<\/div>|<\/p>))/i,
-                            "$1" + imgTags
-                        );
-                        enhancedDescription = enhancedDescription.replace(
-                            /(<h4[^>]*>\s*Expected Results\s*<\/h4>[\s\S]*?(<div|<p)[^>]*>.*?(<\/div>|<\/p>))/i,
+                            /(<h4[^>]*>\s*Expected results\s*<\/h4>[\s\S]*?(<div|<p)[^>]*>.*?(<\/div>|<\/p>))/i,
                             "$1" + imgTags
                         );
                     }
@@ -1134,6 +1203,20 @@
                     updateAttachmentCountIndicator();
                 }
 
+                // Function to update the attachment count
+                function updateAttachmentCountIndicator() {
+                    const counter = document.getElementById('attachmentCounter');
+                    if (counter) {
+                        const count = aggregatedScreenshotFiles.length;
+                        if (count > 0) {
+                            counter.textContent = `${count} file(s) selected`;
+                            counter.style.display = 'block';
+                        } else {
+                            counter.style.display = 'none';
+                        }
+                    }
+                }
+
                 // Initialize the original label text when DOM is loaded
                 const screenshotsLabel = document.querySelector('label[for="screenshots"]');
                 if (screenshotsLabel) {
@@ -1146,22 +1229,26 @@
                 });
 
                 function fillFormWithDemoData() {
-                    document.getElementById('application').value = 'Bookshelves App';
-                    document.getElementById('specificIssue').value = 'Missing School Folder';
-                    document.getElementById('issueSummary').value = 'Books not appearing in school folder';
-                    document.getElementById('reportedIssue').value = 'User reports that when they log in to the Bookshelves app, the school folder is empty even though content should be visible.';
-                    document.getElementById('userInfo').value = 'Jane Smith, jsmith@example.edu, Teacher';
-                    document.getElementById('productImpacted').value = 'Math Workbook 5';
-                    document.getElementById('xcodeInfo').value = 'XC12345';
+                    document.getElementById('xcode').value = 'X56723';
+                    document.getElementById('application').value = 'BAdvance -c2022';
+                    document.getElementById('resourcePath').value = 'TRS: G5>U1>TRS>W2>L12';
+                    document.getElementById('specificIssue').value = 'Title Missing';
+                    document.getElementById('issueSummary').value = 'The title is missing from the TRS resource';
+                    document.getElementById('isVIP').value = 'No';
+                    document.getElementById('username').value = 'jsmith';
+                    document.getElementById('userEmail').value = 'jsmith@school.edu';
+                    document.getElementById('userRole').value = 'Teacher';
+                    document.getElementById('productImpacted').value = 'Benchmark Advance - c2022';
+                    document.getElementById('xcodeInfo').value = 'X56723';
                     document.getElementById('districtState').value = 'Florida';
                     document.getElementById('impactType').selectedIndex = 1;
                     const today = new Date().toISOString().split('T')[0];
                     document.getElementById('dateReported').value = today;
-                    document.getElementById('impactScope').selectedIndex = 3;
-                    document.getElementById('components').value = 'Login, Content Display, School Folder';
-                    document.getElementById('stepsToReproduce').value = '1. Log in to Bookshelves app\n2. Navigate to School folder\n3. Observe that the folder appears empty';
-                    document.getElementById('actualResults').value = 'School folder shows no content even though books have been assigned';
-                    document.getElementById('expectedResults').value = 'School folder should display all books assigned to the user';
+                    document.getElementById('impactScope').selectedIndex = 1;
+                    document.getElementById('components').value = 'TRS, Reading Materials';
+                    document.getElementById('pathField').value = 'Login > Resources > Grade 5 > Unit 1 > Week 2 > Lesson 12';
+                    document.getElementById('actualResults').value = 'The TRS title is missing completely from the lesson page';
+                    document.getElementById('expectedResults').value = 'TRS title should be visible at the top of the lesson page';
                     document.getElementById('relatedTickets').value = '1234, 5678';
                     document.getElementById('priority').selectedIndex = 1;
                     document.getElementById('status').selectedIndex = 0;
@@ -1172,18 +1259,16 @@
                 }
 
                 // Initialize Quill editors for rich text fields
-                const quillReported = new Quill("#reportedIssueEditor", { theme: "snow", placeholder: "Enter the reported issue..." });
                 const quillSummary = new Quill("#issueSummaryEditor", { theme: "snow", placeholder: "Enter the summary..." });
-                const quillSteps = new Quill("#stepsToReproduceEditor", { theme: "snow", placeholder: "Enter steps to reproduce..." });
+                const quillComponents = new Quill("#componentsEditor", { theme: "snow", placeholder: "Enter program components..." });
                 const quillActual = new Quill("#actualResultsEditor", { theme: "snow", placeholder: "Enter actual results..." });
                 const quillExpected = new Quill("#expectedResultsEditor", { theme: "snow", placeholder: "Enter expected results..." });
 
                 // Before form submission, copy Quill HTML into hidden textareas
                 document.getElementById('trackerForm').addEventListener('submit', async function (e) {
                     // Update hidden textareas with editor content
-                    document.getElementById('reportedIssue').value = quillReported.root.innerHTML;
                     document.getElementById('issueSummary').value = quillSummary.root.innerHTML;
-                    document.getElementById('stepsToReproduce').value = quillSteps.root.innerHTML;
+                    document.getElementById('components').value = quillComponents.root.innerHTML;
                     document.getElementById('actualResults').value = quillActual.root.innerHTML;
                     document.getElementById('expectedResults').value = quillExpected.root.innerHTML;
                     // Form submission continues with the normal flow
@@ -1229,14 +1314,11 @@
                 }
 
                 // Attach paste listener on each Quill editor so pasted images are uploaded automatically
-                quillReported.root.addEventListener('paste', function (e) {
-                    handlePasteImage(e, quillReported);
-                });
                 quillSummary.root.addEventListener('paste', function (e) {
                     handlePasteImage(e, quillSummary);
                 });
-                quillSteps.root.addEventListener('paste', function (e) {
-                    handlePasteImage(e, quillSteps);
+                quillComponents.root.addEventListener('paste', function (e) {
+                    handlePasteImage(e, quillComponents);
                 });
                 quillActual.root.addEventListener('paste', function (e) {
                     handlePasteImage(e, quillActual);
@@ -1457,7 +1539,7 @@
                     // Create label
                     const label = document.createElement('label');
                     label.setAttribute('for', 'productImpacted');
-                    label.textContent = 'Product/Program Impacted:';
+                    label.textContent = 'Application/Program Impacted:';
                     productContainer.appendChild(label);
 
                     // Create main product select

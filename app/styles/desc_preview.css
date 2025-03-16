@@ -1,0 +1,176 @@
+/* Modern styling for the description preview window */
+.description-preview-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    /* Centers horizontally */
+    align-items: center;
+    /* Centers vertically */
+    z-index: 1000;
+}
+
+.description-preview-content {
+    width: 90%;
+    max-width: 1200px;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.3s ease-out;
+    /* These two lines ensure it's centered even if not taking full modal space */
+    margin: 0 auto;
+    position: relative;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.description-preview-content h3 {
+    margin: 0;
+    padding: 20px;
+    background: #1976d2;
+    color: white;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.description-preview-text {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(90vh - 130px);
+    /* Adjusted to match the max-height above */
+}
+
+.description-preview-modal .form-actions {
+    padding: 15px 20px;
+    background: #f5f5f7;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Modern styling for the description content itself */
+.tracker-description {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+.tracker-description h3 {
+    margin: 24px 0 12px;
+    padding-bottom: 8px;
+    color: #1976d2;
+    font-weight: 600;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.tracker-description h3:first-child {
+    margin-top: 0;
+}
+
+.tracker-description h4 {
+    margin: 18px 0 8px;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.tracker-description table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.tracker-description table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.tracker-description table tr:last-child td {
+    border-bottom: none;
+}
+
+.tracker-description table td:first-child {
+    width: 35%;
+    background-color: #f8f9fa;
+    font-weight: 500;
+    color: #546e7a;
+}
+
+.tracker-description p {
+    margin: 12px 0;
+    line-height: 1.6;
+}
+
+.tracker-description ul,
+.tracker-description ol {
+    margin: 12px 0;
+    padding-left: 24px;
+}
+
+.tracker-description li {
+    margin-bottom: 8px;
+}
+
+.tracker-description strong {
+    font-weight: 600;
+    color: #37474f;
+}
+
+.tracker-description .step-number {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background: #1976d2;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    margin-right: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.tracker-description .actual-results {
+    background-color: #fff8e1;
+    border-left: 4px solid #ffc107;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.tracker-description .expected-results {
+    background-color: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.tracker-description img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 16px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+

@@ -1,0 +1,142 @@
+.template-selector-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.selector-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.selector-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 24px;
+}
+
+.selector-header p {
+    color: #666;
+    margin-top: 8px;
+}
+
+.template-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.template-group {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f7fa;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.group-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 16px;
+}
+
+.template-count {
+    background-color: #e0e0e0;
+    color: #555;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.templates-list {
+    padding: 10px 15px;
+}
+
+.template-item {
+    display: flex;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #f9f9f9;
+}
+
+.template-item:last-child {
+    margin-bottom: 0;
+}
+
+.template-item:hover {
+    background-color: #f0f7ff;
+    border-color: #c0d9ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.template-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border-radius: 24px;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.template-icon i {
+    font-size: 20px;
+}
+
+.template-details {
+    flex-grow: 1;
+}
+
+.template-details h4 {
+    margin: 0 0 5px 0;
+    color: #333;
+    font-size: 14px;
+}
+
+.template-details p {
+    margin: 0;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.placeholder-note {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 8px;
+    background-color: #fff3cd;
+    color: #856404;
+    border-radius: 3px;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .template-item {
+        flex-direction: column;
+    }
+
+    .template-icon {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
