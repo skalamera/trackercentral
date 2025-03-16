@@ -32,22 +32,36 @@
             <div class="form-group">
                 <h3>Subject</h3>
                 <input type="text" id="subject" name="subject" required>
-                <div class="hint">Auto-generated based on ticket details and application</div>
+                <div class="hint">Format: XCODE | Application - Specific Issue: Grades Impacted</div>
             </div>
 
-            <!-- New application field that will be used for subject generation -->
+            <!-- Xcode field - moved up for subject generation -->
             <div class="form-group">
-                <label for="application">Application*:</label>
-                <input type="text" id="application" name="application" required placeholder="e.g. Bookshelves">
+                <label for="xcodeInfo">Xcode*:</label>
+                <input type="text" id="xcodeInfo" name="xcodeInfo" required placeholder="e.g. X56723">
+                <div class="hint">Enter Xcode (indicate if more than one)</div>
+            </div>
+
+            <!-- Application field for subject generation -->
+            <div class="form-group">
+                <label for="application">Application Name*:</label>
+                <input type="text" id="application" name="application" required placeholder="e.g. BAdvance c2022">
                 <div class="hint">The application or system related to this issue</div>
             </div>
 
-            <!-- Specific issue field that will be used for subject generation -->
+            <!-- Specific issue field for subject generation -->
             <div class="form-group">
                 <label for="specificIssue">Specific Issue*:</label>
                 <input type="text" id="specificIssue" name="specificIssue" required
-                    placeholder="e.g. School Customization Folder Missing">
+                    placeholder="e.g. Symbols Of Our Country Missing">
                 <div class="hint">Brief description of the specific issue</div>
+            </div>
+
+            <!-- Grades Impacted field - new field -->
+            <div class="form-group">
+                <label for="gradesImpacted">Grades Impacted*:</label>
+                <input type="text" id="gradesImpacted" name="gradesImpacted" required placeholder="e.g. Grade 2">
+                <div class="hint">Enter the grade levels affected</div>
             </div>
 
             <!-- Summary field -->
@@ -64,88 +78,74 @@
                 <div class="hint">These fields will be used to generate the description</div>
             </div>
 
-
-
             <!-- Description details fields -->
             <div class="form-group">
-                <label for="reportedIssueEditor">Reported Issue*:</label>
+                <label for="reportedIssueEditor">Issue*:</label>
                 <div id="reportedIssueEditor" style="height: 150px; background-color: white;"></div>
                 <textarea id="reportedIssue" name="reportedIssue" style="display: none;"></textarea>
+                <div class="hint">Detailed description of the issue</div>
             </div>
 
             <div class="form-group">
-                <label for="userInfo">User Name and Email/Role:</label>
-                <input type="text" id="userInfo" name="userInfo" placeholder="e.g. John Doe, john@school.edu, Teacher">
+                <label for="districtName">District Name*:</label>
+                <input type="text" id="districtName" name="districtName" required
+                    placeholder="e.g. Springfield School District">
+                <div class="hint">Name of the district reporting the issue</div>
+            </div>
+
+            <div class="form-group">
+                <label for="schoolName">School Name:</label>
+                <input type="text" id="schoolName" name="schoolName" placeholder="e.g. Springfield Elementary">
+                <div class="hint">Name of the specific school (if applicable)</div>
+            </div>
+
+            <div class="form-group">
+                <label for="districtState">District State*:</label>
+                <input type="text" id="districtState" name="districtState" required placeholder="e.g. California">
+                <div class="hint">State where the district is located</div>
             </div>
 
             <!-- Replace Product/Program Impacted field with a dropdown -->
             <div class="form-group">
-                <label for="productImpacted">Product/Program Impacted:</label>
-                <select id="productImpacted" name="productImpacted">
+                <label for="productImpacted">Program/Product Impacted*:</label>
+                <select id="productImpacted" name="productImpacted" required>
                     <!-- Options will be loaded from the custom field cf_product_type -->
                 </select>
                 <div class="hint">Select the product type</div>
             </div>
 
             <div class="form-group">
-                <label for="xcodeInfo">Xcode:</label>
-                <input type="text" id="xcodeInfo" name="xcodeInfo">
+                <label for="dateReported">Date issue reported by user*:</label>
+                <input type="date" id="dateReported" name="dateReported" required>
+                <div class="hint">When the user reported this issue</div>
             </div>
 
             <div class="form-group">
-                <label for="districtState">District State:</label>
-                <input type="text" id="districtState" name="districtState">
+                <label for="subscriptionCodes">Subscription codes customer is onboarded with:</label>
+                <input type="text" id="subscriptionCodes" name="subscriptionCodes" placeholder="e.g. ABC123, XYZ456">
+                <div class="hint">Comma-separated list of subscription codes</div>
             </div>
 
             <div class="form-group">
-                <label for="impactType">Digital Only or Print Impacted as Well:</label>
-                <select id="impactType" name="impactType">
-                    <option value="">-- Select --</option>
-                    <option value="Digital Only">Digital Only</option>
-                    <option value="Print Only">Print Only</option>
-                    <option value="Both Digital and Print">Both Digital and Print</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="dateReported">Date issue reported by user:</label>
-                <input type="date" id="dateReported" name="dateReported">
-            </div>
-
-            <div class="form-group">
-                <label for="impactScope">Teacher vs Student impact:</label>
-                <select id="impactScope" name="impactScope">
+                <label for="impactScope">Teacher vs Student impact*:</label>
+                <select id="impactScope" name="impactScope" required>
                     <option value="">-- Select --</option>
                     <option value="Teacher Only">Teacher Only</option>
                     <option value="Student Only">Student Only</option>
                     <option value="Both Teacher and Student">Both Teacher and Student</option>
                     <option value="Unknown">Unknown</option>
                 </select>
+                <div class="hint">Who is affected by this issue</div>
             </div>
 
+            <!-- New VIP Field -->
             <div class="form-group">
-                <label for="components">Components:</label>
-                <input type="text" id="components" name="components"
-                    placeholder="e.g. Assessment, Assignments, ePlanner">
-                <div class="hint">Specific application or component affected</div>
-            </div>
-
-            <div class="form-group">
-                <label for="stepsToReproduceEditor">Steps To Reproduce:</label>
-                <div id="stepsToReproduceEditor" style="height: 100px; background-color: white;"></div>
-                <textarea id="stepsToReproduce" name="stepsToReproduce" style="display: none;"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="actualResultsEditor">Actual Results:</label>
-                <div id="actualResultsEditor" style="height: 100px; background-color: white;"></div>
-                <textarea id="actualResults" name="actualResults" style="display: none;"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="expectedResultsEditor">Expected Results:</label>
-                <div id="expectedResultsEditor" style="height: 100px; background-color: white;"></div>
-                <textarea id="expectedResults" name="expectedResults" style="display: none;"></textarea>
+                <label for="vipStatus">VIP Customer*:</label>
+                <select id="vipStatus" name="vipStatus" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+                <div class="hint">Is this a VIP customer?</div>
             </div>
 
             <!-- Preview button for description -->
@@ -195,7 +195,7 @@
                 </select>
             </div>
 
-            <!-- New Group field -->
+            <!-- Group field -->
             <div class="form-group">
                 <label for="groupField">Group:</label>
                 <select id="groupField" name="groupField">
@@ -205,7 +205,7 @@
                 <div class="hint">Select a support group</div>
             </div>
 
-            <!-- New Agent field (dependent on Group) -->
+            <!-- Agent field (dependent on Group) -->
             <div class="form-group">
                 <label for="agentField">Agent:</label>
                 <select id="agentField" name="agentField">
@@ -219,6 +219,7 @@
                 <fw-button id="cancelTracker" color="secondary">Cancel</fw-button>
                 <fw-button id="createTracker" color="primary" type="submit">Create Tracker</fw-button>
             </div>
+
             <!-- Description preview modal -->
             <div id="descriptionPreviewModal" class="description-preview-modal" style="display: none;">
                 <div class="description-preview-content">
@@ -229,8 +230,8 @@
                     </div>
                 </div>
             </div>
-            </form>
-            </div>
+        </form>
+    </div>
 
     <!-- Screenshot upload field -->
     <div class="form-group">
@@ -344,19 +345,60 @@
                     }
                 }
 
+                // Function to get source ticket details and populate fields
+                async function getSourceTicketDetails(ticketId) {
+                    try {
+                        console.log("Fetching source ticket details for ticket ID:", ticketId);
+                        const ticketResponse = await client.request.invokeTemplate("getTicketDetails", {
+                            context: { ticketId: ticketId }
+                        });
+                        const ticketData = JSON.parse(ticketResponse.response);
+                        console.log("Source ticket data:", ticketData);
+
+                        // Check for custom fields
+                        if (ticketData.custom_fields) {
+                            console.log("Custom fields found:", ticketData.custom_fields);
+
+                            // Populate District Name if present
+                            if (ticketData.custom_fields.cf_district509811) {
+                                const districtName = ticketData.custom_fields.cf_district509811;
+                                console.log("Found district name:", districtName);
+                                document.getElementById("districtName").value = districtName;
+                            }
+
+                            // Populate VIP status if available
+                            if (ticketData.custom_fields.cf_vip !== undefined) {
+                                const isVip = ticketData.custom_fields.cf_vip;
+                                console.log("Found VIP status:", isVip);
+                                document.getElementById("vipStatus").value = isVip ? "Yes" : "No";
+                                // Store VIP status for later use (e.g., in description generation)
+                                ticketData.isVip = isVip;
+                            }
+                        }
+
+                        return ticketData;
+                    } catch (error) {
+                        console.error("Error getting source ticket details:", error);
+                        return null;
+                    }
+                }
+
                 client.instance.context().then(async function (context) {
                     console.log("Modal context:", context);
                     if (context && context.data) {
                         ticketData = {
                             isVip: context.data.isVip || false,
-                            districtName: context.data.districtName || '',
+                            districtName: context.data.districtName || "",
                             currentTicketId: context.data.currentTicketId || null,
-                            requesterEmail: context.data.requesterEmail || '',
-                            ticketRequesterEmail: context.data.ticketRequesterEmail || ''
+                            requesterEmail: context.data.requesterEmail || "",
+                            ticketRequesterEmail: context.data.ticketRequesterEmail || ""
                         };
                         console.log("Received ticket data:", ticketData);
                         if (ticketData.currentTicketId) {
-                            document.getElementById('relatedTickets').value = ticketData.currentTicketId;
+                            // Auto-populate related ticket IDs
+                            document.getElementById("relatedTickets").value = ticketData.currentTicketId;
+                            // Call the getSourceTicketDetails function to auto-populate District Name and VIP status
+                            await getSourceTicketDetails(ticketData.currentTicketId);
                             const assignedAgentEmail = await getAssignedAgentEmail(ticketData.currentTicketId);
                             if (!assignedAgentEmail) {
                                 await getLoggedInUserEmail();
@@ -364,19 +406,17 @@
                         } else {
                             await getLoggedInUserEmail();
                         }
-                        const today = new Date().toISOString().split('T')[0];
-                        document.getElementById('dateReported').value = today;
+                        const today = new Date().toISOString().split("T")[0];
+                        document.getElementById("dateReported").value = today;
                     } else {
                         console.log("No context data, fetching agent email directly");
                         await getLoggedInUserEmail();
-                        const today = new Date().toISOString().split('T')[0];
-                        document.getElementById('dateReported').value = today;
+                        const today = new Date().toISOString().split("T")[0];
+                        document.getElementById("dateReported").value = today;
                     }
                     setupSubjectGeneration();
-                }).catch(async function (error) {
-                    console.error("Error getting modal context:", error);
-                    await getLoggedInUserEmail();
-                    setupSubjectGeneration();
+                }).catch(function (error) {
+                    console.error("Error retrieving context:", error);
                 });
 
                 if (!document.getElementById('email').value) {
@@ -386,54 +426,91 @@
                 }
 
                 function setupSubjectGeneration() {
+                    const xcodeField = document.getElementById('xcodeInfo');
                     const applicationField = document.getElementById('application');
                     const specificIssueField = document.getElementById('specificIssue');
+                    const gradesImpactedField = document.getElementById('gradesImpacted');
+                    xcodeField.addEventListener('input', generateSubject);
                     applicationField.addEventListener('input', generateSubject);
                     specificIssueField.addEventListener('input', generateSubject);
+                    gradesImpactedField.addEventListener('input', generateSubject);
                     generateSubject();
                 }
 
+                // UPDATED: Modified subject generation function to match new format
                 function generateSubject() {
+                    const xcode = document.getElementById('xcodeInfo').value.trim();
                     const application = document.getElementById('application').value.trim();
                     const specificIssue = document.getElementById('specificIssue').value.trim();
+                    const gradesImpacted = document.getElementById('gradesImpacted').value.trim();
+
                     let subject = '';
-                    if (ticketData.isVip) {
-                        subject = 'VIP* ';
+
+                    // Add Xcode
+                    if (xcode) {
+                        subject += xcode;
                     }
-                    if (ticketData.districtName) {
-                        subject += ticketData.districtName;
-                    }
+
+                    // Add Application
                     if (application) {
                         subject += ' | ' + application;
-                        if (specificIssue) {
-                            subject += '- ' + specificIssue;
-                        }
                     }
+
+                    // Add Specific Issue
+                    if (specificIssue) {
+                        subject += ' | ' + specificIssue;
+                    }
+
+                    // Add Grades Impacted
+                    if (gradesImpacted) {
+                        subject += ' : ' + gradesImpacted;
+                    }
+
                     document.getElementById('subject').value = subject;
                 }
 
+                // Function to update attachment count indicator
+                function updateAttachmentCountIndicator() {
+                    const attachmentCounter = document.getElementById('attachmentCounter');
+                    if (!attachmentCounter) return;
+
+                    if (aggregatedScreenshotFiles.length === 0) {
+                        attachmentCounter.textContent = '';
+                        attachmentCounter.style.display = 'none';
+
+                        // Restore the original label text
+                        const screenshotsLabel = document.querySelector('label[for="screenshots"]');
+                        if (screenshotsLabel && screenshotsLabel.getAttribute('data-original-text')) {
+                            screenshotsLabel.textContent = screenshotsLabel.getAttribute('data-original-text');
+                        }
+                    } else {
+                        // Update the counter
+                        const fileCount = aggregatedScreenshotFiles.length;
+                        attachmentCounter.textContent = fileCount > 0 ? `${fileCount} file${fileCount !== 1 ? 's' : ''} selected` : '';
+                        attachmentCounter.style.display = fileCount > 0 ? 'block' : 'none';
+
+                        // Update the label to show the count
+                        const screenshotsLabel = document.querySelector('label[for="screenshots"]');
+                        if (screenshotsLabel) {
+                            screenshotsLabel.textContent = `Attachments (${fileCount}):`;
+                        }
+                    }
+                }
+
+                // UPDATED: Modified description generation function to match new format and removed fields
                 function generateDescription() {
                     const subject = document.getElementById('subject').value.trim();
                     const issueSummary = document.getElementById('issueSummary').value.trim();
                     const reportedIssue = document.getElementById('reportedIssue').value.trim();
-
-                    // User info from userInfo field instead of separate fields
-                    const userInfo = document.getElementById('userInfo').value.trim();
-
-                    // Get the full product value from the dataset if available, otherwise fall back to the select value
+                    const districtName = document.getElementById('districtName').value.trim();
+                    const schoolName = document.getElementById('schoolName').value.trim();
+                    const districtState = document.getElementById('districtState').value.trim();
                     const productImpacted = document.getElementById('productImpacted').dataset.fullValue ||
                         document.getElementById('productImpacted').value || '';
-
-                    // Other fields
-                    const xcodeInfo = document.getElementById('xcodeInfo').value.trim();
-                    const districtState = document.getElementById('districtState').value.trim();
-                    const impactType = document.getElementById('impactType').value;
                     const dateReported = document.getElementById('dateReported').value;
+                    const subscriptionCodes = document.getElementById('subscriptionCodes').value.trim();
                     const impactScope = document.getElementById('impactScope').value;
-                    const components = document.getElementById('components').value.trim();
-                    const stepsToReproduce = document.getElementById('stepsToReproduce').value.trim();
-                    const actualResults = document.getElementById('actualResults').value.trim();
-                    const expectedResults = document.getElementById('expectedResults').value.trim();
+                    const vipStatus = document.getElementById('vipStatus').value === "Yes";
 
                     let formattedDate = '';
                     if (dateReported) {
@@ -443,98 +520,62 @@
                         });
                     }
 
-                    // Main container with border and box shadow for a professional scorecard appearance
+                    // Main container with border and box shadow for a professional appearance
                     let description = '<div style="font-family: \'Segoe UI\', Arial, sans-serif; line-height: 1.5; border: 2px solid #d1d1d1; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden; margin: 10px 0;">';
 
                     // Title banner with "Assembly" at the top
-                    description += '<div style="background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%); color: white; padding: 15px 20px; font-size: 20px; font-weight: bold; letter-spacing: 0.5px; border-bottom: 2px solid #0d47a1;">Assembly Issue Tracker</div>';
+                    description += '<div style="background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%); color: white; padding: 15px 20px; font-size: 20px; font-weight: bold; letter-spacing: 0.5px; border-bottom: 2px solid #0d47a1;">Assembly Issue Tracker';
 
-                    // Summary section with enhanced styling
-                    description += '<div style="border-bottom: 2px solid #e0e0e0; padding: 20px; background-color: #f9f9f9;">';
-                    description += '<div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 16px; border-left: 4px solid #1976d2; padding-left: 10px;">Summary</div>';
+                    // Add VIP badge if applicable
+                    if (vipStatus) {
+                        description += ' <span style="background-color: #d32f2f; color: white; padding: 4px 8px; border-radius: 4px; font-size: 16px; margin-left: 10px;">VIP</span>';
+                    }
+
+                    description += '</div>';
+
+                    // Summary section
                     if (issueSummary) {
+                        description += '<div style="border-bottom: 2px solid #e0e0e0; padding: 20px; background-color: #f9f9f9;">';
+                        description += '<div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 16px; border-left: 4px solid #1976d2; padding-left: 10px;">SUMMARY</div>';
                         description += `<div style="margin-bottom: 5px; padding: 10px; background-color: white; border-radius: 4px; border: 1px solid #e0e0e0;">${issueSummary}</div>`;
-                    } else {
-                        description += `<div style="margin-bottom: 5px; padding: 10px; background-color: white; border-radius: 4px; border: 1px solid #e0e0e0;">${subject}</div>`;
+                        description += '</div>';
                     }
-                    description += '</div>';
 
-                    // Reported Issue section with enhanced styling
-                    description += '<div style="border-bottom: 2px solid #e0e0e0; padding: 20px; background-color: white;">';
-                    description += '<div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 16px; border-left: 4px solid #ff9800; padding-left: 10px;">Reported Issue</div>';
+                    // Description section header
+                    description += '<div style="padding: 20px; background-color: #f9f9f9;">';
+                    description += '<div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 16px; border-left: 4px solid #4caf50; padding-left: 10px;">DESCRIPTION</div>';
 
-                    if (reportedIssue) {
-                        description += `<div style="margin-bottom: 5px; padding: 10px; background-color: #fff9e6; border-radius: 4px; border: 1px solid #ffe0b2;">${reportedIssue}</div>`;
-                    }
-                    description += '</div>';
-
-                    // Issue Details section with enhanced styling
-                    description += '<div style="border-bottom: 2px solid #e0e0e0; padding: 20px; background-color: #f9f9f9;">';
-                    description += '<div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 16px; border-left: 4px solid #4caf50; padding-left: 10px;">Issue Details</div>';
-
-                    // Table with enhanced styling
+                    // Table with description items
                     description += '<div style="display: table; width: 100%; border-collapse: separate; border-spacing: 0 8px;">';
 
-                    // Function to create a table row with enhanced styling
+                    // Function to create a table row
                     const addRow = (label, value, isVip = false) => {
                         if (!value && !isVip) return '';
                         const vipStyle = isVip ? 'color: #d32f2f; font-weight: bold;' : '';
                         return `
-            <div style="display: table-row;">
-                <div style="display: table-cell; width: 35%; padding: 10px; vertical-align: top; font-weight: bold; background-color: #eef2f6; border-radius: 4px 0 0 4px; border: 1px solid #d1d1d1; border-right: none;">${label}:</div>
-                <div style="display: table-cell; padding: 10px; vertical-align: top; background-color: white; border-radius: 0 4px 4px 0; border: 1px solid #d1d1d1; border-left: none; ${vipStyle}">${value || 'No'}</div>
-            </div>
-        `;
+                            <div style="display: table-row;">
+                                <div style="display: table-cell; width: 35%; padding: 10px; vertical-align: top; font-weight: bold; background-color: #eef2f6; border-radius: 4px 0 0 4px; border: 1px solid #d1d1d1; border-right: none;">${label}:</div>
+                                <div style="display: table-cell; padding: 10px; vertical-align: top; background-color: white; border-radius: 0 4px 4px 0; border: 1px solid #d1d1d1; border-left: none; ${vipStyle}">${value || 'No'}</div>
+                            </div>
+                        `;
                     };
 
-                    // Add all the rows with enhanced styling
-                    if (userInfo) description += addRow('User Name and Email/Role', userInfo);
-                    description += addRow('Product/Program Impacted', productImpacted);
-                    description += addRow('Xcode', xcodeInfo);
+                    // Add all required rows in the requested order
+                    if (reportedIssue) description += addRow('Issue', reportedIssue);
+                    description += addRow('District Name', districtName);
+                    description += addRow('School Name', schoolName);
                     description += addRow('District State', districtState);
-                    description += addRow('Digital/Print Impact', impactType);
-                    description += addRow('Date Reported', formattedDate);
-                    description += addRow('Teacher/Student Impact', impactScope);
+                    description += addRow('Program/Product Impacted', productImpacted);
+                    description += addRow('Date issue reported by user', formattedDate);
+                    description += addRow('Subscription codes customer is onboarded with', subscriptionCodes);
+                    description += addRow('Teacher vs Student impact', impactScope);
+                    description += addRow('VIP Customer', vipStatus ? 'Yes' : 'No', true);
 
-                    // Make VIP field red as requested
-                    description += addRow('VIP Customer', ticketData.isVip ? 'Yes' : 'No', true);
+                    // Close the table
+                    description += '</div>';
 
-                    description += '</div>'; // Close table
-                    description += '</div>'; // Close Issue Details section
-
-                    // Components section with enhanced styling
-                    if (components) {
-                        description += '<div style="border-bottom: 2px solid #e0e0e0; padding: 20px; background-color: white;">';
-                        description += '<div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 16px; border-left: 4px solid #9c27b0; padding-left: 10px;">Components</div>';
-                        description += `<div style="margin-bottom: 5px; padding: 10px; background-color: #f3e5f5; border-radius: 4px; border: 1px solid #e1bee7;">${components}</div>`;
-                        description += '</div>';
-                    }
-
-                    // Steps To Reproduce section with enhanced styling
-                    if (stepsToReproduce) {
-                        description += '<div style="border-bottom: 2px solid #e0e0e0; padding: 20px; background-color: #f9f9f9;">';
-                        description += '<div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 16px; border-left: 4px solid #2196f3; padding-left: 10px;">Steps To Reproduce</div>';
-                        description += `<div style="margin-bottom: 5px; padding: 10px; background-color: white; border-radius: 4px; border: 1px solid #bbdefb;">${stepsToReproduce}</div>`;
-                        description += '</div>'; // Close Steps section
-                    }
-
-                    // Actual Results with enhanced styling
-                    if (actualResults) {
-                        description += '<div style="border-bottom: 2px solid #e0e0e0; padding: 20px; background-color: white;">';
-                        description += '<div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 16px; border-left: 4px solid #ff9800; padding-left: 10px;">Actual Results</div>';
-                        description += `<div style="background-color: #fff8e1; padding: 15px; border-radius: 4px; border: 1px solid #ffe082;">${actualResults}</div>`;
-                        description += '</div>';
-                    }
-
-                    // Expected Results with enhanced styling
-                    if (expectedResults) {
-                        description += '<div style="padding: 20px; background-color: #f9f9f9;">';
-                        description += '<div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 16px; border-left: 4px solid #4caf50; padding-left: 10px;">Expected Results</div>';
-                        description += `<div style="background-color: #e8f5e9; padding: 15px; border-radius: 4px; border: 1px solid #c8e6c9;">${expectedResults}</div>`;
-                        description += '</div>';
-                    }
-
-                    // Close the main container
+                    // Close the description section and main container
+                    description += '</div>';
                     description += '</div>';
 
                     return description;
@@ -570,32 +611,39 @@
                 async function generateDescriptionWithScreenshots() {
                     const baseDescription = generateDescription();
                     const screenshotUrls = await getScreenshotUrls();
-                    let enhancedDescription = baseDescription;
-                    if (screenshotUrls.length > 0) {
-                        const imgTags = screenshotUrls.map(url => `<img src="${url}" alt="Screenshot" style="max-width:100%;display:block;margin:10px 0;">`).join("");
-                        // For each designated section, append the image tags after the primary content.
-                        enhancedDescription = enhancedDescription.replace(
-                            /(<h3[^>]*>\s*Reported Issue\s*<\/h3>[\s\S]*?<p[^>]*>.*?<\/p>)/i,
-                            "$1" + imgTags
-                        );
-                        enhancedDescription = enhancedDescription.replace(
-                            /(<h3[^>]*>\s*Summary\s*<\/h3>[\s\S]*?<p[^>]*>.*?<\/p>)/i,
-                            "$1" + imgTags
-                        );
-                        enhancedDescription = enhancedDescription.replace(
-                            /(<h3[^>]*>\s*Steps To Reproduce\s*<\/h3>[\s\S]*?(<div|<p)[^>]*>.*?(<\/div>|<\/p>))/i,
-                            "$1" + imgTags
-                        );
-                        enhancedDescription = enhancedDescription.replace(
-                            /(<h4[^>]*>\s*Actual Results\s*<\/h4>[\s\S]*?(<div|<p)[^>]*>.*?(<\/div>|<\/p>))/i,
-                            "$1" + imgTags
-                        );
-                        enhancedDescription = enhancedDescription.replace(
-                            /(<h4[^>]*>\s*Expected Results\s*<\/h4>[\s\S]*?(<div|<p)[^>]*>.*?(<\/div>|<\/p>))/i,
-                            "$1" + imgTags
-                        );
+
+                    if (screenshotUrls.length === 0) {
+                        return baseDescription; // No screenshots to add
                     }
-                    return enhancedDescription;
+
+                    // Create a temporary DOM element to parse the HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = baseDescription;
+
+                    // Create the image HTML
+                    const imgTags = screenshotUrls.map(url =>
+                        `<img src="${url}" alt="Screenshot" style="max-width:100%;display:block;margin:10px 0;">`
+                    ).join("");
+
+                    // Create an image container
+                    const imgContainer = document.createElement('div');
+                    imgContainer.innerHTML = imgTags;
+                    imgContainer.style.marginTop = '15px';
+                    imgContainer.style.marginBottom = '15px';
+                    imgContainer.style.padding = '10px';
+                    imgContainer.style.border = '1px dashed #ccc';
+                    imgContainer.style.borderRadius = '4px';
+                    imgContainer.style.backgroundColor = '#f9f9f9';
+
+                    // Find the reported issue section and append images
+                    const sections = tempDiv.querySelectorAll('div[style*="border-bottom"]');
+                    if (sections.length >= 2) { // Make sure we have at least the reported issue section
+                        // Insert after the first section (summary)
+                        const reportedIssueSection = sections[1]; // The second section is typically the reported issue
+                        reportedIssueSection.appendChild(imgContainer.cloneNode(true));
+                    }
+
+                    return tempDiv.innerHTML;
                 }
 
                 // Update previewDescription button event handler to use the new async function
@@ -811,407 +859,35 @@
 
                 let aggregatedScreenshotFiles = [];
 
-                /**
-                 * Enhanced file type detection for better previews
-                 */
-                function getFileTypeInfo(file) {
-                    // Extract file extension
-                    const fileName = file.name || '';
-                    const fileExtension = fileName.split('.').pop().toLowerCase();
-                    const mimeType = file.type || '';
-
-                    // Default file type info
-                    let iconClass = 'fa-file';
-                    let fileTypeLabel = 'File';
-                    let colorClass = '';
-
-                    // Common document types
-                    if (['doc', 'docx', 'odt', 'rtf'].includes(fileExtension) ||
-                        mimeType.includes('word') || mimeType.includes('opendocument.text')) {
-                        iconClass = 'fa-file-word';
-                        fileTypeLabel = 'Document';
-                        colorClass = 'word-color';
-                    }
-                    // Spreadsheet types
-                    else if (['xls', 'xlsx', 'xlsm', 'csv', 'ods'].includes(fileExtension) ||
-                        mimeType.includes('excel') || mimeType.includes('spreadsheet') ||
-                        mimeType.includes('csv')) {
-                        iconClass = 'fa-file-excel';
-                        fileTypeLabel = 'Spreadsheet';
-                        colorClass = 'excel-color';
-                    }
-                    // Presentation types
-                    else if (['ppt', 'pptx', 'odp'].includes(fileExtension) ||
-                        mimeType.includes('powerpoint') || mimeType.includes('presentation')) {
-                        iconClass = 'fa-file-powerpoint';
-                        fileTypeLabel = 'Presentation';
-                        colorClass = 'powerpoint-color';
-                    }
-                    // PDF files
-                    else if (fileExtension === 'pdf' || mimeType.includes('pdf')) {
-                        iconClass = 'fa-file-pdf';
-                        fileTypeLabel = 'PDF';
-                        colorClass = 'pdf-color';
-                    }
-                    // Archive files
-                    else if (['zip', 'rar', 'tar', 'gz', '7z'].includes(fileExtension) ||
-                        mimeType.includes('zip') || mimeType.includes('compressed')) {
-                        iconClass = 'fa-file-archive';
-                        fileTypeLabel = 'Archive';
-                        colorClass = 'archive-color';
-                    }
-                    // Plain text files
-                    else if (['txt', 'log', 'md'].includes(fileExtension) ||
-                        mimeType.includes('text/plain')) {
-                        iconClass = 'fa-file-alt';
-                        fileTypeLabel = 'Text';
-                        colorClass = 'text-color';
-                    }
-                    // Code files
-                    else if (['html', 'htm', 'xml', 'json', 'js', 'css', 'php', 'py', 'java', 'c', 'cpp'].includes(fileExtension) ||
-                        mimeType.includes('code') || mimeType.includes('javascript') || mimeType.includes('html')) {
-                        iconClass = 'fa-file-code';
-                        fileTypeLabel = 'Code';
-                        colorClass = 'code-color';
-                    }
-                    // Audio files
-                    else if (['mp3', 'wav', 'ogg', 'flac', 'm4a'].includes(fileExtension) ||
-                        mimeType.includes('audio')) {
-                        iconClass = 'fa-file-audio';
-                        fileTypeLabel = 'Audio';
-                        colorClass = 'audio-color';
-                    }
-                    // Video files
-                    else if (['mp4', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'webm'].includes(fileExtension) ||
-                        mimeType.includes('video')) {
-                        iconClass = 'fa-file-video';
-                        fileTypeLabel = 'Video';
-                        colorClass = 'video-color';
-                    }
-                    // HAR files (HTTP Archive)
-                    else if (fileExtension === 'har') {
-                        iconClass = 'fa-file-code';
-                        fileTypeLabel = 'HAR';
-                        colorClass = 'har-color';
-                    }
-
-                    // Image files are handled differently with actual thumbnails
-                    const isImage = file.type.match('image.*');
-
-                    // Get file size in appropriate units
-                    const fileSizeBytes = file.size;
-                    let fileSize = '';
-
-                    if (fileSizeBytes < 1024) {
-                        fileSize = fileSizeBytes + ' B';
-                    } else if (fileSizeBytes < 1024 * 1024) {
-                        fileSize = (fileSizeBytes / 1024).toFixed(1) + ' KB';
-                    } else {
-                        fileSize = (fileSizeBytes / (1024 * 1024)).toFixed(1) + ' MB';
-                    }
-
-                    return {
-                        iconClass,
-                        fileTypeLabel,
-                        colorClass,
-                        isImage,
-                        fileSize,
-                        fileSizeBytes,
-                        extension: fileExtension,
-                        mimeType
-                    };
-                }
-
-                /**
-                 * Function to create a file preview element
-                 */
-                function createFilePreviewElement(file, index) {
-                    const fileInfo = getFileTypeInfo(file);
-                    const previewDiv = document.createElement('div');
-                    previewDiv.className = 'file-thumbnail';
-                    previewDiv.dataset.fileIndex = index;
-
-                    if (fileInfo.isImage) {
-                        // For image files, create a thumbnail preview
-                        const reader = new FileReader();
-                        reader.onload = function (e) {
-                            previewDiv.innerHTML = `
-                                <div class="thumbnail-container">
-                                    <img src="${e.target.result}" title="${file.name}" alt="${file.name}"/>
-                                </div>
-                                <div class="file-filename" title="${file.name}">${file.name}</div>
-                                <div class="file-size">${fileInfo.fileSize}</div>
-                                <div class="file-remove" data-index="${index}">✕</div>`;
-
-                            // Add event listener to the remove button
-                            previewDiv.querySelector('.file-remove').addEventListener('click', function (e) {
-                                e.stopPropagation();
-                                const index = parseInt(this.dataset.index);
-                                removeFile(index);
-                            });
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        // For non-image files, show appropriate icon based on file type
-                        previewDiv.innerHTML = `
-                            <div class="thumbnail-container file-icon-container ${fileInfo.colorClass}">
-                                <i class="fas ${fileInfo.iconClass} file-icon"></i>
-                                <div class="file-type-label">${fileInfo.fileTypeLabel}</div>
-                            </div>
-                            <div class="file-filename" title="${file.name}">${file.name}</div>
-                            <div class="file-size">${fileInfo.fileSize}</div>
-                            <div class="file-remove" data-index="${index}">✕</div>`;
-
-                        // Add event listener to the remove button
-                        previewDiv.querySelector('.file-remove').addEventListener('click', function (e) {
-                            e.stopPropagation();
-                            const index = parseInt(this.dataset.index);
-                            removeFile(index);
-                        });
-                    }
-
-                    // Make the whole preview clickable to view file details
-                    previewDiv.addEventListener('click', function () {
-                        showFileDetails(file, index);
-                    });
-
-                    return previewDiv;
-                }
-
-                /**
-                 * Function to show file details when a preview is clicked
-                 */
-                function showFileDetails(file, index) {
-                    const fileInfo = getFileTypeInfo(file);
-                    const detailsHtml = `
-                        <div class="file-details-header">
-                            <h3>File Details</h3>
-                            <div class="file-details-close">✕</div>
-                        </div>
-                        <div class="file-details-content">
-                            <div class="file-details-icon">
-                                <i class="fas ${fileInfo.iconClass} file-icon-large"></i>
-                            </div>
-                            <div class="file-details-info">
-                                <p><strong>Name:</strong> ${file.name}</p>
-                                <p><strong>Type:</strong> ${file.type || 'Unknown'}</p>
-                                <p><strong>Size:</strong> ${fileInfo.fileSize}</p>
-                                <p><strong>Last Modified:</strong> ${new Date(file.lastModified).toLocaleString()}</p>
-                            </div>
-                        </div>
-                        <div class="file-details-actions">
-                            <button class="file-details-remove" data-index="${index}">Remove File</button>
-                        </div>
-                    `;
-
-                    // Create or update the details modal
-                    let detailsModal = document.getElementById('fileDetailsModal');
-                    if (!detailsModal) {
-                        detailsModal = document.createElement('div');
-                        detailsModal.id = 'fileDetailsModal';
-                        detailsModal.className = 'file-details-modal';
-                        document.body.appendChild(detailsModal);
-                    }
-
-                    detailsModal.innerHTML = detailsHtml;
-                    detailsModal.style.display = 'block';
-
-                    // Add event listeners
-                    detailsModal.querySelector('.file-details-close').addEventListener('click', function () {
-                        detailsModal.style.display = 'none';
-                    });
-
-                    detailsModal.querySelector('.file-details-remove').addEventListener('click', function () {
-                        const index = parseInt(this.dataset.index);
-                        removeFile(index);
-                        detailsModal.style.display = 'none';
-                    });
-                }
-
-                // Enhanced file preview functionality with attachment totals
-                document.getElementById('screenshots').addEventListener('change', function (e) {
-                    const previewContainer = document.getElementById('screenshotPreview');
-                    if (this.files.length > 0) {
-                        // Add new files to our aggregated collection
-                        for (let i = 0; i < this.files.length; i++) {
-                            aggregatedScreenshotFiles.push(this.files[i]);
-                        }
-
-                        // Clear the preview container first to show all files
-                        previewContainer.innerHTML = '';
-
-                        // Add attachments summary at the top
-                        updateAttachmentsSummary(previewContainer);
-
-                        // Preview up to 5 files to avoid overwhelming the UI
-                        const fileCount = Math.min(aggregatedScreenshotFiles.length, 5);
-                        for (let i = 0; i < fileCount; i++) {
-                            const filePreview = createFilePreviewElement(aggregatedScreenshotFiles[i], i);
-                            previewContainer.appendChild(filePreview);
-                        }
-
-                        // Show note if there are more files than we're showing
-                        if (aggregatedScreenshotFiles.length > 5) {
-                            const noteDiv = document.createElement('div');
-                            noteDiv.className = 'file-note';
-                            noteDiv.textContent = `Note: Only showing the first 5 files. All ${aggregatedScreenshotFiles.length} files will be uploaded.`;
-                            previewContainer.appendChild(noteDiv);
-                        }
-
-                        // Add a clear all button if there are files
-                        if (aggregatedScreenshotFiles.length > 0) {
-                            const clearAllDiv = document.createElement('div');
-                            clearAllDiv.className = 'clear-files';
-                            clearAllDiv.innerHTML = `<button type="button">Clear All Attachments (${aggregatedScreenshotFiles.length})</button>`;
-                            clearAllDiv.querySelector('button').addEventListener('click', function () {
-                                clearAllFiles();
-                            });
-                            previewContainer.appendChild(clearAllDiv);
-                        }
-
-                        // Update the attachment count indicator
-                        updateAttachmentCountIndicator();
-
-                        // Clear the file input so the same files can be selected again
-                        this.value = '';
-                    }
-                });
-
-                /**
-                 * Calculate and display attachment totals information
-                 */
-                function updateAttachmentsSummary(container) {
-                    if (!container) container = document.getElementById('screenshotPreview');
-
-                    // Calculate total size
-                    let totalSizeBytes = 0;
-                    let fileTypes = new Set();
-
-                    aggregatedScreenshotFiles.forEach(file => {
-                        totalSizeBytes += file.size;
-                        const extension = file.name.split('.').pop().toLowerCase();
-                        fileTypes.add(extension);
-                    });
-
-                    // Format size for display
-                    let formattedSize;
-                    if (totalSizeBytes < 1024) {
-                        formattedSize = totalSizeBytes + ' B';
-                    } else if (totalSizeBytes < 1024 * 1024) {
-                        formattedSize = (totalSizeBytes / 1024).toFixed(1) + ' KB';
-                    } else {
-                        formattedSize = (totalSizeBytes / (1024 * 1024)).toFixed(2) + ' MB';
-                    }
-
-                    // Create the summary element
-                    const summaryDiv = document.createElement('div');
-                    summaryDiv.className = 'attachments-summary';
-                    if (totalSizeBytes > 10 * 1024 * 1024) { // Mark as large if over 10MB
-                        summaryDiv.classList.add('large-size');
-                    }
-
-                    summaryDiv.innerHTML = `
-                        <div class="attachments-count">
-                            <strong>${aggregatedScreenshotFiles.length}</strong> file${aggregatedScreenshotFiles.length !== 1 ? 's' : ''} attached
-                            ${fileTypes.size > 1 ? `(${fileTypes.size} different types)` : ''}
-                        </div>
-                        <div class="attachments-size">Total: ${formattedSize}</div>
-                    `;
-
-                    // Insert at the beginning of the container
-                    if (container.firstChild) {
-                        container.insertBefore(summaryDiv, container.firstChild);
-                    } else {
-                        container.appendChild(summaryDiv);
-                    }
-
-                    return summaryDiv;
-                }
-
-                // Function to remove a file by index
-                function removeFile(index) {
-                    if (index >= 0 && index < aggregatedScreenshotFiles.length) {
-                        // Remove the file from our collection
-                        aggregatedScreenshotFiles.splice(index, 1);
-
-                        // Refresh the preview to reflect the change
-                        const previewContainer = document.getElementById('screenshotPreview');
-                        previewContainer.innerHTML = '';
-
-                        // Re-add the summary information
-                        if (aggregatedScreenshotFiles.length > 0) {
-                            updateAttachmentsSummary(previewContainer);
-                        }
-
-                        // Rebuild the preview display
-                        const fileCount = Math.min(aggregatedScreenshotFiles.length, 5);
-                        for (let i = 0; i < fileCount; i++) {
-                            const filePreview = createFilePreviewElement(aggregatedScreenshotFiles[i], i);
-                            previewContainer.appendChild(filePreview);
-                        }
-
-                        // Show note if there are more files than we're showing
-                        if (aggregatedScreenshotFiles.length > 5) {
-                            const noteDiv = document.createElement('div');
-                            noteDiv.className = 'file-note';
-                            noteDiv.textContent = `Note: Only showing the first 5 files. All ${aggregatedScreenshotFiles.length} files will be uploaded.`;
-                            previewContainer.appendChild(noteDiv);
-                        }
-
-                        // Add a clear all button if there are files
-                        if (aggregatedScreenshotFiles.length > 0) {
-                            const clearAllDiv = document.createElement('div');
-                            clearAllDiv.className = 'clear-files';
-                            clearAllDiv.innerHTML = `<button type="button">Clear All Attachments (${aggregatedScreenshotFiles.length})</button>`;
-                            clearAllDiv.querySelector('button').addEventListener('click', function () {
-                                clearAllFiles();
-                            });
-                            previewContainer.appendChild(clearAllDiv);
-                        }
-
-                        // Update the attachment count indicator
-                        updateAttachmentCountIndicator();
-                    }
-                }
-
-                // Function to clear all files
-                function clearAllFiles() {
-                    aggregatedScreenshotFiles = [];
-                    document.getElementById('screenshotPreview').innerHTML = '';
-                    updateAttachmentCountIndicator();
-                }
-
-                // Initialize the original label text when DOM is loaded
-                const screenshotsLabel = document.querySelector('label[for="screenshots"]');
-                if (screenshotsLabel) {
-                    screenshotsLabel.setAttribute('data-original-text', screenshotsLabel.textContent);
-                }
-
                 document.getElementById('debugFillForm').addEventListener('click', function (e) {
                     e.preventDefault();
                     fillFormWithDemoData();
                 });
 
+                // Updated demo data fill function
                 function fillFormWithDemoData() {
-                    document.getElementById('application').value = 'Bookshelves App';
-                    document.getElementById('specificIssue').value = 'Missing School Folder';
-                    document.getElementById('issueSummary').value = 'Books not appearing in school folder';
-                    document.getElementById('reportedIssue').value = 'User reports that when they log in to the Bookshelves app, the school folder is empty even though content should be visible.';
-                    document.getElementById('userInfo').value = 'Jane Smith, jsmith@example.edu, Teacher';
-                    document.getElementById('productImpacted').value = 'Math Workbook 5';
-                    document.getElementById('xcodeInfo').value = 'XC12345';
+                    document.getElementById('xcodeInfo').value = 'X56723';
+                    document.getElementById('application').value = 'BAdvance c2022';
+                    document.getElementById('specificIssue').value = 'Symbols Of Our Country Missing';
+                    document.getElementById('gradesImpacted').value = 'Grade 2';
+                    document.getElementById('issueSummary').value = 'Content for Symbols Of Our Country not appearing in Grade 2 resources';
+                    document.getElementById('reportedIssue').value = 'Teacher reports that when they access the Grade 2 content for Symbols Of Our Country, the expected materials are not visible.';
+                    document.getElementById('districtName').value = 'Springfield School District';
+                    document.getElementById('schoolName').value = 'Springfield Elementary';
                     document.getElementById('districtState').value = 'Florida';
-                    document.getElementById('impactType').selectedIndex = 1;
+                    // Product dropdown will need to be selected manually
                     const today = new Date().toISOString().split('T')[0];
                     document.getElementById('dateReported').value = today;
-                    document.getElementById('impactScope').selectedIndex = 3;
-                    document.getElementById('components').value = 'Login, Content Display, School Folder';
-                    document.getElementById('stepsToReproduce').value = '1. Log in to Bookshelves app\n2. Navigate to School folder\n3. Observe that the folder appears empty';
-                    document.getElementById('actualResults').value = 'School folder shows no content even though books have been assigned';
-                    document.getElementById('expectedResults').value = 'School folder should display all books assigned to the user';
+                    document.getElementById('subscriptionCodes').value = 'AB123, XYZ456';
+                    document.getElementById('impactScope').selectedIndex = 3; // Both teacher and student
+                    document.getElementById('vipStatus').value = "Yes"; // Set VIP to Yes for demo
                     document.getElementById('relatedTickets').value = '1234, 5678';
-                    document.getElementById('priority').selectedIndex = 1;
-                    document.getElementById('status').selectedIndex = 0;
+                    document.getElementById('priority').selectedIndex = 1; // Medium
+                    document.getElementById('status').selectedIndex = 0; // Open
+
+                    // Update generated subject
+                    generateSubject();
+
                     client.interface.trigger("showNotify", {
                         type: "success",
                         message: "Form filled with demo data"
@@ -1221,18 +897,12 @@
                 // Initialize Quill editors for rich text fields
                 const quillReported = new Quill("#reportedIssueEditor", { theme: "snow", placeholder: "Enter the reported issue..." });
                 const quillSummary = new Quill("#issueSummaryEditor", { theme: "snow", placeholder: "Enter the summary..." });
-                const quillSteps = new Quill("#stepsToReproduceEditor", { theme: "snow", placeholder: "Enter steps to reproduce..." });
-                const quillActual = new Quill("#actualResultsEditor", { theme: "snow", placeholder: "Enter actual results..." });
-                const quillExpected = new Quill("#expectedResultsEditor", { theme: "snow", placeholder: "Enter expected results..." });
 
                 // Before form submission, copy Quill HTML into hidden textareas
                 document.getElementById('trackerForm').addEventListener('submit', async function (e) {
                     // Update hidden textareas with editor content
                     document.getElementById('reportedIssue').value = quillReported.root.innerHTML;
                     document.getElementById('issueSummary').value = quillSummary.root.innerHTML;
-                    document.getElementById('stepsToReproduce').value = quillSteps.root.innerHTML;
-                    document.getElementById('actualResults').value = quillActual.root.innerHTML;
-                    document.getElementById('expectedResults').value = quillExpected.root.innerHTML;
                     // Form submission continues with the normal flow
                 });
 
@@ -1281,15 +951,6 @@
                 });
                 quillSummary.root.addEventListener('paste', function (e) {
                     handlePasteImage(e, quillSummary);
-                });
-                quillSteps.root.addEventListener('paste', function (e) {
-                    handlePasteImage(e, quillSteps);
-                });
-                quillActual.root.addEventListener('paste', function (e) {
-                    handlePasteImage(e, quillActual);
-                });
-                quillExpected.root.addEventListener('paste', function (e) {
-                    handlePasteImage(e, quillExpected);
                 });
 
                 // API-based dropdown functionality
@@ -1776,6 +1437,382 @@
                         agentSelect.appendChild(blankOption);
                     }
                 });
+
+                // Enhanced file preview functionality with attachment totals
+                document.getElementById('screenshots').addEventListener('change', function (e) {
+                    const previewContainer = document.getElementById('screenshotPreview');
+                    if (this.files.length > 0) {
+                        // Add new files to our aggregated collection
+                        for (let i = 0; i < this.files.length; i++) {
+                            aggregatedScreenshotFiles.push(this.files[i]);
+                        }
+
+                        // Clear the preview container first to show all files
+                        previewContainer.innerHTML = '';
+
+                        // Add attachments summary at the top
+                        updateAttachmentsSummary(previewContainer);
+
+                        // Preview up to 5 files to avoid overwhelming the UI
+                        const fileCount = Math.min(aggregatedScreenshotFiles.length, 5);
+                        for (let i = 0; i < fileCount; i++) {
+                            const filePreview = createFilePreviewElement(aggregatedScreenshotFiles[i], i);
+                            previewContainer.appendChild(filePreview);
+                        }
+
+                        // Show note if there are more files than we're showing
+                        if (aggregatedScreenshotFiles.length > 5) {
+                            const noteDiv = document.createElement('div');
+                            noteDiv.className = 'file-note';
+                            noteDiv.textContent = `Note: Only showing the first 5 files. All ${aggregatedScreenshotFiles.length} files will be uploaded.`;
+                            previewContainer.appendChild(noteDiv);
+                        }
+
+                        // Add a clear all button if there are files
+                        if (aggregatedScreenshotFiles.length > 0) {
+                            const clearAllDiv = document.createElement('div');
+                            clearAllDiv.className = 'clear-files';
+                            clearAllDiv.innerHTML = `<button type="button">Clear All Attachments (${aggregatedScreenshotFiles.length})</button>`;
+                            clearAllDiv.querySelector('button').addEventListener('click', function () {
+                                clearAllFiles();
+                            });
+                            previewContainer.appendChild(clearAllDiv);
+                        }
+
+                        // Update the attachment count indicator
+                        updateAttachmentCountIndicator();
+
+                        // Clear the file input so the same files can be selected again
+                        this.value = '';
+                    }
+                });
+
+                /**
+                 * Calculate and display attachment totals information
+                 */
+                function updateAttachmentsSummary(container) {
+                    if (!container) container = document.getElementById('screenshotPreview');
+
+                    // Calculate total size
+                    let totalSizeBytes = 0;
+                    let fileTypes = new Set();
+
+                    aggregatedScreenshotFiles.forEach(file => {
+                        totalSizeBytes += file.size;
+                        const extension = file.name.split('.').pop().toLowerCase();
+                        fileTypes.add(extension);
+                    });
+
+                    // Format size for display
+                    let formattedSize;
+                    if (totalSizeBytes < 1024) {
+                        formattedSize = totalSizeBytes + ' B';
+                    } else if (totalSizeBytes < 1024 * 1024) {
+                        formattedSize = (totalSizeBytes / 1024).toFixed(1) + ' KB';
+                    } else {
+                        formattedSize = (totalSizeBytes / (1024 * 1024)).toFixed(2) + ' MB';
+                    }
+
+                    // Create the summary element
+                    const summaryDiv = document.createElement('div');
+                    summaryDiv.className = 'attachments-summary';
+                    if (totalSizeBytes > 10 * 1024 * 1024) { // Mark as large if over 10MB
+                        summaryDiv.classList.add('large-size');
+                    }
+
+                    summaryDiv.innerHTML = `
+                        <div class="attachments-count">
+                            <strong>${aggregatedScreenshotFiles.length}</strong> file${aggregatedScreenshotFiles.length !== 1 ? 's' : ''} attached
+                            ${fileTypes.size > 1 ? `(${fileTypes.size} different types)` : ''}
+                        </div>
+                        <div class="attachments-size">Total: ${formattedSize}</div>
+                    `;
+
+                    // Insert at the beginning of the container
+                    if (container.firstChild) {
+                        container.insertBefore(summaryDiv, container.firstChild);
+                    } else {
+                        container.appendChild(summaryDiv);
+                    }
+
+                    return summaryDiv;
+                }
+
+                /**
+                 * Enhanced file type detection for better previews
+                 */
+                function getFileTypeInfo(file) {
+                    // Extract file extension
+                    const fileName = file.name || '';
+                    const fileExtension = fileName.split('.').pop().toLowerCase();
+                    const mimeType = file.type || '';
+
+                    // Default file type info
+                    let iconClass = 'fa-file';
+                    let fileTypeLabel = 'File';
+                    let colorClass = '';
+
+                    // Common document types
+                    if (['doc', 'docx', 'odt', 'rtf'].includes(fileExtension) ||
+                        mimeType.includes('word') || mimeType.includes('opendocument.text')) {
+                        iconClass = 'fa-file-word';
+                        fileTypeLabel = 'Document';
+                        colorClass = 'word-color';
+                    }
+                    // Spreadsheet types
+                    else if (['xls', 'xlsx', 'xlsm', 'csv', 'ods'].includes(fileExtension) ||
+                        mimeType.includes('excel') || mimeType.includes('spreadsheet') ||
+                        mimeType.includes('csv')) {
+                        iconClass = 'fa-file-excel';
+                        fileTypeLabel = 'Spreadsheet';
+                        colorClass = 'excel-color';
+                    }
+                    // Presentation types
+                    else if (['ppt', 'pptx', 'odp'].includes(fileExtension) ||
+                        mimeType.includes('powerpoint') || mimeType.includes('presentation')) {
+                        iconClass = 'fa-file-powerpoint';
+                        fileTypeLabel = 'Presentation';
+                        colorClass = 'powerpoint-color';
+                    }
+                    // PDF files
+                    else if (fileExtension === 'pdf' || mimeType.includes('pdf')) {
+                        iconClass = 'fa-file-pdf';
+                        fileTypeLabel = 'PDF';
+                        colorClass = 'pdf-color';
+                    }
+                    // Archive files
+                    else if (['zip', 'rar', 'tar', 'gz', '7z'].includes(fileExtension) ||
+                        mimeType.includes('zip') || mimeType.includes('compressed')) {
+                        iconClass = 'fa-file-archive';
+                        fileTypeLabel = 'Archive';
+                        colorClass = 'archive-color';
+                    }
+                    // Plain text files
+                    else if (['txt', 'log', 'md'].includes(fileExtension) ||
+                        mimeType.includes('text/plain')) {
+                        iconClass = 'fa-file-alt';
+                        fileTypeLabel = 'Text';
+                        colorClass = 'text-color';
+                    }
+                    // Code files
+                    else if (['html', 'htm', 'xml', 'json', 'js', 'css', 'php', 'py', 'java', 'c', 'cpp'].includes(fileExtension) ||
+                        mimeType.includes('code') || mimeType.includes('javascript') || mimeType.includes('html')) {
+                        iconClass = 'fa-file-code';
+                        fileTypeLabel = 'Code';
+                        colorClass = 'code-color';
+                    }
+                    // Audio files
+                    else if (['mp3', 'wav', 'ogg', 'flac', 'm4a'].includes(fileExtension) ||
+                        mimeType.includes('audio')) {
+                        iconClass = 'fa-file-audio';
+                        fileTypeLabel = 'Audio';
+                        colorClass = 'audio-color';
+                    }
+                    // Video files
+                    else if (['mp4', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'webm'].includes(fileExtension) ||
+                        mimeType.includes('video')) {
+                        iconClass = 'fa-file-video';
+                        fileTypeLabel = 'Video';
+                        colorClass = 'video-color';
+                    }
+                    // HAR files (HTTP Archive)
+                    else if (fileExtension === 'har') {
+                        iconClass = 'fa-file-code';
+                        fileTypeLabel = 'HAR';
+                        colorClass = 'har-color';
+                    }
+
+                    // Image files are handled differently with actual thumbnails
+                    const isImage = file.type.match('image.*');
+
+                    // Get file size in appropriate units
+                    const fileSizeBytes = file.size;
+                    let fileSize = '';
+
+                    if (fileSizeBytes < 1024) {
+                        fileSize = fileSizeBytes + ' B';
+                    } else if (fileSizeBytes < 1024 * 1024) {
+                        fileSize = (fileSizeBytes / 1024).toFixed(1) + ' KB';
+                    } else {
+                        fileSize = (fileSizeBytes / (1024 * 1024)).toFixed(1) + ' MB';
+                    }
+
+                    return {
+                        iconClass,
+                        fileTypeLabel,
+                        colorClass,
+                        isImage,
+                        fileSize,
+                        fileSizeBytes,
+                        extension: fileExtension,
+                        mimeType
+                    };
+                }
+
+                /**
+                 * Function to create a file preview element
+                 */
+                function createFilePreviewElement(file, index) {
+                    const fileInfo = getFileTypeInfo(file);
+                    const previewDiv = document.createElement('div');
+                    previewDiv.className = 'file-thumbnail';
+                    previewDiv.dataset.fileIndex = index;
+
+                    if (fileInfo.isImage) {
+                        // For image files, create a thumbnail preview
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            previewDiv.innerHTML = `
+                                <div class="thumbnail-container">
+                                    <img src="${e.target.result}" title="${file.name}" alt="${file.name}"/>
+                                </div>
+                                <div class="file-filename" title="${file.name}">${file.name}</div>
+                                <div class="file-size">${fileInfo.fileSize}</div>
+                                <div class="file-remove" data-index="${index}">✕</div>`;
+
+                            // Add event listener to the remove button
+                            previewDiv.querySelector('.file-remove').addEventListener('click', function (e) {
+                                e.stopPropagation();
+                                const index = parseInt(this.dataset.index);
+                                removeFile(index);
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        // For non-image files, show appropriate icon based on file type
+                        previewDiv.innerHTML = `
+                            <div class="thumbnail-container file-icon-container ${fileInfo.colorClass}">
+                                <i class="fas ${fileInfo.iconClass} file-icon"></i>
+                                <div class="file-type-label">${fileInfo.fileTypeLabel}</div>
+                            </div>
+                            <div class="file-filename" title="${file.name}">${file.name}</div>
+                            <div class="file-size">${fileInfo.fileSize}</div>
+                            <div class="file-remove" data-index="${index}">✕</div>`;
+
+                        // Add event listener to the remove button
+                        previewDiv.querySelector('.file-remove').addEventListener('click', function (e) {
+                            e.stopPropagation();
+                            const index = parseInt(this.dataset.index);
+                            removeFile(index);
+                        });
+                    }
+
+                    // Make the whole preview clickable to view file details
+                    previewDiv.addEventListener('click', function () {
+                        showFileDetails(file, index);
+                    });
+
+                    return previewDiv;
+                }
+
+                /**
+                 * Function to show file details when a preview is clicked
+                 */
+                function showFileDetails(file, index) {
+                    const fileInfo = getFileTypeInfo(file);
+                    const detailsHtml = `
+                        <div class="file-details-header">
+                            <h3>File Details</h3>
+                            <div class="file-details-close">✕</div>
+                        </div>
+                        <div class="file-details-content">
+                            <div class="file-details-icon">
+                                <i class="fas ${fileInfo.iconClass} file-icon-large"></i>
+                            </div>
+                            <div class="file-details-info">
+                                <p><strong>Name:</strong> ${file.name}</p>
+                                <p><strong>Type:</strong> ${file.type || 'Unknown'}</p>
+                                <p><strong>Size:</strong> ${fileInfo.fileSize}</p>
+                                <p><strong>Last Modified:</strong> ${new Date(file.lastModified).toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <div class="file-details-actions">
+                            <button class="file-details-remove" data-index="${index}">Remove File</button>
+                        </div>
+                    `;
+
+                    // Create or update the details modal
+                    let detailsModal = document.getElementById('fileDetailsModal');
+                    if (!detailsModal) {
+                        detailsModal = document.createElement('div');
+                        detailsModal.id = 'fileDetailsModal';
+                        detailsModal.className = 'file-details-modal';
+                        document.body.appendChild(detailsModal);
+                    }
+
+                    detailsModal.innerHTML = detailsHtml;
+                    detailsModal.style.display = 'block';
+
+                    // Add event listeners
+                    detailsModal.querySelector('.file-details-close').addEventListener('click', function () {
+                        detailsModal.style.display = 'none';
+                    });
+
+                    detailsModal.querySelector('.file-details-remove').addEventListener('click', function () {
+                        const index = parseInt(this.dataset.index);
+                        removeFile(index);
+                        detailsModal.style.display = 'none';
+                    });
+                }
+
+                // Function to remove a file by index
+                function removeFile(index) {
+                    if (index >= 0 && index < aggregatedScreenshotFiles.length) {
+                        // Remove the file from our collection
+                        aggregatedScreenshotFiles.splice(index, 1);
+
+                        // Refresh the preview to reflect the change
+                        const previewContainer = document.getElementById('screenshotPreview');
+                        previewContainer.innerHTML = '';
+
+                        // Re-add the summary information
+                        if (aggregatedScreenshotFiles.length > 0) {
+                            updateAttachmentsSummary(previewContainer);
+                        }
+
+                        // Rebuild the preview display
+                        const fileCount = Math.min(aggregatedScreenshotFiles.length, 5);
+                        for (let i = 0; i < fileCount; i++) {
+                            const filePreview = createFilePreviewElement(aggregatedScreenshotFiles[i], i);
+                            previewContainer.appendChild(filePreview);
+                        }
+
+                        // Show note if there are more files than we're showing
+                        if (aggregatedScreenshotFiles.length > 5) {
+                            const noteDiv = document.createElement('div');
+                            noteDiv.className = 'file-note';
+                            noteDiv.textContent = `Note: Only showing the first 5 files. All ${aggregatedScreenshotFiles.length} files will be uploaded.`;
+                            previewContainer.appendChild(noteDiv);
+                        }
+
+                        // Add a clear all button if there are files
+                        if (aggregatedScreenshotFiles.length > 0) {
+                            const clearAllDiv = document.createElement('div');
+                            clearAllDiv.className = 'clear-files';
+                            clearAllDiv.innerHTML = `<button type="button">Clear All Attachments (${aggregatedScreenshotFiles.length})</button>`;
+                            clearAllDiv.querySelector('button').addEventListener('click', function () {
+                                clearAllFiles();
+                            });
+                            previewContainer.appendChild(clearAllDiv);
+                        }
+
+                        // Update the attachment count indicator
+                        updateAttachmentCountIndicator();
+                    }
+                }
+
+                // Function to clear all files
+                function clearAllFiles() {
+                    aggregatedScreenshotFiles = [];
+                    document.getElementById('screenshotPreview').innerHTML = '';
+                    updateAttachmentCountIndicator();
+                }
+
+                // Initialize the original label text when DOM is loaded
+                const screenshotsLabel = document.querySelector('label[for="screenshots"]');
+                if (screenshotsLabel) {
+                    screenshotsLabel.setAttribute('data-original-text', screenshotsLabel.textContent);
+                }
 
                 // Initialize the dropdowns when the form loads
                 fetchGroups();
