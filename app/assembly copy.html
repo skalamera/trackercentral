@@ -1,0 +1,2415 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script async src="{{{appclient}}}"></script>
+    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+    <link rel="stylesheet" type="text/css" href="styles/modal.css" />
+    <link rel="stylesheet" type="text/css" href="styles/filepreview.css" />
+    <link rel="stylesheet" type="text/css" href="styles/assembly.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Add Quill CSS and JS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+
+</head>
+
+<body>
+    <!-- Add the loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <div class="spinner-text">Creating ticket...</div>
+    </div>
+
+    <div class="tracker-form-container">
+        <!-- Debug Button -->
+        <div class="debug-container">
+            <button id="debugFillForm" class="debug-button">
+                <i class="fas fa-magic"></i> Fill with Demo Data
+            </button>
+        </div>
+
+        <div class="form-title">
+            <h2><i class="fas fa-tools"></i> Assembly Tracker</h2>
+        </div>
+
+        <div class="back-button-container">
+            <fw-button id="backButton" color="secondary" size="small"
+                style="cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';"
+                onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';">
+                <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>Back to Tracker Templates
+            </fw-button>
+        </div>
+
+        <form id="trackerForm">
+            <div class="cards-container">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-pen-fancy fa-lg section-icon"></i>
+                        <h3>SUBJECT</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Add this at the beginning of the SUBJECT card body -->
+                        <div class="form-group">
+                            <label for="subject" class="required-field">Subject</label>
+                            <input type="text" id="subject" name="subject" required>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Format: XCODE | Application - Specific
+                                Issue: Grades Impacted
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="xcodeInfo" class="required-field">Xcode</label>
+                            <input type="text" id="xcodeInfo" name="xcodeInfo" required placeholder="e.g. X56723">
+                            <div class="hint"><i class="fas fa-info-circle"></i> Enter Xcode (indicate if more than one)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="application" class="required-field">Application Name</label>
+                            <input type="text" id="application" name="application" required
+                                placeholder="e.g. BAdvance c2022">
+                            <div class="hint"><i class="fas fa-info-circle"></i> The application or system related to
+                                this issue
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="specificIssue" class="required-field">Specific Issue</label>
+                            <input type="text" id="specificIssue" name="specificIssue" required
+                                placeholder="e.g. Symbols Of Our Country Missing">
+                            <div class="hint"><i class="fas fa-info-circle"></i> Brief description of the specific issue
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gradesImpacted" class="required-field">Grades Impacted</label>
+                            <input type="text" id="gradesImpacted" name="gradesImpacted" required
+                                placeholder="e.g. Grade 2">
+                            <div class="hint"><i class="fas fa-info-circle"></i> Enter the grade levels affected</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-file-alt fa-lg section-icon"></i>
+                        <h3>SUMMARY</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="quill-editor-container"></div>
+                        <div id="issueSummaryEditor" style="height: 120px; background-color: white;"></div>
+                        <textarea id="issueSummary" name="issueSummary" style="display: none;"></textarea>
+                        <div class="hint"><i class="fas fa-lightbulb"></i> Provide a clear, concise summary of the issue
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-clipboard-list fa-lg section-icon"></i>
+                        <h3>DESCRIPTION</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="reportedIssueEditor" class="required-field">Issue:</label>
+                            <div class="quill-editor-container">
+                                <div id="reportedIssueEditor" style="height: 150px; background-color: white;"></div>
+                                <textarea id="reportedIssue" name="reportedIssue" style="display: none;"></textarea>
+                            </div>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Detailed description of the issue</div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="districtName" class="required-field">District Name:</label>
+                                <input type="text" id="districtName" name="districtName" required
+                                    placeholder="e.g. Springfield School District">
+                                <div class="hint"><i class="fas fa-info-circle"></i> Name of the district reporting the
+                                    issue</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="schoolName">School Name:</label>
+                                <input type="text" id="schoolName" name="schoolName"
+                                    placeholder="e.g. Springfield Elementary">
+                                <div class="hint"><i class="fas fa-info-circle"></i> Name of the specific school (if
+                                    applicable)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="districtState" class="required-field">District State:</label>
+                                <input type="text" id="districtState" name="districtState" required
+                                    placeholder="e.g. California">
+                                <div class="hint"><i class="fas fa-info-circle"></i> State where the district is located
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productImpacted" class="required-field">Program/Product Impacted:</label>
+                            <select id="productImpacted" name="productImpacted" required>
+                            </select>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Select the product type</div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dateReported" class="required-field">Date issue reported by user:</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-calendar-alt icon-prefix"></i>
+                                    <input type="date" id="dateReported" name="dateReported" required>
+                                </div>
+                                <div class="hint"><i class="fas fa-info-circle"></i> When the user reported this issue
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="subscriptionCodes">Subscription codes customer is onboarded with:</label>
+                                <input type="text" id="subscriptionCodes" name="subscriptionCodes"
+                                    placeholder="e.g. ABC123, XYZ456">
+                                <div class="hint"><i class="fas fa-info-circle"></i> Comma-separated list of
+                                    subscription codes
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="impactScope" class="required-field">Teacher vs Student impact:</label>
+                                <select id="impactScope" name="impactScope" required>
+                                    <option value="">-- Select --</option>
+                                    <option value="Teacher Only">Teacher Only</option>
+                                    <option value="Student Only">Student Only</option>
+                                    <option value="Both Teacher and Student">Both Teacher and Student</option>
+                                    <option value="Unknown">Unknown</option>
+                                </select>
+                                <div class="hint"><i class="fas fa-info-circle"></i> Who is affected by this issue</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="vipStatus" class="required-field">VIP:</label>
+                                <select id="vipStatus" name="vipStatus" required>
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
+                                <div class="hint"><i class="fas fa-info-circle"></i> Is this a VIP customer?</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-tasks fa-lg section-icon"></i>
+                        <h3>TICKET PROPERTIES</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="email" class="required-field">Requester Email</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope icon-prefix"></i>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="hint"><i class="fas fa-info-circle"></i> This ticket will be created by you (the
+                                logged-in
+                                agent)</div>
+                            <div id="emailStatus" class="email-status"></div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="relatedTickets" class="required-field">Related Ticket IDs</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-link icon-prefix"></i>
+                                    <input type="text" id="relatedTickets" name="relatedTickets" required>
+                                </div>
+                                <div class="hint"><i class="fas fa-info-circle"></i> Comma-separated ticket IDs (e.g.,
+                                    1,2,3)</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="priority">Priority</label>
+                                <select id="priority" name="priority">
+                                    <option value="1">Low</option>
+                                    <option value="2">Medium</option>
+                                    <option value="3">High</option>
+                                    <option value="4">Urgent</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select id="status" name="status">
+                                    <option value="2">Open</option>
+                                    <option value="3">Pending</option>
+                                    <option value="4">Resolved</option>
+                                    <option value="5">Closed</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="groupField">Group</label>
+                                <select id="groupField" name="groupField">
+                                    <option>Loading groups...</option>
+                                </select>
+                                <div class="hint"><i class="fas fa-info-circle"></i> Select a support group</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="agentField">Agent</label>
+                                <select id="agentField" name="agentField"></select>
+                                <div class="hint"><i class="fas fa-info-circle"></i> Select an agent</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-paperclip fa-lg section-icon"></i>
+                        <h3>ATTACHMENTS</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="attachment-input-container">
+                                <div class="custom-file-input">
+                                    <!-- Modified file upload button with improved clickability -->
+                                    <div class="file-upload-btn">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Choose files</span>
+                                        <input type="file" id="screenshots" name="screenshots" multiple
+                                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                                    </div>
+                                </div>
+                                <div class="hint"><i class="fas fa-info-circle"></i> Upload files to include in the
+                                    ticket (15MB total)</div>
+                            </div>
+                            <div id="screenshotPreview" class="screenshot-preview"></div>
+                            <div id="attachmentCounter" class="attachment-counter"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: none;">
+                <textarea id="description" name="description"></textarea>
+            </div>
+
+            <div class="form-actions">
+                <fw-button id="cancelTracker" color="secondary" size="medium"
+                    style="display: flex; justify-content: center; align-items: center;">
+                    <i class="fas fa-times"></i> Cancel
+                </fw-button>
+                <fw-button id="createTracker" color="primary" type="submit" size="medium"
+                    style="display: flex; justify-content: center; align-items: center;">
+                    <i class="fas fa-check"></i> Create Tracker
+                </fw-button>
+            </div>
+        </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Wait for the Freshworks SDK to be available
+                let initRetries = 0;
+                const maxRetries = 30; // Increase max retries to ensure we have enough time
+                const retryInterval = 200; // Milliseconds between retries
+
+                // Store ticket data from parent
+                let ticketData = {
+                    isVip: false,
+                    districtName: '',
+                    currentTicketId: null,
+                    requesterEmail: ''
+                };
+
+                // Initialize file input listener
+                const fileInput = document.getElementById('screenshots');
+                if (fileInput) {
+                    fileInput.addEventListener('change', function (event) {
+                        handleFileSelection(event);
+                    });
+                }
+
+                // Handle file selection
+                function handleFileSelection(event) {
+                    const files = event.target.files;
+                    const previewContainer = document.getElementById('screenshotPreview');
+
+                    if (!previewContainer) return;
+
+                    previewContainer.innerHTML = '';
+
+                    if (files.length === 0) return;
+
+                    // Store the files for form submission
+                    aggregatedScreenshotFiles = Array.from(files);
+
+                    // Add counter text
+                    updateAttachmentCounter(files.length);
+
+                    // Preview the files
+                    Array.from(files).forEach((file, index) => {
+                        const filePreview = createFilePreview(file, index);
+                        previewContainer.appendChild(filePreview);
+                    });
+                }
+
+                function updateAttachmentCounter(count) {
+                    const counter = document.getElementById('attachmentCounter');
+                    if (counter) {
+                        counter.textContent = count > 0 ? `${count} file${count !== 1 ? 's' : ''} selected` : '';
+                    }
+
+                    // Update the attachment label
+                    const screenshotsLabel = document.querySelector('label[for="screenshots"]');
+                    if (screenshotsLabel) {
+                        if (count > 0) {
+                            screenshotsLabel.textContent = `Attachments (${count}):`;
+                        } else {
+                            screenshotsLabel.textContent = screenshotsLabel.getAttribute('data-original-text') || "Attachments:";
+                        }
+                    }
+                }
+
+                function createFilePreview(file, index) {
+                    const fileContainer = document.createElement('div');
+                    fileContainer.className = 'file-thumbnail';
+
+                    // Determine if it's an image
+                    const isImage = file.type.startsWith('image/');
+
+                    if (isImage) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            fileContainer.innerHTML = `
+                                <div class="thumbnail-container">
+                                    <img src="${e.target.result}" alt="${file.name}">
+                                </div>
+                                <div class="file-filename">${file.name}</div>
+                                <div class="file-remove" data-index="${index}">✕</div>
+                            `;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        // For non-image files
+                        let fileIcon = 'fa-file';
+                        let fileTypeLabel = 'File';
+
+                        // Determine file type icon
+                        if (file.name.endsWith('.pdf')) {
+                            fileIcon = 'fa-file-pdf';
+                            fileTypeLabel = 'PDF';
+                        }
+                        else if (file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
+                            fileIcon = 'fa-file-word';
+                            fileTypeLabel = 'Document';
+                        }
+                        else if (file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) {
+                            fileIcon = 'fa-file-excel';
+                            fileTypeLabel = 'Spreadsheet';
+                        }
+                        else if (file.name.endsWith('.zip') || file.name.endsWith('.rar')) {
+                            fileIcon = 'fa-file-archive';
+                            fileTypeLabel = 'Archive';
+                        }
+
+                        fileContainer.innerHTML = `
+                            <div class="thumbnail-container file-icon-container">
+                                <i class="fas ${fileIcon} file-icon"></i>
+                                <div class="file-type-label">${fileTypeLabel}</div>
+                            </div>
+                            <div class="file-filename">${file.name}</div>
+                            <div class="file-remove" data-index="${index}">✕</div>
+                        `;
+                    }
+
+                    // Add event handler for remove button
+                    setTimeout(() => {
+                        const removeBtn = fileContainer.querySelector('.file-remove');
+                        if (removeBtn) {
+                            removeBtn.addEventListener('click', function (e) {
+                                e.stopPropagation();
+
+                                // Remove from aggregated files array
+                                aggregatedScreenshotFiles.splice(index, 1);
+
+                                // Remove visual element
+                                fileContainer.remove();
+
+                                // Update counter
+                                updateAttachmentCounter(aggregatedScreenshotFiles.length);
+                            });
+                        }
+                    }, 100);
+
+                    return fileContainer;
+                }
+
+                // Check if scripts are loaded properly
+                function checkScriptsLoaded() {
+                    // Log which scripts are available
+                    console.log("Script availability check:", {
+                        "app-client": typeof app !== 'undefined',
+                        "client": typeof client !== 'undefined',
+                        "frsh": typeof window.frsh !== 'undefined',
+                        "quill": typeof Quill !== 'undefined'
+                    });
+                }
+
+                // Retry logic with improved debugging
+                function initializeClient() {
+                    checkScriptsLoaded();
+
+                    if (typeof client !== 'undefined') {
+                        console.log("Found client object directly");
+                        setupFormHandlers(client);
+                    } else if (typeof app !== 'undefined') {
+                        console.log("Found app object, initializing");
+                        app.initialized().then(function (clientObj) {
+                            console.log("App initialized successfully");
+                            setupFormHandlers(clientObj);
+                        }).catch(handleInitError);
+                    } else if (typeof window.frsh !== 'undefined' && window.frsh.init) {
+                        console.log("Found frsh object, initializing");
+                        window.frsh.init().then(function (clientObj) {
+                            console.log("Frsh initialized successfully");
+                            setupFormHandlers(clientObj);
+                        }).catch(handleInitError);
+                    } else if (initRetries < maxRetries) {
+                        initRetries++;
+                        console.log(`Waiting for client to be available (attempt ${initRetries}/${maxRetries})...`);
+                        setTimeout(initializeClient, retryInterval);
+                    } else {
+                        handleInitError(new Error(`Could not initialize client after ${maxRetries} attempts`));
+                    }
+                }
+
+                function handleInitError(error) {
+                    console.error("Modal initialization error:", error);
+                    document.querySelector('.tracker-form-container').innerHTML =
+                        `<div class="error-card">
+                <h3>Failed to initialize app client</h3>
+                <p>Error details: ${error.message}</p>
+                <p>Please check the console for more information or refresh the page.</p>
+                <button onclick="location.reload()">Refresh Page</button>
+            </div>`;
+                }
+
+                // Initialize global variable for file storage
+                let aggregatedScreenshotFiles = [];
+
+                function setupFormHandlers(client) {
+                    window.client = client;
+                    console.log("Setting up form handlers with client:", client);
+
+                    // Add global error handling for debugging
+                    window.onerror = function (message, source, lineno, colno, error) {
+                        console.error("Global error:", message, "at", source, lineno, colno, error);
+                        return false;
+                    };
+
+                    // Add missing testClientConnection function
+                    async function testClientConnection(client) {
+                        try {
+                            console.log("Testing client connection with data.get('domInfo')...");
+                            try {
+                                const domInfo = await client.data.get('domInfo');
+                                console.log("DOM info retrieved successfully:", domInfo);
+                                return true;
+                            } catch (error) {
+                                console.warn("Basic client test failed:", error);
+                                console.log("Trying alternative method with instance.context()...");
+                                try {
+                                    const context = await client.instance.context();
+                                    console.log("Context retrieved successfully:", context);
+                                    return true;
+                                } catch (error2) {
+                                    console.error("All client tests failed:", error2);
+                                    return false;
+                                }
+                            }
+                        } catch (error) {
+                            console.error("Error in testClientConnection:", error);
+                            return false;
+                        }
+                    }
+
+                    // Test the client functionality immediately
+                    testClientConnection(client);
+
+                    // Try to get ticket data from localStorage
+                    try {
+                        const storedAssemblyData = localStorage.getItem('assemblyData');
+                        if (storedAssemblyData) {
+                            const assemblyData = JSON.parse(storedAssemblyData);
+                            console.log("📦 Retrieved assembly data from localStorage:", assemblyData);
+
+                            // Populate form fields with the retrieved data
+                            if (assemblyData.districtName) {
+                                document.getElementById('districtName').value = assemblyData.districtName;
+                                document.getElementById('districtName').style.backgroundColor = "#f0fff0"; // Light green
+                                setTimeout(() => {
+                                    document.getElementById('districtName').style.backgroundColor = "";
+                                }, 2000);
+                                console.log("✅ Set district name from localStorage:", assemblyData.districtName);
+                            }
+
+                            // In assembly.html when retrieving data from localStorage
+                            if (assemblyData.priority) {
+                                const priorityField = document.getElementById('priority');
+                                priorityField.value = assemblyData.priority;
+                                priorityField.style.backgroundColor = "#f0fff0"; // Light green
+                                setTimeout(() => {
+                                    priorityField.style.backgroundColor = "";
+                                }, 2000);
+                                console.log("✅ Set priority from localStorage:", priorityField.value);
+                            }
+
+                            if (assemblyData.isVip !== undefined) {
+                                const vipField = document.getElementById('vipStatus');
+                                vipField.value = assemblyData.isVip ? "Yes" : "No";
+                                vipField.style.backgroundColor = assemblyData.isVip ? "#ffebee" : "#f0fff0"; // Red or green
+                                setTimeout(() => {
+                                    vipField.style.backgroundColor = "";
+                                }, 2000);
+                                console.log("✅ Set VIP status from localStorage:", vipField.value);
+                            }
+
+                            if (assemblyData.currentTicketId) {
+                                const relatedField = document.getElementById('relatedTickets');
+                                relatedField.value = assemblyData.currentTicketId;
+                                relatedField.style.backgroundColor = "#f0fff0"; // Light green
+                                setTimeout(() => {
+                                    relatedField.style.backgroundColor = "";
+                                }, 2000);
+                                console.log("✅ Set related ticket ID from localStorage:", relatedField.value);
+
+                                // Try to get more ticket details using the ID
+                                getSourceTicketDetails(assemblyData.currentTicketId).catch(error => {
+                                    console.error("Error getting source ticket details:", error);
+                                });
+                            }
+
+                            // Clean up - remove the data from localStorage to avoid stale data
+                            localStorage.removeItem('assemblyData');
+                        }
+                    } catch (error) {
+                        console.error("Error retrieving assembly data from localStorage:", error);
+                    }
+
+                    async function getLoggedInUserEmail() {
+                        try {
+                            console.log("Fetching agent email directly from modal");
+                            const userData = await client.data.get("loggedInUser");
+                            console.log("Agent data:", userData);
+                            if (userData && userData.loggedInUser && userData.loggedInUser.contact && userData.loggedInUser.contact.email) {
+                                const agentEmail = userData.loggedInUser.contact.email;
+                                console.log("Found agent email:", agentEmail);
+                                document.getElementById('email').value = agentEmail;
+                                document.getElementById('emailStatus').innerHTML =
+                                    `<span style="color: green">✓ Email loaded: ${agentEmail}</span>`;
+                                return agentEmail;
+                            } else {
+                                console.warn("Could not get agent email from userData");
+                                document.getElementById('emailStatus').innerHTML =
+                                    '<span style="color: orange">⚠️ Email not found in user data</span>';
+                                return null;
+                            }
+                        } catch (error) {
+                            console.error("Error getting logged-in user data:", error);
+                            document.getElementById('emailStatus').innerHTML =
+                                '<span style="color: red">✗ Error loading email</span>';
+                            return null;
+                        }
+                    }
+
+                    async function getAssignedAgentEmail(ticketId) {
+                        try {
+                            const ticketResponse = await client.request.invokeTemplate("getTicketDetails", {
+                                context: { ticketId: ticketId }
+                            });
+                            const ticketData = JSON.parse(ticketResponse.response);
+                            console.log("Related ticket data:", ticketData);
+                            if (!ticketData.responder_id) {
+                                console.warn("Ticket doesn't have an assigned agent");
+                                return null;
+                            }
+                            const agentResponse = await client.request.invokeTemplate("getAgentDetails", {
+                                context: { agentId: ticketData.responder_id }
+                            });
+                            const agentData = JSON.parse(agentResponse.response);
+                            console.log("Assigned agent data:", agentData);
+                            if (agentData && agentData.contact && agentData.contact.email) {
+                                console.log("Found assigned agent email:", agentData.contact.email);
+                                document.getElementById('email').value = agentData.contact.email;
+                                document.getElementById('emailStatus').innerHTML =
+                                    `<span style="color: green">✓ Using assigned agent's email: ${agentData.contact.email}</span>`;
+                                return agentData.contact.email;
+                            } else {
+                                console.warn("Could not get assigned agent email");
+                                return null;
+                            }
+                        } catch (error) {
+                            console.error("Error getting assigned agent email:", error);
+                            return null;
+                        }
+                    }
+
+                    // Add missing tryGetTicketIdFromUrlOrParent function
+                    async function tryGetTicketIdFromUrlOrParent() {
+                        console.log("🔍 Attempting to get ticket ID from URL or parent");
+                        let foundTicketId = null;
+
+                        // First try to extract from URL if we're in a ticket context
+                        try {
+                            const url = window.location.href;
+                            const ticketMatch = url.match(/\/tickets\/(\d+)/);
+                            if (ticketMatch && ticketMatch[1]) {
+                                foundTicketId = parseInt(ticketMatch[1]);
+                                console.log(`🎯 Found ticket ID in URL: ${foundTicketId}`);
+
+                                if (foundTicketId) {
+                                    document.getElementById('relatedTickets').value = foundTicketId;
+                                    document.getElementById('relatedTickets').style.backgroundColor = "#f0fff0"; // Light green
+                                    setTimeout(() => {
+                                        document.getElementById('relatedTickets').style.backgroundColor = "";
+                                    }, 2000);
+
+                                    const sourceTicketData = await getSourceTicketDetails(foundTicketId);
+                                    if (!sourceTicketData) {
+                                        await getLoggedInUserEmail();
+                                    }
+                                }
+                                return;
+                            }
+                        } catch (urlError) {
+                            console.error("❌ Error extracting ticket ID from URL:", urlError);
+                        }
+
+                        // If no ticket ID found in URL, try to get from parent context
+                        try {
+                            console.log("🔄 Trying to get ticket ID from parent context");
+                            await getLoggedInUserEmail();
+                        } catch (parentError) {
+                            console.error("❌ Error getting ticket ID from parent:", parentError);
+                            await getLoggedInUserEmail();
+                        }
+                    }
+
+                    // Function to get source ticket details and populate fields
+                    async function getSourceTicketDetails(ticketId) {
+                        console.log("🔍 Starting getSourceTicketDetails for ticket:", ticketId);
+
+                        // Validate ticket ID
+                        if (!ticketId || isNaN(parseInt(ticketId))) {
+                            console.error("❌ Invalid ticket ID provided:", ticketId);
+                            return null;
+                        }
+
+                        // Show loading state in the UI
+                        document.getElementById('districtName').placeholder = "Loading district info...";
+                        document.getElementById('relatedTickets').style.backgroundColor = "#fff9c4"; // Light yellow background
+
+                        try {
+                            console.log("📡 Making API request for ticket details:", ticketId);
+                            // Ensure we're using a valid ticket ID for the API call
+                            const validTicketId = parseInt(ticketId);
+
+                            const ticketResponse = await client.request.invokeTemplate("getTicketDetails", {
+                                context: { ticketId: validTicketId }
+                            });
+
+                            if (!ticketResponse) {
+                                throw new Error("Empty response received");
+                            }
+
+                            console.log("✅ Raw ticket response received:", ticketResponse);
+
+                            // Parse the response
+                            let ticketData;
+                            try {
+                                ticketData = JSON.parse(ticketResponse.response);
+                            } catch (parseError) {
+                                console.error("❌ Failed to parse ticket response:", parseError);
+                                console.log("Raw response content:", ticketResponse.response);
+                                throw new Error(`Parse error: ${parseError.message}`);
+                            }
+
+                            console.log("✅ Parsed ticket data:", ticketData);
+
+                            // Check for expected data structure
+                            if (!ticketData || typeof ticketData !== 'object') {
+                                throw new Error("Ticket data is not an object");
+                            }
+
+                            // Extract and process custom fields
+                            if (ticketData.custom_fields) {
+                                console.log("📋 Custom fields found:", ticketData.custom_fields);
+
+                                // Show all custom fields in console for debugging
+                                Object.entries(ticketData.custom_fields).forEach(([key, value]) => {
+                                    console.log(`  ${key}: ${value}`);
+                                });
+
+                                // Handle district field with flexible field matching
+                                const districtFieldNames = [
+                                    'cf_district509811', 'cf_district', 'district',
+                                    'cf_school_district', 'cf_district_name', 'cf_school_district_name'
+                                ];
+
+                                // Try each possible district field name
+                                let districtFound = false;
+                                for (const fieldName of districtFieldNames) {
+                                    if (ticketData.custom_fields[fieldName]) {
+                                        const districtName = ticketData.custom_fields[fieldName];
+                                        console.log(`✅ Found district name in field ${fieldName}:`, districtName);
+                                        document.getElementById('districtName').value = districtName;
+                                        document.getElementById('districtName').style.backgroundColor = "#f0fff0"; // Light green background
+                                        setTimeout(() => {
+                                            document.getElementById('districtName').style.backgroundColor = "";
+                                        }, 2000);
+                                        districtFound = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!districtFound) {
+                                    console.log("⚠️ No district field found in custom fields");
+
+                                    // Try to extract district from description as fallback
+                                    if (ticketData.description) {
+                                        // Try to find district in description using regex
+                                        const districtPatterns = [
+                                            /district\s*(?:name)?[:]\s*([^<\n\r,\.]+)/i,  // "District: Springfield"
+                                            /district[: ]\s*([^<\n\r,\.]+)/i,             // "District Springfield"
+                                            /from\s+([^<\n\r,\.]+)\s+district/i,          // "from Springfield district"
+                                            /([^<\n\r,\.]+)\s+district/i                  // "Springfield district"
+                                        ];
+
+                                        for (const pattern of districtPatterns) {
+                                            const match = ticketData.description.match(pattern);
+                                            if (match && match[1]) {
+                                                const extractedDistrict = match[1].trim();
+                                                console.log("📝 Found district in description:", extractedDistrict);
+                                                document.getElementById('districtName').value = extractedDistrict;
+                                                document.getElementById('districtName').style.backgroundColor = "#fff9c4"; // Light yellow background
+                                                setTimeout(() => {
+                                                    document.getElementById('districtName').style.backgroundColor = "";
+                                                }, 2000);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Handle VIP field with flexible field matching
+                                const vipFieldNames = [
+                                    'cf_vip', 'vip', 'cf_vip_status', 'vip_customer',
+                                    'cf_vip_client', 'cf_is_vip'
+                                ];
+
+                                let vipFound = false;
+                                for (const fieldName of vipFieldNames) {
+                                    if (ticketData.custom_fields[fieldName] !== undefined) {
+                                        let isVip = false;
+                                        const vipValue = ticketData.custom_fields[fieldName];
+
+                                        // Handle different value types for VIP status
+                                        if (typeof vipValue === 'boolean') {
+                                            isVip = vipValue;
+                                        } else if (typeof vipValue === 'string') {
+                                            isVip = vipValue.toLowerCase() === 'yes' ||
+                                                vipValue.toLowerCase() === 'true' ||
+                                                vipValue === '1';
+                                        } else if (typeof vipValue === 'number') {
+                                            isVip = vipValue !== 0;
+                                        }
+
+                                        console.log(`✅ Found VIP status in field ${fieldName}:`, isVip, "Original value:", vipValue);
+                                        document.getElementById('vipStatus').value = isVip ? "Yes" : "No";
+                                        document.getElementById('vipStatus').style.backgroundColor = isVip ? "#ffebee" : "#f0fff0"; // Red or green tint
+                                        setTimeout(() => {
+                                            document.getElementById('vipStatus').style.backgroundColor = "";
+                                        }, 2000);
+                                        ticketData.isVip = isVip;
+                                        vipFound = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!vipFound) {
+                                    console.log("⚠️ No VIP field found in custom fields");
+
+                                    // Check for VIP keywords in ticket data
+                                    const vipRegex = /\b(vip|very\s+important|priority\s+customer|high\s+value)\b/i;
+                                    if ((ticketData.subject && vipRegex.test(ticketData.subject)) ||
+                                        (ticketData.description && vipRegex.test(ticketData.description))) {
+                                        console.log("📝 VIP keyword found in subject/description");
+                                        document.getElementById('vipStatus').value = "Yes";
+                                        document.getElementById('vipStatus').style.backgroundColor = "#ffebee"; // Light red background
+                                        setTimeout(() => {
+                                            document.getElementById('vipStatus').style.backgroundColor = "";
+                                        }, 2000);
+                                        ticketData.isVip = true;
+                                    }
+                                }
+                            } else {
+                                console.warn("⚠️ No custom_fields property found in ticket data");
+                                document.getElementById('districtName').placeholder = "Enter district name";
+                            }
+
+                            // Return success with highlight on the ticket field
+                            document.getElementById('relatedTickets').style.backgroundColor = "#f0fff0"; // Light green background
+                            setTimeout(() => {
+                                document.getElementById('relatedTickets').style.backgroundColor = "";
+                            }, 2000);
+
+                            return ticketData;
+                        } catch (error) {
+                            console.error("❌ Error getting source ticket details:", error);
+                            console.error("Error stack:", error.stack);
+                            document.getElementById('districtName').placeholder = "Error loading district info";
+                            document.getElementById('relatedTickets').style.backgroundColor = "#ffebee"; // Light red background
+                            setTimeout(() => {
+                                document.getElementById('relatedTickets').style.backgroundColor = "";
+                            }, 2000);
+                            return null;
+                        }
+                    }
+
+                    // Modified context handler with improved error handling and debugging
+                    client.instance.context().then(async function (context) {
+                        console.log("🌟 Modal context received:", context);
+                        console.log("🔍 Context data direct access:", context.data);
+
+                        // Try to print the full context for debugging
+                        try {
+                            console.log("🔄 Complete context stringified:", JSON.stringify(context));
+                        } catch (e) {
+                            console.log("⚠️ Could not stringify full context:", e.message);
+                        }
+
+                        // Default the related ticket field for user feedback
+                        document.getElementById('relatedTickets').placeholder = "Enter ticket ID(s)";
+
+                        if (context && context.data) {
+                            // Extract ticket data from context with better logging
+                            ticketData = {
+                                isVip: context.data.isVip || false,
+                                districtName: context.data.districtName || '',
+                                currentTicketId: context.data.currentTicketId || null,
+                                requesterEmail: context.data.requesterEmail || '',
+                                ticketRequesterEmail: context.data.ticketRequesterEmail || ''
+                            };
+                            console.log("📦 Received ticket data from context:", ticketData);
+
+                            // Directly set form values from context data for better visibility
+                            if (ticketData.isVip !== undefined) {
+                                const vipField = document.getElementById('vipStatus');
+                                vipField.value = ticketData.isVip ? "Yes" : "No";
+                                vipField.style.backgroundColor = ticketData.isVip ? "#ffebee" : "#f0fff0";
+                                setTimeout(() => { vipField.style.backgroundColor = ""; }, 2000);
+                                console.log("✅ Set VIP status to:", vipField.value);
+                            }
+
+                            if (ticketData.districtName) {
+                                const districtField = document.getElementById('districtName');
+                                districtField.value = ticketData.districtName;
+                                districtField.style.backgroundColor = "#f0fff0";
+                                setTimeout(() => { districtField.style.backgroundColor = ""; }, 2000);
+                                console.log("✅ Set district name to:", districtField.value);
+                            }
+
+                            // Make sure we have a valid ticket ID and it's not zero or NaN
+                            const ticketId = parseInt(ticketData.currentTicketId);
+                            if (ticketId && !isNaN(ticketId) && ticketId > 0) {
+                                console.log("🎯 Using valid currentTicketId from context:", ticketId);
+
+                                // Auto-populate related ticket IDs with clear visual feedback
+                                const relatedTicketsField = document.getElementById('relatedTickets');
+                                relatedTicketsField.value = ticketId;
+                                relatedTicketsField.style.backgroundColor = "#f0fff0"; // Light green background
+                                setTimeout(() => {
+                                    relatedTicketsField.style.backgroundColor = "";
+                                }, 2000); // Return to normal after 2 seconds
+                                console.log("✅ Set related ticket ID to:", relatedTicketsField.value);
+
+                                // Get source ticket details for auto-population of district and VIP status
+                                try {
+                                    const sourceTicketData = await getSourceTicketDetails(ticketId);
+                                    console.log("📄 Returned source ticket data:", sourceTicketData);
+
+                                    // If district name came in context data, use it as a fallback
+                                    if (!document.getElementById('districtName').value && ticketData.districtName) {
+                                        console.log("🏫 Using district name from context:", ticketData.districtName);
+                                        document.getElementById('districtName').value = ticketData.districtName;
+                                        document.getElementById('districtName').style.backgroundColor = "#fff9c4"; // Light yellow
+                                        setTimeout(() => {
+                                            document.getElementById('districtName').style.backgroundColor = "";
+                                        }, 2000);
+                                    }
+
+                                    const assignedAgentEmail = await getAssignedAgentEmail(ticketId);
+                                    if (!assignedAgentEmail) {
+                                        await getLoggedInUserEmail();
+                                    }
+                                } catch (detailsError) {
+                                    console.error("❌ Error in getSourceTicketDetails:", detailsError);
+                                    await getLoggedInUserEmail();
+                                }
+                            } else {
+                                console.warn("⚠️ Invalid or missing currentTicketId in context:", ticketData.currentTicketId);
+                                await tryGetTicketIdFromUrlOrParent();
+                            }
+                        } else {
+                            console.log("ℹ️ No context data, trying to get ticket ID from URL");
+                            await tryGetTicketIdFromUrlOrParent();
+                        }
+
+                        // Set today's date regardless of other operations
+                        const today = new Date().toISOString().split('T')[0];
+                        document.getElementById('dateReported').value = today;
+                        setupSubjectGeneration();
+                    }).catch(async function (error) {
+                        console.error("❌ Error getting modal context:", error);
+                        await tryGetTicketIdFromUrlOrParent();
+                        await getLoggedInUserEmail();
+                        const today = new Date().toISOString().split('T')[0];
+                        document.getElementById('dateReported').value = today;
+                        setupSubjectGeneration();
+                    });
+
+                    function setupSubjectGeneration() {
+                        const xcodeField = document.getElementById('xcodeInfo');
+                        const applicationField = document.getElementById('application');
+                        const specificIssueField = document.getElementById('specificIssue');
+                        const gradesImpactedField = document.getElementById('gradesImpacted');
+                        xcodeField.addEventListener('input', generateSubject);
+                        applicationField.addEventListener('input', generateSubject);
+                        specificIssueField.addEventListener('input', generateSubject);
+                        gradesImpactedField.addEventListener('input', generateSubject);
+                        generateSubject();
+                    }
+
+                    // UPDATED: Modified subject generation function to match new format
+                    function generateSubject() {
+                        const xcode = document.getElementById('xcodeInfo').value.trim();
+                        const application = document.getElementById('application').value.trim();
+                        const specificIssue = document.getElementById('specificIssue').value.trim();
+                        const gradesImpacted = document.getElementById('gradesImpacted').value.trim();
+
+                        let subject = '';
+
+                        // Add Xcode
+                        if (xcode) {
+                            subject += xcode;
+                        }
+
+                        // Add Application
+                        if (application) {
+                            subject += ' | ' + application;
+                        }
+
+                        // Add Specific Issue
+                        if (specificIssue) {
+                            subject += ' | ' + specificIssue;
+                        }
+
+                        // Add Grades Impacted
+                        if (gradesImpacted) {
+                            subject += ' : ' + gradesImpacted;
+                        }
+
+                        document.getElementById('subject').value = subject;
+                    }
+
+                    // Function to update attachment count indicator
+                    function updateAttachmentCountIndicator() {
+                        const attachmentCounter = document.getElementById('attachmentCounter');
+                        if (!attachmentCounter) return;
+
+                        if (aggregatedScreenshotFiles.length === 0) {
+                            attachmentCounter.textContent = '';
+                            attachmentCounter.style.display = 'none';
+
+                            // Restore the original label text
+                            const screenshotsLabel = document.querySelector('label[for="screenshots"]');
+                            if (screenshotsLabel && screenshotsLabel.getAttribute('data-original-text')) {
+                                screenshotsLabel.textContent = screenshotsLabel.getAttribute('data-original-text');
+                            }
+                        } else {
+                            // Update the counter
+                            const fileCount = aggregatedScreenshotFiles.length;
+                            attachmentCounter.textContent = fileCount > 0 ? `${fileCount} file${fileCount !== 1 ? 's' : ''} selected` : '';
+                            attachmentCounter.style.display = fileCount > 0 ? 'block' : 'none';
+
+                            // Update the label to show the count
+                            const screenshotsLabel = document.querySelector('label[for="screenshots"]');
+                            if (screenshotsLabel) {
+                                screenshotsLabel.textContent = `Attachments (${fileCount}):`;
+                            }
+                        }
+                    }
+
+                    // UPDATED: Modified description generation function to match new format and removed fields
+                    function generateDescription() {
+                        // Collect all form field values
+                        const summary = document.getElementById('issueSummary').value || '';
+                        const issue = document.getElementById('reportedIssue').value || '';
+                        const districtName = document.getElementById('districtName').value || '';
+                        const schoolName = document.getElementById('schoolName').value || '';
+                        const districtState = document.getElementById('districtState').value || '';
+
+                        // Get the product value using both possible sources
+                        const productImpacted = document.getElementById('productImpacted').dataset.fullValue ||
+                            document.getElementById('productImpacted').value || '';
+
+                        // For program variation, we'll use a placeholder since it's not in the form
+                        const programVariation = '';
+
+                        const dateReported = document.getElementById('dateReported').value || '';
+                        const subscriptionCodes = document.getElementById('subscriptionCodes').value || '';
+                        const teacherStudentImpact = document.getElementById('impactScope').value || '';
+                        const vipCustomer = document.getElementById('vipStatus').value || 'No';
+
+                        let description = '';
+
+                        // SUMMARY section
+                        description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+
+                        // Add summary content if available
+                        if (summary) {
+                            description += `<div>${summary}</div>`;
+                        }
+
+                        // Add blank space
+                        description += '<div style="margin-bottom: 20px;"></div>';
+
+                        // DESCRIPTION section
+                        description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
+
+                        // Add issue details if available
+                        if (issue) {
+                            description += `<div>Issue: ${issue}</div><br>`;
+                        } else {
+                            description += 'Issue: <br>';
+                        }
+
+                        // Add all the fields with proper spacing and check for empty values
+                        description += `District Name: ${districtName}<br>`;
+                        description += `School Name: ${schoolName}<br>`;
+                        description += `District State: ${districtState}<br>`;
+                        description += `Program/Product Impacted: ${productImpacted}<br>`;
+                        description += `Program Variation (if known): ${programVariation}<br>`;
+                        description += `Date issue reported by user: ${dateReported}<br>`;
+                        description += `Subscription codes customer is onboarded with: ${subscriptionCodes}<br>`;
+                        description += `Teacher vs Student impact: ${teacherStudentImpact}<br>`;
+                        description += `VIP Customer: (${vipCustomer})`;
+
+                        return description;
+                    }
+
+                    // Handle form submission with fixed file upload sequence
+                    document.getElementById('trackerForm').addEventListener('submit', async function (e) {
+                        e.preventDefault();
+
+                        // Update hidden textareas with editor content BEFORE generating description
+                        // This ensures the Quill editor content is available for the description
+                        const quillReported = document.getElementById('reportedIssueEditor').querySelector('.ql-editor');
+                        if (quillReported) {
+                            document.getElementById('reportedIssue').value = quillReported.innerHTML;
+                        }
+
+                        const quillSummary = document.getElementById('issueSummaryEditor').querySelector('.ql-editor');
+                        if (quillSummary) {
+                            document.getElementById('issueSummary').value = quillSummary.innerHTML;
+                        }
+
+                        try {
+                            // Rest of the code remains unchanged
+                            let subdomainCheck;
+                            try {
+                                subdomainCheck = await client.iparams.get("freshdesk_subdomain");
+                                console.log("Subdomain check:", subdomainCheck);
+                                if (!subdomainCheck || !subdomainCheck.freshdesk_subdomain || !subdomainCheck.freshdesk_subdomain.trim()) {
+                                    throw new Error("Missing Freshdesk subdomain configuration");
+                                }
+                            } catch (configError) {
+                                console.error("Configuration error:", configError);
+                                client.interface.trigger("showNotify", {
+                                    type: "danger",
+                                    message: "App configuration error: Freshdesk subdomain is missing or invalid."
+                                });
+                                document.getElementById('createTracker').disabled = false;
+                                return;
+                            }
+
+                            // Show loading overlay
+                            const loadingOverlay = document.getElementById('loadingOverlay');
+                            if (loadingOverlay) {
+                                loadingOverlay.style.display = 'flex';
+                            }
+
+                            // Disable the create button to prevent multiple submissions
+                            const createTrackerButton = document.getElementById('createTracker');
+                            if (createTrackerButton) createTrackerButton.disabled = true;
+
+                            const subject = document.getElementById('subject').value;
+
+                            // Generate description AFTER we've updated the textarea content
+                            const description = generateDescription();
+
+                            const agentEmail = document.getElementById('email').value || "agent@freshdesk.com";
+                            const relatedTicketsStr = document.getElementById('relatedTickets').value;
+                            const priority = document.getElementById('priority').value;
+                            const status = document.getElementById('status').value;
+                            const screenshotFiles = aggregatedScreenshotFiles;
+                            const groupId = document.getElementById('groupField').value;
+                            const agentId = document.getElementById('agentField').value;
+                            const districtName = document.getElementById('districtName').value;
+
+                            // Get the product value but DON'T add it as a custom field
+                            // We already include this in the description via the generateDescription function
+                            const productImpacted = document.getElementById('productImpacted').dataset.fullValue ||
+                                document.getElementById('productImpacted').value || '';
+
+                            const relatedTicketIds = relatedTicketsStr.split(',')
+                                .map(id => id.trim())
+                                .filter(id => id !== '' && !isNaN(parseInt(id, 10)))
+                                .map(id => parseInt(id, 10));
+
+                            if (relatedTicketIds.length === 0) {
+                                alert('Please enter at least one valid related ticket ID');
+                                return;
+                            }
+
+                            console.log("Form values:", {
+                                subject,
+                                description: description.substring(0, 50) + "...",
+                                email: agentEmail,
+                                relatedTickets: relatedTicketsStr,
+                                relatedTicketIds: relatedTicketIds,
+                                priority,
+                                status,
+                                groupId,
+                                agentId,
+                                productImpacted,
+                                districtName,
+                                attachments: screenshotFiles.length > 0 ? `${screenshotFiles.length} files selected` : 'No files'
+                            });
+
+                            // STEP 1: First create the ticket without attachments
+                            const ticketData = {
+                                email: agentEmail,
+                                subject: subject,
+                                description: description,
+                                related_ticket_ids: relatedTicketIds,
+                                priority: parseInt(priority, 10),
+                                status: parseInt(status, 10),
+                                type: "Incident",
+                                custom_fields: {
+                                    // Updated the custom fields to ensure proper formatting
+                                    // Both fields need to be set for compatibility with different views
+                                    cf_district: districtName || "",
+                                    cf_district509811: districtName || ""
+                                }
+                            };
+
+                            // Add VIP status if set to Yes
+                            if (document.getElementById('vipStatus').value === "Yes") {
+                                ticketData.custom_fields.cf_vip = true;
+                            }
+
+                            // Add group ID if selected
+                            if (groupId) {
+                                ticketData.group_id = parseInt(groupId, 10);
+                                console.log(`Setting group_id: ${groupId}`);
+                            }
+
+                            // Add agent ID if selected
+                            if (agentId) {
+                                ticketData.responder_id = parseInt(agentId, 10);
+                                console.log(`Setting responder_id: ${agentId}`);
+                            }
+
+                            console.log("Creating ticket with data:", ticketData);
+
+                            console.log("First creating ticket without attachments");
+
+                            const createResponse = await client.request.invokeTemplate("createfdTicket", {
+                                body: JSON.stringify(ticketData)
+                            });
+
+                            // Log the full ticket data being sent for troubleshooting
+                            console.log("Ticket data JSON:", JSON.stringify(ticketData));
+
+                            const newTicket = JSON.parse(createResponse.response);
+                            console.log("Created ticket:", newTicket);
+                            const newTicketId = newTicket.id;
+
+                            if (!newTicketId) {
+                                throw new Error("Failed to get ID of newly created ticket");
+                            }
+
+                            // Prepare for redirect - construct the ticket URL
+                            const ticketUrl = `https://benchmarkeducationcompany.freshdesk.com/a/tickets/${newTicketId}`;
+
+                            // STEP 2: Add attachments as a private note to the ticket
+                            console.log(`Adding ${screenshotFiles.length} attachments as note to ticket #${newTicketId}`);
+
+                            if (screenshotFiles.length > 0) {
+                                try {
+                                    // API credentials
+                                    const subdomain = "benchmarkeducationcompany";
+                                    const apiKey = "5TMgbcZdRFY70hSpEdj";
+
+                                    // Create FormData for the attachment upload
+                                    const formData = new FormData();
+                                    formData.append('body', 'Additional attachments for assembly issue');
+                                    formData.append('private', 'true');
+
+                                    // Add files to the form data
+                                    for (let i = 0; i < screenshotFiles.length; i++) {
+                                        const file = screenshotFiles[i];
+                                        formData.append('attachments[]', file, file.name);
+                                    }
+
+                                    // Use XMLHttpRequest for direct API access
+                                    const xhr = new XMLHttpRequest();
+                                    xhr.open('POST', `https://${subdomain}.freshdesk.com/api/v2/tickets/${newTicketId}/notes`, true);
+                                    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(`${apiKey}:X`));
+
+                                    // Handle response
+                                    xhr.onload = function () {
+                                        if (xhr.status >= 200 && xhr.status < 300) {
+                                            console.log("Attachments added successfully:", xhr.responseText);
+                                            client.interface.trigger("showNotify", {
+                                                type: "success",
+                                                message: `Assembly ticket #${newTicketId} created with attachments`
+                                            });
+                                        } else {
+                                            console.error("Error uploading attachments:", xhr.status, xhr.responseText);
+                                            client.interface.trigger("showNotify", {
+                                                type: "warning",
+                                                message: `Assembly ticket #${newTicketId} created, but attachments failed`
+                                            });
+                                        }
+
+                                        // Always proceed with redirection and closing regardless of attachment outcome
+                                        finishTicketCreation(newTicketId, ticketUrl);
+                                    };
+
+                                    // Handle network errors
+                                    xhr.onerror = function () {
+                                        console.error("Network error during attachment upload");
+                                        client.interface.trigger("showNotify", {
+                                            type: "warning",
+                                            message: `Assembly ticket #${newTicketId} created, but attachments failed due to network error`
+                                        });
+
+                                        // Still finish the process even on error
+                                        finishTicketCreation(newTicketId, ticketUrl);
+                                    };
+
+                                    // Send the form data
+                                    xhr.send(formData);
+                                    console.log("Attachment request sent via XMLHttpRequest");
+
+                                    // Set a timeout as a fallback in case the XHR doesn't complete
+                                    setTimeout(() => {
+                                        if (loadingOverlay && loadingOverlay.style.display === 'flex') {
+                                            console.warn("XHR timed out, forcing completion");
+                                            finishTicketCreation(newTicketId, ticketUrl);
+                                        }
+                                    }, 8000);
+
+                                } catch (attachmentError) {
+                                    console.error("Error handling attachments:", attachmentError);
+                                    client.interface.trigger("showNotify", {
+                                        type: "warning",
+                                        message: `Assembly ticket #${newTicketId} created, but attachments failed: ${attachmentError.message}`
+                                    });
+
+                                    // Still finish the process even on error
+                                    finishTicketCreation(newTicketId, ticketUrl);
+                                }
+                            } else {
+                                // No attachments, just show success message and redirect
+                                client.interface.trigger("showNotify", {
+                                    type: "success",
+                                    message: `Assembly ticket #${newTicketId} created successfully`
+                                });
+
+                                // Call the finish function for consistency
+                                finishTicketCreation(newTicketId, ticketUrl);
+                            }
+
+                        } catch (error) {
+                            console.error("Error creating tracker:", error);
+                            console.error("Error details:", JSON.stringify(error, null, 2));
+
+                            // Hide loading overlay on error
+                            const loadingOverlay = document.getElementById('loadingOverlay');
+                            if (loadingOverlay) {
+                                loadingOverlay.style.display = 'none';
+                            }
+
+                            let errorMessage = "Failed to create tracker: ";
+                            if (error.response) {
+                                console.log("Raw error response:", error.response);
+                                try {
+                                    const errorData = JSON.parse(error.response);
+                                    console.log("Parsed error data:", errorData);
+                                    errorMessage += errorData.description || error.response;
+                                } catch (e) {
+                                    errorMessage += error.response;
+                                }
+                            } else if (error.errors && error.errors.length) {
+                                errorMessage += error.errors.map(e => e.message || JSON.stringify(e)).join("; ");
+                            } else {
+                                errorMessage += error.message || "Unknown error";
+                            }
+                            client.interface.trigger("showNotify", {
+                                type: "danger",
+                                message: errorMessage
+                            });
+                            document.getElementById('createTracker').disabled = false;
+                        }
+                    });
+
+                    // Helper function to finish the ticket creation process
+                    function finishTicketCreation(ticketId, ticketUrl) {
+                        // Hide loading overlay
+                        const loadingOverlay = document.getElementById('loadingOverlay');
+                        if (loadingOverlay) {
+                            loadingOverlay.style.display = 'none';
+                        }
+
+                        // Open the new ticket in a new tab
+                        try {
+                            window.open(ticketUrl, '_blank');
+                        } catch (navError) {
+                            console.error("Error opening ticket page:", navError);
+                        }
+
+                        // Close the current modal with a delay to ensure notifications are visible
+                        try {
+                            setTimeout(() => {
+                                client.instance.close({ refreshTickets: true });
+                            }, 1000);
+                        } catch (closeError) {
+                            console.error("Error closing modal:", closeError);
+                            // As a last resort, redirect to template selector
+                            setTimeout(() => {
+                                window.location.href = "template-selector.html";
+                            }, 1500);
+                        }
+                    }
+
+                    let aggregatedScreenshotFiles = [];
+
+                    document.getElementById('debugFillForm').addEventListener('click', function (e) {
+                        e.preventDefault();
+                        fillFormWithDemoData();
+                    });
+
+                    // Updated demo data fill function
+                    function fillFormWithDemoData() {
+                        document.getElementById('xcodeInfo').value = 'X56723';
+                        document.getElementById('application').value = 'BAdvance c2022';
+                        document.getElementById('specificIssue').value = 'Symbols Of Our Country Missing';
+                        document.getElementById('gradesImpacted').value = 'Grade 2';
+                        document.getElementById('issueSummary').value = 'Content for Symbols Of Our Country not appearing in Grade 2 resources';
+                        document.getElementById('reportedIssue').value = 'Teacher reports that when they access the Grade 2 content for Symbols Of Our Country, the expected materials are not visible.';
+                        document.getElementById('districtName').value = 'Springfield School District';
+                        document.getElementById('schoolName').value = 'Springfield Elementary';
+                        document.getElementById('districtState').value = 'Florida';
+                        // Product dropdown will need to be selected manually
+                        const today = new Date().toISOString().split('T')[0];
+                        document.getElementById('dateReported').value = today;
+                        document.getElementById('subscriptionCodes').value = 'AB123, XYZ456';
+                        document.getElementById('impactScope').selectedIndex = 3; // Both teacher and student
+                        document.getElementById('vipStatus').value = "Yes"; // Set VIP to Yes for demo
+                        document.getElementById('relatedTickets').value = '1234, 5678';
+                        document.getElementById('priority').selectedIndex = 1; // Medium
+                        document.getElementById('status').selectedIndex = 0; // Open
+
+                        // Update generated subject
+                        generateSubject();
+
+                        client.interface.trigger("showNotify", {
+                            type: "success",
+                            message: "Form filled with demo data"
+                        });
+                    }
+
+                    // Initialize Quill editors for rich text fields
+                    const quillReported = new Quill("#reportedIssueEditor", { theme: "snow", placeholder: "Enter the reported issue..." });
+                    const quillSummary = new Quill("#issueSummaryEditor", { theme: "snow", placeholder: "Enter the summary..." });
+
+                    // Before form submission, copy Quill HTML into hidden textareas
+                    document.getElementById('trackerForm').addEventListener('submit', async function (e) {
+                        // Update hidden textareas with editor content
+                        document.getElementById('reportedIssue').value = quillReported.root.innerHTML;
+                        document.getElementById('issueSummary').value = quillSummary.root.innerHTML;
+                        // Form submission continues with the normal flow
+                    });
+
+                    // Helper: Upload an image file to ImgBB and return its URL
+                    function uploadImageToImgbb(file) {
+                        const formData = new FormData();
+                        formData.append('image', file);
+                        const IMGBB_API_KEY = "b3da8c974bc40dd87d896d84436dd76e";
+                        return fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(result => {
+                                if (result.success) {
+                                    return result.data.display_url;
+                                }
+                                throw new Error("Image upload failed");
+                            });
+                    }
+
+                    // Handles paste events on a Quill editor and processes image files
+                    function handlePasteImage(e, quill) {
+                        const clipboardData = e.clipboardData || window.clipboardData;
+                        if (!clipboardData) return;
+                        const items = clipboardData.items;
+                        if (!items) return;
+                        for (let i = 0; i < items.length; i++) {
+                            if (items[i].type.indexOf("image") !== -1) {
+                                e.preventDefault();
+                                const file = items[i].getAsFile();
+                                uploadImageToImgbb(file)
+                                    .then(url => {
+                                        const range = quill.getSelection();
+                                        quill.insertEmbed(range.index, 'image', url);
+                                    })
+                                    .catch(error => console.error("Image upload error:", error));
+                                return;
+                            }
+                        }
+                    }
+
+                    // Attach paste listener on each Quill editor so pasted images are uploaded automatically
+                    quillReported.root.addEventListener('paste', function (e) {
+                        handlePasteImage(e, quillReported);
+                    });
+                    quillSummary.root.addEventListener('paste', function (e) {
+                        handlePasteImage(e, quillSummary);
+                    });
+
+                    // API-based dropdown functionality
+                    // Function to fetch groups from Freshdesk API
+                    async function fetchGroups() {
+                        try {
+                            console.log("Fetching groups from Freshdesk API");
+                            // Add a UI indicator that API is being called
+                            const groupSelect = document.getElementById("groupField");
+                            groupSelect.innerHTML = "<option>Loading groups...</option>";
+
+                            const response = await client.request.invokeTemplate("getGroups", {});
+
+                            if (!response || !response.response) {
+                                throw new Error("Empty response from groups API");
+                            }
+
+                            const groups = JSON.parse(response.response);
+                            console.log("Fetched groups:", groups);
+
+                            groupSelect.innerHTML = ""; // Clear existing options
+
+                            // Add a blank option
+                            const blankOption = document.createElement("option");
+                            blankOption.value = "";
+                            blankOption.textContent = "-- Select a Group --";
+                            groupSelect.appendChild(blankOption);
+
+                            groups.forEach(group => {
+                                const option = document.createElement("option");
+                                option.value = group.id;
+                                option.textContent = group.name;
+                                groupSelect.appendChild(option);
+
+                                // Set Escalations group as default
+                                if (group.id === 67000396680) {
+                                    option.selected = true;
+                                }
+                            });
+
+                            // After loading groups, instead of fetching agents, 
+                            // always use the hardcoded agent list directly
+                            loadHardcodedAgents();
+
+                        } catch (error) {
+                            console.error("Error fetching groups:", error);
+                            console.error(error.stack);
+                            // Fallback with hardcoded groups in case of API error
+                            loadFallbackGroups();
+                        }
+                    }
+
+                    // Function to always load the hardcoded agents instead of using the API
+                    function loadHardcodedAgents() {
+                        console.log("Loading hardcoded agents list");
+                        const agents = [
+                            { id: 67025683491, name: "Mohammad Azeem" },
+                            { id: 67030529218, name: "Jordan Fields" },
+                            { id: 67031011668, name: "Suriya Iqbal" },
+                            { id: 67040597168, name: "Anson Li" },
+                            { id: 67051499418, name: "Drita Lulgjuraj" }
+                        ];
+
+                        const agentSelect = document.getElementById("agentField");
+                        agentSelect.innerHTML = ""; // Clear existing options
+
+                        // Add a blank option
+                        const blankOption = document.createElement("option");
+                        blankOption.value = "";
+                        blankOption.textContent = "-- Select an Agent --";
+                        agentSelect.appendChild(blankOption);
+
+                        agents.forEach(agent => {
+                            const option = document.createElement("option");
+                            option.value = agent.id;
+                            option.textContent = agent.name;
+                            agentSelect.appendChild(option);
+                        });
+                    }
+
+                    // Modified to use hardcoded agents instead of API
+                    function fetchAgentsForGroup(groupId) {
+                        console.log(`Group selection changed, loading hardcoded agents for group: ${groupId}`);
+                        // Always use the hardcoded list regardless of group
+                        loadHardcodedAgents();
+                    }
+
+                    // Function to fetch product types
+                    function fetchProductTypes() {
+                        console.log("Using hardcoded product types data");
+
+                        // Set up the hardcoded product hierarchy
+                        const productTypeHierarchy = {
+                            "Not Product Specific": {},
+                            "Assess 360": {},
+                            "Benchmark Advance": {
+                                "c2026": [],
+                                "- c2022": [],
+                                "c2022": [],
+                                "c2021": [],
+                                "c2018": [],
+                                "c2017": [],
+                                "Florida c2026": [],
+                                "Florida": [],
+                                "Intervention Resources": [],
+                                "Pilots": [
+                                    "National Pilot",
+                                    "Units 1-4 Pilot - c2022",
+                                    "Units 1-4 Pilot c2022",
+                                    "Units 1-2 Pilot - c2022",
+                                    "Units 1-2 Pilot c2022",
+                                    "Units 3-4 Pilot - c2022",
+                                    "Units 3-4 Pilot c2022",
+                                    "Units 5-7 Pilot - c2022",
+                                    "Units 5-7 Pilot c2022",
+                                    "Units 8-10 Pilot - c2022",
+                                    "Units 8-10 Pilot c2022",
+                                    "Unknown"
+                                ],
+                                "Benchmark Advance": [],
+                                "California c2017": [],
+                                "California": []
+                            },
+                            "Benchmark Adelante": {
+                                "c2026": [],
+                                "c2023": [],
+                                "- c2023": [],
+                                "c2022": [],
+                                "c2018": [],
+                                "c2017": [],
+                                "Florida c2026": [],
+                                "California c2017": [],
+                                "Utah": [],
+                                "Pilots": [
+                                    "National Pilot",
+                                    "Units 1-4 Pilot - c2023",
+                                    "Units 1-4 Pilot c2023",
+                                    "Units 1-2 Pilot - c2023",
+                                    "Units 1-2 Pilot c2023",
+                                    "Units 3-4 Pilot - c2023",
+                                    "Units 3-4 Pilot c2023",
+                                    "Units 5-7 Pilot - c2023",
+                                    "Units 5-7 Pilot c2023",
+                                    "Units 8-10 Pilot - c2023",
+                                    "Units 8-10 Pilot c2023",
+                                    "Unknown"
+                                ],
+                                "Adelante": []
+                            },
+                            "Benchmark Workshop": {},
+                            "Benchmark Taller": {},
+                            "Ready To Advance": {},
+                            "Listos Y Adelante": {
+                                "Listos y Adelante Aprendizaje emergente": [],
+                                "c2022": [],
+                                "Edicion Texas": [],
+                                "Listos Y Adelante": []
+                            },
+                            "Supplemental": {
+                                "Foundational Skills Assessment": [],
+                                "Oral Reading Records": [],
+                                "Registros de lectura en voz alta™": [],
+                                "Hello": [],
+                                "Writer's Workshop": [],
+                                "Reader's Workshop": [],
+                                "4,500+ eBook Library": [],
+                                "123 Andres": [],
+                                "ACT Now!": [],
+                                "Advance ALL": [],
+                                "Advancing Language Learning": [],
+                                "Anchor Comprehension Workshop": [],
+                                "Authentic Voices": [],
+                                "BEC Decodables": [],
+                                "Benchmark Literacy": [],
+                                "Benchmark Literacy 2016": [],
+                                "Steps to Advance": [],
+                                "Benchmark Common Core": [],
+                                "Benchmark Phonics": [],
+                                "SpiralUp Phonics": [],
+                                "BuildUp Phonics": [],
+                                "Phonics Intervention": [],
+                                "Benchmark Phonics & Word Study Workshop": [],
+                                "RIGOR": [],
+                                "Benchmark Writer's Universe": [],
+                                "Comprehension Skill Bags": [],
+                                "Decodable Fluency Builders": [],
+                                "Decodable Readers": [],
+                                "Dynamite Decodables": [],
+                                "Express": [],
+                                "MySELF": [],
+                                "Represent!": [],
+                                "Fonética y gramática": [],
+                                "Avanse": [],
+                                "Mis libros de fonetica": [],
+                                "Soluciones": [],
+                                "Sound Spelling Cards and Videos/Transfer Kits": [],
+                                "Spring Forward": [],
+                                "PD Essentials": [
+                                    "Collections",
+                                    "Courses and Books"
+                                ],
+                                "PD Training: Curriculum Resources": []
+                            }
+                        };
+
+                        // Create the dropdown structure in the DOM
+                        const productContainer = document.querySelector('.form-group:has(#productImpacted)');
+
+                        // Clean out the existing container
+                        productContainer.innerHTML = '';
+
+                        // Create label
+                        const label = document.createElement('label');
+                        label.setAttribute('for', 'productImpacted');
+                        label.textContent = 'Product/Program Impacted:';
+                        productContainer.appendChild(label);
+
+                        // Create main product select
+                        const mainSelect = document.createElement('select');
+                        mainSelect.id = 'productImpacted';
+                        mainSelect.name = 'productImpacted';
+
+                        // Initialize the dataset property to store the full value
+                        mainSelect.dataset.fullValue = '';
+
+                        // Add the blank option
+                        const blankOption = document.createElement('option');
+                        blankOption.value = '';
+                        blankOption.textContent = '-- Select a Product --';
+                        mainSelect.appendChild(blankOption);
+
+                        // Add product options
+                        Object.keys(productTypeHierarchy).forEach(productName => {
+                            const option = document.createElement('option');
+                            option.value = productName;
+                            option.textContent = productName;
+                            mainSelect.appendChild(option);
+                        });
+
+                        productContainer.appendChild(mainSelect);
+
+                        // Create a container for the second level dropdown (initially hidden)
+                        const secondLevelContainer = document.createElement('div');
+                        secondLevelContainer.id = 'secondLevelContainer';
+                        secondLevelContainer.style.display = 'none';
+                        secondLevelContainer.style.marginTop = '10px';
+
+                        const secondLevelSelect = document.createElement('select');
+                        secondLevelSelect.id = 'secondLevelSelect';
+                        secondLevelSelect.name = 'secondLevelSelect';
+                        secondLevelContainer.appendChild(secondLevelSelect);
+
+                        productContainer.appendChild(secondLevelContainer);
+
+                        // Create a container for the third level dropdown (initially hidden)
+                        const thirdLevelContainer = document.createElement('div');
+                        thirdLevelContainer.id = 'thirdLevelContainer';
+                        thirdLevelContainer.style.display = 'none';
+                        thirdLevelContainer.style.marginTop = '10px';
+
+                        const thirdLevelSelect = document.createElement('select');
+                        thirdLevelSelect.id = 'thirdLevelSelect';
+                        thirdLevelSelect.name = 'thirdLevelSelect';
+                        thirdLevelContainer.appendChild(thirdLevelSelect);
+
+                        productContainer.appendChild(thirdLevelContainer);
+
+                        // Add the hint text
+                        const hintText = document.createElement('div');
+                        hintText.className = 'hint';
+                        hintText.textContent = 'Select the product type';
+                        productContainer.appendChild(hintText);
+
+                        // Event listener for the main product dropdown
+                        mainSelect.addEventListener('change', function () {
+                            const selectedProduct = this.value;
+                            const secondLevel = productTypeHierarchy[selectedProduct];
+
+                            // Update the full product value to include the first level
+                            document.getElementById('productImpacted').dataset.fullValue = selectedProduct;
+
+                            // Reset and hide third level
+                            thirdLevelContainer.style.display = 'none';
+                            thirdLevelSelect.innerHTML = '';
+
+                            // Reset second level
+                            secondLevelSelect.innerHTML = '';
+
+                            if (selectedProduct && Object.keys(secondLevel).length > 0) {
+                                // Add a blank option
+                                const blankOption = document.createElement('option');
+                                blankOption.value = '';
+                                blankOption.textContent = '-- Select a Subcategory --';
+                                secondLevelSelect.appendChild(blankOption);
+
+                                // Add options for second level
+                                Object.keys(secondLevel).forEach(subCategory => {
+                                    const option = document.createElement('option');
+                                    option.value = subCategory;
+                                    option.textContent = subCategory;
+                                    secondLevelSelect.appendChild(option);
+                                });
+
+                                // Show second level
+                                secondLevelContainer.style.display = 'block';
+                            } else {
+                                // Hide second level if no subcategories
+                                secondLevelContainer.style.display = 'none';
+                            }
+                        });
+
+                        // Event listener for the second level dropdown
+                        secondLevelSelect.addEventListener('change', function () {
+                            const selectedProduct = mainSelect.value;
+                            const selectedSubCategory = this.value;
+                            const thirdLevel = productTypeHierarchy[selectedProduct][selectedSubCategory];
+
+                            // Update the full product value to include first and second levels
+                            document.getElementById('productImpacted').dataset.fullValue =
+                                selectedProduct + ' - ' + selectedSubCategory;
+
+                            // Reset third level
+                            thirdLevelSelect.innerHTML = '';
+
+                            if (selectedSubCategory && Array.isArray(thirdLevel) && thirdLevel.length > 0) {
+                                // Add a blank option
+                                const blankOption = document.createElement('option');
+                                blankOption.value = '';
+                                blankOption.textContent = '-- Select a Specific Item --';
+                                thirdLevelSelect.appendChild(blankOption);
+
+                                // Add options for third level
+                                thirdLevel.forEach(item => {
+                                    const option = document.createElement('option');
+                                    option.value = item;
+                                    option.textContent = item;
+                                    thirdLevelSelect.appendChild(option);
+                                });
+
+                                // Show third level
+                                thirdLevelContainer.style.display = 'block';
+                            } else {
+                                // Hide third level if no items
+                                thirdLevelContainer.style.display = 'none';
+                            }
+                        });
+
+                        // Event listener for the third level dropdown
+                        thirdLevelSelect.addEventListener('change', function () {
+                            const selectedProduct = mainSelect.value;
+                            const selectedSubCategory = secondLevelSelect.value;
+                            const selectedItem = this.value;
+
+                            // Update the full product value to include all three levels
+                            document.getElementById('productImpacted').dataset.fullValue =
+                                selectedProduct + ' - ' + selectedSubCategory + ' - ' + selectedItem;
+                        });
+
+                        // Override the form submission to use the full hierarchical value
+                        const originalSubmitHandler = document.getElementById('trackerForm').onsubmit;
+                        document.getElementById('trackerForm').onsubmit = function (e) {
+                            // Get the full value from all dropdown levels
+                            const fullProductValue = document.getElementById('productImpacted').dataset.fullValue;
+                            if (fullProductValue) {
+                                // Set the product value to the full hierarchical value
+                                document.getElementById('productImpacted').value = fullProductValue;
+                            }
+
+                            // Call the original handler if it exists
+                            if (originalSubmitHandler) {
+                                return originalSubmitHandler.call(this, e);
+                            }
+                        };
+                    }
+
+                    // Replace the API-based fetchProductTypes with our hardcoded version
+                    // Use the loadFallbackProductTypes as a backup method in case of issues
+                    function loadFallbackProductTypes() {
+                        // Call the main function to ensure we always use the hardcoded version
+                        fetchProductTypes();
+                    }
+
+                    // Fallback functions in case the API calls fail
+                    function loadFallbackGroups() {
+                        console.log("Using fallback groups data");
+                        const groups = [
+                            { id: 67000396680, name: "Escalations" },
+                            { id: 67000396681, name: "Support" },
+                            { id: 67000396682, name: "Technical" }
+                        ];
+
+                        const groupSelect = document.getElementById("groupField");
+                        groupSelect.innerHTML = ""; // Clear existing options
+
+                        // Add a blank option
+                        const blankOption = document.createElement("option");
+                        blankOption.value = "";
+                        blankOption.textContent = "-- Select a Group --";
+                        groupSelect.appendChild(blankOption);
+
+                        groups.forEach(group => {
+                            const option = document.createElement("option");
+                            option.value = group.id;
+                            option.textContent = group.name;
+                            groupSelect.appendChild(option);
+
+                            // Set Escalations group as default
+                            if (group.id === 67000396680) {
+                                option.selected = true;
+                            }
+                        });
+
+                        // Load fallback agents for the default group
+                        loadFallbackAgents();
+                    }
+
+                    function loadFallbackAgents() {
+                        console.log("Using fallback agents data");
+                        const agents = [
+                            { id: 67025683491, name: "Mohammad Azeem" },
+                            { id: 67030529218, name: "Jordan Fields" },
+                            { id: 67031011668, name: "Suriya Iqbal" },
+                            { id: 67040597168, name: "Anson Li" },
+                            { id: 67051499418, name: "Drita Lulgjuraj" }
+                        ];
+
+                        const agentSelect = document.getElementById("agentField");
+                        agentSelect.innerHTML = ""; // Clear existing options
+
+                        // Add a blank option
+                        const blankOption = document.createElement("option");
+                        blankOption.value = "";
+                        blankOption.textContent = "-- Select an Agent --";
+                        agentSelect.appendChild(blankOption);
+
+                        agents.forEach(agent => {
+                            const option = document.createElement("option");
+                            option.value = agent.id;
+                            option.textContent = agent.name;
+                            agentSelect.appendChild(option);
+                        });
+                    }
+
+                    function loadFallbackProductTypes() {
+                        console.log("Using fallback product types data");
+                        const productTypes = [
+                            { id: "book", name: "Book" },
+                            { id: "software", name: "Software" },
+                            { id: "digital_content", name: "Digital Content" },
+                            { id: "print_content", name: "Print Content" },
+                            { id: "assessment", name: "Assessment" }
+                        ];
+
+                        const productSelect = document.getElementById("productImpacted");
+                        productSelect.innerHTML = ""; // Clear existing options
+
+                        // Add a blank option
+                        const blankOption = document.createElement("option");
+                        blankOption.value = "";
+                        blankOption.textContent = "-- Select a Product --";
+                        productSelect.appendChild(blankOption);
+
+                        productTypes.forEach(product => {
+                            const option = document.createElement("option");
+                            option.value = product.id;
+                            option.textContent = product.name;
+                            productSelect.appendChild(option);
+                        });
+                    }
+
+                    // When group changes, still call the function but it will always load hardcoded agents
+                    document.getElementById("groupField").addEventListener("change", function () {
+                        const groupId = this.value;
+                        if (groupId) {
+                            // This will now load the hardcoded agents instead of doing an API call
+                            fetchAgentsForGroup(parseInt(groupId, 10));
+                        } else {
+                            // Clear agents dropdown if no group selected
+                            const agentSelect = document.getElementById("agentField");
+                            agentSelect.innerHTML = "";
+                            const blankOption = document.createElement("option");
+                            blankOption.value = "";
+                            blankOption.textContent = "-- Select a Group First --";
+                            agentSelect.appendChild(blankOption);
+                        }
+                    });
+
+                    // Enhanced file preview functionality with attachment totals
+                    document.getElementById('screenshots').addEventListener('change', function (e) {
+                        const previewContainer = document.getElementById('screenshotPreview');
+                        if (this.files.length > 0) {
+                            // Add new files to our aggregated collection
+                            for (let i = 0; i < this.files.length; i++) {
+                                aggregatedScreenshotFiles.push(this.files[i]);
+                            }
+
+                            // Clear the preview container first to show all files
+                            previewContainer.innerHTML = '';
+
+                            // Add attachments summary at the top
+                            updateAttachmentsSummary(previewContainer);
+
+                            // Preview up to 5 files to avoid overwhelming the UI
+                            const fileCount = Math.min(aggregatedScreenshotFiles.length, 5);
+                            for (let i = 0; i < fileCount; i++) {
+                                const filePreview = createFilePreviewElement(aggregatedScreenshotFiles[i], i);
+                                previewContainer.appendChild(filePreview);
+                            }
+
+                            // Show note if there are more files than we're showing
+                            if (aggregatedScreenshotFiles.length > 5) {
+                                const noteDiv = document.createElement('div');
+                                noteDiv.className = 'file-note';
+                                noteDiv.textContent = `Note: Only showing the first 5 files. All ${aggregatedScreenshotFiles.length} files will be uploaded.`;
+                                previewContainer.appendChild(noteDiv);
+                            }
+
+                            // Add a clear all button if there are files
+                            if (aggregatedScreenshotFiles.length > 0) {
+                                const clearAllDiv = document.createElement('div');
+                                clearAllDiv.className = 'clear-files';
+                                clearAllDiv.innerHTML = `<button type="button">Clear All Attachments (${aggregatedScreenshotFiles.length})</button>`;
+                                clearAllDiv.querySelector('button').addEventListener('click', function () {
+                                    clearAllFiles();
+                                });
+                                previewContainer.appendChild(clearAllDiv);
+                            }
+
+                            // Update the attachment count indicator
+                            updateAttachmentCountIndicator();
+
+                            // Clear the file input so the same files can be selected again
+                            this.value = '';
+                        }
+                    });
+
+                    /**
+                     * Calculate and display attachment totals information
+                     */
+                    function updateAttachmentsSummary(container) {
+                        if (!container) container = document.getElementById('screenshotPreview');
+
+                        // Calculate total size
+                        let totalSizeBytes = 0;
+                        let fileTypes = new Set();
+
+                        aggregatedScreenshotFiles.forEach(file => {
+                            totalSizeBytes += file.size;
+                            const extension = file.name.split('.').pop().toLowerCase();
+                            fileTypes.add(extension);
+                        });
+
+                        // Format size for display
+                        let formattedSize;
+                        if (totalSizeBytes < 1024) {
+                            formattedSize = totalSizeBytes + ' B';
+                        } else if (totalSizeBytes < 1024 * 1024) {
+                            formattedSize = (totalSizeBytes / 1024).toFixed(1) + ' KB';
+                        } else {
+                            formattedSize = (totalSizeBytes / (1024 * 1024)).toFixed(2) + ' MB';
+                        }
+
+                        // Create the summary element
+                        const summaryDiv = document.createElement('div');
+                        summaryDiv.className = 'attachments-summary';
+                        if (totalSizeBytes > 10 * 1024 * 1024) { // Mark as large if over 10MB
+                            summaryDiv.classList.add('large-size');
+                        }
+
+                        summaryDiv.innerHTML = `
+                <div class="attachments-count">
+                    <strong>${aggregatedScreenshotFiles.length}</strong> file${aggregatedScreenshotFiles.length !== 1 ? 's' : ''} attached
+                    ${fileTypes.size > 1 ? `(${fileTypes.size} different types)` : ''}
+                </div>
+                <div class="attachments-size">Total: ${formattedSize}</div>
+            `;
+
+                        // Insert at the beginning of the container
+                        if (container.firstChild) {
+                            container.insertBefore(summaryDiv, container.firstChild);
+                        } else {
+                            container.appendChild(summaryDiv);
+                        }
+
+                        return summaryDiv;
+                    }
+
+                    /**
+                     * Enhanced file type detection for better previews
+                     */
+                    function getFileTypeInfo(file) {
+                        // Extract file extension
+                        const fileName = file.name || '';
+                        const fileExtension = fileName.split('.').pop().toLowerCase();
+                        const mimeType = file.type || '';
+
+                        // Default file type info
+                        let iconClass = 'fa-file';
+                        let fileTypeLabel = 'File';
+                        let colorClass = '';
+
+                        // Common document types
+                        if (['doc', 'docx', 'odt', 'rtf'].includes(fileExtension) ||
+                            mimeType.includes('word') || mimeType.includes('opendocument.text')) {
+                            iconClass = 'fa-file-word';
+                            fileTypeLabel = 'Document';
+                            colorClass = 'word-color';
+                        }
+                        // Spreadsheet types
+                        else if (['xls', 'xlsx', 'xlsm', 'csv', 'ods'].includes(fileExtension) ||
+                            mimeType.includes('excel') || mimeType.includes('spreadsheet') ||
+                            mimeType.includes('csv')) {
+                            iconClass = 'fa-file-excel';
+                            fileTypeLabel = 'Spreadsheet';
+                            colorClass = 'excel-color';
+                        }
+                        // Presentation types
+                        else if (['ppt', 'pptx', 'odp'].includes(fileExtension) ||
+                            mimeType.includes('powerpoint') || mimeType.includes('presentation')) {
+                            iconClass = 'fa-file-powerpoint';
+                            fileTypeLabel = 'Presentation';
+                            colorClass = 'powerpoint-color';
+                        }
+                        // PDF files
+                        else if (fileExtension === 'pdf' || mimeType.includes('pdf')) {
+                            iconClass = 'fa-file-pdf';
+                            fileTypeLabel = 'PDF';
+                            colorClass = 'pdf-color';
+                        }
+                        // Archive files
+                        else if (['zip', 'rar', 'tar', 'gz', '7z'].includes(fileExtension) ||
+                            mimeType.includes('zip') || mimeType.includes('compressed')) {
+                            iconClass = 'fa-file-archive';
+                            fileTypeLabel = 'Archive';
+                            colorClass = 'archive-color';
+                        }
+                        // Plain text files
+                        else if (['txt', 'log', 'md'].includes(fileExtension) ||
+                            mimeType.includes('text/plain')) {
+                            iconClass = 'fa-file-alt';
+                            fileTypeLabel = 'Text';
+                            colorClass = 'text-color';
+                        }
+                        // Code files
+                        else if (['html', 'htm', 'xml', 'json', 'js', 'css', 'php', 'py', 'java', 'c', 'cpp'].includes(fileExtension) ||
+                            mimeType.includes('code') || mimeType.includes('javascript') || mimeType.includes('html')) {
+                            iconClass = 'fa-file-code';
+                            fileTypeLabel = 'Code';
+                            colorClass = 'code-color';
+                        }
+                        // Audio files
+                        else if (['mp3', 'wav', 'ogg', 'flac', 'm4a'].includes(fileExtension) ||
+                            mimeType.includes('audio')) {
+                            iconClass = 'fa-file-audio';
+                            fileTypeLabel = 'Audio';
+                            colorClass = 'audio-color';
+                        }
+                        // Video files
+                        else if (['mp4', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'webm'].includes(fileExtension) ||
+                            mimeType.includes('video')) {
+                            iconClass = 'fa-file-video';
+                            fileTypeLabel = 'Video';
+                            colorClass = 'video-color';
+                        }
+                        // HAR files (HTTP Archive)
+                        else if (fileExtension === 'har') {
+                            iconClass = 'fa-file-code';
+                            fileTypeLabel = 'HAR';
+                            colorClass = 'har-color';
+                        }
+
+                        // Image files are handled differently with actual thumbnails
+                        const isImage = file.type.match('image.*');
+
+                        // Get file size in appropriate units
+                        const fileSizeBytes = file.size;
+                        let fileSize = '';
+
+                        if (fileSizeBytes < 1024) {
+                            fileSize = fileSizeBytes + ' B';
+                        } else if (fileSizeBytes < 1024 * 1024) {
+                            fileSize = (fileSizeBytes / 1024).toFixed(1) + ' KB';
+                        } else {
+                            fileSize = (fileSizeBytes / (1024 * 1024)).toFixed(1) + ' MB';
+                        }
+
+                        return {
+                            iconClass,
+                            fileTypeLabel,
+                            colorClass,
+                            isImage,
+                            fileSize,
+                            fileSizeBytes,
+                            extension: fileExtension,
+                            mimeType
+                        };
+                    }
+
+                    /**
+                     * Function to create a file preview element
+                     */
+                    function createFilePreviewElement(file, index) {
+                        const fileInfo = getFileTypeInfo(file);
+                        const previewDiv = document.createElement('div');
+                        previewDiv.className = 'file-thumbnail';
+                        previewDiv.dataset.fileIndex = index;
+
+                        if (fileInfo.isImage) {
+                            // For image files, create a thumbnail preview
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                previewDiv.innerHTML = `
+                        <div class="thumbnail-container">
+                            <img src="${e.target.result}" title="${file.name}" alt="${file.name}"/>
+                        </div>
+                        <div class="file-filename" title="${file.name}">${file.name}</div>
+                        <div class="file-size">${fileInfo.fileSize}</div>
+                        <div class="file-remove" data-index="${index}">✕</div>`;
+
+                                // Add event listener to the remove button
+                                previewDiv.querySelector('.file-remove').addEventListener('click', function (e) {
+                                    e.stopPropagation();
+                                    const index = parseInt(this.dataset.index);
+                                    removeFile(index);
+                                });
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            // For non-image files, show appropriate icon based on file type
+                            previewDiv.innerHTML = `
+                    <div class="thumbnail-container file-icon-container ${fileInfo.colorClass}">
+                        <i class="fas ${fileInfo.iconClass} file-icon"></i>
+                        <div class="file-type-label">${fileInfo.fileTypeLabel}</div>
+                    </div>
+                    <div class="file-filename" title="${file.name}">${file.name}</div>
+                    <div class="file-size">${fileInfo.fileSize}</div>
+                    <div class="file-remove" data-index="${index}">✕</div>`;
+
+                            // Add event listener to the remove button
+                            previewDiv.querySelector('.file-remove').addEventListener('click', function (e) {
+                                e.stopPropagation();
+                                const index = parseInt(this.dataset.index);
+                                removeFile(index);
+                            });
+                        }
+
+                        // Make the whole preview clickable to view file details
+                        previewDiv.addEventListener('click', function () {
+                            showFileDetails(file, index);
+                        });
+
+                        return previewDiv;
+                    }
+
+                    /**
+                     * Function to show file details when a preview is clicked
+                     */
+                    function showFileDetails(file, index) {
+                        const fileInfo = getFileTypeInfo(file);
+                        const detailsHtml = `
+                <div class="file-details-header">
+                    <h3>File Details</h3>
+                    <div class="file-details-close">✕</div>
+                </div>
+                <div class="file-details-content">
+                    <div class="file-details-icon">
+                        <i class="fas ${fileInfo.iconClass} file-icon-large"></i>
+                    </div>
+                    <div class="file-details-info">
+                        <p><strong>Name:</strong> ${file.name}</p>
+                        <p><strong>Type:</strong> ${file.type || 'Unknown'}</p>
+                        <p><strong>Size:</strong> ${fileInfo.fileSize}</p>
+                        <p><strong>Last Modified:</strong> ${new Date(file.lastModified).toLocaleString()}</p>
+                    </div>
+                </div>
+                <div class="file-details-actions">
+                    <button class="file-details-remove" data-index="${index}">Remove File</button>
+                </div>
+            `;
+
+                        // Create or update the details modal
+                        let detailsModal = document.getElementById('fileDetailsModal');
+                        if (!detailsModal) {
+                            detailsModal = document.createElement('div');
+                            detailsModal.id = 'fileDetailsModal';
+                            detailsModal.className = 'file-details-modal';
+                            document.body.appendChild(detailsModal);
+                        }
+
+                        detailsModal.innerHTML = detailsHtml;
+                        detailsModal.style.display = 'block';
+
+                        // Add event listeners
+                        detailsModal.querySelector('.file-details-close').addEventListener('click', function () {
+                            detailsModal.style.display = 'none';
+                        });
+
+                        detailsModal.querySelector('.file-details-remove').addEventListener('click', function () {
+                            const index = parseInt(this.dataset.index);
+                            removeFile(index);
+                            detailsModal.style.display = 'none';
+                        });
+                    }
+
+                    // Function to remove a file by index
+                    function removeFile(index) {
+                        if (index >= 0 && index < aggregatedScreenshotFiles.length) {
+                            // Remove the file from our collection
+                            aggregatedScreenshotFiles.splice(index, 1);
+
+                            // Refresh the preview to reflect the change
+                            const previewContainer = document.getElementById('screenshotPreview');
+                            previewContainer.innerHTML = '';
+
+                            // Re-add the summary information
+                            if (aggregatedScreenshotFiles.length > 0) {
+                                updateAttachmentsSummary(previewContainer);
+                            }
+
+                            // Rebuild the preview display
+                            const fileCount = Math.min(aggregatedScreenshotFiles.length, 5);
+                            for (let i = 0; i < fileCount; i++) {
+                                const filePreview = createFilePreviewElement(aggregatedScreenshotFiles[i], i);
+                                previewContainer.appendChild(filePreview);
+                            }
+
+                            // Show note if there are more files than we're showing
+                            if (aggregatedScreenshotFiles.length > 5) {
+                                const noteDiv = document.createElement('div');
+                                noteDiv.className = 'file-note';
+                                noteDiv.textContent = `Note: Only showing the first 5 files. All ${aggregatedScreenshotFiles.length} files will be uploaded.`;
+                                previewContainer.appendChild(noteDiv);
+                            }
+
+                            // Add a clear all button if there are files
+                            if (aggregatedScreenshotFiles.length > 0) {
+                                const clearAllDiv = document.createElement('div');
+                                clearAllDiv.className = 'clear-files';
+                                clearAllDiv.innerHTML = `<button type="button">Clear All Attachments (${aggregatedScreenshotFiles.length})</button>`;
+                                clearAllDiv.querySelector('button').addEventListener('click', function () {
+                                    clearAllFiles();
+                                });
+                                previewContainer.appendChild(clearAllDiv);
+                            }
+
+                            // Update the attachment count indicator
+                            updateAttachmentCountIndicator();
+                        }
+                    }
+
+                    // Function to clear all files
+                    function clearAllFiles() {
+                        aggregatedScreenshotFiles = [];
+                        document.getElementById('screenshotPreview').innerHTML = '';
+                        updateAttachmentCountIndicator();
+                    }
+
+                    // Initialize the original label text when DOM is loaded
+                    const screenshotsLabel = document.querySelector('label[for="screenshots"]');
+                    if (screenshotsLabel) {
+                        screenshotsLabel.setAttribute('data-original-text', screenshotsLabel.textContent);
+                    }
+
+                    // Initialize the dropdowns when the form loads
+                    fetchGroups();
+                    fetchProductTypes();
+
+                    // Add back button functionality
+                    document.getElementById('backButton').addEventListener('click', function () {
+                        window.location.href = "template-selector.html";
+                    });
+                }
+
+                // Start initialization with a short delay to ensure all scripts are loaded
+                setTimeout(initializeClient, 500);
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(function () {
+                    var createBtn = document.getElementById('createTracker');
+                    if (createBtn) {
+                        createBtn.onclick = function (e) {
+                            e.preventDefault();
+                            document.getElementById('trackerForm').dispatchEvent(new Event('submit'));
+                        };
+                    }
+                    var cancelBtn = document.getElementById('cancelTracker');
+                    if (cancelBtn) {
+                        cancelBtn.onclick = function () {
+                            if (window.client) {
+                                window.client.instance.close();
+                            }
+                        };
+                    }
+                    console.log('Extra event handlers attached to buttons');
+                }, 500);
+            });
+        </script>
+
+
+</body>
+
+</html>
