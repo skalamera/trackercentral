@@ -365,6 +365,12 @@ async function getAssociatedTickets(ticketId) {
 // Add a helper function to open tickets
 function openTicket(ticketId) {
   client.interface.trigger("click", { id: "openTicket", value: ticketId });
+  client.iparams.get("freshdesk_subdomain").then(iparams => {
+    let subdomain = sanitizeSubdomain(iparams.freshdesk_subdomain);
+    window.open(`https://${subdomain}.freshdesk.com/a/tickets/${ticketId}`, "_blank");
+  }).catch(() => {
+    window.open(`https://freshdesk.com/a/tickets/${ticketId}`, "_blank");
+  });
 }
 
 /**
@@ -603,6 +609,12 @@ document.onreadystatechange = function () {
       client.iparams.get("freshdesk_subdomain").then(function (iparams) {
         console.log("App initialization - iparams retrieved:", iparams);
 
+        // Sanitize the subdomain and store it for future use
+        if (iparams && iparams.freshdesk_subdomain) {
+          iparams.freshdesk_subdomain = sanitizeSubdomain(iparams.freshdesk_subdomain);
+          console.log("Sanitized subdomain:", iparams.freshdesk_subdomain);
+        }
+
         if (!iparams || !iparams.freshdesk_subdomain || !iparams.freshdesk_subdomain.trim()) {
           console.error("Missing or empty Freshdesk subdomain in configuration");
           document.body.innerHTML = `
@@ -615,6 +627,7 @@ document.onreadystatechange = function () {
           return;
         }
 
+        // Continue with normal app initialization
         client.events.on("app.activated", onAppActivate);
       }).catch(function (error) {
         console.error("Failed to get installation parameters:", error);
@@ -632,3 +645,53 @@ document.onreadystatechange = function () {
     });
   }
 };
+
+/**
+ * Sanitize the Freshdesk subdomain to ensure it doesn't include .freshdesk.com
+ * @param {string} subdomain - The subdomain from configuration
+ * @return {string} - The sanitized subdomain
+ */
+function sanitizeSubdomain(subdomain) {
+  if (!subdomain) return '';
+  // Remove any .freshdesk.com suffix if present
+  return subdomain.replace(/\.freshdesk\.com$/i, '');
+}
+
+// Update the event handler for the Create Tracker button
+document.addEventListener('DOMContentLoaded', function () {
+  const createTrackerButton = document.getElementById('createTrackerLink');
+
+  if (createTrackerButton) {
+    createTrackerButton.addEventListener('click', function () {
+      console.log("Create tracker clicked");
+
+      // Clear ALL localStorage data related to districts
+      console.log("🧹 Purging all district data from localStorage before opening tracker");
+      const keysToCheck = ['sourceTicketData', 'sedcustData', 'assemblyData', 'districtCache'];
+
+      keysToCheck.forEach(key => {
+        try {
+          if (localStorage.getItem(key)) {
+            console.log(`Removing cached data from ${key}`);
+            localStorage.removeItem(key);
+          }
+        } catch (e) {
+          console.error(`Error removing ${key}:`, e);
+        }
+      });
+
+      ensureClientInitialized()
+        .then(() => {
+          console.log("Client initialized, opening template selector");
+          return openTrackerModal('template-selector');
+        })
+        .catch(error => {
+          console.error("Failed to open tracker modal:", error);
+          // Show fallback UI or direct navigation
+          handleModalFailure('template-selector');
+        });
+    });
+  }
+
+});
+

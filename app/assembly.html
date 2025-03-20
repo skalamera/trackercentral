@@ -20,6 +20,12 @@
 </head>
 
 <body>
+    <!-- Add the loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <div class="spinner-text">Creating ticket...</div>
+    </div>
+
     <div class="tracker-form-container">
         <!-- Debug Button -->
         <div class="debug-container">
@@ -37,7 +43,7 @@
                 style="cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;"
                 onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';"
                 onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';">
-                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>Back to Tracker Templates
             </fw-button>
         </div>
 
@@ -1055,84 +1061,58 @@
 
                     // UPDATED: Modified description generation function to match new format and removed fields
                     function generateDescription() {
-                        const subject = document.getElementById('subject').value.trim();
-                        const issueSummary = document.getElementById('issueSummary').value.trim();
-                        const reportedIssue = document.getElementById('reportedIssue').value.trim();
-                        const districtName = document.getElementById('districtName').value.trim();
-                        const schoolName = document.getElementById('schoolName').value.trim();
-                        const districtState = document.getElementById('districtState').value.trim();
+                        // Collect all form field values
+                        const summary = document.getElementById('issueSummary').value || '';
+                        const issue = document.getElementById('reportedIssue').value || '';
+                        const districtName = document.getElementById('districtName').value || '';
+                        const schoolName = document.getElementById('schoolName').value || '';
+                        const districtState = document.getElementById('districtState').value || '';
+
+                        // Get the product value using both possible sources
                         const productImpacted = document.getElementById('productImpacted').dataset.fullValue ||
                             document.getElementById('productImpacted').value || '';
-                        const dateReported = document.getElementById('dateReported').value;
-                        const subscriptionCodes = document.getElementById('subscriptionCodes').value.trim();
-                        const impactScope = document.getElementById('impactScope').value;
-                        const vipStatus = document.getElementById('vipStatus').value === "Yes";
 
-                        let formattedDate = '';
-                        if (dateReported) {
-                            const date = new Date(dateReported);
-                            formattedDate = date.toLocaleDateString('en-US', {
-                                year: 'numeric', month: 'long', day: 'numeric'
-                            });
+                        // For program variation, we'll use a placeholder since it's not in the form
+                        const programVariation = '';
+
+                        const dateReported = document.getElementById('dateReported').value || '';
+                        const subscriptionCodes = document.getElementById('subscriptionCodes').value || '';
+                        const teacherStudentImpact = document.getElementById('impactScope').value || '';
+                        const vipCustomer = document.getElementById('vipStatus').value || 'No';
+
+                        let description = '';
+
+                        // SUMMARY section
+                        description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+
+                        // Add summary content if available
+                        if (summary) {
+                            description += `<div>${summary}</div>`;
                         }
 
-                        // Main container with border and box shadow for a professional appearance
-                        let description = '<div style="font-family: \'Segoe UI\', Arial, sans-serif; line-height: 1.5; border: 2px solid #d1d1d1; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden; margin: 10px 0;">';
+                        // Add blank space
+                        description += '<div style="margin-bottom: 20px;"></div>';
 
-                        // Title banner with "Assembly" at the top
-                        description += '<div style="background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%); color: white; padding: 15px 20px; font-size: 20px; font-weight: bold; letter-spacing: 0.5px; border-bottom: 2px solid #0d47a1;">Assembly Issue Tracker';
+                        // DESCRIPTION section
+                        description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
 
-                        // Add VIP badge if applicable
-                        if (vipStatus) {
-                            description += ' <span style="background-color: #d32f2f; color: white; padding: 4px 8px; border-radius: 4px; font-size: 16px; margin-left: 10px;">VIP</span>';
+                        // Add issue details if available
+                        if (issue) {
+                            description += `<div>Issue: ${issue}</div><br>`;
+                        } else {
+                            description += 'Issue: <br>';
                         }
 
-                        description += '</div>';
-
-                        // Summary section
-                        if (issueSummary) {
-                            description += '<div style="border-bottom: 2px solid #e0e0e0; padding: 20px; background-color: #f9f9f9;">';
-                            description += '<div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 16px; border-left: 4px solid #1976d2; padding-left: 10px;">SUMMARY</div>';
-                            description += `<div style="margin-bottom: 5px; padding: 10px; background-color: white; border-radius: 4px; border: 1px solid #e0e0e0;">${issueSummary}</div>`;
-                            description += '</div>';
-                        }
-
-                        // Description section header
-                        description += '<div style="padding: 20px; background-color: #f9f9f9;">';
-                        description += '<div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 16px; border-left: 4px solid #4caf50; padding-left: 10px;">DESCRIPTION</div>';
-
-                        // Table with description items
-                        description += '<div style="display: table; width: 100%; border-collapse: separate; border-spacing: 0 8px;">';
-
-                        // Function to create a table row
-                        const addRow = (label, value, isVip = false) => {
-                            if (!value && !isVip) return '';
-                            const vipStyle = isVip ? 'color: #d32f2f; font-weight: bold;' : '';
-                            return `
-                    <div style="display: table-row;">
-                        <div style="display: table-cell; width: 35%; padding: 10px; vertical-align: top; font-weight: bold; background-color: #eef2f6; border-radius: 4px 0 0 4px; border: 1px solid #d1d1d1; border-right: none;">${label}:</div>
-                        <div style="display: table-cell; padding: 10px; vertical-align: top; background-color: white; border-radius: 0 4px 4px 0; border: 1px solid #d1d1d1; border-left: none; ${vipStyle}">${value || 'No'}</div>
-                    </div>
-                `;
-                        };
-
-                        // Add all required rows in the requested order
-                        if (reportedIssue) description += addRow('Issue', reportedIssue);
-                        description += addRow('District Name', districtName);
-                        description += addRow('School Name', schoolName);
-                        description += addRow('District State', districtState);
-                        description += addRow('Program/Product Impacted', productImpacted);
-                        description += addRow('Date issue reported by user', formattedDate);
-                        description += addRow('Subscription codes customer is onboarded with', subscriptionCodes);
-                        description += addRow('Teacher vs Student impact', impactScope);
-                        description += addRow('VIP Customer', vipStatus ? 'Yes' : 'No', true);
-
-                        // Close the table
-                        description += '</div>';
-
-                        // Close the description section and main container
-                        description += '</div>';
-                        description += '</div>';
+                        // Add all the fields with proper spacing and check for empty values
+                        description += `District Name: ${districtName}<br>`;
+                        description += `School Name: ${schoolName}<br>`;
+                        description += `District State: ${districtState}<br>`;
+                        description += `Program/Product Impacted: ${productImpacted}<br>`;
+                        description += `Program Variation (if known): ${programVariation}<br>`;
+                        description += `Date issue reported by user: ${dateReported}<br>`;
+                        description += `Subscription codes customer is onboarded with: ${subscriptionCodes}<br>`;
+                        description += `Teacher vs Student impact: ${teacherStudentImpact}<br>`;
+                        description += `VIP Customer: (${vipCustomer})`;
 
                         return description;
                     }
@@ -1140,7 +1120,21 @@
                     // Handle form submission with fixed file upload sequence
                     document.getElementById('trackerForm').addEventListener('submit', async function (e) {
                         e.preventDefault();
+
+                        // Update hidden textareas with editor content BEFORE generating description
+                        // This ensures the Quill editor content is available for the description
+                        const quillReported = document.getElementById('reportedIssueEditor').querySelector('.ql-editor');
+                        if (quillReported) {
+                            document.getElementById('reportedIssue').value = quillReported.innerHTML;
+                        }
+
+                        const quillSummary = document.getElementById('issueSummaryEditor').querySelector('.ql-editor');
+                        if (quillSummary) {
+                            document.getElementById('issueSummary').value = quillSummary.innerHTML;
+                        }
+
                         try {
+                            // Rest of the code remains unchanged
                             let subdomainCheck;
                             try {
                                 subdomainCheck = await client.iparams.get("freshdesk_subdomain");
@@ -1158,8 +1152,21 @@
                                 return;
                             }
 
+                            // Show loading overlay
+                            const loadingOverlay = document.getElementById('loadingOverlay');
+                            if (loadingOverlay) {
+                                loadingOverlay.style.display = 'flex';
+                            }
+
+                            // Disable the create button to prevent multiple submissions
+                            const createTrackerButton = document.getElementById('createTracker');
+                            if (createTrackerButton) createTrackerButton.disabled = true;
+
                             const subject = document.getElementById('subject').value;
+
+                            // Generate description AFTER we've updated the textarea content
                             const description = generateDescription();
+
                             const agentEmail = document.getElementById('email').value || "agent@freshdesk.com";
                             const relatedTicketsStr = document.getElementById('relatedTickets').value;
                             const priority = document.getElementById('priority').value;
@@ -1209,10 +1216,17 @@
                                 status: parseInt(status, 10),
                                 type: "Incident",
                                 custom_fields: {
-                                    // Add district name as a custom field if available
-                                    cf_district: districtName || undefined
+                                    // Updated the custom fields to ensure proper formatting
+                                    // Both fields need to be set for compatibility with different views
+                                    cf_district: districtName || "",
+                                    cf_district509811: districtName || ""
                                 }
                             };
+
+                            // Add VIP status if set to Yes
+                            if (document.getElementById('vipStatus').value === "Yes") {
+                                ticketData.custom_fields.cf_vip = true;
+                            }
 
                             // Add group ID if selected
                             if (groupId) {
@@ -1234,6 +1248,9 @@
                                 body: JSON.stringify(ticketData)
                             });
 
+                            // Log the full ticket data being sent for troubleshooting
+                            console.log("Ticket data JSON:", JSON.stringify(ticketData));
+
                             const newTicket = JSON.parse(createResponse.response);
                             console.log("Created ticket:", newTicket);
                             const newTicketId = newTicket.id;
@@ -1242,81 +1259,109 @@
                                 throw new Error("Failed to get ID of newly created ticket");
                             }
 
+                            // Prepare for redirect - construct the ticket URL
+                            const ticketUrl = `https://benchmarkeducationcompany.freshdesk.com/a/tickets/${newTicketId}`;
+
                             // STEP 2: Add attachments as a private note to the ticket
                             console.log(`Adding ${screenshotFiles.length} attachments as note to ticket #${newTicketId}`);
 
-                            try {
-                                // API credentials
-                                const subdomain = "benchmarkeducationcompany";
-                                const apiKey = "5TMgbcZdRFY70hSpEdj";
+                            if (screenshotFiles.length > 0) {
+                                try {
+                                    // API credentials
+                                    const subdomain = "benchmarkeducationcompany";
+                                    const apiKey = "5TMgbcZdRFY70hSpEdj";
 
-                                console.log(`Using subdomain: ${subdomain} to upload attachments`);
+                                    // Create FormData for the attachment upload
+                                    const formData = new FormData();
+                                    formData.append('body', 'Additional attachments for assembly issue');
+                                    formData.append('private', 'true');
 
-                                // Create FormData for the attachment upload
-                                const formData = new FormData();
-                                formData.append('body', 'Additional Screenshots and other file attachments');
-                                formData.append('private', 'true');
+                                    // Add files to the form data
+                                    for (let i = 0; i < screenshotFiles.length; i++) {
+                                        const file = screenshotFiles[i];
+                                        formData.append('attachments[]', file, file.name);
+                                    }
 
-                                // Add each file to the form data
-                                for (let i = 0; i < screenshotFiles.length; i++) {
-                                    const file = screenshotFiles[i];
-                                    formData.append('attachments[]', file, file.name);
-                                }
+                                    // Use XMLHttpRequest for direct API access
+                                    const xhr = new XMLHttpRequest();
+                                    xhr.open('POST', `https://${subdomain}.freshdesk.com/api/v2/tickets/${newTicketId}/notes`, true);
+                                    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(`${apiKey}:X`));
 
-                                // Use XMLHttpRequest for direct API access
-                                const xhr = new XMLHttpRequest();
-                                xhr.open('POST', `https://${subdomain}.freshdesk.com/api/v2/tickets/${newTicketId}/notes`, true);
+                                    // Handle response
+                                    xhr.onload = function () {
+                                        if (xhr.status >= 200 && xhr.status < 300) {
+                                            console.log("Attachments added successfully:", xhr.responseText);
+                                            client.interface.trigger("showNotify", {
+                                                type: "success",
+                                                message: `Assembly ticket #${newTicketId} created with attachments`
+                                            });
+                                        } else {
+                                            console.error("Error uploading attachments:", xhr.status, xhr.responseText);
+                                            client.interface.trigger("showNotify", {
+                                                type: "warning",
+                                                message: `Assembly ticket #${newTicketId} created, but attachments failed`
+                                            });
+                                        }
 
-                                // Set up Basic Auth using the API key
-                                xhr.setRequestHeader('Authorization', 'Basic ' + btoa(`${apiKey}:X`));
+                                        // Always proceed with redirection and closing regardless of attachment outcome
+                                        finishTicketCreation(newTicketId, ticketUrl);
+                                    };
 
-                                // Handle response
-                                xhr.onload = function () {
-                                    if (xhr.status >= 200 && xhr.status < 300) {
-                                        console.log("Attachments added successfully:", xhr.responseText);
-                                        client.interface.trigger("showNotify", {
-                                            type: "success",
-                                            message: `Tracker #${newTicketId} created successfully with attachment`
-                                        });
-                                    } else {
-                                        console.error("Error from API:", xhr.status, xhr.responseText);
+                                    // Handle network errors
+                                    xhr.onerror = function () {
+                                        console.error("Network error during attachment upload");
                                         client.interface.trigger("showNotify", {
                                             type: "warning",
-                                            message: `Tracker #${newTicketId} created, but attachment upload failed`
+                                            message: `Assembly ticket #${newTicketId} created, but attachments failed due to network error`
                                         });
-                                    }
-                                    // Close the modal in either case
-                                    client.instance.close({ refreshTickets: true });
-                                };
 
-                                // Handle network errors
-                                xhr.onerror = function () {
-                                    console.error("Network error while uploading attachments");
+                                        // Still finish the process even on error
+                                        finishTicketCreation(newTicketId, ticketUrl);
+                                    };
+
+                                    // Send the form data
+                                    xhr.send(formData);
+                                    console.log("Attachment request sent via XMLHttpRequest");
+
+                                    // Set a timeout as a fallback in case the XHR doesn't complete
+                                    setTimeout(() => {
+                                        if (loadingOverlay && loadingOverlay.style.display === 'flex') {
+                                            console.warn("XHR timed out, forcing completion");
+                                            finishTicketCreation(newTicketId, ticketUrl);
+                                        }
+                                    }, 8000);
+
+                                } catch (attachmentError) {
+                                    console.error("Error handling attachments:", attachmentError);
                                     client.interface.trigger("showNotify", {
                                         type: "warning",
-                                        message: `Tracker #${newTicketId} created, but attachment upload failed due to network error`
+                                        message: `Assembly ticket #${newTicketId} created, but attachments failed: ${attachmentError.message}`
                                     });
-                                    client.instance.close({ refreshTickets: true });
-                                };
 
-                                // Send the form data
-                                xhr.send(formData);
-                                console.log("Attachment request sent via direct XMLHttpRequest");
-
-                            } catch (attachmentError) {
-                                // Log attachment error but don't fail the overall process
-                                console.error("Error adding attachments as note:", attachmentError);
-                                console.warn("Continuing without attachments");
-
+                                    // Still finish the process even on error
+                                    finishTicketCreation(newTicketId, ticketUrl);
+                                }
+                            } else {
+                                // No attachments, just show success message and redirect
                                 client.interface.trigger("showNotify", {
-                                    type: "warning",
-                                    message: `Tracker #${newTicketId} created, but attachment handling failed: ${attachmentError.message}`
+                                    type: "success",
+                                    message: `Assembly ticket #${newTicketId} created successfully`
                                 });
-                                client.instance.close({ refreshTickets: true });
+
+                                // Call the finish function for consistency
+                                finishTicketCreation(newTicketId, ticketUrl);
                             }
+
                         } catch (error) {
                             console.error("Error creating tracker:", error);
                             console.error("Error details:", JSON.stringify(error, null, 2));
+
+                            // Hide loading overlay on error
+                            const loadingOverlay = document.getElementById('loadingOverlay');
+                            if (loadingOverlay) {
+                                loadingOverlay.style.display = 'none';
+                            }
+
                             let errorMessage = "Failed to create tracker: ";
                             if (error.response) {
                                 console.log("Raw error response:", error.response);
@@ -1339,6 +1384,35 @@
                             document.getElementById('createTracker').disabled = false;
                         }
                     });
+
+                    // Helper function to finish the ticket creation process
+                    function finishTicketCreation(ticketId, ticketUrl) {
+                        // Hide loading overlay
+                        const loadingOverlay = document.getElementById('loadingOverlay');
+                        if (loadingOverlay) {
+                            loadingOverlay.style.display = 'none';
+                        }
+
+                        // Open the new ticket in a new tab
+                        try {
+                            window.open(ticketUrl, '_blank');
+                        } catch (navError) {
+                            console.error("Error opening ticket page:", navError);
+                        }
+
+                        // Close the current modal with a delay to ensure notifications are visible
+                        try {
+                            setTimeout(() => {
+                                client.instance.close({ refreshTickets: true });
+                            }, 1000);
+                        } catch (closeError) {
+                            console.error("Error closing modal:", closeError);
+                            // As a last resort, redirect to template selector
+                            setTimeout(() => {
+                                window.location.href = "template-selector.html";
+                            }, 1500);
+                        }
+                    }
 
                     let aggregatedScreenshotFiles = [];
 

@@ -2,7 +2,7 @@
   "createfdTicket": {
     "schema": {
       "method": "POST",
-      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
       "path": "/api/v2/tickets",
       "headers": {
         "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
@@ -35,7 +35,7 @@
   "getAssociatedTickets": {
     "schema": {
       "method": "GET",
-      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
       "path": "/api/v2/tickets/<%= context.ticketId %>/associated_tickets",
       "headers": {
         "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
@@ -46,7 +46,7 @@
   "getCompanyDetails": {
     "schema": {
       "method": "GET",
-      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
       "path": "/api/v2/companies/<%= context.companyId %>",
       "headers": {
         "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
@@ -57,7 +57,7 @@
   "getPrimeAssociation": {
     "schema": {
       "method": "GET",
-      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
       "path": "/api/v2/tickets/<%= context.ticketId %>/prime_association",
       "headers": {
         "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
@@ -68,7 +68,7 @@
   "getTicketDetails": {
     "schema": {
       "method": "GET",
-      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
       "path": "/api/v2/tickets/<%= context.ticketId %>",
       "headers": {
         "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
@@ -79,7 +79,7 @@
   "getAgentDetails": {
     "schema": {
       "method": "GET",
-      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
       "path": "/api/v2/agents/<%= context.agentId %>",
       "headers": {
         "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
@@ -90,7 +90,7 @@
   "getGroups": {
     "schema": {
       "method": "GET",
-      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
       "path": "/api/v2/groups",
       "headers": {
         "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
@@ -101,7 +101,7 @@
   "getAgentsInGroup": {
     "schema": {
       "method": "GET",
-      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
       "path": "/api/v2/groups/<%= context.groupId %>/members",
       "headers": {
         "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
@@ -112,7 +112,7 @@
   "getTicketFields": {
     "schema": {
       "method": "GET",
-      "host": "<%= iparam.freshdesk_subdomain && iparam.freshdesk_subdomain.trim() ? iparam.freshdesk_subdomain + '.freshdesk.com' : 'invalid-missing-subdomain.freshdesk.com' %>",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
       "path": "/api/v2/ticket_fields",
       "headers": {
         "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
@@ -125,6 +125,17 @@
       "method": "GET",
       "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
       "path": "/api/v2/agents",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "sendTeamsEmail": {
+    "schema": {
+      "method": "POST",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
+      "path": "/api/v2/tickets/outbound_email",
       "headers": {
         "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
         "Content-Type": "application/json"

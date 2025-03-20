@@ -14,6 +14,9 @@ exports = {
         const { iparams } = args;
 
         try {
+            // Sanitize subdomain - ensure it doesn't contain .freshdesk.com
+            const sanitizedSubdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
+
             // Extract data from the request
             const ticketId = args.data.ticketId;
             const noteBody = args.data.noteBody || 'Attachment from tracker app';
@@ -35,7 +38,7 @@ exports = {
             // We'll use the request library with formData
             const options = {
                 method: 'POST',
-                url: `https://${iparams.freshdesk_subdomain}.freshdesk.com/api/v2/tickets/${ticketId}/notes`,
+                url: `https://${sanitizedSubdomain}.freshdesk.com/api/v2/tickets/${ticketId}/notes`,
                 headers: {
                     'Authorization': 'Basic ' + Buffer.from(`${iparams.freshdesk_api_key}:X`).toString('base64')
                 },

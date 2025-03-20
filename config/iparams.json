@@ -1,7 +1,7 @@
 {
   "freshdesk_subdomain": {
     "display_name": "Freshdesk Subdomain",
-    "description": "Please enter your Freshdesk subdomain.",
+    "description": "Please enter your Freshdesk subdomain only (without .freshdesk.com). For example, if your Freshdesk URL is 'benchmarkeducationcompany.freshdesk.com', enter only 'benchmarkeducationcompany'.",
     "type": "text",
     "required": true
   },
