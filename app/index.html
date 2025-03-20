@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -7,92 +8,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script async src="{{{appclient}}}"></script>
   <link rel="stylesheet" type="text/css" href="styles/style.css" />
-  <!-- Add Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-  <!-- Add styles for loading indicators and error messages -->
-  <style>
-    .modal-loading-indicator {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 20px;
-      border-radius: 5px;
-      z-index: 9999;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .modal-loading-indicator .spinner {
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      animation: spin 1s linear infinite;
-      margin-bottom: 10px;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    .modal-error-message {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      border: 1px solid #e74c3c;
-      border-radius: 5px;
-      padding: 20px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-      z-index: 10000;
-      max-width: 400px;
-    }
-
-    .button-wrapper {
-      position: relative;
-      display: inline-block;
-    }
-
-    .button-wrapper .button-spinner {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top: 2px solid white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      display: none;
-    }
-
-    .create-tracker-button:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-  </style>
 </head>
 
 <body>
   <div class="main">
-
-
     <!-- Container to display company info -->
     <div id="companyIdsContainer" style="display: none; width: 100%;">
       <div class="summary-header">
@@ -114,85 +34,26 @@
 
       <!-- Refresh button at the bottom -->
       <div class="app-footer">
+        <fw-button id="btnGetAssociated" color="primary" class="refresh-button">
+          <i class="fas fa-sync-alt" style="margin-right: 8px;"></i> Refresh
+        </fw-button>
       </div>
-      <fw-button id="btnGetAssociated" color="primary" class="refresh-button">
-        <i class="fas fa-sync-alt" style="margin-right: 8px;"></i> Refresh
-      </fw-button>
     </div>
-    <div class="create-tracker-container" style="display: flex; flex-direction: column; align-items: center;">
-      <fw-button id="linkToTrackerLink" color="primary" class="create-tracker-button" style="margin-bottom: 10px;">
-        <div class="button-wrapper">
-          <i class="fas fa-link" style="margin-right: 8px;"></i> Link to a Tracker
-          <div class="button-spinner"></div>
-        </div>
-      </fw-button>
 
+    <div class="create-tracker-container">
       <fw-button id="createTrackerLink" color="primary" class="create-tracker-button">
-        <div class="button-wrapper">
-          <i class="fas fa-crosshairs" style="margin-right: 8px;"></i> Create a Tracker
-          <div class="button-spinner"></div>
-        </div>
+        <i class="fas fa-crosshairs" style="margin-right: 8px;"></i> Create a Tracker
       </fw-button>
     </div>
-
-    <div id="modalLoadingIndicator" class="modal-loading-indicator">
-      <div class="spinner"></div>
-      <div>Opening tracker...</div>
-    </div>
-
-    <div id="modalErrorMessage" class="modal-error-message"></div>
-
-    <style>
-      .create-tracker-button,
-      .refresh-button {
-        width: 100%;
-      }
-
-      .create-tracker-container {
-        width: 100%;
-        margin-bottom: 2px;
-      }
-
-      .app-footer {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-      }
-    </style>
   </div>
 
-  <!-- Add a fallback script in case the main script fails -->
-  <script>
-    // Safety timeout - if the app doesn't initialize properly, provide fallback navigation
-    setTimeout(function () {
-      if (typeof client === 'undefined') {
-        console.warn("Client not initialized after timeout, setting up fallback navigation");
-        const createBtn = document.getElementById('createTrackerLink');
-        const linkBtn = document.getElementById('linkToTrackerLink');
-
-        if (createBtn) {
-          createBtn.addEventListener('click', function () {
-            console.log("Using direct navigation fallback");
-            window.location.href = "template-selector.html";
-          });
-        }
-
-        if (linkBtn) {
-          linkBtn.addEventListener('click', function () {
-            console.log("Using direct navigation fallback for link");
-            // Add appropriate fallback URL here
-          });
-        }
-      }
-    }, 5000); 
-  </script>
-
+  <!-- Load the app.js script -->
   <script defer src="scripts/app.js"></script>
+
+  <!-- Load Freshworks components -->
   <script async type="module"
     src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.esm.js"></script>
   <script async nomodule src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.js"></script>
-
 </body>
 
 </html>

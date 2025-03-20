@@ -1,0 +1,2414 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script async src="{{{appclient}}}"></script>
+    <link rel="stylesheet" type="text/css" href="styles/dynamic-tracker.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="tracker-config.js"></script>
+    <style>
+        div.card-header {
+            background-color: #2C3E50;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <div class="spinner-text">Creating ticket...</div>
+        <div class="progress-status" style="margin-top: 10px; font-size: 12px;"></div>
+    </div>
+
+    <div class="tracker-form-container">
+        <!-- Debug Button -->
+        <div class="debug-container">
+            <button id="debugFillForm" class="debug-button">Fill Form with Demo Data</button>
+        </div>
+
+        <!-- Form Title -->
+        <div class="form-title">
+            <h2 id="trackerTitle">Dynamic Tracker</h2>
+        </div>
+
+        <!-- Back Button -->
+        <div class="back-button-container">
+            <fw-button id="backButton" color="secondary" size="small"
+                style="cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';"
+                onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';">
+                <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>Back to Tracker Templates
+            </fw-button>
+        </div>
+
+        <form id="trackerForm">
+            <div class="cards-container" id="dynamicSections">
+                <!-- Dynamic sections will be inserted here -->
+            </div>
+
+            <!-- Common ticket properties section -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-tasks fa-lg section-icon"></i>
+                    <h3>TICKET PROPERTIES</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="email" class="required-field">Requester Email</label>
+                        <div class="input-with-icon">
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="hint"><i class="fas fa-info-circle"></i> This ticket will be created by you (the
+                            logged-in agent)</div>
+                        <div id="emailStatus" class="email-status"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="relatedTickets" class="required-field">Related Ticket IDs</label>
+                            <div class="input-with-icon">
+                                <input type="text" id="relatedTickets" name="relatedTickets" required>
+                            </div>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Comma-separated ticket IDs (e.g.,
+                                1,2,3)</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="priority">Priority</label>
+                            <select id="priority" name="priority">
+                                <option value="1">Low</option>
+                                <option value="2">Medium</option>
+                                <option value="3">High</option>
+                                <option value="4">Urgent</option>
+                            </select>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Select ticket priority</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select id="status" name="status">
+                                <option value="2">Open</option>
+                                <option value="3">Pending</option>
+                                <option value="4">Resolved</option>
+                                <option value="5">Closed</option>
+                            </select>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Select ticket status</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="groupField">Group</label>
+                            <select id="groupField" name="groupField">
+                                <option>Loading groups...</option>
+                            </select>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Select a support group</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="agentField">Agent</label>
+                            <select id="agentField" name="agentField"></select>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Select an agent</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="districtField">District</label>
+                            <input type="text" id="districtField" name="districtField" readonly>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Auto-populated from source ticket</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attachments card -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-paperclip fa-lg section-icon"></i>
+                    <h3>ATTACHMENTS</h3>
+                </div>
+                <div class="card-body">
+                    <div class="attachment-input-container">
+                        <label for="screenshots" class="file-upload-button">
+                            <i class="fas fa-cloud-upload-alt"></i> Choose files
+                            <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
+                        </label>
+                        <div class="hint"><i class="fas fa-info-circle"></i> Upload files to include in the ticket (15MB
+                            total)</div>
+                    </div>
+                    <div id="screenshotPreview" class="screenshot-preview"></div>
+                    <div id="attachmentCounter" class="attachment-counter"></div>
+                </div>
+            </div>
+
+            <div style="display: none;">
+                <textarea id="description" name="description"></textarea>
+                <input type="hidden" id="trackerType" name="trackerType">
+            </div>
+
+            <div class="form-actions">
+                <fw-button id="cancelTracker" color="secondary" size="medium"
+                    style="display: flex; justify-content: center; align-items: center;">
+                    <i class="fas fa-times"></i> Cancel
+                </fw-button>
+                <fw-button id="createTracker" color="primary" type="submit" size="medium"
+                    style="display: flex; justify-content: center; align-items: center;">
+                    <i class="fas fa-check"></i> Create Tracker
+                </fw-button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("Dynamic tracker template initializing...");
+            // Get the tracker type from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const trackerType = urlParams.get('type') || 'blank';
+
+            // Store tracker type in hidden field
+            document.getElementById('trackerType').value = trackerType;
+
+            // Log the tracker type
+            console.log("Loading tracker template:", trackerType);
+
+            // Get the config for this tracker type
+            const config = TRACKER_CONFIGS[trackerType] || {
+                title: "Blank Tracker",
+                icon: "fa-file",
+                description: "Generic tracker template",
+                sections: []
+            };
+
+            // If this is the SIM Assignment template, ensure there's no attachments card
+            if (trackerType === 'sim-assignment') {
+                // Filter out any attachments section that might have been added
+                config.sections = config.sections.filter(section => section.id !== 'attachments');
+            }
+
+            // Set the page title
+            document.getElementById('trackerTitle').innerHTML = `<i class="fas ${config.icon} mr-2"></i> ${config.title}`;
+            document.title = config.title;
+
+            // Build dynamic sections based on configuration
+            buildDynamicSections(config);
+
+            // Initialize the app
+            initializeTrackerApp(trackerType, config);
+        });
+
+        function buildDynamicSections(config) {
+            const container = document.getElementById('dynamicSections');
+
+            // Clear any existing content
+            container.innerHTML = '';
+
+            // Add each section defined in the config
+            config.sections.forEach(section => {
+                // Skip the "attachments" section for the SIM Assignment template
+                if (config.title === "SIM Assignment Tracker" && section.id === "attachments") {
+                    return; // Skip this section
+                }
+
+                const sectionHtml = buildSection(section);
+                container.innerHTML += sectionHtml;
+            });
+        }
+
+        function buildSection(section) {
+            let html = `
+                <div class="card" id="section-${section.id}">
+                    <div class="card-header">
+                        <i class="fas ${section.icon} fa-lg section-icon"></i>
+                        <h3>${section.title}</h3>
+                    </div>
+                    <div class="card-body">
+                        ${buildFields(section.fields)}
+                    </div>
+                </div>
+            `;
+            return html;
+        }
+
+        function buildFields(fields) {
+            let html = '';
+
+            fields.forEach(field => {
+                html += `<div class="form-group">`;
+
+                // Add label if not a richtext editor with empty label
+                if (!(field.type === 'richtext' && field.label === '')) {
+                    html += `<label for="${field.id}" ${field.required ? 'class="required-field"' : ''}>${field.label}</label>`;
+                }
+
+                // Add the appropriate input based on field type
+                switch (field.type) {
+                    case 'text':
+                        html += `<input type="text" id="${field.id}" name="${field.id}" ${field.required ? 'required' : ''} ${field.placeholder ? `placeholder="${field.placeholder}"` : ''}>`;
+                        break;
+
+                    case 'email':
+                        html += `<input type="email" id="${field.id}" name="${field.id}" ${field.required ? 'required' : ''}>`;
+                        break;
+
+                    case 'textarea':
+                        html += `<textarea id="${field.id}" name="${field.id}" rows="4" ${field.required ? 'required' : ''}></textarea>`;
+                        break;
+
+                    case 'date':
+                        html += `<input type="date" id="${field.id}" name="${field.id}" ${field.required ? 'required' : ''}>`;
+                        break;
+
+                    case 'select':
+                        html += `
+                            <select id="${field.id}" name="${field.id}" ${field.required ? 'required' : ''}>
+                                ${field.options.map(option => `<option value="${option}">${option}</option>`).join('')}
+                            </select>
+                        `;
+                        break;
+
+                    case 'richtext':
+                        html += `
+                            <div class="quill-editor-container">
+                                <div id="${field.id}Editor" style="min-height: 120px;"></div>
+                                <textarea id="${field.id}" name="${field.id}" style="display: none;"></textarea>
+                            </div>
+                        `;
+                        break;
+
+                    default:
+                        html += `<input type="text" id="${field.id}" name="${field.id}" ${field.required ? 'required' : ''}>`;
+                }
+
+                // Add hint if provided
+                if (field.hint) {
+                    html += `<div class="hint"><i class="fas fa-info-circle"></i> ${field.hint}</div>`;
+                }
+
+                html += `</div>`;
+            });
+
+            return html;
+        }
+
+        function initializeTrackerApp(trackerType, config) {
+            const trackerApp = new TrackerApp(trackerType, config);
+            window.trackerApp = trackerApp;
+            trackerApp.init();
+        }
+
+        class TrackerApp {
+            constructor(trackerType, config) {
+                this.trackerType = trackerType;
+                this.config = config;
+                this.client = null;
+                this.quillEditors = {};
+                this.aggregatedScreenshotFiles = [];
+                this.ticketData = {
+                    isVip: false,
+                    districtName: '',
+                    currentTicketId: null,
+                    requesterEmail: '',
+                    ticketRequesterEmail: ''
+                };
+            }
+
+            async init() {
+                try {
+                    console.log('Initializing TrackerApp');
+                    await this.initClient();
+                    this.initEventListeners();
+                    this.initQuillEditors();
+                    this.initFormData();
+                    await this.loadInitialData();
+
+                    // Add hidden description field if it doesn't exist
+                    this.ensureHiddenFields();
+
+                    // Set up custom file uploaders
+                    this.setupCustomFileUploaders();
+
+                    // Load data from localStorage based on tracker type
+                    this.loadDataFromStorage();
+
+                    console.log('TrackerApp initialized successfully');
+                } catch (error) {
+                    console.error('Failed to initialize TrackerApp:', error);
+                    this.showError('Failed to initialize app. Please try again.');
+                }
+            }
+
+            initFormData() {
+                console.log('Initializing form data');
+                // This can be empty, but must exist as a function
+            }
+
+            async initClient() {
+                // Initialize client code (same as in existing app)
+                return new Promise((resolve, reject) => {
+                    let attempts = 0;
+                    const maxAttempts = 10;
+
+                    const tryInit = () => {
+                        attempts++;
+                        console.log(`Attempt ${attempts} to initialize Freshworks client`);
+
+                        if (typeof client !== 'undefined') {
+                            this.client = client;
+                            resolve(client);
+                        } else if (typeof app !== 'undefined') {
+                            app.initialized().then(clientObj => {
+                                this.client = clientObj;
+                                resolve(clientObj);
+                            }).catch(reject);
+                        } else if (typeof window.frsh !== 'undefined' && window.frsh.init) {
+                            window.frsh.init().then(clientObj => {
+                                this.client = clientObj;
+                                resolve(clientObj);
+                            }).catch(reject);
+                        } else if (attempts < maxAttempts) {
+                            setTimeout(tryInit, 100);
+                        } else {
+                            reject(new Error('Could not initialize client after multiple attempts'));
+                        }
+                    };
+
+                    tryInit();
+                });
+            }
+
+            initQuillEditors() {
+                console.log('Initializing Quill editors');
+                // Clear any previous editors
+                this.quillEditors = {};
+
+                // Initialize Quill editors based on config
+                this.config.sections.forEach(section => {
+                    section.fields.forEach(field => {
+                        if (field.type === 'richtext') {
+                            const editorId = `${field.id}Editor`;
+                            const editorElement = document.getElementById(editorId);
+
+                            if (editorElement) {
+                                // Make sure to set min-height directly on the element
+                                editorElement.style.minHeight = '120px';
+
+                                try {
+                                    // Define a custom image handler for the toolbar
+                                    const customImageHandler = () => {
+                                        const input = document.createElement('input');
+                                        input.setAttribute('type', 'file');
+                                        input.setAttribute('accept', 'image/*');
+                                        input.click();
+
+                                        input.onchange = () => {
+                                            if (input.files && input.files[0]) {
+                                                const file = input.files[0];
+
+                                                // Show loading indicator
+                                                const range = editor.getSelection(true);
+                                                editor.insertText(range.index, "Uploading image... ", { italic: true, color: '#999' });
+                                                const placeholderIndex = range.index;
+
+                                                // Upload to ImgBB
+                                                this.uploadImageToImgBB(file).then(imageUrl => {
+                                                    // Delete the placeholder text
+                                                    editor.deleteText(placeholderIndex, "Uploading image... ".length);
+
+                                                    // Insert the image
+                                                    editor.insertEmbed(placeholderIndex, 'image', imageUrl);
+                                                    editor.setSelection(placeholderIndex + 1);
+                                                }).catch(error => {
+                                                    console.error('Error uploading image:', error);
+
+                                                    // Replace placeholder with error message
+                                                    editor.deleteText(placeholderIndex, "Uploading image... ".length);
+                                                    editor.insertText(placeholderIndex, "⚠️ Image upload failed ", { italic: true, color: 'red' });
+                                                });
+                                            }
+                                        };
+                                    };
+
+                                    // Initialize Quill with custom image handler
+                                    const editor = new Quill(`#${editorId}`, {
+                                        theme: 'snow',
+                                        placeholder: `Enter ${field.id.replace(/([A-Z])/g, ' $1').toLowerCase()}...`,
+                                        modules: {
+                                            toolbar: {
+                                                container: [
+                                                    ['bold', 'italic', 'underline', 'strike'],
+                                                    ['blockquote', 'code-block'],
+                                                    [{ 'header': 1 }, { 'header': 2 }],
+                                                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                                    [{ 'script': 'sub' }, { 'script': 'super' }],
+                                                    [{ 'indent': '-1' }, { 'indent': '+1' }],
+                                                    [{ 'direction': 'rtl' }],
+                                                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                                                    [{ 'color': [] }, { 'background': [] }],
+                                                    [{ 'font': [] }],
+                                                    [{ 'align': [] }],
+                                                    ['clean'],
+                                                    ['link', 'image']
+                                                ],
+                                                handlers: {
+                                                    'image': customImageHandler.bind(this)
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                    // Ensure the editor is properly enabled
+                                    editor.enable();
+
+                                    // Store reference in our global map
+                                    this.quillEditors[field.id] = editor;
+
+                                    // Add paste image handling
+                                    editor.root.addEventListener('paste', e => this.handlePasteImage(e, editor));
+
+                                    // Add drop handling for images
+                                    editor.root.addEventListener('drop', e => this.handleDropImage(e, editor));
+
+                                    console.log(`Initialized Quill editor for ${field.id}`);
+                                } catch (error) {
+                                    console.error(`Error initializing Quill editor for ${field.id}:`, error);
+                                }
+                            } else {
+                                console.warn(`Editor element not found for ${field.id}`);
+                            }
+                        }
+                    });
+                });
+            }
+
+            initEventListeners() {
+                console.log('Setting up event listeners');
+
+                // Back button
+                const backButton = document.getElementById('backButton');
+                if (backButton) {
+                    backButton.addEventListener('click', () => {
+                        window.location.href = 'template-selector.html';
+                    });
+                }
+
+                // Cancel button
+                const cancelButton = document.getElementById('cancelTracker');
+                if (cancelButton) {
+                    cancelButton.addEventListener('click', () => {
+                        window.location.href = 'template-selector.html';
+                    });
+                }
+
+                // Submit form - Fix for Create Tracker button
+                const form = document.getElementById('trackerForm');
+                if (form) {
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleFormSubmit();
+                    });
+                }
+
+                // Also add direct event handler to the createTracker button
+                const createTrackerButton = document.getElementById('createTracker');
+                if (createTrackerButton) {
+                    createTrackerButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        console.log('Create Tracker button clicked');
+                        this.handleFormSubmit();
+                    });
+                }
+
+                // File input change
+                const fileInput = document.getElementById('screenshots');
+                if (fileInput) {
+                    fileInput.addEventListener('change', (e) => {
+                        this.handleFileInputChange(e);
+                    });
+                }
+
+                // Debug button
+                const debugButton = document.getElementById('debugFillForm');
+                if (debugButton) {
+                    debugButton.addEventListener('click', () => {
+                        this.fillFormWithDemoData();
+                    });
+                }
+
+                // Add a debugging button to the debug-container to show user data
+                const debugContainer = document.querySelector('.debug-container');
+                if (debugContainer) {
+                    // First button - Check User Data
+                    const checkUserButton = document.createElement('button');
+                    checkUserButton.className = 'debug-button';
+                    checkUserButton.textContent = 'Check User Data';
+                    checkUserButton.style.marginLeft = '10px';
+                    checkUserButton.addEventListener('click', async () => {
+                        try {
+                            const userData = await this.client.data.get("loggedInUser");
+                            console.log("Current user data:", userData);
+
+                            // Show more detailed info in an alert
+                            let emailInfo = "No email found";
+                            if (userData && userData.loggedInUser && userData.loggedInUser.email) {
+                                emailInfo = userData.loggedInUser.email;
+                            }
+
+                            alert(`User email: ${emailInfo}\n\nSee console for full user data`);
+                        } catch (error) {
+                            console.error("Error checking user data:", error);
+                            alert("Error checking user data. See console for details.");
+                        }
+                    });
+
+                    debugContainer.appendChild(checkUserButton);
+
+                    // Second button - Check District Data
+                    // REMOVED: const debugContainer = document.querySelector('.debug-container');
+                    // Just use the existing debugContainer variable
+                    const checkDistrictButton = document.createElement('button');
+                    checkDistrictButton.className = 'debug-button';
+                    checkDistrictButton.textContent = 'Check District Data';
+                    checkDistrictButton.style.marginLeft = '10px';
+                    checkDistrictButton.addEventListener('click', () => {
+                        // Get current ticket data to check district field
+                        this.client.data.get("ticket").then(ticketData => {
+                            console.group("District Field Debugging");
+                            console.log("Current ticket data:", ticketData);
+
+                            // Check custom fields for district
+                            if (ticketData && ticketData.ticket && ticketData.ticket.custom_fields) {
+                                console.log("Custom fields:", ticketData.ticket.custom_fields);
+
+                                // Log any field that might contain district information
+                                Object.keys(ticketData.ticket.custom_fields).forEach(key => {
+                                    if (key.toLowerCase().includes('district')) {
+                                        console.log(`Potential district field: ${key} = ${ticketData.ticket.custom_fields[key]}`);
+                                    }
+                                });
+                            }
+
+                            // Check if district field in DOM is populated
+                            const districtField = document.getElementById('districtField');
+                            console.log("District field element:", districtField);
+                            console.log("District field value:", districtField ? districtField.value : "Element not found");
+
+                            console.groupEnd();
+
+                            alert("District data check complete. See console for details.");
+                        }).catch(error => {
+                            console.error("Error checking district data:", error);
+                            alert("Error checking district data. See console for details.");
+                        });
+                    });
+
+                    debugContainer.appendChild(checkDistrictButton);
+                }
+
+                // Add a "Use My Email" button next to the email field
+                const emailField = document.getElementById('email');
+                if (emailField) {
+                    const emailFieldParent = emailField.parentElement;
+
+                    // Create a button container
+                    const buttonContainer = document.createElement('div');
+                    buttonContainer.style.marginTop = '8px';
+
+                    // Create the button
+                    const useMyEmailButton = document.createElement('button');
+                    useMyEmailButton.type = 'button';
+                    useMyEmailButton.className = 'email-input-button';
+                    useMyEmailButton.innerHTML = '<i class="fas fa-user"></i> Use My Email';
+                    useMyEmailButton.style.backgroundColor = '#f0f0f0';
+                    useMyEmailButton.style.border = '1px solid #ddd';
+                    useMyEmailButton.style.borderRadius = '4px';
+                    useMyEmailButton.style.padding = '5px 10px';
+                    useMyEmailButton.style.cursor = 'pointer';
+                    useMyEmailButton.style.marginRight = '8px';
+
+                    // Add click handler
+                    useMyEmailButton.addEventListener('click', () => {
+                        const emailInput = prompt("Enter your email address:", emailField.value || "");
+                        if (emailInput && emailInput.trim()) {
+                            emailField.value = emailInput.trim();
+                        }
+                    });
+
+                    buttonContainer.appendChild(useMyEmailButton);
+
+                    // Insert after email field
+                    emailFieldParent.appendChild(buttonContainer);
+                }
+
+                // Add dynamic subject line builder for Assembly template
+                if (this.trackerType === 'assembly') {
+                    const subjectFields = ['xcode', 'application', 'specificIssue', 'gradesImpacted'];
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+
+                    if (formattedSubjectField) {
+                        // Make it read-only
+                        formattedSubjectField.readOnly = true;
+
+                        // Update the formatted subject when any of the subject fields change
+                        subjectFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (field) {
+                                field.addEventListener('input', () => {
+                                    this.updateFormattedSubject();
+                                });
+                            }
+                        });
+
+                        // Initial update
+                        this.updateFormattedSubject();
+                    }
+                }
+
+                // Add dynamic subject line builder for SEDCUST template
+                if (this.trackerType === 'sedcust') {
+                    const subjectFields = ['xcode', 'application', 'resourcePath', 'specificIssue'];
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+
+                    if (formattedSubjectField) {
+                        // Make it read-only
+                        formattedSubjectField.readOnly = true;
+
+                        // Update the formatted subject when any of the subject fields change
+                        subjectFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (field) {
+                                field.addEventListener('input', () => {
+                                    this.updateSedcustSubject();
+                                });
+                            }
+                        });
+
+                        // Initial update
+                        this.updateSedcustSubject();
+                    }
+                }
+
+                // Add dynamic subject line builder for SIM Assignment template
+                if (this.trackerType === 'sim-assignment') {
+                    const subjectFields = ['isVIP', 'districtName', 'application', 'specificIssue', 'userRole'];
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+
+                    if (formattedSubjectField) {
+                        // Make it read-only
+                        formattedSubjectField.readOnly = true;
+
+                        // Update the formatted subject when any of the subject fields change
+                        subjectFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (field) {
+                                field.addEventListener('input', () => {
+                                    this.updateSimAssignmentSubject();
+                                });
+                                field.addEventListener('change', () => {
+                                    this.updateSimAssignmentSubject();
+                                });
+                            }
+                        });
+
+                        // Initial update
+                        this.updateSimAssignmentSubject();
+                    }
+                }
+
+                // Set up conditional fields
+                this.setupConditionalFields();
+
+                // Initialize HAR file attached dropdown behavior
+                if (this.trackerType === 'sim-assignment') {
+                    const harFileAttached = document.getElementById('harFileAttached');
+                    const harFileReason = document.getElementById('harFileReason');
+
+                    if (harFileAttached && harFileReason) {
+                        // Set initial state
+                        const harFileReasonContainer = this.findParentWithClass(harFileReason, 'form-group');
+
+                        if (harFileAttached.value === 'No') {
+                            if (harFileReasonContainer) harFileReasonContainer.style.display = 'block';
+                        } else {
+                            if (harFileReasonContainer) harFileReasonContainer.style.display = 'none';
+                        }
+
+                        // Add change listener
+                        harFileAttached.addEventListener('change', function () {
+                            if (this.value === 'No') {
+                                if (harFileReasonContainer) harFileReasonContainer.style.display = 'block';
+                                // Hide the uploader container
+                                const harUploaderContainer = document.getElementById('harUploaderContainer');
+                                if (harUploaderContainer) harUploaderContainer.style.display = 'none';
+                            } else {
+                                if (harFileReasonContainer) harFileReasonContainer.style.display = 'none';
+                                // Show the uploader container 
+                                const harUploaderContainer = document.getElementById('harUploaderContainer');
+                                if (harUploaderContainer) harUploaderContainer.style.display = 'block';
+                            }
+                        });
+                    }
+                }
+            }
+
+            updateFormattedSubject() {
+                const xcodeValue = document.getElementById('xcode')?.value || '';
+                const applicationValue = document.getElementById('application')?.value || '';
+                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
+                const gradesImpactedValue = document.getElementById('gradesImpacted')?.value || '';
+
+                const formattedSubject =
+                    `${xcodeValue} | ${applicationValue} | ${specificIssueValue} : ${gradesImpactedValue}`;
+
+                const formattedSubjectField = document.getElementById('formattedSubject');
+                if (formattedSubjectField) {
+                    formattedSubjectField.value = formattedSubject;
+
+                    // Also update the hidden subject field to ensure it's submitted correctly
+                    const subjectField = document.getElementById('subject');
+                    if (subjectField) {
+                        subjectField.value = formattedSubject;
+                    }
+                }
+            }
+
+            updateSedcustSubject() {
+                const xcodeValue = document.getElementById('xcode')?.value || '';
+                const applicationValue = document.getElementById('application')?.value || '';
+                const resourcePathValue = document.getElementById('resourcePath')?.value || '';
+                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
+
+                const formattedSubject =
+                    `${xcodeValue} | ${applicationValue} | ${resourcePathValue} | ${specificIssueValue}`;
+
+                const formattedSubjectField = document.getElementById('formattedSubject');
+                if (formattedSubjectField) {
+                    formattedSubjectField.value = formattedSubject;
+
+                    // Also update the hidden subject field to ensure it's submitted correctly
+                    const subjectField = document.getElementById('subject');
+                    if (subjectField) {
+                        subjectField.value = formattedSubject;
+                    }
+                }
+            }
+
+            updateSimAssignmentSubject() {
+                const isVIP = document.getElementById('isVIP')?.value || 'No';
+                const vipPrefix = isVIP === "Yes" ? "VIP* " : "";
+                const districtValue = document.getElementById('districtName')?.value || '';
+                const applicationValue = document.getElementById('application')?.value || '';
+                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
+                const userRoleValue = document.getElementById('userRole')?.value || '';
+
+                const formattedSubject =
+                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue}: ${userRoleValue}`;
+
+                const formattedSubjectField = document.getElementById('formattedSubject');
+                if (formattedSubjectField) {
+                    formattedSubjectField.value = formattedSubject;
+
+                    // Also update the hidden subject field to ensure it's submitted correctly
+                    const subjectField = document.getElementById('subject');
+                    if (subjectField) {
+                        subjectField.value = formattedSubject;
+                    }
+                }
+            }
+
+            loadDataFromStorage() {
+                // Try to load data from localStorage based on tracker type
+                const storageKey = `${this.trackerType}Data`;
+                const storedData = localStorage.getItem(storageKey);
+
+                if (storedData) {
+                    try {
+                        const parsedData = JSON.parse(storedData);
+                        console.log(`Found stored data for ${this.trackerType}:`, parsedData);
+
+                        // Populate fields from stored data
+                        if (parsedData.currentTicketId) {
+                            document.getElementById('relatedTickets').value = parsedData.currentTicketId;
+                        }
+
+                        // Add explicit check and debug for district field
+                        if (parsedData.districtName) {
+                            const districtField = document.getElementById('districtField');
+                            if (districtField) {
+                                districtField.value = parsedData.districtName;
+                                console.log(`Set district field to: ${parsedData.districtName}`);
+                            } else {
+                                console.warn('District field element not found in the DOM');
+                            }
+                        } else {
+                            console.warn('No district name found in stored data');
+                        }
+
+                        // IMPORTANT - Set email field directly
+                        if (parsedData.requesterEmail) {
+                            const emailField = document.getElementById('email');
+                            emailField.value = parsedData.requesterEmail;
+                            console.log(`Set email to: ${parsedData.requesterEmail}`);
+                        }
+
+                        // IMPORTANT - Make sure priority is set with the right value
+                        if (parsedData.priority) {
+                            const priorityField = document.getElementById('priority');
+                            priorityField.value = parsedData.priority.toString();
+                            console.log(`Set priority to: ${parsedData.priority}`);
+                        }
+
+                        if (parsedData.isVip !== undefined) {
+                            // Find and set VIP field if it exists in this tracker
+                            const vipField = document.getElementById('isVIP');
+                            if (vipField) {
+                                vipField.value = parsedData.isVip ? 'Yes' : 'No';
+                            }
+                        }
+
+                        // Clear localStorage to avoid reusing stale data
+                        localStorage.removeItem(storageKey);
+                    } catch (error) {
+                        console.error("Error parsing stored data:", error);
+                    }
+                } else {
+                    console.warn(`No stored data found for ${this.trackerType}`);
+                }
+            }
+
+            async loadInitialData() {
+                try {
+                    // FIRST PRIORITY: Get agent email directly from API
+                    try {
+                        const userData = await this.client.data.get("loggedInUser");
+                        console.log("Direct API user data:", userData);
+
+                        // Try to extract email from various possible locations
+                        let agentEmail = '';
+                        if (userData && userData.loggedInUser) {
+                            // Log the full structure to understand where the email might be
+                            console.log("Full userData.loggedInUser:", JSON.stringify(userData.loggedInUser));
+
+                            // Try different possible locations for the email
+                            if (userData.loggedInUser.email) {
+                                agentEmail = userData.loggedInUser.email;
+                            } else if (userData.loggedInUser.contact && userData.loggedInUser.contact.email) {
+                                agentEmail = userData.loggedInUser.contact.email;
+                            } else if (userData.loggedInUser.primary_email) {
+                                agentEmail = userData.loggedInUser.primary_email;
+                            } else if (userData.loggedInUser.user && userData.loggedInUser.user.email) {
+                                agentEmail = userData.loggedInUser.user.email;
+                            }
+
+                            // If we find the email, use it
+                            if (agentEmail) {
+                                const emailField = document.getElementById('email');
+                                emailField.value = agentEmail;
+                                console.log("Set email directly from agent data:", agentEmail);
+                            } else {
+                                // Last resort: try to get email from another API call
+                                try {
+                                    // Try to get current agent ID
+                                    if (userData.loggedInUser.id) {
+                                        const agentId = userData.loggedInUser.id;
+                                        const agentResponse = await this.client.request.invokeTemplate("getAgentDetails", {
+                                            context: {
+                                                agentId: agentId
+                                            }
+                                        });
+                                        const agentData = JSON.parse(agentResponse.response);
+
+                                        if (agentData && agentData.contact && agentData.contact.email) {
+                                            const emailField = document.getElementById('email');
+                                            emailField.value = agentData.contact.email;
+                                            console.log("Set email from agent details API:", agentData.contact.email);
+                                        }
+                                    }
+                                } catch (error) {
+                                    console.warn("Error getting agent details:", error);
+                                }
+                            }
+                        } else {
+                            console.warn("Could not get agent email from userData:", userData);
+                        }
+                    } catch (agentError) {
+                        console.error("Error getting agent email:", agentError);
+                    }
+
+                    // Fall back to a hardcoded email if we still don't have one
+                    const emailField = document.getElementById('email');
+                    if (!emailField.value) {
+                        // Try to get the ticket requester's email as a last resort
+                        try {
+                            const ticketData = await this.client.data.get("ticket");
+                            if (ticketData && ticketData.ticket && ticketData.ticket.requester && ticketData.ticket.requester.email) {
+                                emailField.value = ticketData.ticket.requester.email;
+                                console.log("Set email from ticket requester:", ticketData.ticket.requester.email);
+                            }
+                        } catch (error) {
+                            console.warn("Could not get ticket data:", error);
+                        }
+                    }
+
+                    // Rest of the method continues as before
+                    const today = new Date().toISOString().split('T')[0];
+                    document.querySelectorAll('input[type="date"]').forEach(dateField => {
+                        dateField.value = today;
+                    });
+
+                    await this.loadTicketContext();
+                    await this.loadGroups();
+                } catch (error) {
+                    console.error('Error loading initial data:', error);
+                }
+            }
+
+            async loadTicketContext() {
+                // Simple stub implementation
+                console.log('Loading ticket context');
+                return Promise.resolve();
+            }
+
+            async loadGroups() {
+                console.log('Loading groups');
+
+                try {
+                    // Show loading state
+                    const groupField = document.getElementById('groupField');
+                    groupField.innerHTML = '<option value="">Loading groups...</option>';
+
+                    // Fetch groups from API
+                    const response = await this.client.request.invokeTemplate("getGroups", {});
+                    const groups = JSON.parse(response.response);
+
+                    if (Array.isArray(groups) && groups.length > 0) {
+                        // Build options
+                        let options = '<option value="">-- Select Group --</option>';
+                        let escalationsGroupId = null;
+
+                        groups.forEach(group => {
+                            // Check if this is the Escalations group
+                            const isEscalations = group.name.toLowerCase() === 'escalations';
+                            if (isEscalations) {
+                                escalationsGroupId = group.id;
+                            }
+
+                            // Add the group to the dropdown
+                            options += `<option value="${group.id}" ${isEscalations ? 'selected' : ''}>${group.name}</option>`;
+                        });
+
+                        // Set options
+                        groupField.innerHTML = options;
+                        console.log(`Loaded ${groups.length} groups`);
+
+                        // Load only the specific agents - not all agents
+                        await this.loadSpecificAgents();
+                    } else {
+                        groupField.innerHTML = '<option value="">No groups available</option>';
+
+                        // Set default to Escalations anyway
+                        groupField.innerHTML = `
+                            <option value="">-- Select Group --</option>
+                            <option value="escalations" selected>Escalations</option>
+                            <option value="1">Support</option>
+                            <option value="2">Engineering</option>
+                        `;
+
+                        // Also load the specific agents
+                        await this.loadSpecificAgents();
+                    }
+                } catch (error) {
+                    console.error('Error loading groups:', error);
+
+                    // Fallback with Escalations selected
+                    document.getElementById('groupField').innerHTML = `
+                        <option value="">-- Select Group --</option>
+                        <option value="escalations" selected>Escalations</option>
+                        <option value="1">Support</option>
+                        <option value="2">Engineering</option>
+                    `;
+
+                    // Load the specific agents
+                    await this.loadSpecificAgents();
+                }
+            }
+
+            async loadSpecificAgents() {
+                console.log('Loading specific agents');
+
+                // List of specific agent IDs to display
+                const specificAgentIds = [67025683491, 67030529218, 67031011668, 67040597168, 67051499418];
+
+                try {
+                    // Show loading state
+                    const agentField = document.getElementById('agentField');
+                    agentField.innerHTML = '<option value="">Loading agents...</option>';
+
+                    // Fetch all agents from API
+                    const response = await this.client.request.invokeTemplate("getAllAgents", {});
+                    const allAgents = JSON.parse(response.response);
+
+                    if (Array.isArray(allAgents) && allAgents.length > 0) {
+                        // Filter to only include specific agents
+                        const specificAgents = allAgents.filter(agent =>
+                            specificAgentIds.includes(agent.id)
+                        );
+
+                        // Build options
+                        let options = '<option value="">-- Select Agent --</option>';
+
+                        specificAgents.forEach(agent => {
+                            // Get agent name
+                            let agentName = 'Unknown Agent';
+                            let agentId = agent.id;
+
+                            if (agent.contact && agent.contact.name) {
+                                agentName = agent.contact.name;
+                            } else if (agent.name) {
+                                agentName = agent.name;
+                            } else if (agent.email) {
+                                agentName = agent.email.split('@')[0]; // Use part of email as name
+                            }
+
+                            options += `<option value="${agentId}">${agentName}</option>`;
+                        });
+
+                        // Set options
+                        agentField.innerHTML = options;
+                        console.log(`Loaded ${specificAgents.length} specific agents`);
+                    } else {
+                        agentField.innerHTML = '<option value="">No agents available</option>';
+                    }
+                } catch (error) {
+                    console.error('Error loading specific agents:', error);
+
+                    // Fallback hardcoded agents
+                    document.getElementById('agentField').innerHTML = `
+                        <option value="">-- Select Agent --</option>
+                        <option value="67025683491">Escalation Agent 1</option>
+                        <option value="67030529218">Escalation Agent 2</option>
+                        <option value="67031011668">Escalation Agent 3</option>
+                        <option value="67040597168">Escalation Agent 4</option>
+                        <option value="67051499418">Escalation Agent 5</option>
+                    `;
+                }
+            }
+
+            handleFormSubmit() {
+                console.log('Form submitted');
+
+                // Show the loading overlay
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'flex';
+                }
+
+                // Reset previous errors
+                document.querySelectorAll('.validation-error').forEach(el => el.remove());
+                document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+
+                // For assembly template, make sure the formatted subject is updated one last time
+                if (this.trackerType === 'assembly') {
+                    this.updateFormattedSubject();
+                }
+
+                // For sedcust template, make sure the formatted subject is updated one last time
+                if (this.trackerType === 'sedcust') {
+                    this.updateSedcustSubject();
+                }
+
+                // For sim-assignment template, make sure the formatted subject is updated one last time
+                if (this.trackerType === 'sim-assignment') {
+                    this.updateSimAssignmentSubject();
+                }
+
+                // Validate the form first
+                if (!this.validateForm()) {
+                    // Hide loading overlay if validation fails
+                    if (loadingOverlay) {
+                        loadingOverlay.style.display = 'none';
+                    }
+                    return;
+                }
+
+                // Get all form data and update hidden description field
+                try {
+                    // Get the data and sanitize it
+                    let formData = this.getFormData();
+                    formData = this.sanitizeFormData(formData);
+
+                    console.log('Form data:', formData);
+
+                    // Generate description using the configured template
+                    const description = this.generateDescription();
+                    document.getElementById('description').value = description;
+                    console.log('Generated description:', description);
+
+                    // Create the ticket in Freshdesk
+                    this.createTicket(formData);
+                } catch (error) {
+                    console.error('Error submitting form:', error);
+                    if (loadingOverlay) {
+                        loadingOverlay.style.display = 'none';
+                    }
+                    this.showError('Error submitting form: ' + (error.message || 'Unknown error'));
+                }
+            }
+
+            validateForm() {
+                // Reset any previous validation errors
+                document.querySelectorAll('.validation-error').forEach(el => el.remove());
+                document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+
+                let isValid = true;
+
+                // Check required fields
+                const requiredFields = document.querySelectorAll('[required]');
+                for (let field of requiredFields) {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        this.showFieldError(field, 'This field is required');
+                    }
+                }
+
+                // Email validation for email fields
+                const emailFields = document.querySelectorAll('input[type="email"]');
+                for (let field of emailFields) {
+                    if (field.value && !this.isValidEmail(field.value)) {
+                        isValid = false;
+                        this.showFieldError(field, 'Please enter a valid email address');
+                    }
+                }
+
+                // Add more validation rules as needed (e.g., min/max length, format validation)
+
+                // Check the Quill editors for required content
+                Object.keys(this.quillEditors).forEach(id => {
+                    const editor = this.quillEditors[id];
+                    const textareaElement = document.getElementById(id);
+
+                    if (textareaElement && textareaElement.hasAttribute('required')) {
+                        const content = editor.getText().trim();
+                        if (!content) {
+                            isValid = false;
+                            const editorElement = editor.container;
+                            this.showFieldError(editorElement, 'This field is required');
+                            editor.container.classList.add('field-error');
+                        }
+                    }
+                });
+
+                if (!isValid) {
+                    this.showError('Please correct the errors in the form');
+                }
+
+                return isValid;
+            }
+
+            showFieldError(field, message) {
+                // Add error class to the field
+                field.classList.add('field-error');
+
+                // Create and append the error message
+                const errorElement = document.createElement('div');
+                errorElement.className = 'validation-error';
+                errorElement.textContent = message;
+
+                // Insert after the field
+                if (field.parentNode) {
+                    field.parentNode.appendChild(errorElement);
+                }
+            }
+
+            isValidEmail(email) {
+                const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            }
+
+            generateDescription() {
+                // Get values from all form fields
+                const formData = this.getFormData();
+
+                // Use the description generator from the config
+                if (this.config.descriptionGenerator) {
+                    return this.config.descriptionGenerator(formData);
+                } else {
+                    // Default description generator for blank template
+                    return `<div>${formData.subject || 'No subject'}</div>`;
+                }
+            }
+
+            getFormData() {
+                // Get values from all form fields
+                const formData = {};
+
+                // Get values from Quill editors
+                Object.keys(this.quillEditors).forEach(id => {
+                    const editor = this.quillEditors[id];
+                    const textareaElement = document.getElementById(id);
+                    if (textareaElement) {
+                        const content = editor.root.innerHTML;
+                        textareaElement.value = content;
+                        formData[id] = content;
+                    }
+                });
+
+                // Get values from regular form fields
+                const formElements = document.getElementById('trackerForm').elements;
+                for (let i = 0; i < formElements.length; i++) {
+                    const element = formElements[i];
+                    if (element.name && element.name !== '') {
+                        formData[element.name] = element.value;
+                    }
+                }
+
+                return formData;
+            }
+
+            showError(message) {
+                console.error(message);
+                // Display error in UI
+                if (typeof client !== 'undefined') {
+                    client.interface.trigger("showNotify", {
+                        type: "danger",
+                        message: message
+                    }).catch(err => console.error("Error showing notification:", err));
+                } else {
+                    alert('Error: ' + message);
+                }
+            }
+
+            handleFileInputChange(e) {
+                const files = e.target.files;
+                const previewContainer = document.getElementById('screenshotPreview');
+                const counter = document.getElementById('attachmentCounter');
+
+                // Clear previous previews
+                previewContainer.innerHTML = '';
+
+                // Store files for later use
+                this.aggregatedScreenshotFiles = Array.from(files);
+
+                // Create previews for each file
+                Array.from(files).forEach(file => {
+                    const thumbnail = document.createElement('div');
+                    thumbnail.className = 'screenshot-thumbnail';
+
+                    // Create thumbnail content
+                    const fileTypeIcon = this.getFileTypeIcon(file.type);
+                    thumbnail.innerHTML = `
+                        <div class="file-preview">
+                            <i class="${fileTypeIcon}"></i>
+                        </div>
+                        <div class="screenshot-filename">${file.name}</div>
+                        <div class="screenshot-remove" data-filename="${file.name}">×</div>
+                    `;
+
+                    previewContainer.appendChild(thumbnail);
+                });
+
+                // Update counter
+                if (files.length > 0) {
+                    counter.textContent = `${files.length} file(s) selected (${this.formatFileSize(Array.from(files).reduce((total, file) => total + file.size, 0))})`;
+                } else {
+                    counter.textContent = '';
+                }
+
+                // Add event listeners to remove buttons
+                document.querySelectorAll('.screenshot-remove').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const filename = e.target.getAttribute('data-filename');
+                        this.removeFile(filename);
+                    });
+                });
+            }
+
+            getFileTypeIcon(mimeType) {
+                if (mimeType.startsWith('image/')) return 'fas fa-image';
+                if (mimeType.startsWith('video/')) return 'fas fa-video';
+                if (mimeType.startsWith('audio/')) return 'fas fa-music';
+                if (mimeType.includes('pdf')) return 'fas fa-file-pdf';
+                if (mimeType.includes('word') || mimeType.includes('document')) return 'fas fa-file-word';
+                if (mimeType.includes('excel') || mimeType.includes('sheet')) return 'fas fa-file-excel';
+                if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return 'fas fa-file-powerpoint';
+                if (mimeType.includes('zip') || mimeType.includes('compressed')) return 'fas fa-file-archive';
+                return 'fas fa-file';
+            }
+
+            formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' bytes';
+                if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+                if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+                return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+            }
+
+            removeFile(filename) {
+                // Remove from stored files array
+                this.aggregatedScreenshotFiles = this.aggregatedScreenshotFiles.filter(file => file.name !== filename);
+
+                // Remove thumbnail from UI
+                const thumbnails = document.querySelectorAll('.screenshot-thumbnail');
+                thumbnails.forEach(thumbnail => {
+                    const filenameElement = thumbnail.querySelector('.screenshot-filename');
+                    if (filenameElement && filenameElement.textContent === filename) {
+                        thumbnail.remove();
+                    }
+                });
+
+                // Update counter
+                const counter = document.getElementById('attachmentCounter');
+                if (this.aggregatedScreenshotFiles.length > 0) {
+                    counter.textContent = `${this.aggregatedScreenshotFiles.length} file(s) selected (${this.formatFileSize(this.aggregatedScreenshotFiles.reduce((total, file) => total + file.size, 0))})`;
+                } else {
+                    counter.textContent = '';
+                }
+            }
+
+            fillFormWithDemoData() {
+                // Set some sample data for quick testing - Skip email, relatedTickets, district fields, and group
+
+                // DON'T fill email field
+                // document.getElementById('email').value = 'test@example.com';
+
+                // DON'T fill related tickets field
+                // document.getElementById('relatedTickets').value = '123456';
+
+                // Set priority
+                document.getElementById('priority').value = '2';
+
+                // Set status
+                document.getElementById('status').value = '2'; // Open
+
+                // Set subject if it exists
+                const subjectField = document.getElementById('subject');
+                if (subjectField) {
+                    subjectField.value = `Test ${this.config.title}`;
+                }
+
+                // Set values in quill editors
+                Object.keys(this.quillEditors).forEach(id => {
+                    this.quillEditors[id].root.innerHTML = '<p>This is sample content for testing.</p>';
+                });
+
+                // Set other fields based on their type, but skip district fields, group field
+                document.querySelectorAll('input[type="text"]').forEach(input => {
+                    const fieldId = input.id.toLowerCase();
+
+                    // Skip fields containing "district", "related", or if they're the subject field
+                    if (!fieldId.includes('district') &&
+                        fieldId !== 'subject' &&
+                        fieldId !== 'relatedtickets') {
+
+                        input.value = `Sample ${input.id.replace(/([A-Z])/g, ' $1').toLowerCase()}`;
+                    }
+                });
+
+                // DON'T set group field
+                // const groupField = document.getElementById('groupField');
+                // if (groupField) {
+                //     groupField.value = groupField.options[0].value;
+                // }
+
+                // DON'T set agent field - depends on group
+                // const agentField = document.getElementById('agentField');
+                // if (agentField) {
+                //     agentField.value = '';
+                // }
+
+                // Set select fields to their first option if not already set (except group/agent fields)
+                document.querySelectorAll('select').forEach(select => {
+                    const selectId = select.id.toLowerCase();
+                    if (selectId !== 'groupfield' && selectId !== 'agentfield' && !select.value && select.options.length > 0) {
+                        select.value = select.options[0].value;
+                    }
+                });
+
+                // Ensure date fields have a value
+                document.querySelectorAll('input[type="date"]').forEach(dateField => {
+                    if (!dateField.value) {
+                        const today = new Date();
+                        const futureDate = new Date(today);
+                        futureDate.setDate(today.getDate() + 5); // Set date 5 days in the future
+                        dateField.value = futureDate.toISOString().split('T')[0];
+                    }
+                });
+            }
+
+            handlePasteImage(e, editor) {
+                const clipboardData = e.clipboardData;
+                if (!clipboardData || !clipboardData.items) return;
+
+                const items = clipboardData.items;
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        e.preventDefault(); // Prevent default paste behavior
+
+                        // Show loading indicator in editor
+                        const range = editor.getSelection(true);
+                        editor.insertText(range.index, "Uploading image... ", { italic: true, color: '#999' });
+                        const placeholderIndex = range.index;
+
+                        // Get the file from clipboard
+                        const file = items[i].getAsFile();
+                        console.log('Image pasted into editor:', file.name);
+
+                        // Upload to ImgBB
+                        this.uploadImageToImgBB(file).then(imageUrl => {
+                            // Delete the placeholder text
+                            editor.deleteText(placeholderIndex, "Uploading image... ".length);
+
+                            // Insert the image at original paste position
+                            editor.insertEmbed(placeholderIndex, 'image', imageUrl);
+                            editor.setSelection(placeholderIndex + 1);
+                        }).catch(error => {
+                            console.error('Error uploading pasted image:', error);
+
+                            // Replace placeholder with error message
+                            editor.deleteText(placeholderIndex, "Uploading image... ".length);
+                            editor.insertText(placeholderIndex, "⚠️ Image upload failed ", { italic: true, color: 'red' });
+                        });
+
+                        // Only handle the first image in the clipboard
+                        break;
+                    }
+                }
+            }
+
+            handleDropImage(e, editor) {
+                e.preventDefault();
+
+                if (e.dataTransfer.files && e.dataTransfer.files.length) {
+                    const file = e.dataTransfer.files[0];
+
+                    // Check if it's an image
+                    if (file.type.match(/^image\/(gif|jpe?g|png|webp|bmp)$/i)) {
+                        // Show loading indicator
+                        const range = editor.getSelection(true);
+                        editor.insertText(range.index, "Uploading image... ", { italic: true, color: '#999' });
+                        const placeholderIndex = range.index;
+
+                        // Upload to ImgBB
+                        this.uploadImageToImgBB(file).then(imageUrl => {
+                            // Delete the placeholder text
+                            editor.deleteText(placeholderIndex, "Uploading image... ".length);
+
+                            // Insert the image at drop position
+                            editor.insertEmbed(placeholderIndex, 'image', imageUrl);
+                            editor.setSelection(placeholderIndex + 1);
+                        }).catch(error => {
+                            console.error('Error uploading dropped image:', error);
+
+                            // Replace placeholder with error message
+                            editor.deleteText(placeholderIndex, "Uploading image... ".length);
+                            editor.insertText(placeholderIndex, "⚠️ Image upload failed ", { italic: true, color: 'red' });
+                        });
+                    }
+                }
+            }
+
+            async uploadImageToImgBB(imageFile) {
+                console.log(`Uploading image to ImgBB: ${imageFile.name} (${this.formatFileSize(imageFile.size)})`);
+
+                try {
+                    // Convert the image to base64
+                    const base64Image = await this.readFileAsBase64(imageFile);
+
+                    // Create form data for the API request
+                    const formData = new FormData();
+                    formData.append('key', 'b3da8c974bc40dd87d896d84436dd76e'); // Your ImgBB API key
+                    formData.append('image', base64Image);
+                    formData.append('name', imageFile.name);
+
+                    // Make the API request
+                    const response = await fetch('https://api.imgbb.com/1/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    // Parse the response
+                    const result = await response.json();
+
+                    if (result.success) {
+                        console.log('Image uploaded successfully:', result.data.url);
+                        // Return the display URL (medium size) for better quality
+                        return result.data.display_url;
+                    } else {
+                        throw new Error(result.error?.message || 'Upload failed');
+                    }
+                } catch (error) {
+                    console.error('Error uploading to ImgBB:', error);
+                    throw error;
+                }
+            }
+
+            readFileAsBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        // Get the base64 part without the prefix
+                        const base64 = reader.result.split(',')[1];
+                        resolve(base64);
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            handleTicketCreationSuccess(ticketData) {
+                console.log('Ticket created successfully:', ticketData);
+
+                // Hide loading overlay only after all operations (including attachments) are done
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'flex'; // Keep showing until attachments are processed
+                    loadingOverlay.querySelector('.spinner-text').textContent = "Processing attachments...";
+                }
+
+                // Show success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    Tracker ticket #${ticketData.id} created successfully!
+                `;
+
+                // Insert at the top of the form
+                const form = document.getElementById('trackerForm');
+                form.insertBefore(successMessage, form.firstChild);
+
+                // We'll use Promise.all to make sure we process all async operations
+                const processingTasks = [];
+
+                // Associate with related tickets if any
+                if (this.relatedTicketIds && this.relatedTicketIds.length > 0) {
+                    processingTasks.push(this.associateWithRelatedTickets(ticketData.id));
+                }
+
+                // Upload any attachments as a separate note
+                const hasScreenshots = this.aggregatedScreenshotFiles && this.aggregatedScreenshotFiles.length > 0;
+                const hasHarFile = this.trackerType === 'sim-assignment' && this.harFile;
+
+                if (hasScreenshots || hasHarFile) {
+                    processingTasks.push(this.addAttachmentsAsNote(ticketData.id));
+                }
+
+                // Wait for all processing to complete
+                Promise.all(processingTasks)
+                    .then(() => {
+                        console.log('All post-creation tasks completed successfully');
+
+                        // Hide loading overlay
+                        if (loadingOverlay) {
+                            loadingOverlay.style.display = 'none';
+                        }
+
+                        // Disable submit button
+                        const submitButton = document.getElementById('createTracker');
+                        if (submitButton) {
+                            submitButton.disabled = true;
+                        }
+
+                        // Show notification
+                        this.client.interface.trigger("showNotify", {
+                            type: "success",
+                            message: `Tracker ticket #${ticketData.id} created successfully!`
+                        }).catch(err => console.error("Error showing notification:", err));
+
+                        // Get the Freshdesk subdomain and automatically open the ticket in a new tab
+                        this.client.iparams.get("freshdesk_subdomain").then(iparams => {
+                            const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
+                            const ticketUrl = `https://${subdomain}.freshdesk.com/a/tickets/${ticketData.id}`;
+
+                            // Open in a new tab
+                            window.open(ticketUrl, '_blank');
+
+                            // Return to template selector after a short delay
+                            setTimeout(() => {
+                                window.location.href = 'template-selector.html';
+                            }, 1500);
+                        }).catch((error) => {
+                            console.error("Error getting subdomain:", error);
+                            // Fallback to generic URL
+                            window.open(`https://freshdesk.com/a/tickets/${ticketData.id}`, '_blank');
+
+                            // Return to template selector after a short delay
+                            setTimeout(() => {
+                                window.location.href = 'template-selector.html';
+                            }, 1500);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error during post-creation tasks:', error);
+
+                        // Hide loading overlay
+                        if (loadingOverlay) {
+                            loadingOverlay.style.display = 'none';
+                        }
+
+                        this.showError('Ticket created but there were issues processing attachments.');
+
+                        // Still open the ticket
+                        this.client.iparams.get("freshdesk_subdomain").then(iparams => {
+                            const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
+                            const ticketUrl = `https://${subdomain}.freshdesk.com/a/tickets/${ticketData.id}`;
+                            window.open(ticketUrl, '_blank');
+
+                            // Return to template selector after a short delay
+                            setTimeout(() => {
+                                window.location.href = 'template-selector.html';
+                            }, 1500);
+                        }).catch(() => {
+                            window.open(`https://freshdesk.com/a/tickets/${ticketData.id}`, '_blank');
+                            setTimeout(() => window.location.href = 'template-selector.html', 1500);
+                        });
+                    });
+            }
+
+            async associateWithRelatedTickets(ticketId) {
+                // Skip if no related tickets
+                if (!this.relatedTicketIds || this.relatedTicketIds.length === 0) {
+                    return;
+                }
+
+                console.log(`Associating ticket #${ticketId} with related tickets:`, this.relatedTicketIds);
+
+                // Process each related ticket
+                for (const relatedId of this.relatedTicketIds) {
+                    try {
+                        await this.client.request.invokeTemplate("associateTickets", {
+                            context: {
+                                primaryTicketId: ticketId,
+                                secondaryTicketId: relatedId
+                            }
+                        });
+                        console.log(`Successfully associated with ticket #${relatedId}`);
+                    } catch (error) {
+                        console.error(`Failed to associate with ticket #${relatedId}:`, error);
+                        // Continue with other tickets even if one fails
+                    }
+                }
+            }
+
+            async createTicket(formData) {
+                try {
+                    const loadingOverlay = document.getElementById('loadingOverlay');
+
+                    // Prepare the ticket data
+                    let subject = formData.subject;
+
+                    // For assembly template, use the formatted subject
+                    if (this.trackerType === 'assembly' && formData.formattedSubject) {
+                        subject = formData.formattedSubject;
+                    }
+
+                    // For sedcust template, use the formatted subject
+                    if (this.trackerType === 'sedcust' && formData.formattedSubject) {
+                        subject = formData.formattedSubject;
+                    }
+
+                    // For sim-assignment template, use the formatted subject
+                    if (this.trackerType === 'sim-assignment' && formData.formattedSubject) {
+                        subject = formData.formattedSubject;
+                    }
+
+                    const ticketData = {
+                        email: formData.email,
+                        subject: subject || `${this.config.title} - ${new Date().toLocaleDateString()}`,
+                        description: document.getElementById('description').value,
+                        status: parseInt(formData.status || 2), // Default to Open
+                        priority: parseInt(formData.priority || 2), // Default to Medium
+                        tags: [`tracker-${this.trackerType}`]
+                    };
+
+                    // Add group if selected
+                    if (formData.groupField && formData.groupField !== '') {
+                        // Make sure it's a number
+                        const groupId = parseInt(formData.groupField, 10);
+                        if (!isNaN(groupId)) {
+                            ticketData.group_id = groupId;
+                        }
+                    }
+
+                    // Add agent if selected
+                    if (formData.agentField && formData.agentField !== '') {
+                        // Make sure it's a number
+                        const responderId = parseInt(formData.agentField, 10);
+                        if (!isNaN(responderId)) {
+                            ticketData.responder_id = responderId;
+                        }
+                    }
+
+                    // Add custom fields if any
+                    ticketData.custom_fields = {};
+
+                    // Add district field if available
+                    if (formData.districtField) {
+                        // Use the appropriate custom field ID for district
+                        ticketData.custom_fields.cf_district = formData.districtField;
+                    }
+
+                    // Store related tickets ID for later association
+                    if (formData.relatedTickets) {
+                        this.relatedTicketIds = formData.relatedTickets.split(',')
+                            .map(id => id.trim())
+                            .filter(id => id !== '');
+                    }
+
+                    console.log('Ticket data to be sent:', JSON.stringify(ticketData, null, 2));
+
+                    // Create the ticket
+                    const response = await this.client.request.invokeTemplate("createfdTicket", {
+                        body: JSON.stringify(ticketData)
+                    });
+
+                    console.log('Ticket created successfully, raw response:', response.response);
+                    const responseData = JSON.parse(response.response);
+                    console.log('Parsed ticket data:', responseData);
+
+                    this.handleTicketCreationSuccess(responseData);
+                } catch (error) {
+                    console.error('Error creating ticket:', error);
+
+                    // Log the original error for debugging
+                    console.group('Detailed Error Information');
+                    console.error('Error object:', error);
+                    console.error('Error response:', error.response);
+                    console.error('Error status:', error.status);
+                    console.groupEnd();
+
+                    const loadingOverlay = document.getElementById('loadingOverlay');
+                    if (loadingOverlay) {
+                        loadingOverlay.style.display = 'none';
+                    }
+
+                    // Try to extract meaningful error message from API response
+                    let errorMessage = 'Unknown error';
+                    if (error.response) {
+                        try {
+                            const errorJson = JSON.parse(error.response);
+                            if (errorJson.description) {
+                                errorMessage = errorJson.description;
+
+                                // Add details from specific errors if available
+                                if (errorJson.errors && Array.isArray(errorJson.errors)) {
+                                    errorMessage += ': ' + errorJson.errors.map(e =>
+                                        `${e.field || ''} ${e.message || e.code || ''}`
+                                    ).join(', ');
+                                }
+                            }
+                        } catch (parseError) {
+                            // If we can't parse the response, use it directly if it's a string
+                            if (typeof error.response === 'string') {
+                                errorMessage = error.response.substring(0, 100); // Limit length
+                            }
+                        }
+                    } else if (error.message) {
+                        errorMessage = error.message;
+                    }
+
+                    this.showError('Failed to create ticket: ' + errorMessage);
+                }
+            }
+
+            debugLogRequest(req, title = 'API Request') {
+                console.group(title);
+                console.log('URL:', req.url);
+                console.log('Method:', req.method);
+                console.log('Headers:', req.headers);
+                console.log('Body:', req.body);
+                console.groupEnd();
+            }
+
+            // Add this method to your TrackerApp class to upload attachments after ticket creation
+            async uploadAttachmentsToTicket(ticketId) {
+                const hasScreenshots = this.aggregatedScreenshotFiles && this.aggregatedScreenshotFiles.length > 0;
+                let hasHarFile = false;
+
+                if (this.trackerType === 'sim-assignment' && this.harFile) {
+                    // Only for SIM Assignment, process the HAR file
+                    hasHarFile = true;
+                }
+
+                if (!hasScreenshots && !hasHarFile) {
+                    return;
+                }
+
+                try {
+                    // Process screenshots first
+                    if (hasScreenshots) {
+                        console.log(`Uploading ${this.aggregatedScreenshotFiles.length} attachments to ticket #${ticketId}...`);
+
+                        // Process one attachment at a time
+                        for (const file of this.aggregatedScreenshotFiles) {
+                            try {
+                                // Convert file to base64
+                                const base64Data = await this.readFileAsBase64(file);
+
+                                // Create note with attachment
+                                const noteData = {
+                                    ticketId: ticketId,
+                                    noteBody: `Attachment: ${file.name}`,
+                                    isPrivate: false,
+                                    fileContent: base64Data,
+                                    fileName: file.name,
+                                    fileType: file.type
+                                };
+
+                                // Use the server component to upload the attachment
+                                const response = await this.client.request.invoke('handle_attachments', {
+                                    data: noteData
+                                });
+
+                                if (response.status >= 200 && response.status < 300) {
+                                    console.log(`Successfully uploaded attachment: ${file.name}`);
+                                } else {
+                                    console.error(`Failed to upload attachment: ${file.name}`, response);
+                                }
+                            } catch (attachmentError) {
+                                console.error(`Error uploading attachment ${file.name}:`, attachmentError);
+                                // Continue with other attachments even if one fails
+                            }
+                        }
+                    }
+
+                    // Process HAR file if exists
+                    if (hasHarFile) {
+                        try {
+                            console.log(`Uploading HAR file to ticket #${ticketId}...`);
+
+                            // Convert file to base64
+                            const base64Data = await this.readFileAsBase64(this.harFile);
+
+                            // Create note with HAR file
+                            const noteData = {
+                                ticketId: ticketId,
+                                noteBody: `HAR File: ${this.harFile.name}`,
+                                isPrivate: false,
+                                fileContent: base64Data,
+                                fileName: this.harFile.name,
+                                fileType: this.harFile.type
+                            };
+
+                            // Use the server component to upload the HAR file
+                            const response = await this.client.request.invoke('handle_attachments', {
+                                data: noteData
+                            });
+
+                            if (response.status >= 200 && response.status < 300) {
+                                console.log(`Successfully uploaded HAR file: ${this.harFile.name}`);
+                            } else {
+                                console.error(`Failed to upload HAR file: ${this.harFile.name}`, response);
+                            }
+                        } catch (harError) {
+                            console.error(`Error uploading HAR file ${this.harFile.name}:`, harError);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error uploading attachments:', error);
+                    this.showError('Note: Some attachments may not have been uploaded correctly.');
+                }
+            }
+
+            sanitizeFormData(formData) {
+                // Make sure group_id is a number
+                if (formData.groupField) {
+                    try {
+                        // If it's a string like "escalations", replace with appropriate ID
+                        if (formData.groupField === "escalations") {
+                            formData.groupField = "67000570680"; // Replace with actual Escalations group ID
+                        }
+
+                        // Try to convert to number
+                        const groupId = parseInt(formData.groupField, 10);
+                        if (isNaN(groupId)) {
+                            console.warn(`Invalid group ID: ${formData.groupField}, removing`);
+                            delete formData.groupField;
+                        }
+                    } catch (e) {
+                        console.warn(`Error processing group ID: ${e.message}`);
+                        delete formData.groupField;
+                    }
+                }
+
+                // Also sanitize agent ID
+                if (formData.agentField) {
+                    try {
+                        const agentId = parseInt(formData.agentField, 10);
+                        if (isNaN(agentId)) {
+                            console.warn(`Invalid agent ID: ${formData.agentField}, removing`);
+                            delete formData.agentField;
+                        }
+                    } catch (e) {
+                        console.warn(`Error processing agent ID: ${e.message}`);
+                        delete formData.agentField;
+                    }
+                }
+
+                return formData;
+            }
+
+            // Add this method to handle HAR file uploads
+            handleHarFileUpload(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const previewContainer = document.getElementById('harFilePreview');
+                if (!previewContainer) {
+                    console.error('HAR file preview container not found');
+                    return;
+                }
+
+                // Clear previous preview
+                previewContainer.innerHTML = '';
+
+                // Create preview element
+                const thumbnail = document.createElement('div');
+                thumbnail.className = 'screenshot-thumbnail';
+
+                // Create thumbnail content
+                thumbnail.innerHTML = `
+                    <div class="file-preview">
+                        <i class="fas fa-file-code"></i>
+                    </div>
+                    <div class="screenshot-filename">${file.name}</div>
+                    <div class="har-remove" data-filename="${file.name}">×</div>
+                `;
+
+                previewContainer.appendChild(thumbnail);
+
+                // Store file for later use
+                this.harFile = file;
+
+                // Add event listener to remove button
+                document.querySelector('#harFilePreview .har-remove').addEventListener('click', () => {
+                    previewContainer.innerHTML = '';
+                    this.harFile = null;
+
+                    // Reset file input
+                    document.getElementById('harFile').value = '';
+                });
+            }
+
+            // Add this method to your TrackerApp class
+            setupConditionalFields() {
+                // Look for fields with conditions and set up their display logic
+                this.config.sections.forEach(section => {
+                    section.fields.forEach(field => {
+                        if (field.condition) {
+                            const targetField = document.getElementById(field.id);
+
+                            if (!targetField) {
+                                console.warn(`Conditional field ${field.id} not found in DOM`);
+                                return;
+                            }
+
+                            // Find the container for the entire field group
+                            const fieldContainer = this.findParentWithClass(targetField, 'form-group');
+                            if (!fieldContainer) {
+                                console.warn(`Could not find form-group container for ${field.id}`);
+                                return;
+                            }
+
+                            // Find the controlling field and set up a change listener
+                            const controlField = document.getElementById(field.condition.field);
+                            if (!controlField) {
+                                console.warn(`Control field ${field.condition.field} not found for conditional field ${field.id}`);
+                                return;
+                            }
+
+                            // Initial setup - hide/show based on current value
+                            this.updateConditionalField(controlField, fieldContainer, field.condition.value);
+
+                            // Add event listener to control field
+                            controlField.addEventListener('change', () => {
+                                this.updateConditionalField(controlField, fieldContainer, field.condition.value);
+                            });
+                        }
+                    });
+                });
+            }
+
+            // Helper method to find parent element with a specific class
+            findParentWithClass(element, className) {
+                while (element && !element.classList.contains(className)) {
+                    element = element.parentElement;
+                }
+                return element;
+            }
+
+            // Helper method to update the display of a conditional field
+            updateConditionalField(controlField, targetContainer, conditionValue) {
+                if (controlField.value === conditionValue) {
+                    targetContainer.style.display = '';
+                } else {
+                    targetContainer.style.display = 'none';
+                }
+            }
+
+            // Add this method to your TrackerApp class
+            setupCustomFileUploaders() {
+                // Only apply to sim-assignment template
+                if (this.trackerType !== 'sim-assignment') {
+                    return;
+                }
+
+                try {
+                    // Add file uploader to Screenshots & Videos section
+                    const screenshotsSection = document.getElementById('section-screenshots');
+                    if (screenshotsSection) {
+                        // First update the section title to the new longer name
+                        const headerElement = screenshotsSection.querySelector('.card-header h3');
+                        if (headerElement) {
+                            headerElement.textContent = "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS";
+                        }
+
+                        const sectionBody = screenshotsSection.querySelector('.card-body');
+
+                        // Create file uploader HTML with explicit IDs
+                        const uploaderHTML = `
+                            <div class="attachment-input-container">
+                                <label for="screenshots" class="file-upload-button">
+                                    <i class="fas fa-cloud-upload-alt"></i> Upload Files
+                                    <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
+                                </label>
+                                <div class="hint"><i class="fas fa-info-circle"></i> Add screenshots, videos or other supporting files to help illustrate the issue</div>
+                            </div>
+                            <div id="screenshotPreview" class="screenshot-preview"></div>
+                            <div id="attachmentCounter" class="attachment-counter"></div>
+                        `;
+
+                        // Append to the section
+                        const containerDiv = document.createElement('div');
+                        containerDiv.className = 'screenshot-uploader-container';
+                        containerDiv.innerHTML = uploaderHTML;
+                        sectionBody.appendChild(containerDiv);
+
+                        // Add event listener to the file input
+                        const fileInput = sectionBody.querySelector('#screenshots');
+                        if (fileInput) {
+                            fileInput.addEventListener('change', (e) => {
+                                this.handleFileInputChange(e);
+                            });
+                        }
+                    }
+
+                    // We'll still handle the HAR file uploader functionality, but it will be tied to the HAR field
+                    // in the user info section, not as a separate section
+                    this.setupHarFileUploader();
+
+                } catch (error) {
+                    console.error('Error setting up custom file uploaders:', error);
+                }
+            }
+
+            // Add a method to set up the HAR file uploader
+            setupHarFileUploader() {
+                // Find the HAR file attached dropdown
+                const harFileAttached = document.getElementById('harFileAttached');
+                if (!harFileAttached) {
+                    console.warn('HAR file attached dropdown not found');
+                    return;
+                }
+
+                // Create and add the HAR file uploader container
+                const harUploaderHTML = `
+                    <div class="attachment-input-container" id="harUploaderContainer" style="display: none;">
+                        <label for="harFileInput" class="file-upload-button">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload HAR File
+                            <input type="file" id="harFileInput" name="harFileInput" accept=".har" class="hidden-file-input">
+                        </label>
+                        <div class="hint"><i class="fas fa-info-circle"></i> Upload a HAR file to provide detailed network information</div>
+                        <div id="harFilePreviewContainer" class="screenshot-preview"></div>
+                    </div>
+                `;
+
+                // Find the harFileReason field and its container
+                const harFileReason = document.getElementById('harFileReason');
+                const harFileReasonContainer = harFileReason ? this.findParentWithClass(harFileReason, 'form-group') : null;
+
+                if (harFileReasonContainer) {
+                    // Insert the HAR uploader after the reason field
+                    const containerDiv = document.createElement('div');
+                    containerDiv.className = 'har-uploader-container';
+                    containerDiv.innerHTML = harUploaderHTML;
+
+                    harFileReasonContainer.parentNode.insertBefore(containerDiv, harFileReasonContainer.nextSibling);
+
+                    // Make sure initial state is correct
+                    if (harFileAttached.value === 'Yes') {
+                        document.getElementById('harUploaderContainer').style.display = 'block';
+                        if (harFileReasonContainer) harFileReasonContainer.style.display = 'none';
+                    } else {
+                        document.getElementById('harUploaderContainer').style.display = 'none';
+                        if (harFileReasonContainer) harFileReasonContainer.style.display = 'block';
+                    }
+
+                    // Add event listener to the HAR file input
+                    const harFileInput = document.getElementById('harFileInput');
+                    if (harFileInput) {
+                        harFileInput.addEventListener('change', (e) => {
+                            this.handleHarFileInputChange(e);
+                        });
+                    }
+                } else {
+                    console.warn('Could not find HAR file reason container');
+                }
+            }
+
+            // Add a new method specifically for handling HAR file inputs
+            handleHarFileInputChange(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // Use the unique preview container ID
+                const previewContainer = document.getElementById('harFilePreviewContainer');
+                if (!previewContainer) {
+                    console.error('HAR file preview container not found');
+                    return;
+                }
+
+                // Clear previous preview
+                previewContainer.innerHTML = '';
+
+                // Create preview element
+                const thumbnail = document.createElement('div');
+                thumbnail.className = 'screenshot-thumbnail';
+
+                // Create thumbnail content
+                thumbnail.innerHTML = `
+                    <div class="file-preview">
+                        <i class="fas fa-file-code"></i>
+                    </div>
+                    <div class="screenshot-filename">${file.name}</div>
+                    <div class="har-remove" data-filename="${file.name}">×</div>
+                `;
+
+                previewContainer.appendChild(thumbnail);
+
+                // Store file for later use
+                this.harFile = file;
+
+                // Add event listener to remove button
+                document.querySelector('#harFilePreviewContainer .har-remove').addEventListener('click', () => {
+                    previewContainer.innerHTML = '';
+                    this.harFile = null;
+
+                    // Reset file input
+                    document.getElementById('harFileInput').value = '';
+                });
+            }
+
+            // Add this new method to the TrackerApp class
+            ensureHiddenFields() {
+                // Check for description field
+                let descriptionField = document.getElementById('description');
+                if (!descriptionField) {
+                    // Create hidden description textarea if it doesn't exist
+                    const hiddenContainer = document.querySelector('div[style="display: none;"]');
+                    if (!hiddenContainer) {
+                        // Create the container if it doesn't exist
+                        const container = document.createElement('div');
+                        container.style.display = 'none';
+                        document.getElementById('trackerForm').appendChild(container);
+
+                        // Add hidden description field
+                        const textarea = document.createElement('textarea');
+                        textarea.id = 'description';
+                        textarea.name = 'description';
+                        container.appendChild(textarea);
+
+                        // Add hidden tracker type field
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.id = 'trackerType';
+                        input.name = 'trackerType';
+                        input.value = this.trackerType;
+                        container.appendChild(input);
+                    } else {
+                        // Just add the description field
+                        const textarea = document.createElement('textarea');
+                        textarea.id = 'description';
+                        textarea.name = 'description';
+                        hiddenContainer.appendChild(textarea);
+
+                        // Check if tracker type field exists
+                        if (!document.getElementById('trackerType')) {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.id = 'trackerType';
+                            input.name = 'trackerType';
+                            input.value = this.trackerType;
+                            hiddenContainer.appendChild(input);
+                        }
+                    }
+                }
+            }
+
+            // Add this new method to the TrackerApp class
+            async addAttachmentsAsNote(ticketId) {
+                const hasScreenshots = this.aggregatedScreenshotFiles && this.aggregatedScreenshotFiles.length > 0;
+                const hasHarFile = this.trackerType === 'sim-assignment' && this.harFile;
+
+                if (!hasScreenshots && !hasHarFile) {
+                    return Promise.resolve(); // Nothing to do
+                }
+
+                try {
+                    console.log('Adding attachments as a note to ticket #' + ticketId);
+
+                    // Prepare the files to upload
+                    const filesToUpload = [];
+
+                    // Add screenshots if present
+                    if (hasScreenshots) {
+                        filesToUpload.push(...this.aggregatedScreenshotFiles);
+                    }
+
+                    // Add HAR file if present
+                    if (hasHarFile) {
+                        filesToUpload.push(this.harFile);
+                    }
+
+                    // Create a meaningful note body
+                    let noteBody = 'Attached files:';
+                    filesToUpload.forEach(file => {
+                        noteBody += `\n- ${file.name}`;
+                    });
+
+                    // Process files one at a time to prevent issues with large uploads
+                    for (const file of filesToUpload) {
+                        try {
+                            // Show progress in loading overlay
+                            const loadingText = document.querySelector('.spinner-text');
+                            if (loadingText) {
+                                loadingText.textContent = `Uploading ${file.name}...`;
+                            }
+
+                            // Convert file to base64
+                            const base64Data = await this.readFileAsBase64(file);
+
+                            // Create the note data
+                            const noteData = {
+                                ticketId: ticketId,
+                                noteBody: `Attachment: ${file.name}`,
+                                isPrivate: false,
+                                fileContent: base64Data,
+                                fileName: file.name,
+                                fileType: file.type
+                            };
+
+                            // Use the server component to add the note with attachment
+                            const response = await this.client.request.invoke('handle_attachments', {
+                                data: noteData
+                            });
+
+                            if (response.status >= 200 && response.status < 300) {
+                                console.log(`Successfully added ${file.name} as a note attachment`);
+                            } else {
+                                console.error(`Failed to add ${file.name} as a note attachment:`, response);
+                                throw new Error(`Failed to upload ${file.name}: ${response.body?.error || 'Unknown error'}`);
+                            }
+                        } catch (fileError) {
+                            console.error(`Error processing file ${file.name}:`, fileError);
+                            // Continue with other files
+                        }
+                    }
+
+                    console.log('All attachments added successfully as notes');
+                    return Promise.resolve();
+                } catch (error) {
+                    console.error('Error adding attachments as note:', error);
+                    return Promise.reject(error);
+                }
+            }
+
+            // This is an alternative implementation if you prefer a single note with all attachments
+            async addAllAttachmentsAsOneNote(ticketId) {
+                const hasScreenshots = this.aggregatedScreenshotFiles && this.aggregatedScreenshotFiles.length > 0;
+                const hasHarFile = this.trackerType === 'sim-assignment' && this.harFile;
+
+                if (!hasScreenshots && !hasHarFile) {
+                    return Promise.resolve(); // Nothing to do
+                }
+
+                try {
+                    console.log('Adding all attachments as a single note to ticket #' + ticketId);
+
+                    // Prepare the files to upload
+                    const files = [];
+
+                    // Add screenshots if present
+                    if (hasScreenshots) {
+                        files.push(...this.aggregatedScreenshotFiles);
+                    }
+
+                    // Add HAR file if present
+                    if (hasHarFile) {
+                        files.push(this.harFile);
+                    }
+
+                    // Create a meaningful note body
+                    let noteBody = 'Supporting Files:';
+                    files.forEach(file => {
+                        noteBody += `\n- ${file.name}`;
+                    });
+
+                    // Unfortunately, Freshdesk API doesn't support multiple attachments in a single API call
+                    // So we need to create multiple notes, one for each file
+
+                    for (const file of files) {
+                        try {
+                            // Update loading overlay with progress
+                            const loadingText = document.querySelector('.spinner-text');
+                            if (loadingText) {
+                                loadingText.textContent = `Uploading ${file.name}...`;
+                            }
+
+                            // Convert file to base64
+                            const base64Data = await this.readFileAsBase64(file);
+
+                            // Create the note data
+                            const isHarFile = file === this.harFile;
+                            const noteData = {
+                                ticketId: ticketId,
+                                noteBody: isHarFile ? 'HAR File for network analysis' : 'Supporting file for the ticket',
+                                isPrivate: false,
+                                fileContent: base64Data,
+                                fileName: file.name,
+                                fileType: file.type
+                            };
+
+                            // Use the server component to add the note with attachment
+                            const response = await this.client.request.invoke('handle_attachments', {
+                                data: noteData
+                            });
+
+                            if (response.status >= 200 && response.status < 300) {
+                                console.log(`Successfully added ${file.name} as a note attachment`);
+                            } else {
+                                console.error(`Failed to add ${file.name} as a note attachment:`, response);
+                            }
+                        } catch (fileError) {
+                            console.error(`Error processing file ${file.name}:`, fileError);
+                            // Continue with other files
+                        }
+                    }
+
+                    console.log('All attachments added successfully');
+                    return Promise.resolve();
+                } catch (error) {
+                    console.error('Error adding attachments as notes:', error);
+                    return Promise.reject(error);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+
+      --------------------------------------
+      Error Stack:: "AxiosError: Request failed with status code 400\n    at Le (c:\\Users\\skala\\.vscode\\extensions\\freshworksmarketplace.freddy-copilot-2.3.2\\dist\\extension.js:2:168618)\n    at x.<anonymous> (c:\\Users\\skala\\.vscode\\extensions\\freshworksmarketplace.freddy-copilot-2.3.2\\dist\\extension.js:2:179832)\n    at x.emit (node:events:530:35)\n    at x._processResponse (c:\\Users\\skala\\.vscode\\extensions\\freshworksmarketplace.freddy-copilot-2.3.2\\dist\\extension.js:2:49588)\n    at ClientRequest._onNativeResponse (c:\\Users\\skala\\.vscode\\extensions\\freshworksmarketplace.freddy-copilot-2.3.2\\dist\\extension.js:2:44660)\n    at Object.onceWrapper (node:events:633:26)\n    at ClientRequest.emit (node:events:530:35)\n    at HTTPParser.parserOnIncomingClient [as onIncoming] (node:_http_client:702:27)\n    at HTTPParser.parserOnHeadersComplete (node:_http_common:118:17)\n    at TLSSocket.socketOnData (node:_http_client:544:22)\n    at TLSSocket.emit (node:events:518:28)\n    at addChunk (node:internal/streams/readable:561:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)\n    at TLSSocket.Readable.push (node:internal/streams/readable:392:5)\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:191:23)\n    at TLSWrap.callbackTrampoline (node:internal/async_hooks:130:17)"
+      Error Message:: "Request failed with status code 400"
+      Error Name:: "AxiosError"
+      Request ID:: d98ba5c2-d62b-46c1-b490-5eccef8c0fd7
+      Tokens Remaining:: 200000
+      Env:: release
+      API Route:: /api/v1/copilot/completions/platform/3
+      
+      
+
+      Timestamp:: Thu, 20 Mar 2025 13:01:59 GMT
+      Extension Version:: 2.3.2
+      --------------------------------------
+    
+      --------------------------------------
+      Error Stack:: "completions"
+      Error Message:: "As a Freshworks Copilot, my expertise is limited to providing assistance exclusively on matters concerning the Freshworks Developer Platform."
+      
+      
+      
+      
+      
+      
+      
+
+      Timestamp:: Thu, 20 Mar 2025 13:01:59 GMT
+      Extension Version:: 2.3.2
+      --------------------------------------
+    

@@ -6,3 +6,10 @@
 .idea
 **/dist/**
 log/**
+
+# Ignore old CSS files
+/app/styles/style.css
+/app/styles/modal.css
+/app/styles/filepreview.css
+/app/styles/spinner.css
+# Keep template-selector.css

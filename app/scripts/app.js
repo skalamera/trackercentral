@@ -1,3 +1,6 @@
+// Add this at the very top of app.js
+console.log("app.js loading started");
+
 /**
  * Show a notification toast with the given type and message
  *
@@ -53,7 +56,7 @@ async function sayHello(agentName, isFreshDesk) {
       await createfdTicket(agentName);
     }
     else {
-      await createfsTicket(agentName);
+      await createfsTicket();
     }
 
     // If successful...
@@ -164,12 +167,7 @@ function createCompanySection(companyData, companyId, tickets) {
     // Make the row clickable
     row.style.cursor = "pointer";
     row.addEventListener("click", function () {
-      client.interface.trigger("click", { id: "openTicket", value: ticket.id });
-      client.iparams.get("freshdesk_subdomain").then(iparams => {
-        window.open(`https://${iparams.freshdesk_subdomain}.freshdesk.com/a/tickets/${ticket.id}`, "_blank");
-      }).catch(() => {
-        window.open(`https://freshdesk.com/a/tickets/${ticket.id}`, "_blank");
-      });
+      openTicket(ticket.id);
     });
 
     table.appendChild(row);
@@ -196,12 +194,72 @@ function createCompanySection(companyData, companyId, tickets) {
 }
 
 /**
+ * Filter tickets to remove duplicates
+ * 
+ * @param {Array} tickets - Array of ticket objects
+ * @returns {Array} - Filtered array of unique tickets
+ */
+function filterUniqueTickets(tickets) {
+  if (!tickets || !Array.isArray(tickets) || tickets.length === 0) {
+    return [];
+  }
+
+  const processedTicketIds = new Set();
+  return tickets.filter(ticket => {
+    if (!processedTicketIds.has(ticket.id)) {
+      processedTicketIds.add(ticket.id);
+      return true;
+    }
+    return false;
+  });
+}
+
+/**
+ * Find the earliest created ticket from a list
+ * 
+ * @param {Array} tickets - Array of ticket objects
+ * @returns {Object|null} - The earliest ticket or null
+ */
+function findEarliestTicket(tickets) {
+  return tickets.reduce((earliest, ticket) => {
+    const ticketDate = new Date(ticket.created_at);
+    if (!earliest || ticketDate < new Date(earliest.created_at)) {
+      return ticket;
+    }
+    return earliest;
+  }, null);
+}
+
+/**
+ * Group tickets by company ID
+ * 
+ * @param {Array} tickets - Array of ticket objects
+ * @returns {Object} - Object with company IDs as keys and arrays of tickets as values
+ */
+function groupTicketsByCompany(tickets) {
+  const ticketsByCompany = {};
+
+  for (const ticket of tickets) {
+    const companyId = ticket.company_id;
+    if (!companyId) continue;
+
+    if (!ticketsByCompany[companyId]) {
+      ticketsByCompany[companyId] = [];
+    }
+    ticketsByCompany[companyId].push(ticket);
+  }
+
+  return ticketsByCompany;
+}
+
+/**
  * Process the associated tickets data and group by company
  * 
  * @param {Object} data - The parsed API response
  * @returns {Promise<boolean>} - True if processing was successful
  */
 async function processAssociatedTickets(data) {
+  // Handle empty or invalid data
   if (!data || !data.tickets || !Array.isArray(data.tickets) || data.tickets.length === 0) {
     document.getElementById("companyIds").textContent = "No associated tickets found";
     document.getElementById("companySummary").innerHTML = "<div class='no-data-message'>No associated tickets found</div>";
@@ -210,28 +268,25 @@ async function processAssociatedTickets(data) {
     return false;
   }
 
-  // Create a Set to track unique ticket IDs to prevent duplicates
-  const processedTicketIds = new Set();
-  const uniqueTickets = data.tickets.filter(ticket => {
-    if (!processedTicketIds.has(ticket.id)) {
-      processedTicketIds.add(ticket.id);
-      return true;
-    }
-    return false;
-  });
-
+  // Filter to unique tickets
+  const uniqueTickets = filterUniqueTickets(data.tickets);
   document.getElementById("companyIds").textContent = `${uniqueTickets.length} tickets found`;
 
-  // Find the earliest created ticket (first report)
-  let firstReport = uniqueTickets.reduce((earliest, ticket) => {
-    const ticketDate = new Date(ticket.created_at);
-    if (!earliest || ticketDate < new Date(earliest.created_at)) {
-      return ticket;
-    }
-    return earliest;
-  }, null);
+  // Find earliest ticket and display first report info
+  const firstReport = findEarliestTicket(uniqueTickets);
+  updateFirstReportInfo(firstReport);
 
-  // Display first report information if available
+  // Group tickets by company
+  const ticketsByCompany = groupTicketsByCompany(uniqueTickets);
+  return await renderCompanySections(ticketsByCompany);
+}
+
+/**
+ * Update the first report information in the UI
+ * 
+ * @param {Object|null} firstReport - The earliest ticket or null
+ */
+function updateFirstReportInfo(firstReport) {
   if (firstReport) {
     const firstReportDate = new Date(firstReport.created_at);
     document.getElementById("firstReportInfo").style.display = "flex";
@@ -245,20 +300,15 @@ async function processAssociatedTickets(data) {
   } else {
     document.getElementById("firstReportInfo").style.display = "none";
   }
+}
 
-  // Group tickets by company_id
-  const ticketsByCompany = {};
-
-  for (const ticket of uniqueTickets) {
-    const companyId = ticket.company_id;
-    if (!companyId) continue;
-
-    if (!ticketsByCompany[companyId]) {
-      ticketsByCompany[companyId] = [];
-    }
-    ticketsByCompany[companyId].push(ticket);
-  }
-
+/**
+ * Render company sections with their tickets
+ * 
+ * @param {Object} ticketsByCompany - Object with company IDs as keys and arrays of tickets as values
+ * @returns {Promise<boolean>} - True if rendering was successful
+ */
+async function renderCompanySections(ticketsByCompany) {
   const companySummaryDiv = document.getElementById("companySummary");
   companySummaryDiv.innerHTML = "<div class='loading-spinner'>Loading company details...</div>";
 
@@ -322,9 +372,14 @@ async function processAssociatedTickets(data) {
  */
 async function getAssociatedTickets(ticketId) {
   try {
-    document.getElementById("companyIdsContainer").style.display = "block";
+    // Make sure container is visible
+    const container = document.getElementById("companyIdsContainer");
+    if (container) {
+      container.style.display = "block";
+    }
+
     document.getElementById("companyIds").textContent = "Loading...";
-    document.getElementById("companySummary").innerHTML = "";
+    document.getElementById("companySummary").innerHTML = "<div class='loading-spinner'>Loading associated tickets...</div>";
     document.getElementById("firstReportInfo").style.display = "none";
 
     // Show districts count when viewing associated tickets (might have been hidden for related tickets)
@@ -354,10 +409,11 @@ async function getAssociatedTickets(ticketId) {
   } catch (error) {
     console.error("Error getting associated tickets:", error);
 
-    document.getElementById("companyIds").textContent = `Error: ${error.message || "Unknown error"}`;
-    document.getElementById("companySummary").innerHTML = "";
-    document.getElementById("firstReportInfo").style.display = "none";
-    showNotification("danger", "Failed to get associated tickets");
+    document.getElementById("companySummary").innerHTML = `
+      <div class="error-message">
+        <i class="fas fa-exclamation-circle"></i> Failed to get associated tickets: ${error.message || "Unknown error"}
+      </div>
+    `;
     return null;
   }
 }
@@ -366,9 +422,18 @@ async function getAssociatedTickets(ticketId) {
 function openTicket(ticketId) {
   client.interface.trigger("click", { id: "openTicket", value: ticketId });
   client.iparams.get("freshdesk_subdomain").then(iparams => {
-    let subdomain = sanitizeSubdomain(iparams.freshdesk_subdomain);
+    if (!iparams || !iparams.freshdesk_subdomain) {
+      console.warn("Missing Freshdesk subdomain, using default URL");
+      window.open(`https://freshdesk.com/a/tickets/${ticketId}`, "_blank");
+      return;
+    }
+
+    const subdomain = sanitizeSubdomain(iparams.freshdesk_subdomain);
     window.open(`https://${subdomain}.freshdesk.com/a/tickets/${ticketId}`, "_blank");
-  }).catch(() => {
+  }).catch(error => {
+    console.error("Error getting Freshdesk subdomain:", error);
+    // Use a more informative error message
+    showNotification("warning", "Could not get Freshdesk domain, using default URL");
     window.open(`https://freshdesk.com/a/tickets/${ticketId}`, "_blank");
   });
 }
@@ -401,23 +466,23 @@ async function getPrimeAssociation(ticketId) {
  * @param {Object} trackerTicket - Tracker ticket information
  */
 function displayRelatedTicketInfo(trackerTicket) {
-  document.getElementById("companyIdsContainer").style.display = "block";
+  // Show container
+  document.getElementById("companyIds").textContent = "1 tracker found";
+  document.getElementById("districtsCount").textContent = "1";
 
-  // Hide districts count for related tickets
-  document.querySelector(".districts-count").style.display = "none";
-  document.getElementById("firstReportInfo").style.display = "none";
-
-  // Create info message
+  // Create a styled tracker link message
   const infoDiv = document.createElement("div");
-  infoDiv.className = "tracker-link-message";
+  infoDiv.style.padding = "10px 15px";
+  infoDiv.style.borderBottom = "1px solid #eee";
+
   infoDiv.innerHTML = `
-    <div class="tracker-info">
-      This ticket is related to tracker ticket:
-      <a href="#" class="tracker-link" id="trackerLink">
+    <div style="margin-bottom: 8px;">
+      <strong>Related to tracker:</strong>
+      <a href="#" class="ticket-link" id="trackerLink">
         #${trackerTicket.id}: ${trackerTicket.subject}
       </a>
     </div>
-    <fw-button id="viewAssociatedBtn" color="secondary" size="small">
+    <fw-button id="viewAssociatedBtn" color="secondary" size="small" style="--fw-button-font-size: 12px; --fw-button-padding: 5px 10px; --fw-button-min-width: auto;">
       View Associated Tickets
     </fw-button>
   `;
@@ -427,11 +492,7 @@ function displayRelatedTicketInfo(trackerTicket) {
   // Add event listener to tracker link
   document.getElementById("trackerLink").addEventListener("click", function (e) {
     e.preventDefault();
-    client.iparams.get("freshdesk_subdomain").then(iparams => {
-      window.open(`https://${iparams.freshdesk_subdomain}.freshdesk.com/a/tickets/${trackerTicket.id}`, "_blank");
-    }).catch(() => {
-      window.open(`https://freshdesk.com/a/tickets/${trackerTicket.id}`, "_blank");
-    });
+    openTicket(trackerTicket.id);
   });
 
   // Add event listener to view associated button
@@ -439,6 +500,203 @@ function displayRelatedTicketInfo(trackerTicket) {
     getAssociatedTickets(trackerTicket.id);
   });
 }
+
+/**
+ * Opens the tracker creation modal
+ */
+function openTrackerModal() {
+  client.interface.trigger("showModal", {
+    title: "Tracker Central",
+    template: "template-selector.html"
+  });
+}
+
+/**
+ * Opens modal with only ticket data if agent data can't be fetched
+ * (Helper function for openTrackerModal)
+ */
+function openModalWithTicketDataOnly() {
+  client.data.get("ticket").then(function (ticketData) {
+    if (ticketData && ticketData.ticket) {
+      // Store ticket data for templates to use
+      localStorage.setItem('ticketData', JSON.stringify(ticketData.ticket));
+
+      // Open the modal
+      client.interface.trigger("showModal", {
+        title: "Tracker Central",
+        template: "template-selector.html"
+      });
+    } else {
+      showNotification("danger", "Could not retrieve ticket data");
+    }
+  }).catch(function (error) {
+    console.error("Error getting ticket data:", error);
+    showNotification("danger", "Failed to get ticket data");
+  });
+}
+
+function onAppActivate() {
+  // Only load data once when the app first activates
+  if (!window.dataLoaded) {
+    loadAssociatedTickets();
+    window.dataLoaded = true;
+  }
+
+  // Setup event listener for the button - use standard DOM event for better compatibility
+  const refreshButton = document.getElementById("btnGetAssociated");
+
+  // Remove any existing event listeners to prevent duplication
+  const newRefreshButton = refreshButton.cloneNode(true);
+  refreshButton.parentNode.replaceChild(newRefreshButton, refreshButton);
+
+  // Add the event listener to the new button
+  newRefreshButton.addEventListener("click", function () {
+    window.dataLoaded = false; // Reset the flag so we can reload
+    loadAssociatedTickets();
+  });
+
+  // Add event listener for Create Tracker link
+  const createTrackerLink = document.getElementById("createTrackerLink");
+  if (createTrackerLink) {
+    // Remove any existing listeners first
+    const newButton = createTrackerLink.cloneNode(true);
+    createTrackerLink.parentNode.replaceChild(newButton, createTrackerLink);
+
+    // Add click handler
+    newButton.addEventListener("click", function (e) {
+      e.preventDefault();
+      console.log("Create tracker clicked");
+
+      // Clear localStorage data
+      console.log("🧹 Purging all district data from localStorage before opening tracker");
+      const keysToCheck = ['sourceTicketData', 'sedcustData', 'assemblyData', 'districtCache'];
+
+      keysToCheck.forEach(key => {
+        try {
+          if (localStorage.getItem(key)) {
+            console.log(`Removing cached data from ${key}`);
+            localStorage.removeItem(key);
+          }
+        } catch (e) {
+          console.error(`Error removing ${key}:`, e);
+        }
+      });
+
+      openTrackerModal();
+    });
+
+    // Make sure the button is styled properly
+    newButton.style.cursor = "pointer";
+  }
+
+  // Listen for modal events
+  client.events.on('modal.close', function (data) {
+    // Check if we need to refresh tickets based on data from modal
+    if (data && data.refreshTickets) {
+      loadAssociatedTickets();
+    }
+  });
+
+  // Hide elements we don't need anymore
+  const elementsToHide = ["agentName", "fd-product", "btnSayHello"];
+  for (const id of elementsToHide) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.style.display = "none";
+    }
+  }
+}
+
+// Make loadAssociatedTickets globally accessible for the modal
+window.loadAssociatedTickets = loadAssociatedTickets;
+
+/**
+ * Sanitize the Freshdesk subdomain to ensure it doesn't include .freshdesk.com
+ * @param {string} subdomain - The subdomain from configuration
+ * @return {string} - The sanitized subdomain
+ */
+function sanitizeSubdomain(subdomain) {
+  if (!subdomain) return '';
+  // Remove any .freshdesk.com suffix if present
+  return subdomain.replace(/\.freshdesk\.com$/i, '');
+}
+
+/**
+ * Function stub for Freshservice ticket creation
+ * Not needed if your app only uses Freshdesk
+ */
+function createfsTicket() {
+  // Since you're using Freshdesk, this is just a stub implementation
+  console.warn("createfsTicket called but not implemented");
+  return Promise.reject(new Error("Freshservice ticket creation not implemented"));
+}
+
+// Set up MutationObserver for the company summary section
+document.addEventListener('DOMContentLoaded', function () {
+  const targetNode = document.getElementById("companySummary");
+  if (targetNode) {
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          // Content has been added to the company summary
+          console.log("Company data loaded");
+          // Additional actions if needed when company data loads
+        }
+      }
+    });
+    observer.observe(targetNode, { childList: true, subtree: true });
+  }
+});
+
+document.onreadystatechange = function () {
+  if (document.readyState === 'complete') renderApp();
+
+  function renderApp() {
+    const onInit = app.initialized();
+
+    onInit.then(function (_client) {
+      window.client = _client;
+
+      // Check if Freshdesk subdomain is configured
+      client.iparams.get("freshdesk_subdomain").then(function (iparams) {
+        console.log("App initialization - iparams retrieved:", iparams);
+
+        // Sanitize the subdomain and store it for future use
+        if (iparams && iparams.freshdesk_subdomain) {
+          iparams.freshdesk_subdomain = sanitizeSubdomain(iparams.freshdesk_subdomain);
+          console.log("Sanitized subdomain:", iparams.freshdesk_subdomain);
+        }
+
+        if (!iparams || !iparams.freshdesk_subdomain || !iparams.freshdesk_subdomain.trim()) {
+          console.error("Missing or empty Freshdesk subdomain in configuration");
+          document.body.innerHTML = `
+            <div style="padding: 20px; background-color: #ffebee; color: #c62828; border-radius: 4px; margin: 10px;">
+              <h3>Configuration Error</h3>
+              <p>The Freshdesk subdomain is missing or invalid in the app configuration.</p>
+              <p>Please contact your administrator to reconfigure this app with a valid subdomain.</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Continue with normal app initialization
+        client.events.on("app.activated", onAppActivate);
+      }).catch(function (error) {
+        console.error("Failed to get installation parameters:", error);
+        document.body.innerHTML = `
+          <div style="padding: 20px; background-color: #ffebee; color: #c62828; border-radius: 4px; margin: 10px;">
+            <h3>Configuration Error</h3>
+            <p>Failed to retrieve app configuration parameters.</p>
+            <p>Error: ${error.message || "Unknown error"}</p>
+          </div>
+        `;
+      });
+    }).catch(function (error) {
+      console.error('Error: Failed to initialise the app');
+      console.error(error);
+    });
+  }
+};
 
 /**
  * Load associated tickets for the current ticket
@@ -449,6 +707,12 @@ function loadAssociatedTickets() {
   document.getElementById("companySummary").innerHTML = "";
   document.getElementById("districtsCount").textContent = "0";
   document.getElementById("firstReportInfo").style.display = "none";
+
+  // Make sure container is visible
+  const container = document.getElementById("companyIdsContainer");
+  if (container) {
+    container.style.display = "block";
+  }
 
   // Get current ticket ID
   client.data.get("ticket").then(async function (ticketData) {
@@ -502,196 +766,4 @@ function loadAssociatedTickets() {
     showNotification("danger", "Failed to get ticket data");
   });
 }
-
-/**
- * Opens the tracker creation modal
- */
-function openTrackerModal() {
-  client.interface.trigger("showModal", {
-    title: "Tracker Central",
-    template: "template-selector.html"
-  });
-}
-
-/**
- * Opens modal with only ticket data if agent data can't be fetched
- * (Helper function for openTrackerModal)
- */
-function openModalWithTicketDataOnly() {
-  // ...existing code...
-}
-
-function onAppActivate() {
-  // Only load data once when the app first activates
-  if (!window.dataLoaded) {
-    loadAssociatedTickets();
-    window.dataLoaded = true;
-  }
-
-  // Setup event listener for the button - use standard DOM event for better compatibility
-  const refreshButton = document.getElementById("btnGetAssociated");
-
-  // Remove any existing event listeners to prevent duplication
-  const newRefreshButton = refreshButton.cloneNode(true);
-  refreshButton.parentNode.replaceChild(newRefreshButton, refreshButton);
-
-  // Add the event listener to the new button
-  newRefreshButton.addEventListener("click", function () {
-    window.dataLoaded = false; // Reset the flag so we can reload
-    loadAssociatedTickets();
-  });
-
-  // Add event listener for Create Tracker link - FIX THE EVENT LISTENER
-  const createTrackerLink = document.getElementById("createTrackerLink");
-  if (createTrackerLink) {
-    // Remove any existing listeners first
-    createTrackerLink.removeEventListener("click", openTrackerModal);
-
-    // Add the click event listener directly to the existing element
-    createTrackerLink.addEventListener("click", function (e) {
-      e.preventDefault();
-      console.log("Create tracker clicked");
-      openTrackerModal();
-    });
-
-    // Make sure the link is visible and styled properly
-    createTrackerLink.style.display = "inline-block";
-    createTrackerLink.style.cursor = "pointer";
-  } else {
-    console.error("Create Tracker link element not found");
-  }
-
-  // Listen for modal events
-  client.events.on('modal.close', function (data) {
-    // Check if we need to refresh tickets based on data from modal
-    if (data && data.refreshTickets) {
-      loadAssociatedTickets();
-    }
-  });
-
-  // Hide elements we don't need anymore
-  const elementsToHide = ["agentName", "fd-product", "btnSayHello"];
-  for (const id of elementsToHide) {
-    const element = document.getElementById(id);
-    if (element) {
-      element.style.display = "none";
-    }
-  }
-}
-
-// Make loadAssociatedTickets globally accessible for the modal
-window.loadAssociatedTickets = loadAssociatedTickets;
-
-// Replace deprecated listener with MutationObserver and ensure the target element exists
-const targetNode = document.getElementById("targetElement"); // choose the element to watch
-if (targetNode) {
-  const observer = new MutationObserver((mutationsList) => {
-    for (const mutation of mutationsList) {
-      // Your callback logic goes here
-      console.log("DOM change detected:", mutation);
-    }
-  });
-  observer.observe(targetNode, { childList: true, subtree: true });
-} else {
-  console.warn("targetElement not found, skipping MutationObserver setup");
-}
-
-document.onreadystatechange = function () {
-  if (document.readyState === 'complete') renderApp();
-
-  function renderApp() {
-    const onInit = app.initialized();
-
-    onInit.then(function (_client) {
-      window.client = _client;
-
-      // Check if Freshdesk subdomain is configured
-      client.iparams.get("freshdesk_subdomain").then(function (iparams) {
-        console.log("App initialization - iparams retrieved:", iparams);
-
-        // Sanitize the subdomain and store it for future use
-        if (iparams && iparams.freshdesk_subdomain) {
-          iparams.freshdesk_subdomain = sanitizeSubdomain(iparams.freshdesk_subdomain);
-          console.log("Sanitized subdomain:", iparams.freshdesk_subdomain);
-        }
-
-        if (!iparams || !iparams.freshdesk_subdomain || !iparams.freshdesk_subdomain.trim()) {
-          console.error("Missing or empty Freshdesk subdomain in configuration");
-          document.body.innerHTML = `
-            <div style="padding: 20px; background-color: #ffebee; color: #c62828; border-radius: 4px; margin: 10px;">
-              <h3>Configuration Error</h3>
-              <p>The Freshdesk subdomain is missing or invalid in the app configuration.</p>
-              <p>Please contact your administrator to reconfigure this app with a valid subdomain.</p>
-            </div>
-          `;
-          return;
-        }
-
-        // Continue with normal app initialization
-        client.events.on("app.activated", onAppActivate);
-      }).catch(function (error) {
-        console.error("Failed to get installation parameters:", error);
-        document.body.innerHTML = `
-          <div style="padding: 20px; background-color: #ffebee; color: #c62828; border-radius: 4px; margin: 10px;">
-            <h3>Configuration Error</h3>
-            <p>Failed to retrieve app configuration parameters.</p>
-            <p>Error: ${error.message || "Unknown error"}</p>
-          </div>
-        `;
-      });
-    }).catch(function (error) {
-      console.error('Error: Failed to initialise the app');
-      console.error(error);
-    });
-  }
-};
-
-/**
- * Sanitize the Freshdesk subdomain to ensure it doesn't include .freshdesk.com
- * @param {string} subdomain - The subdomain from configuration
- * @return {string} - The sanitized subdomain
- */
-function sanitizeSubdomain(subdomain) {
-  if (!subdomain) return '';
-  // Remove any .freshdesk.com suffix if present
-  return subdomain.replace(/\.freshdesk\.com$/i, '');
-}
-
-// Update the event handler for the Create Tracker button
-document.addEventListener('DOMContentLoaded', function () {
-  const createTrackerButton = document.getElementById('createTrackerLink');
-
-  if (createTrackerButton) {
-    createTrackerButton.addEventListener('click', function () {
-      console.log("Create tracker clicked");
-
-      // Clear ALL localStorage data related to districts
-      console.log("🧹 Purging all district data from localStorage before opening tracker");
-      const keysToCheck = ['sourceTicketData', 'sedcustData', 'assemblyData', 'districtCache'];
-
-      keysToCheck.forEach(key => {
-        try {
-          if (localStorage.getItem(key)) {
-            console.log(`Removing cached data from ${key}`);
-            localStorage.removeItem(key);
-          }
-        } catch (e) {
-          console.error(`Error removing ${key}:`, e);
-        }
-      });
-
-      ensureClientInitialized()
-        .then(() => {
-          console.log("Client initialized, opening template selector");
-          return openTrackerModal('template-selector');
-        })
-        .catch(error => {
-          console.error("Failed to open tracker modal:", error);
-          // Show fallback UI or direct navigation
-          handleModalFailure('template-selector');
-        });
-    });
-  }
-
-});
 

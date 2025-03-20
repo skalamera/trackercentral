@@ -29,171 +29,171 @@
     <div class="tracker-form-container">
         <div class="tracker-form-container">
             <!-- Add Debug Button at the top -->
-        <div class="debug-container">
+            <div class="debug-container">
                 <button id="debugFillForm" class="debug-button">Fill Form with Demo Data</button>
-        </div>
+            </div>
             <!-- Replace the existing form-title div -->
-        <div class="form-title">
+            <div class="form-title">
                 <h2>SIM Assignment Tracker</h2>
-        </div>
+            </div>
 
-        <div class="back-button-container">
-            <fw-button id="backButton" color="secondary" size="small"
-                style="cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;"
-                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';"
-                onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';">
-                <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>Back to Tracker Templates
-            </fw-button>
-        </div>
-        <form id="trackerForm">
-            <div class="cards-container">
+            <div class="back-button-container">
+                <fw-button id="backButton" color="secondary" size="small"
+                    style="cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';"
+                    onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';">
+                    <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>Back to Tracker Templates
+                </fw-button>
+            </div>
+            <form id="trackerForm">
+                <div class="cards-container">
                     <!-- Subject card -->
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-pen-fancy fa-lg section-icon"></i>
-                        <h3>SUBJECT</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="subject" class="required-field">Subject</label>
-                            <input type="text" id="subject" name="subject" required>
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-pen-fancy fa-lg section-icon"></i>
+                            <h3>SUBJECT</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="subject" class="required-field">Subject</label>
+                                <input type="text" id="subject" name="subject" required>
                                 <div class="hint"><i class="fas fa-info-circle"></i> Format: VIP Status* District
                                     Name |
                                     Application
                                     - Specific Issue for User Role</div>
-                        </div>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="vipStatus" class="required-field">VIP Status</label>
+                            <div class="form-group">
+                                <label for="vipStatus" class="required-field">VIP Status</label>
                                 <select id="vipStatus" name="vipStatus">
-                                <option value="No">No</option>
-                                <option value="Yes">Yes</option>
-                            </select>
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
                                 <div class="hint"><i class="fas fa-info-circle"></i> Is this a VIP customer?</div>
-                        </div>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="districtName" class="required-field">District Name</label>
+                            <div class="form-group">
+                                <label for="districtName" class="required-field">District Name</label>
                                 <input type="text" id="districtName" name="districtName" required
                                     placeholder="e.g. Fairfax">
                                 <div class="hint"><i class="fas fa-info-circle"></i> Name of the district</div>
-                        </div>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="application" class="required-field">Application</label>
+                            <div class="form-group">
+                                <label for="application" class="required-field">Application</label>
                                 <input type="text" id="application" name="application" required
                                     placeholder="e.g. Grade View">
                                 <div class="hint"><i class="fas fa-info-circle"></i> The application or system
                                     related to
                                     this issue
                                 </div>
-                        </div>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="specificIssue" class="required-field">Specific Issue</label>
+                            <div class="form-group">
+                                <label for="specificIssue" class="required-field">Specific Issue</label>
                                 <input type="text" id="specificIssue" name="specificIssue" required
                                     placeholder="e.g. Server Error Received">
                                 <div class="hint"><i class="fas fa-info-circle"></i> Brief description of the
                                     specific issue
                                 </div>
-                        </div>
+                            </div>
 
                             <!-- Removed the User Role field as requested -->
+                        </div>
                     </div>
-                </div>
 
                     <!-- Issue Description card -->
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-file-alt fa-lg section-icon"></i>
-                        <h3>ISSUE DESCRIPTION</h3>
-                    </div>
-                    <div class="card-body">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-file-alt fa-lg section-icon"></i>
+                            <h3>ISSUE DESCRIPTION</h3>
+                        </div>
+                        <div class="card-body">
                             <div class="quill-editor-container">
                                 <div id="reportedIssueEditor" style="height: 150px; background-color: white;"></div>
                                 <textarea id="reportedIssue" name="reportedIssue" style="display: none;"></textarea>
-                        </div>
+                            </div>
                             <div class="hint"><i class="fas fa-lightbulb"></i> Specific details outlining user
                                 impact</div>
 
-                        <div class="form-group">
+                            <div class="form-group">
                                 <label for="xcodeInfo">Resource xcode:</label>
                                 <input type="text" id="xcodeInfo" name="xcodeInfo">
                                 <div class="hint"><i class="fas fa-info-circle"></i> Xcode for the resource if
                                     applicable
                                 </div>
-                        </div>
+                            </div>
 
-                        <div class="form-group">
+                            <div class="form-group">
                                 <label for="resourceTitle">Resource title:</label>
                                 <input type="text" id="resourceTitle" name="resourceTitle">
                                 <div class="hint"><i class="fas fa-info-circle"></i> Title of the resource</div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
                     <!-- Steps to Reproduce card -->
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-list-ol fa-lg section-icon"></i>
-                        <h3>STEPS TO REPRODUCE</h3>
-                    </div>
-                    <div class="card-body">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-list-ol fa-lg section-icon"></i>
+                            <h3>STEPS TO REPRODUCE</h3>
+                        </div>
+                        <div class="card-body">
                             <div class="quill-editor-container">
                                 <div id="stepsToReproduceEditor" style="height: 150px; background-color: white;">
-                        </div>
+                                </div>
                                 <textarea id="stepsToReproduce" name="stepsToReproduce"
                                     style="display: none;"></textarea>
                             </div>
                             <div class="hint"><i class="fas fa-info-circle"></i> Numbered steps to reproduce the
                                 issue</div>
+                        </div>
                     </div>
-                </div>
 
                     <!-- Screenshots and Videos card -->
-                <div class="card">
-                    <div class="card-header">
+                    <div class="card">
+                        <div class="card-header">
                             <i class="fas fa-images fa-lg section-icon"></i>
                             <h3>SCREENSHOTS and/or VIDEOS</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <div class="attachment-input-container">
-                                <div class="custom-file-input">
-                                    <div class="file-upload-btn">
-                                        <i class="fas fa-cloud-upload-alt"></i>
-                                        <span>Choose files</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div class="attachment-input-container">
+                                    <div class="custom-file-input">
+                                        <div class="file-upload-btn">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <span>Choose files</span>
                                             <input type="file" id="screenshots" name="screenshots" multiple
                                                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                                        </div>
                                     </div>
-                                </div>
                                     <div class="hint"><i class="fas fa-info-circle"></i> Upload screenshots or
                                         videos
                                         (please
                                         include URL in screen capture)</div>
-                            </div>
-                            <div id="screenshotPreview" class="screenshot-preview"></div>
+                                </div>
+                                <div id="screenshotPreview" class="screenshot-preview"></div>
                                 <div id="attachmentCounter" class="attachment-counter"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
                     <!-- Impacted User Info card -->
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-user fa-lg section-icon"></i>
-                        <h3>IMPACTED USER INFO</h3>
-                    </div>
-                    <div class="card-body">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-user fa-lg section-icon"></i>
+                            <h3>IMPACTED USER INFO</h3>
+                        </div>
+                        <div class="card-body">
                             <div class="form-row">
-                        <div class="form-group">
+                                <div class="form-group">
                                     <label for="username">Username:</label>
                                     <input type="text" id="username" name="username">
                                     <div class="hint"><i class="fas fa-info-circle"></i> Username of the affected
                                         user</div>
-                        </div>
+                                </div>
 
-                        <div class="form-group">
+                                <div class="form-group">
                                     <label for="impactedRole">Role:</label>
                                     <select id="impactedRole" name="impactedRole">
                                         <option value="">-- Select --</option>
@@ -210,54 +210,54 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="studentId">Student Internal ID:</label>
-                            <input type="text" id="studentId" name="studentId">
+                                    <input type="text" id="studentId" name="studentId">
                                     <div class="hint"><i class="fas fa-info-circle"></i> If applicable</div>
-                        </div>
+                                </div>
 
-                        <div class="form-group">
+                                <div class="form-group">
                                     <label for="techAdminLink">Tech Admin link:</label>
-                            <input type="text" id="techAdminLink" name="techAdminLink">
+                                    <input type="text" id="techAdminLink" name="techAdminLink">
                                     <div class="hint"><i class="fas fa-info-circle"></i> Link to tech admin</div>
                                 </div>
-                        </div>
+                            </div>
 
                             <div class="form-row">
-                        <div class="form-group">
+                                <div class="form-group">
                                     <label for="device">Device:</label>
-                            <input type="text" id="device" name="device">
+                                    <input type="text" id="device" name="device">
                                     <div class="hint"><i class="fas fa-info-circle"></i> Device used when
                                         experiencing the
                                         issue
                                     </div>
-                        </div>
+                                </div>
 
-                        <div class="form-group">
+                                <div class="form-group">
                                     <label for="realm">Realm:</label>
-                            <input type="text" id="realm" name="realm">
+                                    <input type="text" id="realm" name="realm">
                                     <div class="hint"><i class="fas fa-info-circle"></i> Realm information</div>
                                 </div>
-                        </div>
+                            </div>
 
                             <div class="form-row">
-                        <div class="form-group">
+                                <div class="form-group">
                                     <label for="assignmentId">Assignment ID:</label>
-                            <input type="text" id="assignmentId" name="assignmentId">
+                                    <input type="text" id="assignmentId" name="assignmentId">
                                     <div class="hint"><i class="fas fa-info-circle"></i> If applicable</div>
-                        </div>
+                                </div>
 
-                        <div class="form-group">
+                                <div class="form-group">
                                     <label for="dateReported">Date Issue Reported:</label>
                                     <div class="input-with-icon">
                                         <i class="fas fa-calendar-alt icon-prefix"></i>
                                         <input type="date" id="dateReported" name="dateReported">
-                        </div>
+                                    </div>
                                     <div class="hint"><i class="fas fa-info-circle"></i> When the user reported this
                                         issue
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
+                            <div class="form-group">
                                 <label for="harFile">HAR file attached:</label>
                                 <select id="harFile" name="harFile">
                                     <option value="No">No</option>
@@ -270,45 +270,45 @@
                                 <div class="hint"><i class="fas fa-info-circle"></i> HTTP Archive file to assist
                                     with
                                     troubleshooting</div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
                     <!-- Expected Results card -->
-                <div class="card">
-                    <div class="card-header">
+                    <div class="card">
+                        <div class="card-header">
                             <i class="fas fa-clipboard-check fa-lg section-icon"></i>
-                        <h3>EXPECTED RESULTS</h3>
-                    </div>
-                    <div class="card-body">
+                            <h3>EXPECTED RESULTS</h3>
+                        </div>
+                        <div class="card-body">
                             <div class="quill-editor-container">
                                 <div id="expectedResultsEditor" style="height: 100px; background-color: white;">
                                 </div>
-                            <textarea id="expectedResults" name="expectedResults" style="display: none;"></textarea>
-                        </div>
+                                <textarea id="expectedResults" name="expectedResults" style="display: none;"></textarea>
+                            </div>
                             <div class="hint"><i class="fas fa-info-circle"></i> What should happen instead</div>
+                        </div>
                     </div>
-                </div>
 
                     <!-- Ticket Properties card -->
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-tasks fa-lg section-icon"></i>
-                        <h3>TICKET PROPERTIES</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="email" class="required-field">Requester Email</label>
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-tasks fa-lg section-icon"></i>
+                            <h3>TICKET PROPERTIES</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="email" class="required-field">Requester Email</label>
                                 <div class="input-with-icon">
-                            <input type="email" id="email" name="email" required>
+                                    <input type="email" id="email" name="email" required>
                                 </div>
                                 <div class="hint"><i class="fas fa-info-circle"></i> This ticket will be created by
                                     you (the
                                     logged-in agent)</div>
-                            <div id="emailStatus" class="email-status"></div>
-                        </div>
+                                <div id="emailStatus" class="email-status"></div>
+                            </div>
 
-                        <div class="form-row">
+                            <div class="form-row">
                                 <div class="form-group">
                                     <label for="relatedTickets" class="required-field">Related Ticket IDs</label>
                                     <div class="input-with-icon">
@@ -320,46 +320,46 @@
                                     </div>
                                 </div>
 
-                            <div class="form-group">
-                                <label for="priority">Priority</label>
-                                <select id="priority" name="priority">
-                                    <option value="1">Low</option>
-                                    <option value="2">Medium</option>
-                                    <option value="3">High</option>
-                                    <option value="4">Urgent</option>
-                                </select>
+                                <div class="form-group">
+                                    <label for="priority">Priority</label>
+                                    <select id="priority" name="priority">
+                                        <option value="1">Low</option>
+                                        <option value="2">Medium</option>
+                                        <option value="3">High</option>
+                                        <option value="4">Urgent</option>
+                                    </select>
                                     <div class="hint"><i class="fas fa-info-circle"></i> Select ticket priority
                                     </div>
-                            </div>
+                                </div>
 
-                            <div class="form-group">
-                                <label for="status">Status</label>
-                                <select id="status" name="status">
-                                    <option value="2">Open</option>
-                                    <option value="3">Pending</option>
-                                    <option value="4">Resolved</option>
-                                    <option value="5">Closed</option>
-                                </select>
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <select id="status" name="status">
+                                        <option value="2">Open</option>
+                                        <option value="3">Pending</option>
+                                        <option value="4">Resolved</option>
+                                        <option value="5">Closed</option>
+                                    </select>
                                     <div class="hint"><i class="fas fa-info-circle"></i> Select ticket status</div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="groupField">Group</label>
-                                <select id="groupField" name="groupField">
-                                    <option>Loading groups...</option>
-                                </select>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="groupField">Group</label>
+                                    <select id="groupField" name="groupField">
+                                        <option>Loading groups...</option>
+                                    </select>
                                     <div class="hint"><i class="fas fa-info-circle"></i> Select a support group
                                     </div>
-                            </div>
+                                </div>
 
-                            <div class="form-group">
-                                <label for="agentField">Agent</label>
-                                <select id="agentField" name="agentField"></select>
+                                <div class="form-group">
+                                    <label for="agentField">Agent</label>
+                                    <select id="agentField" name="agentField"></select>
                                     <div class="hint"><i class="fas fa-info-circle"></i> Select an agent</div>
+                                </div>
                             </div>
-                        </div>
 
                             <div class="form-group">
                                 <label for="districtField">District</label>
@@ -373,25 +373,25 @@
                                 <label for="productImpacted">Application/Program Impacted:</label>
                                 <input type="text" id="productImpacted" name="productImpacted" data-full-value="">
                             </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
                 <div style="display: none;">
                     <textarea id="description" name="description"></textarea>
-            </div>
+                </div>
 
-            <div class="form-actions">
+                <div class="form-actions">
                     <fw-button id="cancelTracker" color="secondary" size="medium"
                         style="display: flex; justify-content: center; align-items: center;">
-                    <i class="fas fa-times"></i> Cancel
-                </fw-button>
+                        <i class="fas fa-times"></i> Cancel
+                    </fw-button>
                     <fw-button id="createTracker" color="primary" type="submit" size="medium"
                         style="display: flex; justify-content: center; align-items: center;">
-                    <i class="fas fa-check"></i> Create Tracker
-                </fw-button>
-            </div>
-        </form>
+                        <i class="fas fa-check"></i> Create Tracker
+                    </fw-button>
+                </div>
+            </form>
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     // Call setupEventListeners function
@@ -841,18 +841,25 @@
                             trackerForm.addEventListener('submit', async function (e) {
                                 e.preventDefault();
 
-                                // Safely update hidden textareas with editor content
-                                if (reportedIssueQuill && safeGetElement('reportedIssue')) {
-                                    safeGetElement('reportedIssue').value = reportedIssueQuill.root.innerHTML;
+                                // ADD THIS CODE at the start of the form submit handler
+                                // Update hidden textareas with editor content
+                                if (reportedIssueQuill) {
+                                    document.getElementById('reportedIssue').value = reportedIssueQuill.root.innerHTML;
+                                }
+                                if (stepsToReproduceQuill) {
+                                    document.getElementById('stepsToReproduce').value = stepsToReproduceQuill.root.innerHTML;
+                                }
+                                if (expectedResultsQuill) {
+                                    document.getElementById('expectedResults').value = expectedResultsQuill.root.innerHTML;
                                 }
 
-                                if (stepsToReproduceQuill && safeGetElement('stepsToReproduce')) {
-                                    safeGetElement('stepsToReproduce').value = stepsToReproduceQuill.root.innerHTML;
-                                }
+                                // Generate the description and ensure it's set properly
+                                const description = window.generateDescription();
+                                console.log("Generated description:", description ? description.substring(0, 100) + "..." : "No description generated");
 
-                                if (expectedResultsQuill && safeGetElement('expectedResults')) {
-                                    safeGetElement('expectedResults').value = expectedResultsQuill.root.innerHTML;
-                                }
+                                // Set the description field explicitly 
+                                document.getElementById('description').value = description || "";
+                                console.log("Description field value after setting:", document.getElementById('description').value ? document.getElementById('description').value.substring(0, 100) + "..." : "Empty description");
 
                                 // Handle form submission
                                 handleSubmitForm(e);
@@ -999,7 +1006,7 @@
                                 summaryDiv.innerHTML = `
                         <div class="attachments-count">
                             <strong>${aggregatedScreenshotFiles.length}</strong> file${aggregatedScreenshotFiles.length !== 1 ? 's' : ''} attached
-    </div>
+                        </div>
                         <div class="attachments-size">Total: ${formattedSize}</div>
                     `;
 
@@ -1313,7 +1320,7 @@
                 });
             </script>
 
-    <script>
+            <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     setTimeout(function () {
                         var createBtn = document.getElementById('createTracker');
@@ -1334,8 +1341,7 @@
                         console.log('Extra event handlers attached to buttons');
                     }, 500);
                 });
-    </script>
-
+            </script>
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     // Call setupEventListeners function
@@ -1354,6 +1360,32 @@
                         // Add the handleSubmitForm function that was missing
                         async function handleSubmitForm(e) {
                             e.preventDefault();
+
+                            // Update Quill editors content to hidden fields
+                            const reportedIssueEditor = document.getElementById('reportedIssueEditor');
+                            const stepsToReproduceEditor = document.getElementById('stepsToReproduceEditor');
+                            const expectedResultsEditor = document.getElementById('expectedResultsEditor');
+
+                            if (reportedIssueEditor) {
+                                const quillContent = reportedIssueEditor.querySelector('.ql-editor');
+                                if (quillContent) {
+                                    document.getElementById('reportedIssue').value = quillContent.innerHTML;
+                                }
+                            }
+
+                            if (stepsToReproduceEditor) {
+                                const quillContent = stepsToReproduceEditor.querySelector('.ql-editor');
+                                if (quillContent) {
+                                    document.getElementById('stepsToReproduce').value = quillContent.innerHTML;
+                                }
+                            }
+
+                            if (expectedResultsEditor) {
+                                const quillContent = expectedResultsEditor.querySelector('.ql-editor');
+                                if (quillContent) {
+                                    document.getElementById('expectedResults').value = quillContent.innerHTML;
+                                }
+                            }
 
                             // Check if client is available
                             if (!window.client) {
@@ -1392,7 +1424,21 @@
                                 }
 
                                 const subject = document.getElementById('subject').value;
-                                const description = generateDescription();
+
+                                // Get the description directly from the hidden field
+                                const descriptionField = document.getElementById('description');
+                                if (!descriptionField || !descriptionField.value) {
+                                    console.error("Description field is empty or not found, regenerating description");
+                                    // Try to regenerate if missing
+                                    descriptionField.value = window.generateDescription();
+                                }
+
+                                const description = window.generateDescription();
+                                // Ensure it's saved to the form field
+                                document.getElementById('description').value = description;
+                                console.log("Description generated:", description ? description.substring(0, 100) + "..." : "No description generated");
+                                console.log("Description element value:", document.getElementById('description').value ? document.getElementById('description').value.substring(0, 100) + "..." : "Empty description field");
+
                                 const agentEmail = document.getElementById('email').value || "agent@freshdesk.com";
                                 const relatedTicketsStr = document.getElementById('relatedTickets').value;
                                 const priority = document.getElementById('priority').value;
@@ -1430,7 +1476,7 @@
 
                                 console.log("Form values:", {
                                     subject,
-                                    description: description.substring(0, 50) + "...",
+                                    description: description ? (description.substring(0, 50) + "...") : "NOT SET",
                                     email: agentEmail,
                                     relatedTickets: relatedTicketsStr,
                                     relatedTicketIds: relatedTicketIds,
@@ -1441,6 +1487,16 @@
                                     productImpacted,
                                     attachments: screenshotFiles.length > 0 ? `${screenshotFiles.length} files selected` : 'No files'
                                 });
+
+                                // Make sure we have a valid description or abort
+                                if (!description) {
+                                    throw new Error("Description is empty or undefined. Cannot create ticket without description.");
+                                }
+
+                                // Make sure description field is properly set
+                                document.getElementById('description').value = description;
+                                console.log("Final description being sent:", description);
+                                console.log("Description element value:", document.getElementById('description').value);
 
                                 // STEP 1: First create the ticket without attachments
                                 const ticketData = {
@@ -1729,6 +1785,8 @@
                             return description;
                         }
 
+                        // Make the function available globally
+                        window.generateDescription = generateDescription;
 
                         // Make sure handleSubmitForm is accessible
                         window.handleSubmitForm = handleSubmitForm;
@@ -1745,8 +1803,7 @@
                                 const districtNameEl = safeGetElement('districtName');
                                 const subjectEl = safeGetElement('subject');
 
-                                if (!applicationEl || !specificIssueEl ||
-                                    !vipStatusEl || !districtNameEl || !subjectEl) {
+                                if (!applicationEl || !specificIssueEl || !vipStatusEl || !districtNameEl || !subjectEl) {
                                     console.warn("Not all elements required for subject generation exist");
                                     return false;
                                 }
@@ -1775,8 +1832,7 @@
                                 const specificIssueEl = safeGetElement('specificIssue');
                                 const subjectEl = safeGetElement('subject');
 
-                                if (!vipStatusEl || !districtNameEl || !applicationEl ||
-                                    !specificIssueEl || !subjectEl) {
+                                if (!vipStatusEl || !districtNameEl || !applicationEl || !specificIssueEl || !subjectEl) {
                                     console.warn("Cannot find required fields for subject generation");
                                     return;
                                 }
@@ -2064,129 +2120,94 @@
             <script>
                 // Fix: Add missing generateDescription function in global scope
                 window.generateDescription = function () {
-                    // Get values from Quill editors - safely handle potential null references
-                    let reportedIssue = '';
-                    let stepsToReproduce = '';
-                    let expectedResults = '';
+                    // Get values from Quill editors
+                    const reportedIssue = reportedIssueQuill ? reportedIssueQuill.root.innerText : '';
+                    const stepsToReproduce = stepsToReproduceQuill ? stepsToReproduceQuill.root.innerText : '';
+                    const expectedResults = expectedResultsQuill ? expectedResultsQuill.root.innerText : '';
 
-                    // Get content from Quill editors if they exist
-                    try {
-                        const reportedEditor = document.getElementById('reportedIssueEditor');
-                        if (reportedEditor && reportedEditor.querySelector('.ql-editor')) {
-                            reportedIssue = reportedEditor.querySelector('.ql-editor').innerHTML || '';
-                        }
-
-                        const stepsEditor = document.getElementById('stepsToReproduceEditor');
-                        if (stepsEditor && stepsEditor.querySelector('.ql-editor')) {
-                            stepsToReproduce = stepsEditor.querySelector('.ql-editor').innerHTML || '';
-                        }
-
-                        const expectedEditor = document.getElementById('expectedResultsEditor');
-                        if (expectedEditor && expectedEditor.querySelector('.ql-editor')) {
-                            expectedResults = expectedEditor.querySelector('.ql-editor').innerHTML || '';
-                        }
-                    } catch (e) {
-                        console.error("Error getting editor content:", e);
-                    }
-
-                    // Get values from form fields - with fallbacks for missing fields
-                    const subject = document.getElementById('subject')?.value.trim() || '';
-                    const username = document.getElementById('username')?.value.trim() || '';
-                    const impactedRole = document.getElementById('impactedRole')?.value || '';
-                    const studentId = document.getElementById('studentId')?.value.trim() || '';
-                    const techAdminLink = document.getElementById('techAdminLink')?.value.trim() || '';
-                    const device = document.getElementById('device')?.value.trim() || '';
-                    const realm = document.getElementById('realm')?.value.trim() || '';
-                    const assignmentId = document.getElementById('assignmentId')?.value.trim() || '';
-                    const dateReported = document.getElementById('dateReported')?.value || '';
-                    const harFile = document.getElementById('harFile')?.value || 'No';
-                    const harReason = document.getElementById('harReason')?.value.trim() || '';
-                    const districtName = document.getElementById('districtName')?.value.trim() || '';
-                    const application = document.getElementById('application')?.value.trim() || '';
-                    const specificIssue = document.getElementById('specificIssue')?.value.trim() || '';
-                    const vipStatus = document.getElementById('vipStatus')?.value || 'No';
+                    // Get values from form fields
+                    const subject = document.getElementById('subject').value.trim();
+                    const username = document.getElementById('username').value.trim();
+                    const role = document.getElementById('impactedRole').value;
+                    const studentId = document.getElementById('studentId').value.trim();
+                    const techAdminLink = document.getElementById('techAdminLink').value.trim();
+                    const device = document.getElementById('device').value.trim();
+                    const realm = document.getElementById('realm').value.trim();
+                    const assignmentId = document.getElementById('assignmentId').value.trim();
+                    const dateReported = document.getElementById('dateReported').value;
+                    const harFile = document.getElementById('harFile').value;
+                    const harReason = document.getElementById('harReason').value.trim();
+                    const districtName = document.getElementById('districtName').value.trim();
+                    const application = document.getElementById('application').value.trim();
+                    const specificIssue = document.getElementById('specificIssue').value.trim();
+                    const vipStatus = document.getElementById('vipStatus').value;
 
                     // Resource info
-                    const xcodeInfo = document.getElementById('xcodeInfo')?.value.trim() || '';
-                    const resourceTitle = document.getElementById('resourceTitle')?.value.trim() || '';
+                    const xcodeInfo = document.getElementById('xcodeInfo').value.trim();
+                    const resourceTitle = document.getElementById('resourceTitle').value.trim();
 
-                    // Format date if available
                     let formattedDate = '';
                     if (dateReported) {
-                        try {
-                            const date = new Date(dateReported);
-                            formattedDate = date.toLocaleDateString('en-US', {
-                                year: 'numeric', month: 'long', day: 'numeric'
-                            });
-                        } catch (e) {
-                            formattedDate = dateReported;
-                        }
+                        const date = new Date(dateReported);
+                        formattedDate = date.toLocaleDateString('en-US', {
+                            year: 'numeric', month: 'long', day: 'numeric'
+                        });
                     }
 
-                    // Create HTML description with styled sections
+                    // Create plain text description
                     let description = '';
 
                     // SUMMARY section
-                    description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
-                    description += `<div>${specificIssue || 'SIM Assignment Issue'}</div>`;
-                    description += '<div style="margin-bottom: 20px;"></div>';
+                    description += 'SUMMARY\n';
+                    description += `${specificIssue}\n\n`;
 
                     // DESCRIPTION section
-                    description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
-                    description += `Issue: ${specificIssue || ''}<br>`;
-                    description += `District Name: ${districtName || ''}<br>`;
+                    description += 'DESCRIPTION\n';
+                    description += `Issue: ${specificIssue || ''}\n`;
+                    description += `District Name: ${districtName || ''}\n`;
+                    if (username) description += `Username: ${username}\n`;
+                    if (role) description += `Role: ${role}\n`;
+                    description += `Program/Product Impacted: ${application || ''}\n`;
+                    if (xcodeInfo) description += `Resource xcode: ${xcodeInfo}\n`;
+                    if (resourceTitle) description += `Resource title: ${resourceTitle}\n`;
+                    if (formattedDate) description += `Date issue reported by user: ${formattedDate}\n`;
+                    if (device) description += `Device: ${device}\n`;
+                    if (realm) description += `Realm: ${realm}\n`;
+                    if (studentId) description += `Student Internal ID: ${studentId}\n`;
+                    if (assignmentId) description += `Assignment ID: ${assignmentId}\n`;
+                    description += `VIP Customer: (${vipStatus})\n\n`;
 
-                    if (username) description += `Username: ${username}<br>`;
-                    if (impactedRole) description += `Role: ${impactedRole}<br>`;
-
-                    description += `Program/Product Impacted: ${application || ''}<br>`;
-
-                    if (xcodeInfo) description += `Resource xcode: ${xcodeInfo}<br>`;
-                    if (resourceTitle) description += `Resource title: ${resourceTitle}<br>`;
-                    if (formattedDate) description += `Date issue reported by user: ${formattedDate}<br>`;
-                    if (device) description += `Device: ${device}<br>`;
-                    if (realm) description += `Realm: ${realm}<br>`;
-                    if (studentId) description += `Student Internal ID: ${studentId}<br>`;
-                    if (assignmentId) description += `Assignment ID: ${assignmentId}<br>`;
-
-                    description += `VIP Customer: ${vipStatus}<br>`;
-                    description += '<div style="margin-bottom: 20px;"></div>';
-
-                    // ISSUE DETAILS section - from reportedIssue Quill editor
-                    if (reportedIssue && reportedIssue.trim() !== '') {
-                        description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
-                        description += `<div>${reportedIssue}</div>`;
-                        description += '<div style="margin-bottom: 20px;"></div>';
+                    // ISSUE DETAILS section
+                    if (reportedIssue) {
+                        description += 'ISSUE DETAILS\n';
+                        description += `${reportedIssue}\n\n`;
                     }
 
-                    // STEPS TO REPRODUCE section - from stepsToReproduce Quill editor
-                    if (stepsToReproduce && stepsToReproduce.trim() !== '') {
-                        description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
-                        description += `<div>${stepsToReproduce}</div>`;
-                        description += '<div style="margin-bottom: 20px;"></div>';
+                    // STEPS TO REPRODUCE section
+                    if (stepsToReproduce) {
+                        description += 'STEPS TO REPRODUCE\n';
+                        description += `${stepsToReproduce}\n\n`;
                     }
 
-                    // EXPECTED RESULTS section - from expectedResults Quill editor
-                    if (expectedResults && expectedResults.trim() !== '') {
-                        description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
-                        description += `<div>${expectedResults}</div>`;
-                        description += '<div style="margin-bottom: 20px;"></div>';
+                    // EXPECTED RESULTS section
+                    if (expectedResults) {
+                        description += 'EXPECTED RESULTS\n';
+                        description += `${expectedResults}\n\n`;
                     }
 
                     // ADDITIONAL INFO section
-                    description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ADDITIONAL INFO</span></div>';
-
-                    if (techAdminLink) description += `Tech Admin link: ${techAdminLink}<br>`;
+                    description += 'ADDITIONAL INFO\n';
+                    if (techAdminLink) description += `Tech Admin link: ${techAdminLink}\n`;
 
                     // HAR file info
                     let harInfo = harFile;
                     if (harFile === 'No' && harReason) {
                         harInfo += `: ${harReason}`;
                     }
-                    description += `HAR file attached: ${harInfo}`;
+                    description += `HAR file attached: ${harInfo}\n`;
 
                     return description;
-                };
+                }
             </script>
 
             <script>
@@ -2250,7 +2271,28 @@
                             const subject = document.getElementById('subject').value;
 
                             // Generate the description HTML
-                            const description = window.generateDescription();
+                            const descriptionField = document.getElementById('description');
+                            // If the description field doesn't have content, regenerate it
+                            if (!descriptionField || !descriptionField.value) {
+                                console.warn("Description field empty, regenerating it");
+                                if (descriptionField) {
+                                    descriptionField.value = window.generateDescription();
+                                }
+                            }
+
+                            // Get the description from the field
+                            const description = descriptionField ? descriptionField.value : null;
+
+                            // Verify we have a description
+                            if (!description) {
+                                console.error("Failed to get a valid description");
+                                alert("Error: Could not generate the ticket description. Please try again.");
+                                hideLoadingOverlay();
+                                if (createBtn) createBtn.disabled = false;
+                                return;
+                            }
+
+                            console.log("Using description (length: " + description.length + ")");
 
                             const agentEmail = document.getElementById('email').value || "agent@freshdesk.com";
                             const relatedTicketsStr = document.getElementById('relatedTickets').value;
@@ -2384,10 +2426,10 @@
                                                 type: "warning",
                                                 message: `Tracker #${newTicketId} created, but attachment upload failed`
                                             });
-
-                                            // Open the ticket in a new tab
-                                            finishTicketCreation(newTicketId, newTicketUrl);
                                         }
+
+                                        // Open the ticket in a new tab
+                                        finishTicketCreation(newTicketId, newTicketUrl);
                                     };
 
                                     // Handle network errors
@@ -2492,6 +2534,12 @@
                 });
             </script>
 
+            <script>
+                // Ensure the generateDescription function is globally accessible
+                window.generateDescription = generateDescription;
+            </script>
+            </form>
+        </div>
 </body>
 
 </html>

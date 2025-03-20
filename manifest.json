@@ -13,7 +13,20 @@
         "getGroups": {},
         "getAgentsInGroup": {},
         "getTicketFields": {},
-        "getAllAgents": {}
+        "getAllAgents": {},
+        "associateTickets": {}
+      },
+      "serverless": {
+        "ticket_with_attachments": {
+          "algorithm": "ticket_with_attachments.js",
+          "export": "uploadTicketWithAttachments",
+          "timeout": 10
+        },
+        "handle_attachments": {
+          "algorithm": "handle_attachments.js",
+          "export": "uploadAttachment",
+          "timeout": 10
+        }
       }
     },
     "support_ticket": {
