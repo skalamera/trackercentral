@@ -1,3 +1,15 @@
+function formatDate(dateString) {
+    if (!dateString) return '';
+
+    try {
+        const [year, month, day] = dateString.split('-');
+        return `${month}/${day}/${year}`;
+    } catch (e) {
+        console.error('Error formatting date:', e);
+        return dateString; // Return original if parsing fails
+    }
+}
+
 const TRACKER_CONFIGS = {
     // Assembly Rollover
     "assembly-rollover": {
@@ -34,7 +46,7 @@ const TRACKER_CONFIGS = {
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
             description += `District Name: ${fields.districtName || ''}<br>`;
             description += `Realm (Tech Admin Link): ${fields.realm || ''}<br>`;
-            description += `Effective Return Date: ${fields.effectiveDate || ''}<br>`;
+            description += `Effective Return Date: ${formatDate(fields.effectiveDate) || ''}<br>`;
             description += `Assembly Codes To Be Removed:<br>${fields.assemblyCodes || ''}`;
 
             return description;
@@ -72,14 +84,14 @@ const TRACKER_CONFIGS = {
                 title: "DESCRIPTION",
                 icon: "fa-clipboard-list",
                 fields: [
-                    { id: "issue", type: "textarea", label: "Issue", required: true },
+                    { id: "issue", type: "richtext", label: "Issue", required: true },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "schoolName", type: "text", label: "School Name", required: false },
                     { id: "districtState", type: "text", label: "District State", required: false },
                     { id: "program", type: "text", label: "Program/Product Impacted", required: true },
                     { id: "programVariation", type: "text", label: "Program Variation (if known)", required: false },
                     { id: "dateReported", type: "date", label: "Date issue reported by user", required: false },
-                    { id: "subscriptionCodes", type: "textarea", label: "Subscription codes customer is onboarded with", required: false },
+                    { id: "subscriptionCodes", type: "richtext", label: "Subscription codes customer is onboarded with", required: false },
                     {
                         id: "impactScope",
                         type: "select",
@@ -95,14 +107,6 @@ const TRACKER_CONFIGS = {
                         options: ["No", "Yes"]
                     }
                 ]
-            },
-            {
-                id: "additionalInfo",
-                title: "ADDITIONAL INFORMATION",
-                icon: "fa-info-circle",
-                fields: [
-                    { id: "additionalInfo", type: "richtext", label: "", required: false }
-                ]
             }
         ],
         descriptionGenerator: function (fields) {
@@ -117,23 +121,20 @@ const TRACKER_CONFIGS = {
 
             // Add description with all fields
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
-            description += `Issue: ${fields.issue || ''}<br>`;
+            description += `<div><strong>Issue:</strong></div>`;
+            description += `<div>${fields.issue || ''}</div>`;
             description += `District Name: ${fields.districtName || ''}<br>`;
             if (fields.schoolName) description += `School Name: ${fields.schoolName}<br>`;
             if (fields.districtState) description += `District State: ${fields.districtState}<br>`;
             description += `Program/Product Impacted: ${fields.program || ''}<br>`;
             if (fields.programVariation) description += `Program Variation: ${fields.programVariation}<br>`;
-            if (fields.dateReported) description += `Date issue reported by user: ${fields.dateReported}<br>`;
-            if (fields.subscriptionCodes) description += `Subscription codes: ${fields.subscriptionCodes}<br>`;
+            if (fields.dateReported) description += `Date issue reported by user: ${formatDate(fields.dateReported)}<br>`;
+            if (fields.subscriptionCodes && fields.subscriptionCodes.trim() !== '<p><br></p>') {
+                description += `<div><strong>Subscription codes:</strong></div>`;
+                description += `<div>${fields.subscriptionCodes}</div>`;
+            }
             if (fields.impactScope) description += `Teacher vs Student impact: ${fields.impactScope}<br>`;
             description += `VIP Customer: ${fields.isVIP || 'No'}<br>`;
-
-            // Add additional info if provided
-            if (fields.additionalInfo && fields.additionalInfo.trim() !== '<p><br></p>') {
-                description += '<div style="margin-bottom: 20px;"></div>';
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ADDITIONAL INFORMATION</span></div>';
-                description += `<div>${fields.additionalInfo}</div>`;
-            }
 
             return description;
         }
@@ -220,7 +221,7 @@ const TRACKER_CONFIGS = {
             if (fields.role) description += `Role: ${fields.role}<br>`;
             if (fields.name) description += `Name: ${fields.name}<br>`;
             if (fields.email) description += `Email: ${fields.email}<br>`;
-            if (fields.dateRequested) description += `Date Requested: ${fields.dateRequested}<br>`;
+            if (fields.dateRequested) description += `Date Requested: ${formatDate(fields.dateRequested) || ''}<br>`;
 
             return description;
         }
@@ -310,16 +311,6 @@ const TRACKER_CONFIGS = {
         ],
         descriptionGenerator: function (fields) {
             let description = '';
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">CONTENT ISSUE</span></div>';
-            description += `<div>${fields.formattedSubject || fields.subject || ''}</div>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE INFORMATION</span></div>';
-            description += `XCODE: ${fields.xcode || ''}<br>`;
-            description += `Application: ${fields.application || ''}<br>`;
-            description += `Resource Path: ${fields.resourcePath || ''}<br>`;
-            description += `Specific Issue: ${fields.specificIssue || ''}<br>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
 
             if (fields.issueSummary) {
                 description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
@@ -342,7 +333,7 @@ const TRACKER_CONFIGS = {
             if (fields.xcodeInfo) description += `Xcode: ${fields.xcodeInfo}<br>`;
             if (fields.districtState) description += `District State: ${fields.districtState}<br>`;
             if (fields.impactType) description += `Impact Type: ${fields.impactType}<br>`;
-            if (fields.dateReported) description += `Date Reported: ${fields.dateReported}<br>`;
+            if (fields.dateReported) description += `Date Reported: ${formatDate(fields.dateReported) || ''}<br>`;
             if (fields.impactScope) description += `Impact Scope: ${fields.impactScope}<br>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
@@ -481,9 +472,6 @@ const TRACKER_CONFIGS = {
         ],
         descriptionGenerator: function (fields) {
             let description = '';
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SIM ASSIGNMENT ISSUE</span></div>';
-            description += `<div>${fields.formattedSubject || fields.subject || 'SIM Assignment Issue'}</div>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
             if (fields.issueDetails) {
@@ -493,21 +481,25 @@ const TRACKER_CONFIGS = {
             if (fields.resourceTitle) description += `Resource Title: ${fields.resourceTitle}<br>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
-            if (fields.stepsToReproduce) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
-                description += `<div>${fields.stepsToReproduce}</div>`;
-                description += '<div style="margin-bottom: 20px;"></div>';
-            }
-
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.userRole) description += `Role: ${fields.userRole}<br>`;
             if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
-            if (fields.techAdminLink) description += `Tech Admin link: ${fields.techAdminLink}<br>`;
+
+            // Handle Tech Admin link as a hyperlink
+            if (fields.techAdminLink) {
+                let techLink = fields.techAdminLink.trim();
+                // If the link doesn't start with http:// or https://, add https://
+                if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
+                    techLink = 'https://' + techLink;
+                }
+                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+            }
+
             if (fields.device) description += `Device: ${fields.device}<br>`;
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
             if (fields.assignmentId) description += `Assignment ID: ${fields.assignmentId}<br>`;
-            if (fields.dateReported) description += `Date Issue Reported: ${fields.dateReported}<br>`;
+            if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported) || ''}<br>`;
             if (fields.harFileAttached) {
                 description += `HAR file attached: ${fields.harFileAttached}`;
                 if (fields.harFileAttached === "No" && fields.harFileReason) {
@@ -685,7 +677,7 @@ const TRACKER_CONFIGS = {
             description += `Requested Timeout: ${fields.requestedTimeout || ''} minutes<br>`;
             description += `Requested By: ${fields.requestedBy || ''}<br>`;
             description += `Requestor Email: ${fields.requestorEmail || ''}<br>`;
-            description += `Requested Effective Date: ${fields.effectiveDate || ''}<br>`;
+            description += `Requested Effective Date: ${formatDate(fields.effectiveDate) || ''}<br>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">JUSTIFICATION</span></div>';
@@ -791,7 +783,7 @@ const TRACKER_CONFIGS = {
             description += '<div style="margin-bottom: 20px;"></div>';
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
-            description += `Date Occurred: ${fields.dateOccurred || ''}<br>`;
+            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
             if (fields.issueDescription) {
                 description += `<div><strong>Description:</strong></div>`;
                 description += `<div>${fields.issueDescription}</div>`;
@@ -883,7 +875,7 @@ const TRACKER_CONFIGS = {
             description += '<div style="margin-bottom: 20px;"></div>';
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
-            description += `Date Occurred: ${fields.dateOccurred || ''}<br>`;
+            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
             if (fields.issueDescription) {
                 description += `<div><strong>Description:</strong></div>`;
                 description += `<div>${fields.issueDescription}</div>`;
@@ -977,7 +969,7 @@ const TRACKER_CONFIGS = {
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
             description += `Issue Type: ${fields.issueType || ''}<br>`;
-            description += `Date Occurred: ${fields.dateOccurred || ''}<br>`;
+            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
             if (fields.issueDescription) {
                 description += `<div><strong>Description:</strong></div>`;
                 description += `<div>${fields.issueDescription}</div>`;
@@ -1069,7 +1061,7 @@ const TRACKER_CONFIGS = {
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
             description += `Issue Type: ${fields.issueType || ''}<br>`;
-            description += `Date Occurred: ${fields.dateOccurred || ''}<br>`;
+            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
             if (fields.issueDescription) {
                 description += `<div><strong>Description:</strong></div>`;
                 description += `<div>${fields.issueDescription}</div>`;
@@ -1160,7 +1152,7 @@ const TRACKER_CONFIGS = {
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
             description += `Issue Type: ${fields.issueType || ''}<br>`;
-            description += `Date Occurred: ${fields.dateOccurred || ''}<br>`;
+            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
             if (fields.issueDescription) {
                 description += `<div><strong>Description:</strong></div>`;
                 description += `<div>${fields.issueDescription}</div>`;
@@ -1248,7 +1240,7 @@ const TRACKER_CONFIGS = {
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
             description += `Issue Type: ${fields.issueType || ''}<br>`;
-            description += `Date Occurred: ${fields.dateOccurred || ''}<br>`;
+            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
             if (fields.issueDescription) {
                 description += `<div><strong>Description:</strong></div>`;
                 description += `<div>${fields.issueDescription}</div>`;
@@ -1339,7 +1331,7 @@ const TRACKER_CONFIGS = {
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
             description += `Issue Type: ${fields.issueType || ''}<br>`;
-            description += `Date Occurred: ${fields.dateOccurred || ''}<br>`;
+            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
             description += `User Experiencing Issue: ${fields.userRole || ''}<br>`;
             if (fields.issueDescription) {
                 description += `<div><strong>Description:</strong></div>`;

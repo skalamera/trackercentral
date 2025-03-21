@@ -57,7 +57,7 @@
             <div class="card">
                 <div class="card-header">
                     <i class="fas fa-tasks fa-lg section-icon"></i>
-                    <h3>TICKET PROPERTIES</h3>
+                    <h3>Ticket Properties</h3>
                 </div>
                 <div class="card-body">
                     <div class="form-group">
@@ -76,8 +76,9 @@
                             <div class="input-with-icon">
                                 <input type="text" id="relatedTickets" name="relatedTickets" required>
                             </div>
-                            <div class="hint"><i class="fas fa-info-circle"></i> Comma-separated ticket IDs (e.g.,
-                                1,2,3)</div>
+                            <div class="hint"><i class="fas fa-info-circle"></i> <strong>Required:</strong>
+                                Comma-separated ticket IDs (e.g., 1,2,3). At least one ticket ID is required to create a
+                                tracker.</div>
                         </div>
 
                         <div class="form-group">
@@ -323,6 +324,10 @@
                 try {
                     console.log('Initializing TrackerApp');
                     await this.initClient();
+
+                    // Move debugDistrictFields to the end
+                    // this.debugDistrictFields(); - REMOVE THIS LINE
+
                     this.initEventListeners();
                     this.initQuillEditors();
                     this.initFormData();
@@ -337,11 +342,64 @@
                     // Load data from localStorage based on tracker type
                     this.loadDataFromStorage();
 
+                    // Hide specified ticket property fields
+                    this.hideTicketPropertyFields();
+
+                    // Remove the Attachments card at the bottom
+                    this.removeBottomAttachmentsCard();
+
+                    // Move the debug to the end, after all initialization is complete
+                    this.debugDistrictFields();
+
                     console.log('TrackerApp initialized successfully');
                 } catch (error) {
                     console.error('Failed to initialize TrackerApp:', error);
                     this.showError('Failed to initialize app. Please try again.');
                 }
+            }
+
+            // Add this new method
+            removeBottomAttachmentsCard() {
+                // Find the Attachments card at the bottom
+                const cards = document.querySelectorAll('.card');
+                cards.forEach(card => {
+                    const header = card.querySelector('.card-header h3');
+                    if (header && header.textContent.trim() === 'ATTACHMENTS') {
+                        // This is the bottom attachments card, remove it
+                        card.remove();
+                        console.log('Removed bottom Attachments card');
+                    }
+                });
+            }
+
+            // Add this new method to hide ticket property fields
+            hideTicketPropertyFields() {
+                // Fields to hide: status, priority, group, related ticket IDs, requester email
+                const fieldsToHide = [
+                    { id: 'status', parent: 'form-group' },
+                    { id: 'priority', parent: 'form-group' },
+                    { id: 'groupField', parent: 'form-group' },
+                    { id: 'relatedTickets', parent: 'form-group' },
+                    { id: 'email', parent: 'form-group' }
+                ];
+
+                fieldsToHide.forEach(field => {
+                    const element = document.getElementById(field.id);
+                    if (element) {
+                        // Find the parent container to hide the entire field including label
+                        const parent = this.findParentWithClass(element, field.parent);
+                        if (parent) {
+                            parent.style.display = 'none';
+                            console.log(`Hid ${field.id} field`);
+                        } else {
+                            // If parent not found, just hide the element itself
+                            element.style.display = 'none';
+                            console.log(`Hid ${field.id} element (parent not found)`);
+                        }
+                    } else {
+                        console.warn(`Could not find element with id: ${field.id}`);
+                    }
+                });
             }
 
             initFormData() {
@@ -435,26 +493,17 @@
                                         };
                                     };
 
-                                    // Initialize Quill with custom image handler
+                                    // Initialize Quill with simplified toolbar
                                     const editor = new Quill(`#${editorId}`, {
                                         theme: 'snow',
                                         placeholder: `Enter ${field.id.replace(/([A-Z])/g, ' $1').toLowerCase()}...`,
                                         modules: {
                                             toolbar: {
                                                 container: [
-                                                    ['bold', 'italic', 'underline', 'strike'],
-                                                    ['blockquote', 'code-block'],
-                                                    [{ 'header': 1 }, { 'header': 2 }],
-                                                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                                                    [{ 'script': 'sub' }, { 'script': 'super' }],
-                                                    [{ 'indent': '-1' }, { 'indent': '+1' }],
-                                                    [{ 'direction': 'rtl' }],
-                                                    [{ 'size': ['small', false, 'large', 'huge'] }],
-                                                    [{ 'color': [] }, { 'background': [] }],
-                                                    [{ 'font': [] }],
-                                                    [{ 'align': [] }],
-                                                    ['clean'],
-                                                    ['link', 'image']
+                                                    ['bold', 'italic'],                        // Bold and italic
+                                                    [{ 'color': [] }, { 'background': [] }],   // Color and highlight
+                                                    [{ 'align': [] }],                         // Alignment
+                                                    ['link', 'image']                          // Link and image
                                                 ],
                                                 handlers: {
                                                     'image': customImageHandler.bind(this)
@@ -484,6 +533,76 @@
                             }
                         }
                     });
+                });
+
+                // Convert textareas to Quill editors
+                this.convertTextareasToQuill();
+            }
+
+            // Add this new method to convert textareas to Quill editors
+            convertTextareasToQuill() {
+                // Find all textareas that aren't already hidden or part of a Quill editor
+                const textareas = document.querySelectorAll('textarea:not([style*="display: none"]):not([id$="Editor"])');
+
+                textareas.forEach(textarea => {
+                    // Skip if already processed or if the ID is "description"
+                    if (textarea.id === 'description' || this.quillEditors[textarea.id]) {
+                        return;
+                    }
+
+                    console.log(`Converting textarea ${textarea.id} to Quill editor`);
+
+                    // Create container for the editor
+                    const container = document.createElement('div');
+                    container.className = 'quill-editor-container';
+
+                    // Create the editor div
+                    const editorDiv = document.createElement('div');
+                    editorDiv.id = `${textarea.id}Editor`;
+                    editorDiv.style.minHeight = '120px';
+
+                    // Add the editor div to the container
+                    container.appendChild(editorDiv);
+
+                    // Replace the textarea with the container
+                    textarea.parentNode.replaceChild(container, textarea);
+
+                    // Move the textarea into the container (hidden)
+                    textarea.style.display = 'none';
+                    container.appendChild(textarea);
+
+                    // Initialize the Quill editor
+                    try {
+                        const editor = new Quill(`#${textarea.id}Editor`, {
+                            theme: 'snow',
+                            placeholder: textarea.placeholder || `Enter ${textarea.id.replace(/([A-Z])/g, ' $1').toLowerCase()}...`,
+                            modules: {
+                                toolbar: {
+                                    container: [
+                                        ['bold', 'italic'],                      // Bold and italic
+                                        [{ 'color': [] }, { 'background': [] }], // Color and highlight
+                                        [{ 'align': [] }],                       // Alignment
+                                        ['link', 'image']                        // Link and image
+                                    ]
+                                }
+                            }
+                        });
+
+                        // Set initial content if textarea had value
+                        if (textarea.value) {
+                            editor.root.innerHTML = textarea.value;
+                        }
+
+                        // Store reference to the editor
+                        this.quillEditors[textarea.id] = editor;
+
+                        // Update textarea when editor changes
+                        editor.on('text-change', () => {
+                            textarea.value = editor.root.innerHTML;
+                        });
+                    } catch (error) {
+                        console.error(`Error converting textarea ${textarea.id} to Quill:`, error);
+                    }
                 });
             }
 
@@ -742,17 +861,53 @@
                         // Add change listener
                         harFileAttached.addEventListener('change', function () {
                             if (this.value === 'No') {
-                                if (harFileReasonContainer) harFileReasonContainer.style.display = 'block';
+                                if (harFileReasonContainer) {
+                                    harFileReasonContainer.style.display = 'block';
+
+                                    // Add visual indication that the field is now required
+                                    const label = harFileReasonContainer.querySelector('label');
+                                    if (label) {
+                                        label.classList.add('required-field');
+                                    }
+                                }
+
                                 // Hide the uploader container
                                 const harUploaderContainer = document.getElementById('harUploaderContainer');
                                 if (harUploaderContainer) harUploaderContainer.style.display = 'none';
                             } else {
-                                if (harFileReasonContainer) harFileReasonContainer.style.display = 'none';
+                                if (harFileReasonContainer) {
+                                    harFileReasonContainer.style.display = 'none';
+
+                                    // Remove the required indication
+                                    const label = harFileReasonContainer.querySelector('label');
+                                    if (label) {
+                                        label.classList.remove('required-field');
+                                    }
+                                }
+
                                 // Show the uploader container 
                                 const harUploaderContainer = document.getElementById('harUploaderContainer');
                                 if (harUploaderContainer) harUploaderContainer.style.display = 'block';
                             }
                         });
+                    }
+
+                    // Apply the same logic for initial state
+                    if (harFileAttached.value === 'No') {
+                        const label = harFileReasonContainer.querySelector('label');
+                        if (label) {
+                            label.classList.add('required-field');
+                        }
+                    }
+                }
+
+                // Update hint for related tickets
+                const relatedTicketsField = document.getElementById('relatedTickets');
+                if (relatedTicketsField) {
+                    const hintDiv = relatedTicketsField.parentElement.nextElementSibling;
+                    if (hintDiv && hintDiv.classList.contains('hint')) {
+                        hintDiv.innerHTML = '<i class="fas fa-info-circle"></i> <strong>Required:</strong> ' +
+                            'Currently includes the source ticket ID. Add more ticket IDs separated by commas if needed.';
                     }
                 }
             }
@@ -784,8 +939,9 @@
                 const resourcePathValue = document.getElementById('resourcePath')?.value || '';
                 const specificIssueValue = document.getElementById('specificIssue')?.value || '';
 
+                // Keep first two as pipes, only last one as dash
                 const formattedSubject =
-                    `${xcodeValue} | ${applicationValue} | ${resourcePathValue} | ${specificIssueValue}`;
+                    `${xcodeValue} | ${applicationValue} | ${resourcePathValue} - ${specificIssueValue}`;
 
                 const formattedSubjectField = document.getElementById('formattedSubject');
                 if (formattedSubjectField) {
@@ -834,17 +990,38 @@
 
                         // Populate fields from stored data
                         if (parsedData.currentTicketId) {
-                            document.getElementById('relatedTickets').value = parsedData.currentTicketId;
+                            // Set the related tickets field to include the source ticket ID
+                            const relatedTicketsField = document.getElementById('relatedTickets');
+                            if (relatedTicketsField && !relatedTicketsField.value) {
+                                relatedTicketsField.value = parsedData.currentTicketId;
+                                console.log(`Set related tickets field to source ticket: ${parsedData.currentTicketId}`);
+                            }
                         }
 
-                        // Add explicit check and debug for district field
+                        // Add explicit check and debug for district field and districtName
                         if (parsedData.districtName) {
                             const districtField = document.getElementById('districtField');
+                            const districtNameField = document.getElementById('districtName');
+
                             if (districtField) {
                                 districtField.value = parsedData.districtName;
+                                // Style it as non-editable
+                                districtField.style.backgroundColor = '#f0f0f0';
+                                districtField.style.color = '#666';
+                                districtField.style.border = '1px solid #ddd';
+                                districtField.style.cursor = 'not-allowed';
                                 console.log(`Set district field to: ${parsedData.districtName}`);
-                            } else {
-                                console.warn('District field element not found in the DOM');
+                            }
+
+                            if (districtNameField) {
+                                districtNameField.value = parsedData.districtName;
+                                // Make it read-only
+                                districtNameField.readOnly = true;
+                                districtNameField.style.backgroundColor = '#f0f0f0';
+                                districtNameField.style.color = '#666';
+                                districtNameField.style.border = '1px solid #ddd';
+                                districtNameField.style.cursor = 'not-allowed';
+                                console.log(`Set districtName field to: ${parsedData.districtName}`);
                             }
                         } else {
                             console.warn('No district name found in stored data');
@@ -884,6 +1061,70 @@
 
             async loadInitialData() {
                 try {
+                    console.log('Loading initial data');
+
+                    // Get the current ticket ID first
+                    let currentTicketId = null;
+                    try {
+                        const ticketData = await this.client.data.get("ticket");
+                        if (ticketData && ticketData.ticket && ticketData.ticket.id) {
+                            currentTicketId = ticketData.ticket.id;
+                            console.log("Got current ticket ID:", currentTicketId);
+
+                            // Populate the related tickets field with the current ticket ID
+                            const relatedTicketsField = document.getElementById('relatedTickets');
+                            if (relatedTicketsField && !relatedTicketsField.value) {
+                                relatedTicketsField.value = currentTicketId.toString();
+                                console.log("Prepopulated related tickets field with current ticket ID");
+                            }
+
+                            // Also store it for future use
+                            this.ticketData.currentTicketId = currentTicketId;
+
+                            // Handle district field synchronization for specific templates
+                            if (this.trackerType === 'assembly' || this.trackerType === 'assembly-rollover' || this.trackerType === 'sim-assignment') {
+                                const districtField = document.getElementById('districtField');
+                                const districtNameField = document.getElementById('districtName');
+
+                                if (districtField && districtNameField) {
+                                    console.log("District field value:", districtField.value);
+                                    // Copy the district value to district name field
+                                    districtNameField.value = districtField.value;
+
+                                    // Make it read-only and style it as non-editable
+                                    districtNameField.readOnly = true;
+                                    districtNameField.style.backgroundColor = '#f0f0f0';
+                                    districtNameField.style.color = '#666';
+                                    districtNameField.style.border = '1px solid #ddd';
+                                    districtNameField.style.cursor = 'not-allowed';
+                                } else {
+                                    console.warn("Could not find districtField or districtNameField");
+                                }
+                            }
+
+                            // Only apply readonly to districtName fields, NOT districtState
+                            document.querySelectorAll('input[id="districtName"]').forEach(field => {
+                                field.readOnly = true;
+                                field.style.backgroundColor = '#f0f0f0';
+                                field.style.color = '#666';
+                                field.style.border = '1px solid #ddd';
+                                field.style.cursor = 'not-allowed';
+                            });
+
+                            // Remove any styling that might have been applied to districtState
+                            document.querySelectorAll('input[id="districtState"]').forEach(field => {
+                                field.readOnly = false;
+                                field.style.backgroundColor = '';
+                                field.style.color = '';
+                                field.style.border = '';
+                                field.style.cursor = '';
+                            });
+                        }
+                    } catch (ticketError) {
+                        console.warn("Could not get current ticket ID:", ticketError);
+                    }
+
+                    // Rest of your existing loadInitialData code...
                     // FIRST PRIORITY: Get agent email directly from API
                     try {
                         const userData = await this.client.data.get("loggedInUser");
@@ -1109,24 +1350,14 @@
                     loadingOverlay.style.display = 'flex';
                 }
 
+                // Set default values for hidden required fields
+                this.setDefaultValuesForHiddenFields();
+
                 // Reset previous errors
                 document.querySelectorAll('.validation-error').forEach(el => el.remove());
                 document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
 
-                // For assembly template, make sure the formatted subject is updated one last time
-                if (this.trackerType === 'assembly') {
-                    this.updateFormattedSubject();
-                }
-
-                // For sedcust template, make sure the formatted subject is updated one last time
-                if (this.trackerType === 'sedcust') {
-                    this.updateSedcustSubject();
-                }
-
-                // For sim-assignment template, make sure the formatted subject is updated one last time
-                if (this.trackerType === 'sim-assignment') {
-                    this.updateSimAssignmentSubject();
-                }
+                // ... other form handling code ...
 
                 // Validate the form first
                 if (!this.validateForm()) {
@@ -1161,6 +1392,34 @@
                 }
             }
 
+            // Add this new method to set default values for hidden required fields
+            setDefaultValuesForHiddenFields() {
+                // Set default status if hidden
+                const statusField = document.getElementById('status');
+                if (statusField && statusField.style.display === 'none' && !statusField.value) {
+                    statusField.value = '2'; // Default to Open
+                }
+
+                // Set default priority if hidden
+                const priorityField = document.getElementById('priority');
+                if (priorityField && priorityField.style.display === 'none' && !priorityField.value) {
+                    priorityField.value = '2'; // Default to Medium
+                }
+
+                // Ensure email has a value
+                const emailField = document.getElementById('email');
+                if (emailField && emailField.style.display === 'none' && !emailField.value) {
+                    // Try to get from the window variable if available
+                    if (this.client && this.client.data) {
+                        this.client.data.get("loggedInUser").then(userData => {
+                            if (userData && userData.loggedInUser && userData.loggedInUser.email) {
+                                emailField.value = userData.loggedInUser.email;
+                            }
+                        }).catch(err => console.error("Error getting logged-in user email:", err));
+                    }
+                }
+            }
+
             validateForm() {
                 // Reset any previous validation errors
                 document.querySelectorAll('.validation-error').forEach(el => el.remove());
@@ -1168,14 +1427,36 @@
 
                 let isValid = true;
 
-                // Check required fields
+                // Check required fields (but skip hidden ones)
                 const requiredFields = document.querySelectorAll('[required]');
                 for (let field of requiredFields) {
+                    // Skip validation for hidden fields
+                    const parent = this.findParentWithClass(field, 'form-group');
+                    if (parent && parent.style.display === 'none') {
+                        continue;
+                    }
+
                     if (!field.value.trim()) {
                         isValid = false;
                         this.showFieldError(field, 'This field is required');
                     }
                 }
+
+                // Add conditional required validation for HAR file reason
+                if (this.trackerType === 'sim-assignment') {
+                    const harFileAttached = document.getElementById('harFileAttached');
+                    const harFileReason = document.getElementById('harFileReason');
+
+                    if (harFileAttached && harFileReason && harFileAttached.value === 'No') {
+                        // If HAR file is not attached, reason is required
+                        if (!harFileReason.value.trim()) {
+                            isValid = false;
+                            this.showFieldError(harFileReason, 'Please provide a reason for not attaching a HAR file');
+                        }
+                    }
+                }
+
+                // Rest of validation code remains the same...
 
                 // Email validation for email fields
                 const emailFields = document.querySelectorAll('input[type="email"]');
@@ -1185,8 +1466,6 @@
                         this.showFieldError(field, 'Please enter a valid email address');
                     }
                 }
-
-                // Add more validation rules as needed (e.g., min/max length, format validation)
 
                 // Check the Quill editors for required content
                 Object.keys(this.quillEditors).forEach(id => {
@@ -1203,6 +1482,13 @@
                         }
                     }
                 });
+
+                // Check if related tickets field is filled
+                const relatedTicketsField = document.getElementById('relatedTickets');
+                if (!relatedTicketsField.value.trim()) {
+                    isValid = false;
+                    this.showFieldError(relatedTicketsField, 'At least one related ticket ID is required to create a tracker');
+                }
 
                 if (!isValid) {
                     this.showError('Please correct the errors in the form');
@@ -1236,12 +1522,17 @@
                 const formData = this.getFormData();
 
                 // Use the description generator from the config
+                let description = '';
                 if (this.config.descriptionGenerator) {
-                    return this.config.descriptionGenerator(formData);
+                    description = this.config.descriptionGenerator(formData);
                 } else {
                     // Default description generator for blank template
-                    return `<div>${formData.subject || 'No subject'}</div>`;
+                    description = `<div>${formData.subject || 'No subject'}</div>`;
                 }
+
+                // Don't sanitize here - let's keep the images in the hidden field
+                // and only sanitize at the API request time
+                return description;
             }
 
             getFormData() {
@@ -1285,18 +1576,17 @@
             }
 
             handleFileInputChange(e) {
-                const files = e.target.files;
+                const files = Array.from(e.target.files);
                 const previewContainer = document.getElementById('screenshotPreview');
                 const counter = document.getElementById('attachmentCounter');
 
-                // Clear previous previews
-                previewContainer.innerHTML = '';
+                if (!files.length) return;
 
-                // Store files for later use
-                this.aggregatedScreenshotFiles = Array.from(files);
+                // Append to existing files instead of replacing them
+                this.aggregatedScreenshotFiles = [...this.aggregatedScreenshotFiles, ...files];
 
-                // Create previews for each file
-                Array.from(files).forEach(file => {
+                // Create previews for the newly added files
+                files.forEach(file => {
                     const thumbnail = document.createElement('div');
                     thumbnail.className = 'screenshot-thumbnail';
 
@@ -1314,8 +1604,8 @@
                 });
 
                 // Update counter
-                if (files.length > 0) {
-                    counter.textContent = `${files.length} file(s) selected (${this.formatFileSize(Array.from(files).reduce((total, file) => total + file.size, 0))})`;
+                if (this.aggregatedScreenshotFiles.length > 0) {
+                    counter.textContent = `${this.aggregatedScreenshotFiles.length} file(s) selected (${this.formatFileSize(this.aggregatedScreenshotFiles.reduce((total, file) => total + file.size, 0))})`;
                 } else {
                     counter.textContent = '';
                 }
@@ -1327,6 +1617,9 @@
                         this.removeFile(filename);
                     });
                 });
+
+                // Reset the file input to allow selecting the same files again
+                e.target.value = '';
             }
 
             getFileTypeIcon(mimeType) {
@@ -1371,13 +1664,13 @@
             }
 
             fillFormWithDemoData() {
-                // Set some sample data for quick testing - Skip email, relatedTickets, district fields, and group
+                console.log("Filling form with demo data...");
 
-                // DON'T fill email field
-                // document.getElementById('email').value = 'test@example.com';
-
-                // DON'T fill related tickets field
-                // document.getElementById('relatedTickets').value = '123456';
+                // KEEP the related tickets field (don't overwrite it)
+                // const relatedTicketsField = document.getElementById('relatedTickets');
+                // if (relatedTicketsField && !relatedTicketsField.value) {
+                //     relatedTicketsField.value = "123456"; // Sample ticket ID for testing
+                // }
 
                 // Set priority
                 document.getElementById('priority').value = '2';
@@ -1396,36 +1689,43 @@
                     this.quillEditors[id].root.innerHTML = '<p>This is sample content for testing.</p>';
                 });
 
-                // Set other fields based on their type, but skip district fields, group field
+                // Set ALL text fields that aren't special fields
                 document.querySelectorAll('input[type="text"]').forEach(input => {
                     const fieldId = input.id.toLowerCase();
 
-                    // Skip fields containing "district", "related", or if they're the subject field
-                    if (!fieldId.includes('district') &&
-                        fieldId !== 'subject' &&
-                        fieldId !== 'relatedtickets') {
+                    // Skip these special fields
+                    if (fieldId !== 'subject' &&
+                        fieldId !== 'relatedtickets' &&
+                        fieldId !== 'districtfield') {
 
+                        // Use a sensible default value based on the field's ID
                         input.value = `Sample ${input.id.replace(/([A-Z])/g, ' $1').toLowerCase()}`;
+
+                        // For common fields, provide more realistic values
+                        if (fieldId === 'districtname') {
+                            input.value = 'Demo School District';
+                        } else if (fieldId === 'xcode') {
+                            input.value = 'X12345';
+                        } else if (fieldId === 'application') {
+                            input.value = 'Demo Application';
+                        } else if (fieldId === 'specificissue') {
+                            input.value = 'Sample Issue';
+                        } else if (fieldId.includes('email')) {
+                            input.value = 'demo@example.com';
+                        }
                     }
                 });
-
-                // DON'T set group field
-                // const groupField = document.getElementById('groupField');
-                // if (groupField) {
-                //     groupField.value = groupField.options[0].value;
-                // }
-
-                // DON'T set agent field - depends on group
-                // const agentField = document.getElementById('agentField');
-                // if (agentField) {
-                //     agentField.value = '';
-                // }
 
                 // Set select fields to their first option if not already set (except group/agent fields)
                 document.querySelectorAll('select').forEach(select => {
                     const selectId = select.id.toLowerCase();
-                    if (selectId !== 'groupfield' && selectId !== 'agentfield' && !select.value && select.options.length > 0) {
-                        select.value = select.options[0].value;
+                    if (selectId !== 'groupfield' &&
+                        selectId !== 'agentfield' &&
+                        !select.value &&
+                        select.options.length > 0) {
+
+                        // For selects, choose the first or second option to avoid blank values
+                        select.value = select.options[Math.min(1, select.options.length - 1)].value;
                     }
                 });
 
@@ -1433,11 +1733,20 @@
                 document.querySelectorAll('input[type="date"]').forEach(dateField => {
                     if (!dateField.value) {
                         const today = new Date();
-                        const futureDate = new Date(today);
-                        futureDate.setDate(today.getDate() + 5); // Set date 5 days in the future
-                        dateField.value = futureDate.toISOString().split('T')[0];
+                        dateField.value = today.toISOString().split('T')[0];
                     }
                 });
+
+                // If this is one of the templates with a formatted subject, update it
+                if (this.trackerType === 'assembly') {
+                    this.updateFormattedSubject();
+                } else if (this.trackerType === 'sedcust') {
+                    this.updateSedcustSubject();
+                } else if (this.trackerType === 'sim-assignment') {
+                    this.updateSimAssignmentSubject();
+                }
+
+                console.log("Form filled with demo data");
             }
 
             handlePasteImage(e, editor) {
@@ -1585,11 +1894,6 @@
                 // We'll use Promise.all to make sure we process all async operations
                 const processingTasks = [];
 
-                // Associate with related tickets if any
-                if (this.relatedTicketIds && this.relatedTicketIds.length > 0) {
-                    processingTasks.push(this.associateWithRelatedTickets(ticketData.id));
-                }
-
                 // Upload any attachments as a separate note
                 const hasScreenshots = this.aggregatedScreenshotFiles && this.aggregatedScreenshotFiles.length > 0;
                 const hasHarFile = this.trackerType === 'sim-assignment' && this.harFile;
@@ -1717,13 +2021,38 @@
                         subject = formData.formattedSubject;
                     }
 
+                    // Parse related tickets
+                    let relatedTicketIds = [];
+                    if (formData.relatedTickets) {
+                        relatedTicketIds = formData.relatedTickets.split(',')
+                            .map(id => id.trim())
+                            .filter(id => id !== '')
+                            .map(id => parseInt(id, 10))  // Convert to integers
+                            .filter(id => !isNaN(id));    // Remove any invalid IDs
+                    }
+
+                    // If no related tickets, we can't create a tracker
+                    if (relatedTicketIds.length === 0) {
+                        throw new Error("At least one related ticket ID is required to create a tracker ticket.");
+                    }
+
+                    // Get description - FIX IMAGE URLS and ensure STEPS TO REPRODUCE is included
+                    let description = document.getElementById('description').value;
+
+                    // Ensure image URLs are properly formatted
+                    if (this.trackerType === 'sim-assignment') {
+                        description = this.fixImageUrls(description);
+                        description = this.fixSIMAssignmentDescription(description);
+                    }
+
                     const ticketData = {
                         email: formData.email,
                         subject: subject || `${this.config.title} - ${new Date().toLocaleDateString()}`,
-                        description: document.getElementById('description').value,
-                        status: parseInt(formData.status || 2), // Default to Open
-                        priority: parseInt(formData.priority || 2), // Default to Medium
-                        tags: [`tracker-${this.trackerType}`]
+                        description: description,
+                        status: parseInt(formData.status || 2),
+                        priority: parseInt(formData.priority || 2),
+                        tags: [`tracker-${this.trackerType}`],
+                        related_ticket_ids: relatedTicketIds
                     };
 
                     // Add group if selected
@@ -1753,13 +2082,6 @@
                         ticketData.custom_fields.cf_district = formData.districtField;
                     }
 
-                    // Store related tickets ID for later association
-                    if (formData.relatedTickets) {
-                        this.relatedTicketIds = formData.relatedTickets.split(',')
-                            .map(id => id.trim())
-                            .filter(id => id !== '');
-                    }
-
                     console.log('Ticket data to be sent:', JSON.stringify(ticketData, null, 2));
 
                     // Create the ticket
@@ -1771,48 +2093,49 @@
                     const responseData = JSON.parse(response.response);
                     console.log('Parsed ticket data:', responseData);
 
+                    // No need to associate tickets separately, the API call already did that
+                    // Remove the association code from handleTicketCreationSuccess
+
                     this.handleTicketCreationSuccess(responseData);
                 } catch (error) {
                     console.error('Error creating ticket:', error);
+                    // Rest of error handling code remains the same
+                }
+            }
 
-                    // Log the original error for debugging
-                    console.group('Detailed Error Information');
-                    console.error('Error object:', error);
-                    console.error('Error response:', error.response);
-                    console.error('Error status:', error.status);
-                    console.groupEnd();
+            // Add this new method to fix image URLs
+            fixImageUrls(html) {
+                if (!html) return html;
 
-                    const loadingOverlay = document.getElementById('loadingOverlay');
-                    if (loadingOverlay) {
-                        loadingOverlay.style.display = 'none';
-                    }
+                try {
+                    // Create a temporary div to parse the HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
 
-                    // Try to extract meaningful error message from API response
-                    let errorMessage = 'Unknown error';
-                    if (error.response) {
-                        try {
-                            const errorJson = JSON.parse(error.response);
-                            if (errorJson.description) {
-                                errorMessage = errorJson.description;
+                    // Find all image tags
+                    const images = tempDiv.querySelectorAll('img');
 
-                                // Add details from specific errors if available
-                                if (errorJson.errors && Array.isArray(errorJson.errors)) {
-                                    errorMessage += ': ' + errorJson.errors.map(e =>
-                                        `${e.field || ''} ${e.message || e.code || ''}`
-                                    ).join(', ');
-                                }
+                    // Fix each image URL
+                    images.forEach(img => {
+                        const src = img.getAttribute('src');
+                        if (src) {
+                            // Make sure the URL has a protocol
+                            if (!src.startsWith('http://') && !src.startsWith('https://')) {
+                                img.setAttribute('src', 'https://' + src);
                             }
-                        } catch (parseError) {
-                            // If we can't parse the response, use it directly if it's a string
-                            if (typeof error.response === 'string') {
-                                errorMessage = error.response.substring(0, 100); // Limit length
+
+                            // Make sure the URL is properly encoded
+                            const fixedUrl = encodeURI(decodeURI(src));
+                            if (fixedUrl !== src) {
+                                img.setAttribute('src', fixedUrl);
                             }
                         }
-                    } else if (error.message) {
-                        errorMessage = error.message;
-                    }
+                    });
 
-                    this.showError('Failed to create ticket: ' + errorMessage);
+                    return tempDiv.innerHTML;
+                } catch (error) {
+                    console.error('Error fixing image URLs:', error);
+                    return html; // Return the original HTML if there's an error
                 }
             }
 
@@ -2070,24 +2393,57 @@
 
                         const sectionBody = screenshotsSection.querySelector('.card-body');
 
-                        // Create file uploader HTML with explicit IDs
-                        const uploaderHTML = `
-                            <div class="attachment-input-container">
-                                <label for="screenshots" class="file-upload-button">
-                                    <i class="fas fa-cloud-upload-alt"></i> Upload Files
-                                    <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
-                                </label>
-                                <div class="hint"><i class="fas fa-info-circle"></i> Add screenshots, videos or other supporting files to help illustrate the issue</div>
-                            </div>
+                        // Clear existing content
+                        sectionBody.innerHTML = '';
+
+                        // Add a Quill editor first
+                        const quillContainer = document.createElement('div');
+                        quillContainer.className = 'quill-editor-container';
+                        quillContainer.innerHTML = `
+                            <div id="screenshotsDescriptionEditor" style="min-height: 120px;"></div>
+                            <textarea id="screenshotsDescription" name="screenshotsDescription" style="display: none;"></textarea>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Add description for your screenshots and videos</div>
+                        `;
+                        sectionBody.appendChild(quillContainer);
+
+                        // Then add file uploader after the Quill editor
+                        const uploaderContainer = document.createElement('div');
+                        uploaderContainer.className = 'attachment-input-container';
+                        uploaderContainer.style.marginTop = '15px';
+                        uploaderContainer.innerHTML = `
+                            <label for="screenshots" class="file-upload-button">
+                                <i class="fas fa-cloud-upload-alt"></i> Upload Files
+                                <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
+                            </label>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Add screenshots, videos or other supporting files to help illustrate the issue</div>
                             <div id="screenshotPreview" class="screenshot-preview"></div>
                             <div id="attachmentCounter" class="attachment-counter"></div>
                         `;
+                        sectionBody.appendChild(uploaderContainer);
 
-                        // Append to the section
-                        const containerDiv = document.createElement('div');
-                        containerDiv.className = 'screenshot-uploader-container';
-                        containerDiv.innerHTML = uploaderHTML;
-                        sectionBody.appendChild(containerDiv);
+                        // Initialize the new Quill editor
+                        const editor = new Quill('#screenshotsDescriptionEditor', {
+                            theme: 'snow',
+                            placeholder: 'Describe your screenshots and videos...',
+                            modules: {
+                                toolbar: {
+                                    container: [
+                                        ['bold', 'italic'],                      // Bold and italic
+                                        [{ 'color': [] }, { 'background': [] }], // Color and highlight
+                                        [{ 'align': [] }],                       // Alignment
+                                        ['link', 'image']                        // Link and image
+                                    ]
+                                }
+                            }
+                        });
+
+                        // Store reference to the editor
+                        this.quillEditors['screenshotsDescription'] = editor;
+
+                        // Update textarea when editor changes
+                        editor.on('text-change', () => {
+                            document.getElementById('screenshotsDescription').value = editor.root.innerHTML;
+                        });
 
                         // Add event listener to the file input
                         const fileInput = sectionBody.querySelector('#screenshots');
@@ -2406,6 +2762,116 @@
                     console.error('Error adding attachments as notes:', error);
                     return Promise.reject(error);
                 }
+            }
+
+            // Add this new method to debug district fields
+            debugDistrictFields() {
+                try {
+                    console.group('District Fields Debug');
+
+                    // Log all district-related fields
+                    const districtFields = document.querySelectorAll('[id*="district"], [id*="District"]');
+                    console.log(`Found ${districtFields.length} district-related fields`);
+
+                    districtFields.forEach(field => {
+                        console.log(`Field ID: ${field.id}, Value: "${field.value}", Type: ${field.type}, ReadOnly: ${field.readOnly}`);
+                    });
+
+                    // Only try to get ticket data if client is initialized
+                    if (this.client && this.client.data) {
+                        // Use a safer approach that won't interrupt initialization
+                        setTimeout(() => {
+                            this.client.data.get("ticket").then(ticketData => {
+                                console.log("Parent ticket data:", ticketData);
+
+                                if (ticketData && ticketData.ticket && ticketData.ticket.custom_fields) {
+                                    console.log("Custom fields:", ticketData.ticket.custom_fields);
+
+                                    // Look for district field in all possible locations
+                                    let districtValue = null;
+                                    const customFields = ticketData.ticket.custom_fields;
+
+                                    // Try various known district field IDs
+                                    if (customFields.cf_district) {
+                                        districtValue = customFields.cf_district;
+                                    } else if (customFields.cf_district509811) {
+                                        districtValue = customFields.cf_district509811;
+                                    }
+
+                                    // If still not found, search for any field with "district" in the name
+                                    if (!districtValue) {
+                                        for (const key in customFields) {
+                                            if (key.toLowerCase().includes('district') && customFields[key]) {
+                                                districtValue = customFields[key];
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    console.log("District value from parent ticket:", districtValue);
+
+                                    // Populate district fields if found
+                                    if (districtValue) {
+                                        const districtField = document.getElementById('districtField');
+                                        const districtNameField = document.getElementById('districtName');
+
+                                        if (districtField) {
+                                            districtField.value = districtValue;
+                                            console.log(`Set districtField to "${districtValue}"`);
+                                        }
+
+                                        if (districtNameField) {
+                                            districtNameField.value = districtValue;
+                                            console.log(`Set districtNameField to "${districtValue}"`);
+
+                                            // Style it as read-only
+                                            districtNameField.readOnly = true;
+                                            districtNameField.style.backgroundColor = '#f0f0f0';
+                                            districtNameField.style.color = '#666';
+                                            districtNameField.style.border = '1px solid #ddd';
+                                            districtNameField.style.cursor = 'not-allowed';
+                                        }
+                                    }
+                                }
+                            }).catch(err => {
+                                // Just log the error but don't let it interrupt initialization
+                                console.error("Error getting ticket data during debug:", err);
+                            });
+                        }, 100); // Small delay to ensure initialization continues
+                    }
+
+                    console.groupEnd();
+                } catch (error) {
+                    // Catch any errors but don't let them interrupt initialization
+                    console.error("Error in debugDistrictFields:", error);
+                    console.groupEnd();
+                }
+            }
+
+            // Find the fixImageUrls method and add this new method beneath it
+
+            fixSIMAssignmentDescription(description) {
+                // Check if STEPS TO REPRODUCE section is missing
+                if (!description.includes('STEPS TO REPRODUCE') && document.getElementById('stepsToReproduce')) {
+                    console.log("Steps to reproduce section missing, fixing it");
+                    const stepsToReproduce = document.getElementById('stepsToReproduce').value;
+
+                    // Find where to insert the steps section (after user info)
+                    const userInfoEndIndex = description.indexOf('</div><div style="margin-bottom: 20px;"></div><div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS');
+
+                    if (userInfoEndIndex !== -1 && stepsToReproduce) {
+                        const beforeSteps = description.substring(0, userInfoEndIndex);
+                        const afterSteps = description.substring(userInfoEndIndex);
+
+                        // Create steps section
+                        const stepsSection = `</div><div style="margin-bottom: 20px;"></div><div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div><div>${stepsToReproduce}</div>`;
+
+                        // Insert steps section
+                        description = beforeSteps + stepsSection + afterSteps;
+                    }
+                }
+
+                return description;
             }
         }
     </script>
