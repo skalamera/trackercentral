@@ -167,9 +167,12 @@
   "renderData": {
     "schema": {
       "method": "GET",
-      "host": "localhost",
-      "path": "/custom_configs",
-      "headers": {}
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
+      "path": "/api/v2/installation_info",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
+        "Content-Type": "application/json"
+      }
     }
   }
 }
