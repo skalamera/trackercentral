@@ -2062,6 +2062,7 @@
                         description = this.fixImageUrls(description);
                     }
 
+                    // Create the basic ticket data
                     const ticketData = {
                         email: formData.email,
                         subject: subject || `${this.config.title} - ${new Date().toLocaleDateString()}`,
@@ -2069,7 +2070,8 @@
                         status: parseInt(formData.status || 2),
                         priority: parseInt(formData.priority || 2),
                         tags: [`tracker-${this.trackerType}`],
-                        related_ticket_ids: relatedTicketIds
+                        related_ticket_ids: relatedTicketIds,
+                        source: 101  // Set the source to 101 as requested
                     };
 
                     // Add group if selected
@@ -2090,13 +2092,54 @@
                         }
                     }
 
-                    // Add custom fields if any
-                    ticketData.custom_fields = {};
+                    // Initialize custom_fields object if it doesn't exist
+                    ticketData.custom_fields = ticketData.custom_fields || {};
 
                     // Add district field if available
                     if (formData.districtField) {
                         // Use the appropriate custom field ID for district
                         ticketData.custom_fields.cf_district = formData.districtField;
+                    }
+
+                    // Get source ticket data to copy custom fields and priority
+                    try {
+                        // Use the first related ticket ID as the source ticket
+                        const sourceTicketId = relatedTicketIds[0];
+                        const sourceTicketResponse = await this.client.request.invokeTemplate("getTicketDetails", {
+                            context: {
+                                ticketId: sourceTicketId
+                            }
+                        });
+
+                        const sourceTicket = JSON.parse(sourceTicketResponse.response);
+
+                        // Copy priority from source ticket
+                        if (sourceTicket && sourceTicket.priority) {
+                            ticketData.priority = sourceTicket.priority;
+                            console.log(`Copied priority from source ticket: ${sourceTicket.priority}`);
+                        }
+
+                        // Copy custom fields from source ticket
+                        if (sourceTicket && sourceTicket.custom_fields) {
+                            // List of custom fields to copy over
+                            const customFieldsToCopy = [
+                                'cf_categorization',
+                                'cf_subcategory',
+                                'cf_issue_detail',
+                                'cf_account_manager',
+                                'cf_rvp'
+                            ];
+
+                            customFieldsToCopy.forEach(field => {
+                                if (sourceTicket.custom_fields[field] !== undefined) {
+                                    ticketData.custom_fields[field] = sourceTicket.custom_fields[field];
+                                    console.log(`Copied custom field ${field} from source ticket: ${sourceTicket.custom_fields[field]}`);
+                                }
+                            });
+                        }
+                    } catch (sourceTicketError) {
+                        console.error(`Error getting source ticket data: ${sourceTicketError}`);
+                        // Continue creating the ticket even if we can't get source ticket data
                     }
 
                     console.log('Ticket data to be sent:', JSON.stringify(ticketData, null, 2));
@@ -2110,13 +2153,48 @@
                     const responseData = JSON.parse(response.response);
                     console.log('Parsed ticket data:', responseData);
 
-                    // No need to associate tickets separately, the API call already did that
-                    // Remove the association code from handleTicketCreationSuccess
-
                     this.handleTicketCreationSuccess(responseData);
                 } catch (error) {
                     console.error('Error creating ticket:', error);
-                    // Rest of error handling code remains the same
+
+                    // Log the original error for debugging
+                    console.group('Detailed Error Information');
+                    console.error('Error object:', error);
+                    console.error('Error response:', error.response);
+                    console.error('Error status:', error.status);
+                    console.groupEnd();
+
+                    const loadingOverlay = document.getElementById('loadingOverlay');
+                    if (loadingOverlay) {
+                        loadingOverlay.style.display = 'none';
+                    }
+
+                    // Try to extract meaningful error message from API response
+                    let errorMessage = 'Unknown error';
+                    if (error.response) {
+                        try {
+                            const errorJson = JSON.parse(error.response);
+                            if (errorJson.description) {
+                                errorMessage = errorJson.description;
+
+                                // Add details from specific errors if available
+                                if (errorJson.errors && Array.isArray(errorJson.errors)) {
+                                    errorMessage += ': ' + errorJson.errors.map(e =>
+                                        `${e.field || ''} ${e.message || e.code || ''}`
+                                    ).join(', ');
+                                }
+                            }
+                        } catch (parseError) {
+                            // If we can't parse the response, use it directly if it's a string
+                            if (typeof error.response === 'string') {
+                                errorMessage = error.response.substring(0, 100); // Limit length
+                            }
+                        }
+                    } else if (error.message) {
+                        errorMessage = error.message;
+                    }
+
+                    this.showError('Failed to create ticket: ' + errorMessage);
                 }
             }
 
