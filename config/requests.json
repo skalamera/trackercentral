@@ -163,5 +163,13 @@
         "Content-Type": "application/json"
       }
     }
+  },
+  "renderData": {
+    "schema": {
+      "method": "GET",
+      "host": "localhost",
+      "path": "/custom_configs",
+      "headers": {}
+    }
   }
 }

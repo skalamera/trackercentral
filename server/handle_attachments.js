@@ -1,101 +1,129 @@
 /**
  * Server component to handle file uploads for Freshdesk tickets
- * This bypasses CORS limitations by running server-side
+ * Based on Freshdesk API documentation for adding a note with attachment
  */
 
 exports = {
     /**
-     * Adds a note with attachment to a Freshdesk ticket
-     * 
-     * @param {object} args - Arguments from the client
-     * @returns {object} - Response with status and data
+     * Upload an attachment as a note to a ticket
+     * @param {object} args - Arguments containing file information and ticket ID
      */
     uploadAttachment: async function (args) {
-        const { iparams } = args;
+        console.log("Processing attachment upload request");
 
         try {
-            // Sanitize subdomain - ensure it doesn't contain .freshdesk.com
-            const sanitizedSubdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
+            // Extract the data from the request
+            const { ticketId, noteBody, isPrivate, fileContent, fileName, fileType } = args.data;
 
-            // Extract data from the request
-            const ticketId = args.data.ticketId;
-            const noteBody = args.data.noteBody || 'Attachment from tracker app';
-            const isPrivate = args.data.isPrivate === false ? false : true;
-            const base64Data = args.data.fileContent;
-            const fileName = args.data.fileName || 'attachment.png';
-            const fileType = args.data.fileType || 'image/png';
-
-            if (!ticketId || !base64Data) {
+            if (!ticketId || !fileContent || !fileName) {
+                console.error("Missing required fields for attachment upload");
                 return {
                     status: 400,
-                    body: { error: "Missing required parameters (ticketId or fileContent)" }
+                    body: { error: "Missing required fields: ticketId, fileContent, or fileName" }
                 };
             }
 
-            console.log(`Adding attachment to ticket #${ticketId}: ${fileName} (${fileType})`);
+            console.log(`Preparing to upload file ${fileName} to ticket #${ticketId}`);
 
-            // Freshdesk API requires multipart/form-data for attachments
-            // We'll use the request library with formData
-            const options = {
+            // Get installation parameters
+            const iparams = await $request.getIparams();
+            if (!iparams || !iparams.freshdesk_subdomain || !iparams.freshdesk_api_key) {
+                console.error("Missing required installation parameters");
+                return {
+                    status: 500,
+                    body: { error: "Missing installation parameters" }
+                };
+            }
+
+            // Create boundary for multipart/form-data
+            const boundary = 'freshdesk-attachment-boundary';
+
+            // Create the multipart form-data body manually
+            let reqBody = '';
+
+            // Add body field
+            reqBody += `--${boundary}\r\n`;
+            reqBody += 'Content-Disposition: form-data; name="body"\r\n\r\n';
+            reqBody += noteBody || `Attachment: ${fileName}`;
+            reqBody += `\r\n`;
+
+            // Add private field
+            reqBody += `--${boundary}\r\n`;
+            reqBody += 'Content-Disposition: form-data; name="private"\r\n\r\n';
+            reqBody += (isPrivate ? 'true' : 'false');
+            reqBody += `\r\n`;
+
+            // Add attachment field
+            reqBody += `--${boundary}\r\n`;
+            reqBody += `Content-Disposition: form-data; name="attachments[]"; filename="${fileName}"\r\n`;
+            reqBody += `Content-Type: ${fileType || 'application/octet-stream'}\r\n\r\n`;
+
+            // Convert base64 to binary for the file contents
+            const binaryData = Buffer.from(fileContent, 'base64');
+            reqBody += binaryData;
+            reqBody += `\r\n`;
+
+            // End boundary
+            reqBody += `--${boundary}--`;
+
+            // Construct auth header
+            const authHeader = `Basic ${Buffer.from(iparams.freshdesk_api_key + ':X').toString('base64')}`;
+
+            // Make the API request to create a note with attachment using raw request
+            const response = await $request.request({
                 method: 'POST',
-                url: `https://${sanitizedSubdomain}.freshdesk.com/api/v2/tickets/${ticketId}/notes`,
+                url: `https://${iparams.freshdesk_subdomain}.freshdesk.com/api/v2/tickets/${ticketId}/notes`,
                 headers: {
-                    'Authorization': 'Basic ' + Buffer.from(`${iparams.freshdesk_api_key}:X`).toString('base64')
+                    'Authorization': authHeader,
+                    'Content-Type': `multipart/form-data; boundary=${boundary}`
                 },
-                formData: {
-                    'body': noteBody,
-                    'private': isPrivate.toString()
-                }
-            };
-
-            // Add the attachment if provided
-            if (base64Data) {
-                // Convert base64 to Buffer
-                const fileBuffer = Buffer.from(base64Data, 'base64');
-
-                // Add file to the form data
-                options.formData['attachments[]'] = {
-                    value: fileBuffer,
-                    options: {
-                        filename: fileName,
-                        contentType: fileType
-                    }
-                };
-            }
-
-            // Make the API request
-            const request = require('request');
-
-            return new Promise((resolve, reject) => {
-                request(options, function (error, response, body) {
-                    if (error) {
-                        console.error('Error in uploadAttachment server component:', error);
-                        reject({
-                            status: 500,
-                            body: { error: error.message }
-                        });
-                    } else {
-                        try {
-                            const responseData = JSON.parse(body);
-                            resolve({
-                                status: response.statusCode,
-                                body: responseData
-                            });
-                        } catch (parseError) {
-                            resolve({
-                                status: response.statusCode,
-                                body: { message: body }
-                            });
-                        }
-                    }
-                });
+                body: reqBody,
+                isEncodedBody: true  // Important to indicate we've already encoded the body
             });
+
+            console.log("Attachment uploaded successfully");
+
+            return {
+                status: response.status,
+                body: response.body
+            };
         } catch (error) {
-            console.error('Unexpected error in uploadAttachment server component:', error);
+            console.error("Error uploading attachment:", error);
             return {
                 status: 500,
-                body: { error: error.message || 'Unknown server error' }
+                body: { error: error.message || "Unknown error during file upload" }
             };
         }
     }
 };
+
+/**
+ * Convert base64 data URI to Blob
+ * @param {string} dataURI - Base64 data URI
+ * @param {string} mimeType - MIME type of the file
+ * @returns {Blob} - Blob object
+ */
+function dataURItoBlob(dataURI, mimeType) {
+    const byteString = atob(dataURI);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+
+    for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ab], { type: mimeType || 'application/octet-stream' });
+}
+
+/**
+ * Get installation parameters
+ * @returns {Promise} - Promise resolving to the installation parameters
+ */
+async function renderData() {
+    try {
+        return await $request.invokeTemplate("renderData", {});
+    } catch (error) {
+        console.error("Error getting installation parameters:", error);
+        return null;
+    }
+}
