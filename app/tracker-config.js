@@ -473,6 +473,7 @@ const TRACKER_CONFIGS = {
         descriptionGenerator: function (fields) {
             let description = '';
 
+            // Issue Description
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
             if (fields.issueDetails) {
                 description += `<div>${fields.issueDetails}</div>`;
@@ -481,6 +482,21 @@ const TRACKER_CONFIGS = {
             if (fields.resourceTitle) description += `Resource Title: ${fields.resourceTitle}<br>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
+            // Steps to Reproduce
+            if (fields.stepsToReproduce) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
+                description += `<div>${fields.stepsToReproduce}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Screenshots and supporting attachments - Right after steps
+            if (fields.screenshotsDescription) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Impacted User Info
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.userRole) description += `Role: ${fields.userRole}<br>`;
@@ -489,7 +505,6 @@ const TRACKER_CONFIGS = {
             // Handle Tech Admin link as a hyperlink
             if (fields.techAdminLink) {
                 let techLink = fields.techAdminLink.trim();
-                // If the link doesn't start with http:// or https://, add https://
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
@@ -509,10 +524,9 @@ const TRACKER_CONFIGS = {
             }
             description += '<div style="margin-bottom: 20px;"></div>';
 
-            if (fields.expectedResults) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
-                description += `<div>${fields.expectedResults}</div>`;
-            }
+            // Expected Results
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
+            description += `<div>${fields.expectedResults}</div>`;
 
             return description;
         }

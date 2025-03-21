@@ -147,23 +147,23 @@
                     <div id="attachmentCounter" class="attachment-counter"></div>
                 </div>
             </div>
-
             <div style="display: none;">
                 <textarea id="description" name="description"></textarea>
                 <input type="hidden" id="trackerType" name="trackerType">
             </div>
 
             <div class="form-actions">
-                <fw-button id="cancelTracker" color="secondary" size="medium"
-                    style="display: flex; justify-content: center; align-items: center;">
-                    <i class="fas fa-times"></i> Cancel
+                <fw-button id="cancelTracker" color="secondary" size="small">
+                    <i class="fas fa-times" style="margin-right: 8px;"></i>Cancel
                 </fw-button>
-                <fw-button id="createTracker" color="primary" type="submit" size="medium"
-                    style="display: flex; justify-content: center; align-items: center;">
-                    <i class="fas fa-check"></i> Create Tracker
+
+                <fw-button id="createTracker" color="primary" type="submit" size="small" style="margin-left: 10px;">
+                    <i class="fas fa-check" style="margin-right: 8px;"></i>Create Tracker
                 </fw-button>
             </div>
-        </form>
+    </div>
+    </div>
+    </form>
     </div>
 
     <script>
@@ -853,19 +853,33 @@
                         const harFileReasonContainer = this.findParentWithClass(harFileReason, 'form-group');
 
                         if (harFileAttached.value === 'No') {
-                            if (harFileReasonContainer) harFileReasonContainer.style.display = 'block';
+                            if (harFileReasonContainer) {
+                                harFileReasonContainer.style.display = 'block';
+
+                                // Add visual indication that the field is now required
+                                const label = harFileReasonContainer.querySelector('label');
+                                if (label) {
+                                    label.classList.add('required-field');
+                                }
+                            }
                         } else {
-                            if (harFileReasonContainer) harFileReasonContainer.style.display = 'none';
+                            if (harFileReasonContainer) {
+                                harFileReasonContainer.style.display = 'none';
+                            }
                         }
 
                         // Add change listener
                         harFileAttached.addEventListener('change', function () {
+                            // Get the container again inside this scope
+                            const reasonContainer = document.getElementById('harFileReason') ?
+                                window.trackerApp.findParentWithClass(document.getElementById('harFileReason'), 'form-group') : null;
+
                             if (this.value === 'No') {
-                                if (harFileReasonContainer) {
-                                    harFileReasonContainer.style.display = 'block';
+                                if (reasonContainer) {
+                                    reasonContainer.style.display = 'block';
 
                                     // Add visual indication that the field is now required
-                                    const label = harFileReasonContainer.querySelector('label');
+                                    const label = reasonContainer.querySelector('label');
                                     if (label) {
                                         label.classList.add('required-field');
                                     }
@@ -875,11 +889,11 @@
                                 const harUploaderContainer = document.getElementById('harUploaderContainer');
                                 if (harUploaderContainer) harUploaderContainer.style.display = 'none';
                             } else {
-                                if (harFileReasonContainer) {
-                                    harFileReasonContainer.style.display = 'none';
+                                if (reasonContainer) {
+                                    reasonContainer.style.display = 'none';
 
                                     // Remove the required indication
-                                    const label = harFileReasonContainer.querySelector('label');
+                                    const label = reasonContainer.querySelector('label');
                                     if (label) {
                                         label.classList.remove('required-field');
                                     }
@@ -890,13 +904,13 @@
                                 if (harUploaderContainer) harUploaderContainer.style.display = 'block';
                             }
                         });
-                    }
 
-                    // Apply the same logic for initial state
-                    if (harFileAttached.value === 'No') {
-                        const label = harFileReasonContainer.querySelector('label');
-                        if (label) {
-                            label.classList.add('required-field');
+                        // Apply the same logic for initial state but only if we have a container
+                        if (harFileAttached.value === 'No' && harFileReasonContainer) {
+                            const label = harFileReasonContainer.querySelector('label');
+                            if (label) {
+                                label.classList.add('required-field');
+                            }
                         }
                     }
                 }
@@ -1521,6 +1535,11 @@
                 // Get values from all form fields
                 const formData = this.getFormData();
 
+                // Log all keys in formData to help debug
+                console.log("Form data keys:", Object.keys(formData));
+                console.log("Screenshots description:", formData.screenshotsDescription);
+                console.log("Steps to reproduce:", formData.stepsToReproduce);
+
                 // Use the description generator from the config
                 let description = '';
                 if (this.config.descriptionGenerator) {
@@ -1530,8 +1549,6 @@
                     description = `<div>${formData.subject || 'No subject'}</div>`;
                 }
 
-                // Don't sanitize here - let's keep the images in the hidden field
-                // and only sanitize at the API request time
                 return description;
             }
 
@@ -2036,13 +2053,12 @@
                         throw new Error("At least one related ticket ID is required to create a tracker ticket.");
                     }
 
-                    // Get description - FIX IMAGE URLS and ensure STEPS TO REPRODUCE is included
+                    // Get description - FIX IMAGE URLS only
                     let description = document.getElementById('description').value;
 
                     // Ensure image URLs are properly formatted
                     if (this.trackerType === 'sim-assignment') {
                         description = this.fixImageUrls(description);
-                        description = this.fixSIMAssignmentDescription(description);
                     }
 
                     const ticketData = {
@@ -2421,29 +2437,82 @@
                         `;
                         sectionBody.appendChild(uploaderContainer);
 
-                        // Initialize the new Quill editor
-                        const editor = new Quill('#screenshotsDescriptionEditor', {
-                            theme: 'snow',
-                            placeholder: 'Describe your screenshots and videos...',
-                            modules: {
-                                toolbar: {
-                                    container: [
-                                        ['bold', 'italic'],                      // Bold and italic
-                                        [{ 'color': [] }, { 'background': [] }], // Color and highlight
-                                        [{ 'align': [] }],                       // Alignment
-                                        ['link', 'image']                        // Link and image
-                                    ]
+                        // Initialize the new Quill editor with the same customImageHandler as other editors
+                        try {
+                            // Define a custom image handler for the toolbar
+                            const customImageHandler = () => {
+                                const input = document.createElement('input');
+                                input.setAttribute('type', 'file');
+                                input.setAttribute('accept', 'image/*');
+                                input.click();
+
+                                input.onchange = () => {
+                                    if (input.files && input.files[0]) {
+                                        const file = input.files[0];
+
+                                        // Show loading indicator
+                                        const range = editor.getSelection(true);
+                                        editor.insertText(range.index, "Uploading image... ", { italic: true, color: '#999' });
+                                        const placeholderIndex = range.index;
+
+                                        // Upload to ImgBB
+                                        this.uploadImageToImgBB(file).then(imageUrl => {
+                                            // Delete the placeholder text
+                                            editor.deleteText(placeholderIndex, "Uploading image... ".length);
+
+                                            // Insert the image
+                                            editor.insertEmbed(placeholderIndex, 'image', imageUrl);
+                                            editor.setSelection(placeholderIndex + 1);
+                                        }).catch(error => {
+                                            console.error('Error uploading image:', error);
+
+                                            // Replace placeholder with error message
+                                            editor.deleteText(placeholderIndex, "Uploading image... ".length);
+                                            editor.insertText(placeholderIndex, "⚠️ Image upload failed ", { italic: true, color: 'red' });
+                                        });
+                                    }
+                                };
+                            };
+
+                            const editor = new Quill('#screenshotsDescriptionEditor', {
+                                theme: 'snow',
+                                placeholder: 'Describe your screenshots and videos...',
+                                modules: {
+                                    toolbar: {
+                                        container: [
+                                            ['bold', 'italic'],                      // Bold and italic
+                                            [{ 'color': [] }, { 'background': [] }], // Color and highlight
+                                            [{ 'align': [] }],                       // Alignment
+                                            ['link', 'image']                        // Link and image
+                                        ],
+                                        handlers: {
+                                            'image': customImageHandler.bind(this)
+                                        }
+                                    }
                                 }
-                            }
-                        });
+                            });
 
-                        // Store reference to the editor
-                        this.quillEditors['screenshotsDescription'] = editor;
+                            // Make sure the editor is enabled
+                            editor.enable();
 
-                        // Update textarea when editor changes
-                        editor.on('text-change', () => {
-                            document.getElementById('screenshotsDescription').value = editor.root.innerHTML;
-                        });
+                            // Store reference to the editor
+                            this.quillEditors['screenshotsDescription'] = editor;
+
+                            // Add paste image handling 
+                            editor.root.addEventListener('paste', e => this.handlePasteImage(e, editor));
+
+                            // Add drop handling for images
+                            editor.root.addEventListener('drop', e => this.handleDropImage(e, editor));
+
+                            // Update textarea when editor changes
+                            editor.on('text-change', () => {
+                                document.getElementById('screenshotsDescription').value = editor.root.innerHTML;
+                            });
+
+                            console.log('Screenshots Quill editor initialized successfully');
+                        } catch (error) {
+                            console.error('Error initializing screenshots Quill editor:', error);
+                        }
 
                         // Add event listener to the file input
                         const fileInput = sectionBody.querySelector('#screenshots');
@@ -2454,8 +2523,7 @@
                         }
                     }
 
-                    // We'll still handle the HAR file uploader functionality, but it will be tied to the HAR field
-                    // in the user info section, not as a separate section
+                    // Setup HAR file uploader
                     this.setupHarFileUploader();
 
                 } catch (error) {

@@ -206,8 +206,70 @@ textarea {
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
-    margin-top: 30px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eaeaea;
+}
+
+/* Updated button styles to match Freshdesk UI */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eaeaea;
+}
+
+/* Target the Freshworks buttons to style them properly */
+fw-button::part(button) {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 8px 16px !important;
+    border-radius: 3px !important;
+    text-transform: none !important;
+    box-shadow: none !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+
+/* Primary button styling (Create Tracker) */
+fw-button[color="primary"]::part(button) {
+    background-color: #2c5cc5 !important;
+    /* Freshworks blue */
+    border: 1px solid #2c5cc5 !important;
+    color: white !important;
+}
+
+fw-button[color="primary"]::part(button):hover {
+    background-color: #234aa0 !important;
+    border-color: #234aa0 !important;
+}
+
+/* Secondary button styling (Cancel) */
+fw-button[color="secondary"]::part(button) {
+    background-color: #f7f7f7 !important;
+    border: 1px solid #d6d6d6 !important;
+    color: #333 !important;
+}
+
+fw-button[color="secondary"]::part(button):hover {
+    background-color: #ebebeb !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 576px) {
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions fw-button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    fw-button#createTracker {
+        margin-left: 0 !important;
+    }
 }
 
 /* Quill editor styles */
@@ -339,13 +401,21 @@ fw-button {
 }
 
 fw-button#createTracker {
-    background-color: #4CAF50 !important;
+    background-color: #247727 !important;
     color: white !important;
+    border-radius: 10px !important;
+    padding: 10px 15px !important;
+    width: 175px !important;
+            text-align: center;
 }
 
 fw-button#cancelTracker {
-    background-color: #757575 !important;
+    background-color: #2C3E50 !important;
     color: white !important;
+        border-radius: 10px !important;
+        padding: 10px 15px !important;
+        width: 175px !important;
+        text-align: center;
 }
 
 /* Responsive styles */
