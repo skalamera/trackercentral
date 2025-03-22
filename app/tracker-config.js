@@ -744,80 +744,209 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pen-fancy",
                 fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true }
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"]
+                    },
+                    { id: "districtName", type: "text", label: "District Name", required: true },
+                    { id: "application", type: "text", label: "Application Name", required: true },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    {
+                        id: "userRole",
+                        type: "select",
+                        label: "User Role",
+                        required: true,
+                        options: ["Teacher", "Student", "Admin", "Other"]
+                    },
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
             {
-                id: "reportDetails",
-                title: "REPORT DETAILS",
-                icon: "fa-clipboard-list",
+                id: "issueDescription",
+                title: "ISSUE DESCRIPTION",
+                icon: "fa-exclamation-circle",
                 fields: [
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "teacherName", type: "text", label: "Teacher Name", required: true },
-                    { id: "teacherEmail", type: "email", label: "Teacher Email", required: true },
-                    { id: "programName", type: "text", label: "Program Name", required: true },
+                    { id: "reportName", type: "text", label: "Name of impacted report", required: true },
                     {
-                        id: "reportType", type: "select", label: "Report Type", required: true,
-                        options: ["Class Overview", "Student Progress", "Benchmark Assessment", "Progress Monitoring", "Other"]
+                        id: "issueDetails",
+                        type: "richtext",
+                        label: "Specific details outlining user impact",
+                        required: true
                     }
                 ]
             },
             {
-                id: "issueDetails",
-                title: "ISSUE DETAILS",
-                icon: "fa-exclamation-circle",
+                id: "reproduction",
+                title: "STEPS / FILTERS TO REPRODUCE",
+                icon: "fa-list-ol",
                 fields: [
-                    { id: "issueDescription", type: "richtext", label: "Issue Description", required: true },
-                    { id: "dateOccurred", type: "date", label: "Date Issue Occurred", required: true },
-                    { id: "affectedStudents", type: "textarea", label: "Affected Students (if applicable)", required: false }
+                    {
+                        id: "stepsToReproduce",
+                        type: "richtext",
+                        label: "",
+                        required: true
+                    }
                 ]
             },
             {
-                id: "reproduction",
-                title: "STEPS TO REPRODUCE",
-                icon: "fa-list-ol",
+                id: "screenshots",
+                title: "SCREENSHOTS and/or VIDEOS",
+                icon: "fa-images",
                 fields: [
-                    { id: "stepsToReproduce", type: "richtext", label: "Steps to Reproduce", required: false },
-                    { id: "expectedBehavior", type: "textarea", label: "Expected Behavior", required: false }
+                    {
+                        id: "fileAttachmentNote",
+                        type: "info",
+                        label: "⚠️ FILE SIZE LIMITATION",
+                        hint: "Each file must be under 20MB, and the TOTAL size of all attachments MUST NOT exceed 20MB. Files over this limit WILL NOT be attached to the ticket."
+                    },
+                    {
+                        id: "screenshotsDescription",
+                        type: "richtext",
+                        label: "(please include URL in screen capture)",
+                        required: false
+                    }
+                ]
+            },
+            {
+                id: "userInfo",
+                title: "IMPACTED USER INFO",
+                icon: "fa-user",
+                fields: [
+                    { id: "teacherName", type: "text", label: "Teacher/Admin Name", required: false },
+                    { id: "username", type: "text", label: "Username", required: false },
+                    {
+                        id: "userRole",
+                        type: "select",
+                        label: "Role",
+                        required: false,
+                        options: ["", "Teacher", "Admin", "Student", "Other"]
+                    },
+                    { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
+                    { id: "realm", type: "text", label: "Realm", required: false },
+                    { id: "browser", type: "text", label: "Browser", required: false },
+                    { id: "assessmentId", type: "text", label: "Assessment Assignment ID", required: false },
+                    { id: "assessmentUrl", type: "text", label: "Assessment Assignment URL", required: false },
+                    { id: "dateTaken", type: "date", label: "Date test was taken", required: false },
+                    { id: "dateGraded", type: "date", label: "Date test was graded", required: false },
+                    { id: "className", type: "text", label: "Impacted Class Name", required: false },
+                    { id: "classLink", type: "text", label: "Impacted Class Tech Admin Link", required: false },
+                    { id: "studentIds", type: "text", label: "Impacted Student(s) Internal ID(s)", required: false },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
+                    {
+                        id: "harFileAttached",
+                        type: "select",
+                        label: "HAR file attached",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "HAR files help identify browser network issues"
+                    },
+                    {
+                        id: "harFileReason",
+                        type: "text",
+                        label: "Reason if HAR file not attached",
+                        required: false
+                    }
+                ]
+            },
+            {
+                id: "expectedResults",
+                title: "EXPECTED RESULTS",
+                icon: "fa-check-circle",
+                fields: [
+                    {
+                        id: "expectedResults",
+                        type: "richtext",
+                        label: "",
+                        required: true
+                    }
                 ]
             }
         ],
         descriptionGenerator: function (fields) {
             let description = '';
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SIM ASSESSMENT REPORTS ISSUE</span></div>';
-            description += `<div>${fields.subject || 'SIM Assessment Reports Issue'}</div>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
 
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">REPORT DETAILS</span></div>';
-            description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `Teacher Name: ${fields.teacherName || ''}<br>`;
-            description += `Teacher Email: ${fields.teacherEmail || ''}<br>`;
-            description += `Program Name: ${fields.programName || ''}<br>`;
-            description += `Report Type: ${fields.reportType || ''}<br>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
-            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
-            if (fields.issueDescription) {
-                description += `<div><strong>Description:</strong></div>`;
-                description += `<div>${fields.issueDescription}</div>`;
-            }
-            if (fields.affectedStudents) {
-                description += `<div><strong>Affected Students:</strong></div>`;
-                description += `<div>${fields.affectedStudents}</div>`;
+            // Issue Description
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
+            description += `Name of impacted report: ${fields.reportName || ''}<br>`;
+            if (fields.issueDetails) {
+                description += `<div><strong>Specific details outlining user impact:</strong></div>`;
+                description += `<div>${fields.issueDetails}</div>`;
             }
             description += '<div style="margin-bottom: 20px;"></div>';
 
-            if (fields.stepsToReproduce || fields.expectedBehavior) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">REPRODUCTION</span></div>';
-                if (fields.stepsToReproduce) {
-                    description += `<div><strong>Steps to Reproduce:</strong></div>`;
-                    description += `<div>${fields.stepsToReproduce}</div>`;
+            // Steps to Reproduce
+            if (fields.stepsToReproduce) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS / FILTERS TO REPRODUCE</span></div>';
+                description += `<div>${fields.stepsToReproduce}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Screenshots and Videos
+            if (fields.screenshotsDescription) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS and/or VIDEOS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Impacted User Info
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
+            if (fields.teacherName) description += `Teacher/Admin Name: ${fields.teacherName}<br>`;
+            if (fields.username) description += `Username: ${fields.username}<br>`;
+            if (fields.userRole) description += `Role: ${fields.userRole}<br>`;
+
+            // Process Tech Admin link as hyperlink
+            if (fields.techAdminLink) {
+                let techLink = fields.techAdminLink.trim();
+                if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
+                    techLink = 'https://' + techLink;
                 }
-                if (fields.expectedBehavior) {
-                    description += `<div><strong>Expected Behavior:</strong></div>`;
-                    description += `<div>${fields.expectedBehavior}</div>`;
+                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+            }
+
+            if (fields.realm) description += `Realm: ${fields.realm}<br>`;
+            if (fields.browser) description += `Browser: ${fields.browser}<br>`;
+            if (fields.assessmentId) description += `Assessment Assignment ID: ${fields.assessmentId}<br>`;
+
+            // Process Assessment URL as hyperlink
+            if (fields.assessmentUrl) {
+                let assessmentLink = fields.assessmentUrl.trim();
+                if (!assessmentLink.startsWith('http://') && !assessmentLink.startsWith('https://')) {
+                    assessmentLink = 'https://' + assessmentLink;
                 }
+                description += `Assessment Assignment URL: <a href="${assessmentLink}" target="_blank">${fields.assessmentUrl}</a><br>`;
+            }
+
+            if (fields.dateTaken) description += `Date test was taken: ${formatDate(fields.dateTaken)}<br>`;
+            if (fields.dateGraded) description += `Date test was graded: ${formatDate(fields.dateGraded)}<br>`;
+            if (fields.className) description += `Impacted Class Name: ${fields.className}<br>`;
+
+            // Process Class Tech Admin Link as hyperlink
+            if (fields.classLink) {
+                let classAdminLink = fields.classLink.trim();
+                if (!classAdminLink.startsWith('http://') && !classAdminLink.startsWith('https://')) {
+                    classAdminLink = 'https://' + classAdminLink;
+                }
+                description += `Impacted Class Tech Admin Link: <a href="${classAdminLink}" target="_blank">${fields.classLink}</a><br>`;
+            }
+
+            if (fields.studentIds) description += `Impacted Student(s) Internal ID(s): ${fields.studentIds}<br>`;
+            if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported)}<br>`;
+            if (fields.harFileAttached) {
+                description += `HAR file attached: ${fields.harFileAttached}`;
+                if (fields.harFileAttached === "No" && fields.harFileReason) {
+                    description += ` (${fields.harFileReason})`;
+                }
+                description += '<br>';
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Expected Results
+            if (fields.expectedResults) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
+                description += `<div>${fields.expectedResults}</div>`;
             }
 
             return description;

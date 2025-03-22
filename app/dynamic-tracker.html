@@ -840,11 +840,38 @@
                     }
                 }
 
+                // Add dynamic subject line builder for SIM Assessment Reports template
+                if (this.trackerType === 'sim-assessment-reports') {
+                    const subjectFields = ['isVIP', 'districtName', 'application', 'specificIssue', 'userRole'];
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+
+                    if (formattedSubjectField) {
+                        // Make it read-only
+                        formattedSubjectField.readOnly = true;
+
+                        // Update the formatted subject when any of the subject fields change
+                        subjectFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (field) {
+                                field.addEventListener('input', () => {
+                                    this.updateSIMAssessmentReportsSubject();
+                                });
+                                field.addEventListener('change', () => {
+                                    this.updateSIMAssessmentReportsSubject();
+                                });
+                            }
+                        });
+
+                        // Initial update
+                        this.updateSIMAssessmentReportsSubject();
+                    }
+                }
+
                 // Set up conditional fields
                 this.setupConditionalFields();
 
-                // Initialize HAR file attached dropdown behavior
-                if (this.trackerType === 'sim-assignment') {
+                // Initialize HAR file attached dropdown behavior for both templates
+                if (this.trackerType === 'sim-assignment' || this.trackerType === 'sim-assessment-reports') {
                     const harFileAttached = document.getElementById('harFileAttached');
                     const harFileReason = document.getElementById('harFileReason');
 
@@ -904,14 +931,6 @@
                                 if (harUploaderContainer) harUploaderContainer.style.display = 'block';
                             }
                         });
-
-                        // Apply the same logic for initial state but only if we have a container
-                        if (harFileAttached.value === 'No' && harFileReasonContainer) {
-                            const label = harFileReasonContainer.querySelector('label');
-                            if (label) {
-                                label.classList.add('required-field');
-                            }
-                        }
                     }
                 }
 
@@ -979,6 +998,29 @@
 
                 const formattedSubject =
                     `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue}: ${userRoleValue}`;
+
+                const formattedSubjectField = document.getElementById('formattedSubject');
+                if (formattedSubjectField) {
+                    formattedSubjectField.value = formattedSubject;
+
+                    // Also update the hidden subject field to ensure it's submitted correctly
+                    const subjectField = document.getElementById('subject');
+                    if (subjectField) {
+                        subjectField.value = formattedSubject;
+                    }
+                }
+            }
+
+            updateSIMAssessmentReportsSubject() {
+                const isVIP = document.getElementById('isVIP')?.value || 'No';
+                const vipPrefix = isVIP === "Yes" ? "VIP* " : "";
+                const districtValue = document.getElementById('districtName')?.value || '';
+                const applicationValue = document.getElementById('application')?.value || '';
+                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
+                const userRoleValue = document.getElementById('userRole')?.value || '';
+
+                const formattedSubject =
+                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue} for ${userRoleValue}`;
 
                 const formattedSubjectField = document.getElementById('formattedSubject');
                 if (formattedSubjectField) {
@@ -1457,7 +1499,7 @@
                 }
 
                 // Add conditional required validation for HAR file reason
-                if (this.trackerType === 'sim-assignment') {
+                if (this.trackerType === 'sim-assignment' || this.trackerType === 'sim-assessment-reports') {
                     const harFileAttached = document.getElementById('harFileAttached');
                     const harFileReason = document.getElementById('harFileReason');
 
@@ -1761,6 +1803,8 @@
                     this.updateSedcustSubject();
                 } else if (this.trackerType === 'sim-assignment') {
                     this.updateSimAssignmentSubject();
+                } else if (this.trackerType === 'sim-assessment-reports') {
+                    this.updateSIMAssessmentReportsSubject();
                 }
 
                 console.log("Form filled with demo data");
@@ -2036,6 +2080,11 @@
 
                     // For sim-assignment template, use the formatted subject
                     if (this.trackerType === 'sim-assignment' && formData.formattedSubject) {
+                        subject = formData.formattedSubject;
+                    }
+
+                    // For sim-assessment-reports template, use the formatted subject
+                    if (this.trackerType === 'sim-assessment-reports' && formData.formattedSubject) {
                         subject = formData.formattedSubject;
                     }
 
@@ -2471,8 +2520,8 @@
 
             // Add this method to your TrackerApp class
             setupCustomFileUploaders() {
-                // Only apply to sim-assignment template
-                if (this.trackerType !== 'sim-assignment') {
+                // Apply to both sim-assignment and sim-assessment-reports templates
+                if (this.trackerType !== 'sim-assignment' && this.trackerType !== 'sim-assessment-reports') {
                     return;
                 }
 
@@ -2511,6 +2560,9 @@
                                 <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
                             </label>
                             <div class="hint"><i class="fas fa-info-circle"></i> Add screenshots, videos or other supporting files to help illustrate the issue</div>
+                            <div class="file-size-warning" style="margin-top: 10px; background-color: #ffebee; color: #d32f2f;">
+                                <strong>⚠️ IMPORTANT:</strong> Maximum total attachment size is 20MB. Files exceeding this limit WILL NOT be attached to the ticket.
+                            </div>
                             <div id="screenshotPreview" class="screenshot-preview"></div>
                             <div id="attachmentCounter" class="attachment-counter"></div>
                         `;
@@ -2612,6 +2664,11 @@
 
             // Add a method to set up the HAR file uploader
             setupHarFileUploader() {
+                // Apply to both sim-assignment and sim-assessment-reports templates
+                if (this.trackerType !== 'sim-assignment' && this.trackerType !== 'sim-assessment-reports') {
+                    return;
+                }
+
                 // Find the HAR file attached dropdown
                 const harFileAttached = document.getElementById('harFileAttached');
                 if (!harFileAttached) {
@@ -2627,6 +2684,9 @@
                             <input type="file" id="harFileInput" name="harFileInput" accept=".har" class="hidden-file-input">
                         </label>
                         <div class="hint"><i class="fas fa-info-circle"></i> Upload a HAR file to provide detailed network information</div>
+                        <div class="file-size-warning" style="margin-top: 10px; background-color: #ffebee; color: #d32f2f;">
+                            <strong>⚠️ IMPORTANT:</strong> Maximum HAR file size is 20MB. Files exceeding this limit WILL NOT be attached to the ticket.
+                        </div>
                         <div id="harFilePreviewContainer" class="screenshot-preview"></div>
                     </div>
                 `;
