@@ -351,6 +351,81 @@
                     // Move the debug to the end, after all initialization is complete
                     this.debugDistrictFields();
 
+                    // Add this at the end of the method
+                    // Special handling for Achievement Levels tracker to ensure district name is populated
+                    if (this.trackerType === 'sim-achievement-levels') {
+                        setTimeout(() => {
+                            // Ensure district name is populated by checking multiple sources
+                            const districtField = document.getElementById('districtField');
+                            const districtNameField = document.getElementById('districtName');
+
+                            if (districtNameField) {
+                                // If districtField has value, use it
+                                if (districtField && districtField.value) {
+                                    districtNameField.value = districtField.value;
+                                    console.log(`Set districtName from districtField: ${districtField.value}`);
+                                }
+                                // If not, try to get from ticket data
+                                else if (this.ticketData && this.ticketData.districtName) {
+                                    districtNameField.value = this.ticketData.districtName;
+                                    console.log(`Set districtName from ticketData: ${this.ticketData.districtName}`);
+                                }
+
+                                // Update the formatted subject
+                                this.updateAchievementLevelsSubject();
+                            }
+                        }, 1000); // Delay to ensure everything else is loaded
+                    }
+
+                    // Special handling for Achievement Levels tracker
+                    if (this.trackerType === 'sim-achievement-levels') {
+                        // Wait a bit to let other initialization processes finish
+                        setTimeout(async () => {
+                            try {
+                                // Get VIP status directly from the source ticket
+                                const relatedTicketsField = document.getElementById('relatedTickets');
+                                if (relatedTicketsField && relatedTicketsField.value) {
+                                    const sourceTicketId = parseInt(relatedTicketsField.value.split(',')[0], 10);
+                                    if (!isNaN(sourceTicketId)) {
+                                        console.log("Getting VIP status from ticket", sourceTicketId);
+
+                                        try {
+                                            const response = await this.client.request.invokeTemplate("getTicketDetails", {
+                                                context: { ticketId: sourceTicketId }
+                                            });
+
+                                            const ticketData = JSON.parse(response.response);
+                                            if (ticketData && ticketData.custom_fields) {
+                                                // Check for VIP status in custom fields
+                                                const vipFields = ['cf_vip', 'vip', 'cf_vip_status', 'vip_customer', 'cf_is_vip'];
+                                                for (const field of vipFields) {
+                                                    if (ticketData.custom_fields[field] !== undefined) {
+                                                        const fieldValue = ticketData.custom_fields[field];
+                                                        const isVip = fieldValue === true ||
+                                                            fieldValue === "true" ||
+                                                            fieldValue === "Yes";
+
+                                                        console.log(`VIP status found in ${field}:`, isVip);
+                                                        this.ticketData.isVip = isVip;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        } catch (error) {
+                                            console.error("Error getting source ticket VIP status:", error);
+                                        }
+                                    }
+                                }
+
+                                // After all data gathering, update the subject with proper VIP status
+                                this.updateAchievementLevelsSubject();
+
+                            } catch (error) {
+                                console.error("Error in Achievement Levels special handling:", error);
+                            }
+                        }, 1000);
+                    }
+
                     console.log('TrackerApp initialized successfully');
                 } catch (error) {
                     console.error('Failed to initialize TrackerApp:', error);
@@ -867,6 +942,33 @@
                     }
                 }
 
+                // Add dynamic subject line builder for SIM Achievement Levels template
+                if (this.trackerType === 'sim-achievement-levels') {
+                    const subjectFields = ['isVIP', 'districtName'];
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+
+                    if (formattedSubjectField) {
+                        // Make it read-only
+                        formattedSubjectField.readOnly = true;
+
+                        // Update the formatted subject when any of the subject fields change
+                        subjectFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (field) {
+                                field.addEventListener('input', () => {
+                                    this.updateAchievementLevelsSubject();
+                                });
+                                field.addEventListener('change', () => {
+                                    this.updateAchievementLevelsSubject();
+                                });
+                            }
+                        });
+
+                        // Initial update
+                        this.updateAchievementLevelsSubject();
+                    }
+                }
+
                 // Set up conditional fields
                 this.setupConditionalFields();
 
@@ -942,6 +1044,28 @@
                         hintDiv.innerHTML = '<i class="fas fa-info-circle"></i> <strong>Required:</strong> ' +
                             'Currently includes the source ticket ID. Add more ticket IDs separated by commas if needed.';
                     }
+                }
+
+                // Add Achievement Levels specific handlers
+                if (this.trackerType === 'sim-achievement-levels') {
+                    // Ensure formattedSubject is updated with the hidden fields
+                    this.updateAchievementLevelsSubject();
+
+                    // Set up the smartsheet file uploader
+                    this.setupSmartsheetUploader();
+
+                    // Hide the isVIP field (stored in localStorage for subject formatting)
+                    const hiddenFields = ['isVIP'];
+                    hiddenFields.forEach(fieldId => {
+                        const field = document.getElementById(fieldId);
+                        if (field) {
+                            const parent = this.findParentWithClass(field, 'form-group');
+                            if (parent) parent.style.display = 'none';
+                        }
+                    });
+
+                    // Add a periodic check to ensure VIP status remains in the subject line
+                    this.startVipStatusMonitor();
                 }
             }
 
@@ -1034,6 +1158,79 @@
                 }
             }
 
+            updateAchievementLevelsSubject() {
+                // Get values from multiple sources to ensure the VIP status is correctly captured
+                let isVIP = 'No';
+                let districtValue = '';
+
+                // First check if we have VIP data in localStorage
+                const storageKey = `${this.trackerType}Data`;
+                const storedData = localStorage.getItem(storageKey);
+                if (storedData) {
+                    try {
+                        const parsedData = JSON.parse(storedData);
+                        if (parsedData.isVip !== undefined) {
+                            isVIP = parsedData.isVip ? "Yes" : "No";
+                            console.log("Using VIP status from localStorage:", isVIP);
+                        }
+                        if (parsedData.districtName) {
+                            districtValue = parsedData.districtName;
+                        }
+                    } catch (e) {
+                        console.error("Error parsing stored data:", e);
+                    }
+                }
+
+                // If not found in localStorage, try to get from ticket data
+                if (isVIP === 'No' && this.ticketData && this.ticketData.isVip) {
+                    isVIP = "Yes";
+                    console.log("Using VIP status from ticketData:", isVIP);
+                }
+
+                // Get district name from field if available
+                const districtNameField = document.getElementById('districtName');
+                if (districtNameField && districtNameField.value) {
+                    districtValue = districtNameField.value;
+                } else if (this.ticketData && this.ticketData.districtName) {
+                    districtValue = this.ticketData.districtName;
+                }
+
+                // If still not found, try to get from districtField
+                if (!districtValue) {
+                    const districtField = document.getElementById('districtField');
+                    if (districtField && districtField.value) {
+                        districtValue = districtField.value;
+
+                        // Update districtName field if it exists
+                        if (districtNameField) {
+                            districtNameField.value = districtValue;
+                        }
+                    }
+                }
+
+                // Generate subject line with VIP prefix if applicable
+                const vipPrefix = isVIP === "Yes" ? "VIP* " : "";
+                const formattedSubject = `${vipPrefix}${districtValue} | Custom Achievement Levels`;
+
+                // Update UI
+                const formattedSubjectField = document.getElementById('formattedSubject');
+                if (formattedSubjectField) {
+                    formattedSubjectField.value = formattedSubject;
+
+                    // Also update the hidden subject field to ensure it's submitted correctly
+                    const subjectField = document.getElementById('subject');
+                    if (subjectField) {
+                        subjectField.value = formattedSubject;
+                    }
+                }
+
+                // Save the current VIP status and subject for future reference
+                this._cachedVipStatus = isVIP;
+                this._cachedSubjectLine = formattedSubject;
+
+                console.log("Updated Achievement Levels subject with VIP status:", isVIP, "Subject:", formattedSubject);
+            }
+
             loadDataFromStorage() {
                 // Try to load data from localStorage based on tracker type
                 const storageKey = `${this.trackerType}Data`;
@@ -1113,6 +1310,23 @@
                 } else {
                     console.warn(`No stored data found for ${this.trackerType}`);
                 }
+
+                // Special handling for Achievement Levels tracker
+                if (this.trackerType === 'sim-achievement-levels') {
+                    // Ensure the district name is populated
+                    setTimeout(() => {
+                        const districtField = document.getElementById('districtField');
+                        const districtNameField = document.getElementById('districtName');
+
+                        if (districtField && districtField.value && districtNameField) {
+                            console.log(`Setting districtName to ${districtField.value} from districtField`);
+                            districtNameField.value = districtField.value;
+
+                            // Update the subject
+                            this.updateAchievementLevelsSubject();
+                        }
+                    }, 500); // Short delay to ensure fields are available
+                }
             }
 
             async loadInitialData() {
@@ -1175,6 +1389,28 @@
                                 field.style.border = '';
                                 field.style.cursor = '';
                             });
+
+                            // Check if this is one of the templates that needs company state data
+                            if (this.trackerType === 'sedcust' ||
+                                this.trackerType === 'assembly' ||       // Added assembly template
+                                this.trackerType === 'assembly-rollover' || // Added assembly-rollover
+                                this.trackerType === 'sim-achievement-levels' ||
+                                this.trackerType === 'timeout-extension') {
+
+                                // Get company ID from ticket data
+                                const companyId = ticketData.ticket.company_id;
+                                if (companyId) {
+                                    console.log("Found company ID:", companyId);
+                                    // Fetch company data to get state
+                                    try {
+                                        this.fetchCompanyState(companyId);
+                                    } catch (companyError) {
+                                        console.error("Error fetching company data:", companyError);
+                                    }
+                                } else {
+                                    console.log("No company ID found in ticket data");
+                                }
+                            }
                         }
                     } catch (ticketError) {
                         console.warn("Could not get current ticket ID:", ticketError);
@@ -2154,6 +2390,8 @@
                     try {
                         // Use the first related ticket ID as the source ticket
                         const sourceTicketId = relatedTicketIds[0];
+                        console.log(`Fetching source ticket #${sourceTicketId} data for copying fields...`);
+
                         const sourceTicketResponse = await this.client.request.invokeTemplate("getTicketDetails", {
                             context: {
                                 ticketId: sourceTicketId
@@ -2161,12 +2399,7 @@
                         });
 
                         const sourceTicket = JSON.parse(sourceTicketResponse.response);
-
-                        // Copy priority from source ticket
-                        if (sourceTicket && sourceTicket.priority) {
-                            ticketData.priority = sourceTicket.priority;
-                            console.log(`Copied priority from source ticket: ${sourceTicket.priority}`);
-                        }
+                        let isVip = false;
 
                         // Copy custom fields from source ticket
                         if (sourceTicket && sourceTicket.custom_fields) {
@@ -2176,7 +2409,8 @@
                                 'cf_subcategory',
                                 'cf_issue_detail',
                                 'cf_account_manager',
-                                'cf_rvp'
+                                'cf_rvp',
+                                'cf_vip'  // Always copy cf_vip to ensure it gets copied
                             ];
 
                             customFieldsToCopy.forEach(field => {
@@ -2185,6 +2419,39 @@
                                     console.log(`Copied custom field ${field} from source ticket: ${sourceTicket.custom_fields[field]}`);
                                 }
                             });
+
+                            // Check for VIP status and set accordingly
+                            if (sourceTicket.custom_fields.cf_vip !== undefined) {
+                                isVip = sourceTicket.custom_fields.cf_vip === true || sourceTicket.custom_fields.cf_vip === "true";
+                                console.log(`VIP status copied from source ticket: ${sourceTicket.custom_fields.cf_vip} (isVip: ${isVip})`);
+                            } else {
+                                console.log("Source ticket does not have cf_vip field defined, checking alternative fields");
+
+                                // Try to find VIP status in other possible fields
+                                const possibleVipFields = ['cf_vip_status', 'vip_customer', 'cf_is_vip'];
+                                for (const field of possibleVipFields) {
+                                    if (sourceTicket.custom_fields[field] !== undefined) {
+                                        const fieldValue = sourceTicket.custom_fields[field];
+                                        isVip = fieldValue === true || fieldValue === "true" || fieldValue === "Yes";
+                                        ticketData.custom_fields.cf_vip = fieldValue;
+                                        console.log(`Found and copied VIP status from field ${field}: ${fieldValue} (isVip: ${isVip})`);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // Set priority based on VIP status
+                            if (isVip) {
+                                // If VIP, always set priority to HIGH (3)
+                                ticketData.priority = 3;
+                                console.log(`VIP customer detected - setting priority to HIGH (3)`);
+                            } else {
+                                // If not VIP, copy priority from source ticket
+                                if (sourceTicket && sourceTicket.priority) {
+                                    ticketData.priority = sourceTicket.priority;
+                                    console.log(`Non-VIP customer - copied priority from source ticket: ${sourceTicket.priority}`);
+                                }
+                            }
                         }
                     } catch (sourceTicketError) {
                         console.error(`Error getting source ticket data: ${sourceTicketError}`);
@@ -2560,8 +2827,8 @@
                                 <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
                             </label>
                             <div class="hint"><i class="fas fa-info-circle"></i> Add screenshots, videos or other supporting files to help illustrate the issue</div>
-                            <div class="file-size-warning" style="margin-top: 10px; background-color: #ffebee; color: #d32f2f;">
-                                <strong>⚠️ IMPORTANT:</strong> Maximum total attachment size is 20MB. Files exceeding this limit WILL NOT be attached to the ticket.
+                            <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
+                                <strong>⚠️ IMPORTANT:</strong> Maximum total attachment size is 20MB. Files exceeding this limit will NOT be attached to the ticket. You can still attach files to the Tracker as a note once created.
                             </div>
                             <div id="screenshotPreview" class="screenshot-preview"></div>
                             <div id="attachmentCounter" class="attachment-counter"></div>
@@ -2684,8 +2951,8 @@
                             <input type="file" id="harFileInput" name="harFileInput" accept=".har" class="hidden-file-input">
                         </label>
                         <div class="hint"><i class="fas fa-info-circle"></i> Upload a HAR file to provide detailed network information</div>
-                        <div class="file-size-warning" style="margin-top: 10px; background-color: #ffebee; color: #d32f2f;">
-                            <strong>⚠️ IMPORTANT:</strong> Maximum HAR file size is 20MB. Files exceeding this limit WILL NOT be attached to the ticket.
+                            <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
+                            <strong>⚠️ IMPORTANT:</strong> Maximum HAR file size is 20MB. Files exceeding this limit will NOT be attached to the ticket. You can still attach HAR files to the Tracker as a note once created.
                         </div>
                         <div id="harFilePreviewContainer" class="screenshot-preview"></div>
                     </div>
@@ -3110,6 +3377,243 @@
                 }
 
                 return new Blob([ab], { type: mimeType || 'application/octet-stream' });
+            }
+
+            // Add new method to fetch company data and populate district state
+            async fetchCompanyState(companyId) {
+                console.log(`Fetching company data for ID: ${companyId}`);
+
+                try {
+                    // Make API request to get company data
+                    const response = await this.client.request.invokeTemplate("getCompanyDetails", {
+                        context: { companyId: companyId }
+                    });
+
+                    const companyData = JSON.parse(response.response);
+                    console.log("Company data:", companyData);
+
+                    // Extract state from custom fields
+                    if (companyData && companyData.custom_fields) {
+                        const stateValue = companyData.custom_fields.state;
+
+                        if (stateValue) {
+                            console.log(`Found company state: ${stateValue}`);
+
+                            // Find all district state fields and populate them
+                            const districtStateFields = document.querySelectorAll('input[id="districtState"]');
+                            if (districtStateFields.length > 0) {
+                                districtStateFields.forEach(field => {
+                                    field.value = stateValue;
+                                    console.log(`Set district state field to: ${stateValue}`);
+                                });
+                            } else {
+                                console.warn("No district state fields found to populate");
+                            }
+                        } else {
+                            console.log("Company has no state custom field");
+                        }
+                    } else {
+                        console.warn("Company data doesn't contain custom fields");
+                    }
+                } catch (error) {
+                    console.error("Error fetching company state:", error);
+                }
+            }
+
+            // Add this new method to your TrackerApp class
+            setupSmartsheetUploader() {
+                // Find the attachmentInfo field in the ATTACH SMARTSHEET section
+                const smartsheetSection = document.getElementById('section-attachments');
+                if (!smartsheetSection) return;
+
+                const sectionBody = smartsheetSection.querySelector('.card-body');
+                if (!sectionBody) return;
+
+                // COMPLETELY REPLACE the content with our editor and uploader
+                sectionBody.innerHTML = '';
+
+                // First add the Quill editor container
+                const quillContainer = document.createElement('div');
+                quillContainer.className = 'quill-editor-container';
+                quillContainer.innerHTML = `
+                    <div id="smartsheetNotesEditor" style="min-height: 120px;"></div>
+                    <textarea id="smartsheetNotes" name="smartsheetNotes" style="display: none;"></textarea>
+                `;
+                sectionBody.appendChild(quillContainer);
+
+                // Then create a file uploader element below the editor
+                const uploaderContainer = document.createElement('div');
+                uploaderContainer.className = 'smartsheet-uploader';
+                uploaderContainer.style.marginTop = '15px';
+                uploaderContainer.innerHTML = `
+                    <label for="smartsheetFile" class="file-upload-button">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload Smartsheet
+                        <input type="file" id="smartsheetFile" name="smartsheetFile" class="hidden-file-input">
+                    </label>
+                    <div class="hint"><i class="fas fa-info-circle"></i> Upload the completed Benchmark eAssessments Custom Achievement Levels form</div>
+                    <div id="smartsheetPreview" class="screenshot-preview"></div>
+                `;
+                sectionBody.appendChild(uploaderContainer);
+
+                // Initialize the Quill editor with image support
+                this.initSmartsheetQuillEditor();
+
+                // Add event listener for file selection
+                const fileInput = document.getElementById('smartsheetFile');
+                if (fileInput) {
+                    fileInput.addEventListener('change', (e) => {
+                        this.handleSmartsheetFileChange(e);
+                    });
+                }
+            }
+
+            // Add this new method to initialize the Smartsheet Quill editor
+            initSmartsheetQuillEditor() {
+                try {
+                    // Define a custom image handler for the toolbar
+                    const customImageHandler = () => {
+                        const input = document.createElement('input');
+                        input.setAttribute('type', 'file');
+                        input.setAttribute('accept', 'image/*');
+                        input.click();
+
+                        input.onchange = () => {
+                            if (input.files && input.files[0]) {
+                                const file = input.files[0];
+
+                                // Show loading indicator
+                                const range = editor.getSelection(true);
+                                editor.insertText(range.index, "Uploading image... ", { italic: true, color: '#999' });
+                                const placeholderIndex = range.index;
+
+                                // Upload to ImgBB
+                                this.uploadImageToImgBB(file).then(imageUrl => {
+                                    // Delete the placeholder text
+                                    editor.deleteText(placeholderIndex, "Uploading image... ".length);
+
+                                    // Insert the image
+                                    editor.insertEmbed(placeholderIndex, 'image', imageUrl);
+                                    editor.setSelection(placeholderIndex + 1);
+                                }).catch(error => {
+                                    console.error('Error uploading image:', error);
+
+                                    // Replace placeholder with error message
+                                    editor.deleteText(placeholderIndex, "Uploading image... ".length);
+                                    editor.insertText(placeholderIndex, "⚠️ Image upload failed ", { italic: true, color: 'red' });
+                                });
+                            }
+                        };
+                    };
+
+                    // Initialize the editor
+                    const editor = new Quill('#smartsheetNotesEditor', {
+                        theme: 'snow',
+                        placeholder: 'Add notes, paste screenshots, or add additional context...',
+                        modules: {
+                            toolbar: {
+                                container: [
+                                    ['bold', 'italic'],                      // Bold and italic
+                                    [{ 'color': [] }, { 'background': [] }], // Color and highlight
+                                    [{ 'align': [] }],                       // Alignment
+                                    ['link', 'image']                        // Link and image
+                                ],
+                                handlers: {
+                                    'image': customImageHandler.bind(this)
+                                }
+                            }
+                        }
+                    });
+
+                    // Make sure the editor is enabled
+                    editor.enable();
+
+                    // Store reference to the editor
+                    this.quillEditors['smartsheetNotes'] = editor;
+
+                    // Add paste image handling
+                    editor.root.addEventListener('paste', e => this.handlePasteImage(e, editor));
+
+                    // Add drop handling for images
+                    editor.root.addEventListener('drop', e => this.handleDropImage(e, editor));
+
+                    // Update textarea when editor changes
+                    editor.on('text-change', () => {
+                        const textarea = document.getElementById('smartsheetNotes');
+                        if (textarea) {
+                            textarea.value = editor.root.innerHTML;
+                        }
+                    });
+
+                    console.log('Smartsheet Quill editor initialized successfully');
+                } catch (error) {
+                    console.error('Error initializing Smartsheet Quill editor:', error);
+                }
+            }
+
+            // Add this method to handle smartsheet file selection
+            handleSmartsheetFileChange(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const previewContainer = document.getElementById('smartsheetPreview');
+                previewContainer.innerHTML = '';
+
+                // Create thumbnail preview
+                const thumbnail = document.createElement('div');
+                thumbnail.className = 'screenshot-thumbnail';
+
+                // Create thumbnail content based on file type
+                const fileTypeIcon = this.getFileTypeIcon(file.type);
+                thumbnail.innerHTML = `
+                    <div class="file-preview">
+                        <i class="${fileTypeIcon}"></i>
+                    </div>
+                    <div class="screenshot-filename">${file.name}</div>
+                    <div class="screenshot-remove" data-filename="${file.name}">×</div>
+                `;
+
+                previewContainer.appendChild(thumbnail);
+
+                // Add to screenshots array to be included with other attachments
+                this.aggregatedScreenshotFiles.push(file);
+
+                // Add event listener to remove button
+                thumbnail.querySelector('.screenshot-remove').addEventListener('click', (e) => {
+                    const filename = e.target.getAttribute('data-filename');
+                    this.removeFile(filename);
+                    previewContainer.innerHTML = '';
+                });
+            }
+
+            // Add this new method to the TrackerApp class
+            startVipStatusMonitor() {
+                // Check the VIP status in the subject line every 2 seconds
+                this.vipStatusInterval = setInterval(() => {
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+                    if (formattedSubjectField && this._cachedSubjectLine) {
+                        // If the subject no longer matches our cached value, restore it
+                        if (formattedSubjectField.value !== this._cachedSubjectLine) {
+                            console.log("Subject line changed, restoring with VIP status",
+                                "From:", formattedSubjectField.value,
+                                "To:", this._cachedSubjectLine);
+
+                            formattedSubjectField.value = this._cachedSubjectLine;
+
+                            // Also update the hidden subject field
+                            const subjectField = document.getElementById('subject');
+                            if (subjectField) {
+                                subjectField.value = this._cachedSubjectLine;
+                            }
+                        }
+                    }
+                }, 2000);
+
+                // Clear the interval when the page is unloaded
+                window.addEventListener('beforeunload', () => {
+                    if (this.vipStatusInterval) {
+                        clearInterval(this.vipStatusInterval);
+                    }
+                });
             }
         }
     </script>

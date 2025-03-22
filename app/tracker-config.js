@@ -953,7 +953,7 @@ const TRACKER_CONFIGS = {
         }
     },
 
-    // 3. SIM Achievement Levels
+    // SIM Achievement Levels
     "sim-achievement-levels": {
         title: "SIM Achievement Levels Tracker",
         icon: "fa-trophy",
@@ -964,74 +964,90 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pen-fancy",
                 fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true }
+                    // Remove the isVIP and districtName fields, keep only formattedSubject
+                    { id: "formattedSubject", type: "text", label: "Subject", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
             {
-                id: "achievementDetails",
-                title: "ACHIEVEMENT DETAILS",
-                icon: "fa-clipboard-list",
+                id: "summary",
+                title: "SUMMARY",
+                icon: "fa-file-alt",
                 fields: [
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "schoolName", type: "text", label: "School Name", required: false },
-                    { id: "teacherName", type: "text", label: "Teacher Name", required: false },
-                    { id: "program", type: "text", label: "Program", required: true },
-                    { id: "gradeLevel", type: "text", label: "Grade Level", required: true },
                     {
-                        id: "achievementType", type: "select", label: "Achievement Type", required: true,
-                        options: ["Benchmarks", "Growth Targets", "Proficiency Levels", "Custom Goals", "Other"]
+                        id: "summaryContent", type: "richtext", label: "Include name of school district that is requesting customized achievement levels", required: true,
+                        hint: "EX. Jersey City Public School district is requesting customized achievement levels."
                     }
                 ]
             },
             {
-                id: "issueDetails",
-                title: "ISSUE DETAILS",
-                icon: "fa-exclamation-circle",
+                id: "userDetails",
+                title: "DESCRIPTION",
+                icon: "fa-clipboard-list",
                 fields: [
-                    { id: "issueDescription", type: "richtext", label: "Issue Description", required: true },
-                    { id: "studentImpact", type: "textarea", label: "Student Impact", required: false },
-                    { id: "dateOccurred", type: "date", label: "Date Issue Occurred", required: true }
+                    {
+                        id: "username", type: "text", label: "Username", required: true,
+                        hint: "Provide the username of the user requesting the customized achievement levels"
+                    },
+                    {
+                        id: "userRole", type: "select", label: "Role", required: true,
+                        options: ["Student", "Teacher", "School Admin", "District Admin"],
+                        hint: "Provide the role they have within Benchmark Universe (user must have a district admin. role)"
+                    },
+                    {
+                        id: "realm", type: "text", label: "Realm (Tech Admin Link)", required: true,
+                        hint: "Provide TechAdmin Link to the district realm"
+                    },
+                    {
+                        id: "districtName", type: "text", label: "District Name", required: true,
+                        hint: "Provide the name of the district"
+                    },
+                    {
+                        id: "districtState", type: "text", label: "District State", required: false,
+                        hint: "State where the district is located"
+                    },
+                    {
+                        id: "dateRequested", type: "date", label: "Date Requested By Customer", required: true,
+                        hint: "Provide the date the user requested the custom achievement levels"
+                    }
                 ]
             },
             {
-                id: "reproduction",
-                title: "REPRODUCTION STEPS",
-                icon: "fa-list-ol",
+                id: "attachments",
+                title: "ATTACH SMARTSHEET TO TRACKER",
+                icon: "fa-paperclip",
                 fields: [
-                    { id: "stepsToReproduce", type: "richtext", label: "Steps to Reproduce", required: false }
+                    // Remove the info field and keep only the file upload field
+                    // This will be handled by setupSmartsheetUploader which creates the proper UI
+                    { id: "dummyField", type: "hidden" } // Just a placeholder field
                 ]
             }
         ],
         descriptionGenerator: function (fields) {
             let description = '';
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SIM ACHIEVEMENT LEVELS ISSUE</span></div>';
-            description += `<div>${fields.subject || 'SIM Achievement Levels Issue'}</div>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
 
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ACHIEVEMENT DETAILS</span></div>';
+            // Add summary section
+            if (fields.summaryContent) {
+                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+                description += `<div>${fields.summaryContent || ''}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Add description with user details
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
+            description += `Username: ${fields.username || ''}<br>`;
+            description += `Role: ${fields.userRole || ''}<br>`;
+            description += `Realm (Tech Admin Link): ${fields.realm || ''}<br>`;
             description += `District Name: ${fields.districtName || ''}<br>`;
-            if (fields.schoolName) description += `School Name: ${fields.schoolName}<br>`;
-            if (fields.teacherName) description += `Teacher Name: ${fields.teacherName}<br>`;
-            description += `Program: ${fields.program || ''}<br>`;
-            description += `Grade Level: ${fields.gradeLevel || ''}<br>`;
-            description += `Achievement Type: ${fields.achievementType || ''}<br>`;
+            description += `District State: ${fields.districtState || ''}<br>`;
+            description += `Date Requested By Customer: ${formatDate(fields.dateRequested) || ''}<br>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
-            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
-            if (fields.issueDescription) {
-                description += `<div><strong>Description:</strong></div>`;
-                description += `<div>${fields.issueDescription}</div>`;
-            }
-            if (fields.studentImpact) {
-                description += `<div><strong>Student Impact:</strong></div>`;
-                description += `<div>${fields.studentImpact}</div>`;
-            }
-            description += '<div style="margin-bottom: 20px;"></div>';
+            // Replace ATTACHMENTS section title with the requested text in bold blue
+            description += '<div><strong style="color: #0000FF;">See smartsheet for specifications of achievement levels.</strong></div>';
 
-            if (fields.stepsToReproduce) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">REPRODUCTION STEPS</span></div>';
-                description += `<div>${fields.stepsToReproduce}</div>`;
+            // Add content from Quill editor if available
+            if (fields.smartsheetNotes && fields.smartsheetNotes.trim() !== '<p><br></p>') {
+                description += `<div>${fields.smartsheetNotes}</div>`;
             }
 
             return description;
