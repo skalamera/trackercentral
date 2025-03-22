@@ -1170,7 +1170,7 @@
                     try {
                         const parsedData = JSON.parse(storedData);
                         if (parsedData.isVip !== undefined) {
-                            isVIP = parsedData.isVip ? "Yes" : "No";
+                            isVip = parsedData.isVip ? "Yes" : "No";
                             console.log("Using VIP status from localStorage:", isVIP);
                         }
                         if (parsedData.districtName) {
@@ -1304,6 +1304,24 @@
 
                         // Clear localStorage to avoid reusing stale data
                         localStorage.removeItem(storageKey);
+
+                        // Add support for product type field
+                        if (parsedData.productType) {
+                            this.ticketData.productType = parsedData.productType;
+                            console.log(`Retrieved product type from stored data:`, this.ticketData.productType);
+                        }
+
+                        // Add support for product field
+                        if (parsedData.product) {
+                            this.ticketData.product = parsedData.product;
+                            console.log(`Retrieved product from stored data:`, this.ticketData.product);
+                        }
+
+                        // Add support for product subsection field
+                        if (parsedData.productSubsection) {
+                            this.ticketData.productSubsection = parsedData.productSubsection;
+                            console.log(`Retrieved product subsection from stored data:`, this.ticketData.productSubsection);
+                        }
                     } catch (error) {
                         console.error("Error parsing stored data:", error);
                     }
@@ -1341,15 +1359,33 @@
                             currentTicketId = ticketData.ticket.id;
                             console.log("Got current ticket ID:", currentTicketId);
 
+                            // Store it for future use
+                            this.ticketData.currentTicketId = currentTicketId;
+
+                            // Get product type if available
+                            if (ticketData.ticket.custom_fields && ticketData.ticket.custom_fields.cf_product_type) {
+                                this.ticketData.productType = ticketData.ticket.custom_fields.cf_product_type;
+                                console.log("Retrieved product type from ticket:", this.ticketData.productType);
+                            }
+
+                            // Get product if available
+                            if (ticketData.ticket.custom_fields && ticketData.ticket.custom_fields.cf_product) {
+                                this.ticketData.product = ticketData.ticket.custom_fields.cf_product;
+                                console.log("Retrieved product from ticket:", this.ticketData.product);
+                            }
+
+                            // Get product subsection if available
+                            if (ticketData.ticket.custom_fields && ticketData.ticket.custom_fields.cf_product_subsection) {
+                                this.ticketData.productSubsection = ticketData.ticket.custom_fields.cf_product_subsection;
+                                console.log("Retrieved product subsection from ticket:", this.ticketData.productSubsection);
+                            }
+
                             // Populate the related tickets field with the current ticket ID
                             const relatedTicketsField = document.getElementById('relatedTickets');
                             if (relatedTicketsField && !relatedTicketsField.value) {
                                 relatedTicketsField.value = currentTicketId.toString();
                                 console.log("Prepopulated related tickets field with current ticket ID");
                             }
-
-                            // Also store it for future use
-                            this.ticketData.currentTicketId = currentTicketId;
 
                             // Handle district field synchronization for specific templates
                             if (this.trackerType === 'assembly' || this.trackerType === 'assembly-rollover' || this.trackerType === 'sim-assignment') {
@@ -2386,7 +2422,7 @@
                         ticketData.custom_fields.cf_district = formData.districtField;
                     }
 
-                    // Get source ticket data to copy custom fields and priority
+                    // Get source ticket data to copy custom fields, priority, and product fields
                     try {
                         // Use the first related ticket ID as the source ticket
                         const sourceTicketId = relatedTicketIds[0];
@@ -2410,51 +2446,66 @@
                                 'cf_issue_detail',
                                 'cf_account_manager',
                                 'cf_rvp',
-                                'cf_vip'  // Always copy cf_vip to ensure it gets copied
+                                'cf_vip',  // Always copy cf_vip to ensure it gets copied
+                                'cf_product_type', // Product type field
+                                'cf_product',  // Add product field
+                                'cf_product_subsection' // Add product subsection field
                             ];
 
                             customFieldsToCopy.forEach(field => {
                                 if (sourceTicket.custom_fields[field] !== undefined) {
                                     ticketData.custom_fields[field] = sourceTicket.custom_fields[field];
-                                    console.log(`Copied custom field ${field} from source ticket: ${sourceTicket.custom_fields[field]}`);
+                                    console.log(`Copied custom field ${field} from source ticket:`, sourceTicket.custom_fields[field]);
                                 }
                             });
 
-                            // Check for VIP status and set accordingly
-                            if (sourceTicket.custom_fields.cf_vip !== undefined) {
-                                isVip = sourceTicket.custom_fields.cf_vip === true || sourceTicket.custom_fields.cf_vip === "true";
-                                console.log(`VIP status copied from source ticket: ${sourceTicket.custom_fields.cf_vip} (isVip: ${isVip})`);
-                            } else {
-                                console.log("Source ticket does not have cf_vip field defined, checking alternative fields");
-
-                                // Try to find VIP status in other possible fields
-                                const possibleVipFields = ['cf_vip_status', 'vip_customer', 'cf_is_vip'];
-                                for (const field of possibleVipFields) {
-                                    if (sourceTicket.custom_fields[field] !== undefined) {
-                                        const fieldValue = sourceTicket.custom_fields[field];
-                                        isVip = fieldValue === true || fieldValue === "true" || fieldValue === "Yes";
-                                        ticketData.custom_fields.cf_vip = fieldValue;
-                                        console.log(`Found and copied VIP status from field ${field}: ${fieldValue} (isVip: ${isVip})`);
-                                        break;
-                                    }
-                                }
+                            // Additional logic to handle product fields from ticketData if not already set
+                            // Handle product type
+                            if (this.ticketData && this.ticketData.productType && !ticketData.custom_fields.cf_product_type) {
+                                ticketData.custom_fields.cf_product_type = this.ticketData.productType;
+                                console.log(`Set product type from stored data:`, this.ticketData.productType);
                             }
 
-                            // Set priority based on VIP status
-                            if (isVip) {
-                                // If VIP, always set priority to HIGH (3)
-                                ticketData.priority = 3;
-                                console.log(`VIP customer detected - setting priority to HIGH (3)`);
-                            } else {
-                                // If not VIP, copy priority from source ticket
-                                if (sourceTicket && sourceTicket.priority) {
-                                    ticketData.priority = sourceTicket.priority;
-                                    console.log(`Non-VIP customer - copied priority from source ticket: ${sourceTicket.priority}`);
-                                }
+                            // Handle product 
+                            if (this.ticketData && this.ticketData.product && !ticketData.custom_fields.cf_product) {
+                                ticketData.custom_fields.cf_product = this.ticketData.product;
+                                console.log(`Set product from stored data:`, this.ticketData.product);
                             }
+
+                            // Handle product subsection
+                            if (this.ticketData && this.ticketData.productSubsection && !ticketData.custom_fields.cf_product_subsection) {
+                                ticketData.custom_fields.cf_product_subsection = this.ticketData.productSubsection;
+                                console.log(`Set product subsection from stored data:`, this.ticketData.productSubsection);
+                            }
+
+                            // ... existing code ...
                         }
                     } catch (sourceTicketError) {
                         console.error(`Error getting source ticket data: ${sourceTicketError}`);
+
+                        // If we failed to get from API but have it in local data, use that
+                        if (this.ticketData) {
+                            ticketData.custom_fields = ticketData.custom_fields || {};
+
+                            // Use product type from local data if available
+                            if (this.ticketData.productType) {
+                                ticketData.custom_fields.cf_product_type = this.ticketData.productType;
+                                console.log(`Using product type from stored data (fallback):`, this.ticketData.productType);
+                            }
+
+                            // Use product from local data if available
+                            if (this.ticketData.product) {
+                                ticketData.custom_fields.cf_product = this.ticketData.product;
+                                console.log(`Using product from stored data (fallback):`, this.ticketData.product);
+                            }
+
+                            // Use product subsection from local data if available
+                            if (this.ticketData.productSubsection) {
+                                ticketData.custom_fields.cf_product_subsection = this.ticketData.productSubsection;
+                                console.log(`Using product subsection from stored data (fallback):`, this.ticketData.productSubsection);
+                            }
+                        }
+
                         // Continue creating the ticket even if we can't get source ticket data
                     }
 
@@ -3219,7 +3270,7 @@
             // Add this new method to debug district fields
             debugDistrictFields() {
                 try {
-                    console.group('District Fields Debug');
+                    console.group('District and Product Fields Debug');
 
                     // Log all district-related fields
                     const districtFields = document.querySelectorAll('[id*="district"], [id*="District"]');
@@ -3228,6 +3279,16 @@
                     districtFields.forEach(field => {
                         console.log(`Field ID: ${field.id}, Value: "${field.value}", Type: ${field.type}, ReadOnly: ${field.readOnly}`);
                     });
+
+                    // Log product field information
+                    console.log("Product Fields information:");
+                    if (this.ticketData) {
+                        console.log("Product Type:", this.ticketData.productType || "Not set");
+                        console.log("Product:", this.ticketData.product || "Not set");
+                        console.log("Product Subsection:", this.ticketData.productSubsection || "Not set");
+                    } else {
+                        console.log("No product fields found in ticketData");
+                    }
 
                     // Only try to get ticket data if client is initialized
                     if (this.client && this.client.data) {
@@ -3295,7 +3356,7 @@
                     console.groupEnd();
                 } catch (error) {
                     // Catch any errors but don't let them interrupt initialization
-                    console.error("Error in debugDistrictFields:", error);
+                    console.error("Error in debug logging:", error);
                     console.groupEnd();
                 }
             }

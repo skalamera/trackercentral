@@ -389,6 +389,23 @@
                                 priority: parsedData.priority || 2
                             };
 
+                            // Add product type data if available in the ticket
+                            if (parsedData.custom_fields && parsedData.custom_fields.cf_product_type) {
+                                dataToPass.productType = parsedData.custom_fields.cf_product_type;
+                                console.log(`Found product type in ticket:`, dataToPass.productType);
+                            }
+
+                            // Add product and product subsection data if available
+                            if (parsedData.custom_fields && parsedData.custom_fields.cf_product) {
+                                dataToPass.product = parsedData.custom_fields.cf_product;
+                                console.log(`Found product in ticket:`, dataToPass.product);
+                            }
+
+                            if (parsedData.custom_fields && parsedData.custom_fields.cf_product_subsection) {
+                                dataToPass.productSubsection = parsedData.custom_fields.cf_product_subsection;
+                                console.log(`Found product subsection in ticket:`, dataToPass.productSubsection);
+                            }
+
                             console.log("Setting requesterEmail to:", agentEmail);
 
                             // Process VIP status from custom fields
