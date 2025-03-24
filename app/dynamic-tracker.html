@@ -407,6 +407,29 @@
 
                                                         console.log(`VIP status found in ${field}:`, isVip);
                                                         this.ticketData.isVip = isVip;
+
+                                                        // Also set the checkbox
+                                                        const vipCheckbox = document.getElementById('hiddenVIPStatus');
+                                                        if (vipCheckbox) {
+                                                            vipCheckbox.checked = isVip;
+                                                            console.log('Set hidden VIP checkbox to:', isVip);
+                                                        }
+
+                                                        // If VIP, set priority to HIGH (priority 3)
+                                                        if (isVip) {
+                                                            console.log("Setting priority to HIGH (3) based on VIP status");
+                                                            // Set the priority in the form
+                                                            const priorityField = document.getElementById('priority');
+                                                            if (priorityField) {
+                                                                priorityField.value = "3"; // 3 = HIGH priority
+                                                            }
+                                                            // Also store in ticketData for when we create the ticket
+                                                            this.ticketData.priority = 3;
+
+                                                            // Make sure the VIP status is reflected in the subject
+                                                            this.updateAchievementLevelsSubject();
+                                                        }
+
                                                         break;
                                                     }
                                                 }
@@ -1070,6 +1093,24 @@
                     // Add a periodic check to ensure VIP status remains in the subject line
                     this.startVipStatusMonitor();
                 }
+
+                // In your initEventListeners method, add this to create a hidden VIP status checkbox
+                const hiddenContainer = document.querySelector('div[style="display: none;"]') ||
+                    document.createElement('div');
+
+                if (!hiddenContainer.parentNode) {
+                    hiddenContainer.style.display = 'none';
+                    document.body.appendChild(hiddenContainer);
+                }
+
+                // Create hidden VIP checkbox if it doesn't exist
+                if (!document.getElementById('hiddenVIPStatus')) {
+                    const vipCheckbox = document.createElement('input');
+                    vipCheckbox.type = 'checkbox';
+                    vipCheckbox.id = 'hiddenVIPStatus';
+                    vipCheckbox.name = 'hiddenVIPStatus';
+                    hiddenContainer.appendChild(vipCheckbox);
+                }
             }
 
             updateFormattedSubject() {
@@ -1161,41 +1202,84 @@
                 }
             }
 
-            updateAchievementLevelsSubject() {
+            // Create a new non-async method for immediate subject updates
+            updateAchievementLevelsSubjectSync() {
                 try {
-                    // Get the district name directly from the DOM element
+                    // First check if we already have a pre-formatted subject from template-selector
+                    if (this.ticketData && this.ticketData.formattedSubject) {
+                        const subject = this.ticketData.formattedSubject;
+                        
+                        // Update DOM fields with the pre-formatted subject
+                        const formattedSubjectField = document.getElementById('formattedSubject');
+                        if (formattedSubjectField) {
+                            formattedSubjectField.value = subject;
+
+                            // Also update the hidden subject field
+                            const subjectField = document.getElementById('subject');
+                            if (subjectField) {
+                                subjectField.value = subject;
+                            }
+
+                            // Cache for comparison
+                            this._cachedSubjectLine = subject;
+                        }
+                        
+                        console.log('Using pre-formatted subject with VIP status:', subject);
+                        return;
+                    }
+                    
+                    // If no pre-formatted subject, fall back to existing logic
                     const districtNameField = document.getElementById('districtName');
                     const districtName = districtNameField ? districtNameField.value || '' : '';
 
-                    // VIP prefix based on the ticketData property
-                    const vipPrefix = this.ticketData && this.ticketData.isVip ? 'VIP* ' : '';
+                    // SIMPLIFY VIP logic - use multiple sources
+                    let isVip = false;
+                    
+                    // Check all possible sources for VIP status
+                    const vipCheckbox = document.getElementById('hiddenVIPStatus');
+                    if (vipCheckbox && vipCheckbox.checked) {
+                        isVip = true;
+                    } else if (this.ticketData && this.ticketData.isVip === true) {
+                        isVip = true;
+                    }
+
+                    // Hardcode VIP prefix based on the determined status  
+                    const vipPrefix = isVip ? 'VIP* ' : '';
 
                     // Format the subject line
                     const subject = `${vipPrefix}${districtName} | Custom Achievement Levels`;
 
-                    // Update the subject field directly in the DOM
+                    // Update DOM fields
                     const formattedSubjectField = document.getElementById('formattedSubject');
                     if (formattedSubjectField) {
                         formattedSubjectField.value = subject;
 
-                        // Also update the hidden subject field if it exists
+                        // Also update the hidden subject field
                         const subjectField = document.getElementById('subject');
                         if (subjectField) {
                             subjectField.value = subject;
                         }
 
-                        // Store the generated subject for future reference
+                        // Cache for comparison
                         this._cachedSubjectLine = subject;
                     }
 
-                    // Also store the district name for later use when creating the ticket
-                    if (districtName) {
-                        this.districtDropdownValue = districtName;
-                    }
-
-                    console.log('Updated Achievement Levels subject with VIP status:', subject);
+                    console.log('Updated Achievement Levels subject line:', subject, 'isVip:', isVip);
                 } catch (error) {
-                    console.log('Error updating achievement levels subject:', error);
+                    console.log('Error in sync subject update:', error);
+                }
+            }
+
+            // Keep the async method for background updates
+            async updateAchievementLevelsSubject() {
+                try {
+                    // Fetch latest VIP status
+                    await this.checkAndUpdateVIPStatus();
+
+                    // Update the subject with latest data
+                    this.updateAchievementLevelsSubjectSync();
+                } catch (error) {
+                    console.log('Error in async subject update:', error);
                 }
             }
 
@@ -1272,6 +1356,17 @@
                             if (vipField) {
                                 vipField.value = parsedData.isVip ? 'Yes' : 'No';
                             }
+
+                            // Also set hidden VIP checkbox
+                            const vipCheckbox = document.getElementById('hiddenVIPStatus');
+                            if (vipCheckbox) {
+                                vipCheckbox.checked = !!parsedData.isVip;
+                                console.log('Set VIP checkbox from stored data:', !!parsedData.isVip);
+                            }
+
+                            // Store in ticketData
+                            this.ticketData.isVip = !!parsedData.isVip;
+                            console.log('Set ticketData.isVip from stored data:', !!parsedData.isVip);
                         }
 
                         // Clear localStorage to avoid reusing stale data
@@ -1792,6 +1887,16 @@
 
                 if (!isValid) {
                     this.showError('Please correct the errors in the form');
+                }
+
+                // Add this to your validateForm method
+                // Ensure VIP tickets always get priority 3
+                if (this.ticketData && this.ticketData.isVip) {
+                    console.log("Form validation: Ensuring HIGH priority (3) for VIP ticket");
+                    const priorityField = document.getElementById('priority');
+                    if (priorityField) {
+                        priorityField.value = "3";
+                    }
                 }
 
                 return isValid;
@@ -2528,6 +2633,13 @@
                     if (relatedTicketIds.length > 0) {
                         // Use the first related ticket to get the district field format
                         ticketData = await this.preserveDistrictFieldFormat(ticketData, relatedTicketIds[0]);
+                    }
+
+                    // ADD THIS NEW CODE:
+                    // Final check to ensure VIP tickets get high priority
+                    if (this.ticketData && this.ticketData.isVip) {
+                        console.log("Final check: Setting priority to HIGH (3) for VIP ticket");
+                        ticketData.priority = 3;
                     }
 
                     // Create the ticket
@@ -3741,6 +3853,24 @@
                             ticketData.custom_fields.cf_district509811 = districtDropdownValue;
                             console.log('Preserved exact format of district dropdown field');
                         }
+
+                        // ADD THIS NEW CODE:
+                        // Check VIP status and set priority accordingly
+                        const vipFields = ['cf_vip', 'vip', 'cf_vip_status', 'vip_customer', 'cf_is_vip'];
+                        for (const field of vipFields) {
+                            if (sourceTicket.custom_fields[field] !== undefined) {
+                                const fieldValue = sourceTicket.custom_fields[field];
+                                const isVip = fieldValue === true ||
+                                    fieldValue === "true" ||
+                                    fieldValue === "Yes";
+
+                                if (isVip) {
+                                    console.log("Setting ticket priority to HIGH (3) based on VIP status");
+                                    ticketData.priority = 3;
+                                    break;
+                                }
+                            }
+                        }
                     }
                 } catch (error) {
                     console.error('Error preserving district field format:', error);
@@ -3772,6 +3902,89 @@
                 } catch (error) {
                     console.error('Error inspecting district dropdown field:', error);
                 }
+            }
+
+            // Add this new method
+            async checkAndUpdateVIPStatus() {
+                const relatedTicketsField = document.getElementById('relatedTickets');
+                if (!relatedTicketsField || !relatedTicketsField.value) return false;
+
+                try {
+                    const sourceTicketId = parseInt(relatedTicketsField.value.split(',')[0], 10);
+                    if (isNaN(sourceTicketId)) return false;
+
+                    const response = await this.client.request.invokeTemplate("getTicketDetails", {
+                        context: { ticketId: sourceTicketId }
+                    });
+
+                    const ticketData = JSON.parse(response.response);
+                    if (!ticketData || !ticketData.custom_fields) return false;
+
+                    // Check all possible VIP fields
+                    const vipFields = ['cf_vip', 'vip', 'cf_vip_status', 'vip_customer', 'cf_is_vip'];
+                    for (const field of vipFields) {
+                        if (ticketData.custom_fields[field] !== undefined) {
+                            const fieldValue = ticketData.custom_fields[field];
+                            this.ticketData.isVip = fieldValue === true ||
+                                fieldValue === "true" ||
+                                fieldValue === "Yes";
+
+                            console.log(`Direct VIP check - Found in ${field}:`, this.ticketData.isVip);
+                            return true;
+                        }
+                    }
+                    return false;
+                } catch (error) {
+                    console.error("Error in direct VIP status check:", error);
+                    return false;
+                }
+            }
+
+            // Modify updateAchievementLevelsSubject to use this
+            async updateAchievementLevelsSubject() {
+                try {
+                    // Try to get updated VIP status
+                    await this.checkAndUpdateVIPStatus();
+
+                    // Rest of your existing code...
+                    const districtNameField = document.getElementById('districtName');
+                    const districtName = districtNameField ? districtNameField.value || '' : '';
+
+                    // VIP prefix based on the ticketData property
+                    const vipPrefix = this.ticketData && this.ticketData.isVip ? 'VIP* ' : '';
+
+                    // Format the subject line
+                    const subject = `${vipPrefix}${districtName} | Custom Achievement Levels`;
+
+                    // Update the subject field directly in the DOM
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+                    if (formattedSubjectField) {
+                        formattedSubjectField.value = subject;
+
+                        // Also update the hidden subject field if it exists
+                        const subjectField = document.getElementById('subject');
+                        if (subjectField) {
+                            subjectField.value = subject;
+                        }
+
+                        // Store the generated subject for future reference
+                        this._cachedSubjectLine = subject;
+                    }
+
+                    console.log('Updated Achievement Levels subject with VIP status:', subject);
+                } catch (error) {
+                    console.log('Error updating achievement levels subject:', error);
+                }
+            }
+
+            // Add this method to your TrackerApp class
+            debugVipPriority() {
+                console.group('VIP Priority Debug');
+                console.log('Current priority setting:', document.getElementById('priority')?.value);
+                console.log('ticketData.isVip:', this.ticketData?.isVip);
+                console.log('ticketData.priority:', this.ticketData?.priority);
+                console.log('VIP checkbox value:', document.getElementById('hiddenVIPStatus')?.checked);
+                console.groupEnd();
             }
         }
     </script>

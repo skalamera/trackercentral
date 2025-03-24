@@ -456,6 +456,17 @@
                                 }
                             }
 
+                            // Handle subject formatting right here in selectTemplate
+                            if (parsedData.isVip) {
+                                // Force the subject format to include VIP at this point
+                                const districtName = parsedData.districtName || '';
+                                const formattedSubject = `VIP* ${districtName} | Custom Achievement Levels`;
+
+                                // Store the pre-formatted subject in localStorage
+                                dataToPass.formattedSubject = formattedSubject;
+                                console.log(`Pre-formatted subject for VIP customer: "${formattedSubject}"`);
+                            }
+
                             // Store the processed data in localStorage
                             localStorage.setItem(`${templateType}Data`, JSON.stringify(dataToPass));
                             console.log(`Stored ${templateType} data in localStorage:`, dataToPass);
