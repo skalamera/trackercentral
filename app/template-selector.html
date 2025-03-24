@@ -428,7 +428,11 @@
                                 for (const field of districtFields) {
                                     if (parsedData.custom_fields[field]) {
                                         dataToPass.districtName = parsedData.custom_fields[field];
+                                        // Store the same value for both district fields
+                                        dataToPass.districtField = parsedData.custom_fields[field];
+                                        dataToPass.districtDropdownValue = parsedData.custom_fields[field];
                                         console.log(`Found district name in field ${field}: ${dataToPass.districtName}`);
+                                        console.log(`Set districtDropdownValue to: ${dataToPass.districtDropdownValue}`);
                                         break;
                                     }
                                 }
@@ -440,6 +444,13 @@
                                     Object.keys(parsedData.custom_fields).forEach(key => {
                                         if (key.toLowerCase().includes('district')) {
                                             console.log(`Potential district field: ${key} = ${parsedData.custom_fields[key]}`);
+                                            if (parsedData.custom_fields[key]) {
+                                                // If any field contains 'district' and has a value, use it for both fields
+                                                dataToPass.districtName = parsedData.custom_fields[key];
+                                                dataToPass.districtField = parsedData.custom_fields[key];
+                                                dataToPass.districtDropdownValue = parsedData.custom_fields[key];
+                                                console.log(`Using value from ${key} for district fields: ${parsedData.custom_fields[key]}`);
+                                            }
                                         }
                                     });
                                 }

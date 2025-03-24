@@ -427,6 +427,9 @@
                     }
 
                     console.log('TrackerApp initialized successfully');
+
+                    // Add this to your init method
+                    await this.inspectDistrictDropdownField();
                 } catch (error) {
                     console.error('Failed to initialize TrackerApp:', error);
                     this.showError('Failed to initialize app. Please try again.');
@@ -1185,9 +1188,14 @@
                         this._cachedSubjectLine = subject;
                     }
 
+                    // Also store the district name for later use when creating the ticket
+                    if (districtName) {
+                        this.districtDropdownValue = districtName;
+                    }
+
                     console.log('Updated Achievement Levels subject with VIP status:', subject);
                 } catch (error) {
-                    console.log('Error parsing stored data:', error);
+                    console.log('Error updating achievement levels subject:', error);
                 }
             }
 
@@ -1224,6 +1232,10 @@
                                 districtField.style.border = '1px solid #ddd';
                                 districtField.style.cursor = 'not-allowed';
                                 console.log(`Set district field to: ${parsedData.districtName}`);
+
+                                // Ensure this value is stored for ticket creation
+                                this.districtDropdownValue = parsedData.districtName;
+                                this.districtField = parsedData.districtName;
                             }
 
                             if (districtNameField) {
@@ -1850,6 +1862,14 @@
                     }
                 }
 
+                // Add district dropdown field explicitly
+                if (this.districtDropdownValue) {
+                    formData.districtDropdownValue = this.districtDropdownValue;
+                } else if (formData.districtField) {
+                    // If districtDropdownValue is not available, use districtField
+                    formData.districtDropdownValue = formData.districtField;
+                }
+
                 return formData;
             }
 
@@ -2298,7 +2318,7 @@
                     const loadingOverlay = document.getElementById('loadingOverlay');
 
                     // Prepare the ticket data
-                    let subject = formData.subject;
+                    let subject = formData.subject;  // Using let here is fine
 
                     // For assembly template, use the formatted subject
                     if (this.trackerType === 'assembly' && formData.formattedSubject) {
@@ -2344,7 +2364,8 @@
                     }
 
                     // Create the basic ticket data
-                    const ticketData = {
+                    // Change from const to let so we can modify it later
+                    let ticketData = {  // <-- Changed from const to let
                         email: formData.email,
                         subject: subject || `${this.config.title} - ${new Date().toLocaleDateString()}`,
                         description: description,
@@ -2352,8 +2373,36 @@
                         priority: parseInt(formData.priority || 2),
                         tags: [`tracker-${this.trackerType}`],
                         related_ticket_ids: relatedTicketIds,
-                        source: 101  // Set the source to 101 as requested
+                        source: 101,  // Set the source to 101 as requested
+                        custom_fields: {}  // Initialize empty custom_fields
                     };
+
+                    // Initialize custom_fields if not already done
+                    ticketData.custom_fields = ticketData.custom_fields || {};
+
+                    // IMPORTANT: Add the district dropdown field with the district field value
+                    if (formData.districtField) {
+                        // Add both district fields with the same value
+                        ticketData.custom_fields.cf_district = String(formData.districtField);
+                        ticketData.custom_fields.cf_district509811 = String(formData.districtField);
+                        console.log(`Set district fields - cf_district: ${formData.districtField}, cf_district509811: ${formData.districtField}`);
+                    }
+                    // Use fallback methods if district field not available
+                    else if (formData.districtName) {
+                        ticketData.custom_fields.cf_district = String(formData.districtName);
+                        ticketData.custom_fields.cf_district509811 = String(formData.districtName);
+                        console.log(`Using districtName as fallback for district fields: ${formData.districtName}`);
+                    }
+                    else if (formData.districtDropdownValue) {
+                        ticketData.custom_fields.cf_district = String(formData.districtDropdownValue);
+                        ticketData.custom_fields.cf_district509811 = String(formData.districtDropdownValue);
+                        console.log(`Using districtDropdownValue as fallback for district fields: ${formData.districtDropdownValue}`);
+                    }
+
+                    // Add additional custom fields as needed (existing code)
+                    if (formData.districtField) {
+                        ticketData.custom_fields.cf_district = formData.districtField;
+                    }
 
                     // Add group if selected
                     if (formData.groupField && formData.groupField !== '') {
@@ -2373,13 +2422,14 @@
                         }
                     }
 
-                    // Initialize custom_fields object if it doesn't exist
-                    ticketData.custom_fields = ticketData.custom_fields || {};
-
                     // Add district field if available
                     if (formData.districtField) {
                         // Use the appropriate custom field ID for district
                         ticketData.custom_fields.cf_district = formData.districtField;
+
+                        // IMPORTANT: Also add the district dropdown field with the same value
+                        ticketData.custom_fields.cf_district509811 = formData.districtField;
+                        console.log(`Set district dropdown field (cf_district509811) to: ${formData.districtField}`);
                     }
 
                     // Get source ticket data to copy custom fields, priority, and product fields
@@ -2469,7 +2519,16 @@
                         // Continue creating the ticket even if we can't get source ticket data
                     }
 
+                    // Debug the district field values before submission
+                    this.debugDistrictSubmission(ticketData);
+
                     console.log('Ticket data to be sent:', JSON.stringify(ticketData, null, 2));
+
+                    // Add this right before creating the ticket in the createTicket method
+                    if (relatedTicketIds.length > 0) {
+                        // Use the first related ticket to get the district field format
+                        ticketData = await this.preserveDistrictFieldFormat(ticketData, relatedTicketIds[0]);
+                    }
 
                     // Create the ticket
                     const response = await this.client.request.invokeTemplate("createfdTicket", {
@@ -3635,6 +3694,84 @@
                         clearInterval(this.vipStatusInterval);
                     }
                 });
+            }
+
+            // Add this to the TrackerApp class near the debugDistrictFields method
+            debugDistrictSubmission(ticketData) {
+                console.group('District Field Submission Debug');
+                console.log('Final ticket data for submission:', ticketData);
+
+                // Check custom fields specifically
+                if (ticketData.custom_fields) {
+                    console.log('Custom fields being submitted:');
+                    Object.keys(ticketData.custom_fields).forEach(key => {
+                        console.log(`${key}: ${ticketData.custom_fields[key]} (${typeof ticketData.custom_fields[key]})`);
+                    });
+
+                    // Specifically check for the district fields
+                    console.log('District field (cf_district):',
+                        ticketData.custom_fields.cf_district || 'NOT SET');
+                    console.log('District dropdown field (cf_district509811):',
+                        ticketData.custom_fields.cf_district509811 || 'NOT SET');
+                } else {
+                    console.warn('No custom fields found in ticket data!');
+                }
+
+                console.groupEnd();
+            }
+
+            // Add this new method to your TrackerApp class
+            async preserveDistrictFieldFormat(ticketData, sourceTicketId) {
+                try {
+                    // Get the exact format of the district dropdown from the source ticket
+                    const response = await this.client.request.invokeTemplate("getTicketDetails", {
+                        context: { ticketId: sourceTicketId }
+                    });
+
+                    const sourceTicket = JSON.parse(response.response);
+                    if (sourceTicket && sourceTicket.custom_fields) {
+                        // Get the district dropdown field value with its exact type/format
+                        const districtDropdownValue = sourceTicket.custom_fields.cf_district509811;
+
+                        console.log('Source ticket district dropdown field:', districtDropdownValue,
+                            'Type:', typeof districtDropdownValue);
+
+                        // Copy the exact value to preserve format
+                        if (districtDropdownValue !== undefined) {
+                            ticketData.custom_fields.cf_district509811 = districtDropdownValue;
+                            console.log('Preserved exact format of district dropdown field');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error preserving district field format:', error);
+                }
+
+                return ticketData;
+            }
+
+            // Add this debugging method to investigate dropdown options
+            async inspectDistrictDropdownField() {
+                try {
+                    // Get the ticket form fields to check dropdown options
+                    const response = await this.client.request.invokeTemplate("getTicketFields", {});
+                    const fields = JSON.parse(response.response);
+
+                    // Find the district dropdown field
+                    const districtField = fields.find(f => f.name === 'cf_district509811');
+
+                    if (districtField) {
+                        console.log('District dropdown field options:', districtField.choices);
+
+                        // If this is a company value, we might need to handle it differently
+                        if (districtField.type === 'company_lookup') {
+                            console.log('This is a company lookup field, needs special handling!');
+                        }
+                    } else {
+                        console.log('Could not find district dropdown field');
+                    }
+                } catch (error) {
+                    console.error('Error inspecting district dropdown field:', error);
+                }
             }
         }
     </script>
