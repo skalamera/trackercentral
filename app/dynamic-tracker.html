@@ -1159,76 +1159,36 @@
             }
 
             updateAchievementLevelsSubject() {
-                // Get values from multiple sources to ensure the VIP status is correctly captured
-                let isVIP = 'No';
-                let districtValue = '';
+                try {
+                    // Get the district name directly from the DOM element
+                    const districtNameField = document.getElementById('districtName');
+                    const districtName = districtNameField ? districtNameField.value || '' : '';
 
-                // First check if we have VIP data in localStorage
-                const storageKey = `${this.trackerType}Data`;
-                const storedData = localStorage.getItem(storageKey);
-                if (storedData) {
-                    try {
-                        const parsedData = JSON.parse(storedData);
-                        if (parsedData.isVip !== undefined) {
-                            isVip = parsedData.isVip ? "Yes" : "No";
-                            console.log("Using VIP status from localStorage:", isVIP);
+                    // VIP prefix based on the ticketData property
+                    const vipPrefix = this.ticketData && this.ticketData.isVip ? 'VIP* ' : '';
+
+                    // Format the subject line
+                    const subject = `${vipPrefix}${districtName} | Custom Achievement Levels`;
+
+                    // Update the subject field directly in the DOM
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+                    if (formattedSubjectField) {
+                        formattedSubjectField.value = subject;
+
+                        // Also update the hidden subject field if it exists
+                        const subjectField = document.getElementById('subject');
+                        if (subjectField) {
+                            subjectField.value = subject;
                         }
-                        if (parsedData.districtName) {
-                            districtValue = parsedData.districtName;
-                        }
-                    } catch (e) {
-                        console.error("Error parsing stored data:", e);
+
+                        // Store the generated subject for future reference
+                        this._cachedSubjectLine = subject;
                     }
+
+                    console.log('Updated Achievement Levels subject with VIP status:', subject);
+                } catch (error) {
+                    console.log('Error parsing stored data:', error);
                 }
-
-                // If not found in localStorage, try to get from ticket data
-                if (isVIP === 'No' && this.ticketData && this.ticketData.isVip) {
-                    isVIP = "Yes";
-                    console.log("Using VIP status from ticketData:", isVIP);
-                }
-
-                // Get district name from field if available
-                const districtNameField = document.getElementById('districtName');
-                if (districtNameField && districtNameField.value) {
-                    districtValue = districtNameField.value;
-                } else if (this.ticketData && this.ticketData.districtName) {
-                    districtValue = this.ticketData.districtName;
-                }
-
-                // If still not found, try to get from districtField
-                if (!districtValue) {
-                    const districtField = document.getElementById('districtField');
-                    if (districtField && districtField.value) {
-                        districtValue = districtField.value;
-
-                        // Update districtName field if it exists
-                        if (districtNameField) {
-                            districtNameField.value = districtValue;
-                        }
-                    }
-                }
-
-                // Generate subject line with VIP prefix if applicable
-                const vipPrefix = isVIP === "Yes" ? "VIP* " : "";
-                const formattedSubject = `${vipPrefix}${districtValue} | Custom Achievement Levels`;
-
-                // Update UI
-                const formattedSubjectField = document.getElementById('formattedSubject');
-                if (formattedSubjectField) {
-                    formattedSubjectField.value = formattedSubject;
-
-                    // Also update the hidden subject field to ensure it's submitted correctly
-                    const subjectField = document.getElementById('subject');
-                    if (subjectField) {
-                        subjectField.value = formattedSubject;
-                    }
-                }
-
-                // Save the current VIP status and subject for future reference
-                this._cachedVipStatus = isVIP;
-                this._cachedSubjectLine = formattedSubject;
-
-                console.log("Updated Achievement Levels subject with VIP status:", isVIP, "Subject:", formattedSubject);
             }
 
             loadDataFromStorage() {
