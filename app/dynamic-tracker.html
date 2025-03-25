@@ -1112,7 +1112,34 @@
                     hiddenContainer.appendChild(vipCheckbox);
                 }
 
-                // Add this inside the initEventListeners method
+                // Add dynamic subject line builder for SIM Library View template
+                if (this.trackerType === 'sim-library-view') {
+                    const subjectFields = ['isVIP', 'districtName', 'application', 'specificIssue', 'userRole'];
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+
+                    if (formattedSubjectField) {
+                        // Make it read-only
+                        formattedSubjectField.readOnly = true;
+
+                        // Update the formatted subject when any of the subject fields change
+                        subjectFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (field) {
+                                field.addEventListener('input', () => {
+                                    this.updateSimLibraryViewSubject();
+                                });
+                                field.addEventListener('change', () => {
+                                    this.updateSimLibraryViewSubject();
+                                });
+                            }
+                        });
+
+                        // Initial update
+                        this.updateSimLibraryViewSubject();
+                    }
+                }
+
+                // Add this to the initEventListeners method, where the other template-specific subject handlers are
                 if (this.trackerType === 'sim-fsa') {
                     const subjectFields = ['isVIP', 'districtName', 'application', 'specificIssue', 'userRole'];
                     const formattedSubjectField = document.getElementById('formattedSubject');
@@ -1438,6 +1465,40 @@
                             this.updateAchievementLevelsSubject();
                         }
                     }, 500); // Short delay to ensure fields are available
+                }
+
+                // Add this to the loadDataFromStorage method instead
+                if (this.trackerType === 'sim-fsa') {
+                    const subjectDistrictField = document.querySelector('#section-subject #districtName');
+                    const issueDistrictField = document.querySelector('#section-issueDescription #districtName');
+
+                    if (subjectDistrictField && issueDistrictField) {
+                        // If we have stored data, use that
+                        if (storedData) {
+                            try {
+                                const parsedData = JSON.parse(storedData);
+                                if (parsedData.districtName) {
+                                    subjectDistrictField.value = parsedData.districtName;
+                                    issueDistrictField.value = parsedData.districtName;
+                                    console.log(`Set both district fields to: ${parsedData.districtName}`);
+                                }
+                            } catch (error) {
+                                console.error('Error parsing stored data for district fields:', error);
+                            }
+                        }
+
+                        // Make the issue description district field read-only
+                        issueDistrictField.readOnly = true;
+                        issueDistrictField.style.backgroundColor = '#f0f0f0';
+                        issueDistrictField.style.color = '#666';
+                        issueDistrictField.style.border = '1px solid #ddd';
+                        issueDistrictField.style.cursor = 'not-allowed';
+
+                        // Add event listener to keep fields in sync
+                        subjectDistrictField.addEventListener('input', () => {
+                            issueDistrictField.value = subjectDistrictField.value;
+                        });
+                    }
                 }
             }
 
@@ -2458,19 +2519,28 @@
                         subject = formData.subject || `${this.config.title} - ${new Date().toLocaleDateString()}`;
                     }
 
-                    // Parse related tickets
+                    // Parse and validate related tickets
                     let relatedTicketIds = [];
                     if (formData.relatedTickets) {
                         relatedTicketIds = formData.relatedTickets.split(',')
                             .map(id => id.trim())
                             .filter(id => id !== '')
-                            .map(id => parseInt(id, 10))  // Convert to integers
-                            .filter(id => !isNaN(id));    // Remove any invalid IDs
+                            .map(id => parseInt(id, 10))
+                            .filter(id => !isNaN(id));
                     }
 
-                    // If no related tickets, we can't create a tracker
-                    if (relatedTicketIds.length === 0) {
-                        throw new Error("At least one related ticket ID is required to create a tracker ticket.");
+                    // Add validation to check if related tickets exist
+                    try {
+                        for (const ticketId of relatedTicketIds) {
+                            const response = await this.client.request.invokeTemplate("getTicketDetails", {
+                                context: { ticketId: ticketId }
+                            });
+                            // If we get here, the ticket exists
+                            console.log(`Verified related ticket ${ticketId} exists`);
+                        }
+                    } catch (error) {
+                        console.error("Error validating related tickets:", error);
+                        throw new Error("One or more related ticket IDs are invalid or inaccessible. Please verify the ticket numbers.");
                     }
 
                     // Generate description BEFORE creating ticketData
@@ -2484,7 +2554,7 @@
                         description: description,
                         status: parseInt(formData.status || 2),
                         priority: parseInt(formData.priority || 2),
-                        tags: [`tracker-${this.trackerType}`],
+                        tags: [`tracker-${this.trackerType}`, "TESTING"],
                         related_ticket_ids: relatedTicketIds,
                         source: 101,
                         custom_fields: {}
@@ -2825,9 +2895,10 @@
 
             // Add this method to your TrackerApp class
             setupCustomFileUploaders() {
-                // Apply to sim-assignment, sim-assessment-reports, and sim-fsa templates
+                // Apply to sim-assignment, sim-assessment-reports, sim-library-view, and sim-fsa templates
                 if (this.trackerType !== 'sim-assignment' &&
                     this.trackerType !== 'sim-assessment-reports' &&
+                    this.trackerType !== 'sim-library-view' &&
                     this.trackerType !== 'sim-fsa') {
                     return;
                 }
@@ -2843,6 +2914,10 @@
                         }
 
                         const sectionBody = screenshotsSection.querySelector('.card-body');
+                        if (!sectionBody) {
+                            console.error('Screenshots section body not found');
+                            return;
+                        }
 
                         // Clear existing content
                         sectionBody.innerHTML = '';
@@ -2857,6 +2932,9 @@
                         `;
                         sectionBody.appendChild(quillContainer);
 
+                        // Initialize Quill editor
+                        this.initializeQuillEditor('screenshotsDescription', 'screenshotsDescriptionEditor');
+
                         // Then add file uploader after the Quill editor
                         const uploaderContainer = document.createElement('div');
                         uploaderContainer.className = 'attachment-input-container';
@@ -2868,89 +2946,12 @@
                             </label>
                             <div class="hint"><i class="fas fa-info-circle"></i> Add screenshots, videos or other supporting files to help illustrate the issue</div>
                             <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
-                                <strong>⚠️ IMPORTANT:</strong> Maximum total attachment size is 20MB. Files exceeding this limit will NOT be attached to the ticket. You can still attach files to the Tracker as a note once created.
+                                <strong>⚠️ IMPORTANT:</strong> Maximum total attachment size is 20MB. Files exceeding this limit will NOT be attached to the ticket.
                             </div>
                             <div id="screenshotPreview" class="screenshot-preview"></div>
                             <div id="attachmentCounter" class="attachment-counter"></div>
                         `;
                         sectionBody.appendChild(uploaderContainer);
-
-                        // Initialize the new Quill editor with the same customImageHandler as other editors
-                        try {
-                            // Define a custom image handler for the toolbar
-                            const customImageHandler = () => {
-                                const input = document.createElement('input');
-                                input.setAttribute('type', 'file');
-                                input.setAttribute('accept', 'image/*');
-                                input.click();
-
-                                input.onchange = () => {
-                                    if (input.files && input.files[0]) {
-                                        const file = input.files[0];
-
-                                        // Show loading indicator
-                                        const range = editor.getSelection(true);
-                                        editor.insertText(range.index, "Uploading image... ", { italic: true, color: '#999' });
-                                        const placeholderIndex = range.index;
-
-                                        // Upload to ImgBB
-                                        this.uploadImageToImgBB(file).then(imageUrl => {
-                                            // Delete the placeholder text
-                                            editor.deleteText(placeholderIndex, "Uploading image... ".length);
-
-                                            // Insert the image
-                                            editor.insertEmbed(placeholderIndex, 'image', imageUrl);
-                                            editor.setSelection(placeholderIndex + 1);
-                                        }).catch(error => {
-                                            console.error('Error uploading image:', error);
-
-                                            // Replace placeholder with error message
-                                            editor.deleteText(placeholderIndex, "Uploading image... ".length);
-                                            editor.insertText(placeholderIndex, "⚠️ Image upload failed ", { italic: true, color: 'red' });
-                                        });
-                                    }
-                                };
-                            };
-
-                            const editor = new Quill('#screenshotsDescriptionEditor', {
-                                theme: 'snow',
-                                placeholder: 'Describe your screenshots and videos...',
-                                modules: {
-                                    toolbar: {
-                                        container: [
-                                            ['bold', 'italic'],                      // Bold and italic
-                                            [{ 'color': [] }, { 'background': [] }], // Color and highlight
-                                            [{ 'align': [] }],                       // Alignment
-                                            ['link', 'image']                        // Link and image
-                                        ],
-                                        handlers: {
-                                            'image': customImageHandler.bind(this)
-                                        }
-                                    }
-                                }
-                            });
-
-                            // Make sure the editor is enabled
-                            editor.enable();
-
-                            // Store reference to the editor
-                            this.quillEditors['screenshotsDescription'] = editor;
-
-                            // Add paste image handling 
-                            editor.root.addEventListener('paste', e => this.handlePasteImage(e, editor));
-
-                            // Add drop handling for images
-                            editor.root.addEventListener('drop', e => this.handleDropImage(e, editor));
-
-                            // Update textarea when editor changes
-                            editor.on('text-change', () => {
-                                document.getElementById('screenshotsDescription').value = editor.root.innerHTML;
-                            });
-
-                            console.log('Screenshots Quill editor initialized successfully');
-                        } catch (error) {
-                            console.error('Error initializing screenshots Quill editor:', error);
-                        }
 
                         // Add event listener to the file input
                         const fileInput = sectionBody.querySelector('#screenshots');
@@ -2969,11 +2970,43 @@
                 }
             }
 
+            // Add this helper method to initialize Quill editors
+            initializeQuillEditor(id, editorId) {
+                try {
+                    const editor = new Quill(`#${editorId}`, {
+                        theme: 'snow',
+                        placeholder: 'Add description for your files...',
+                        modules: {
+                            toolbar: {
+                                container: [
+                                    ['bold', 'italic'],
+                                    [{ 'color': [] }, { 'background': [] }],
+                                    [{ 'align': [] }],
+                                    ['link', 'image']
+                                ]
+                            }
+                        }
+                    });
+
+                    // Store reference to the editor
+                    this.quillEditors[id] = editor;
+
+                    // Add paste and drop handlers
+                    editor.root.addEventListener('paste', e => this.handlePasteImage(e, editor));
+                    editor.root.addEventListener('drop', e => this.handleDropImage(e, editor));
+
+                    console.log(`Initialized Quill editor for ${id}`);
+                } catch (error) {
+                    console.error(`Error initializing Quill editor for ${id}:`, error);
+                }
+            }
+
             // Add a method to set up the HAR file uploader
             setupHarFileUploader() {
-                // Apply to both sim-assignment, sim-assessment-reports and sim-fsa templates
+                // Apply to sim-assignment, sim-assessment-reports, sim-library-view and sim-fsa templates
                 if (this.trackerType !== 'sim-assignment' &&
                     this.trackerType !== 'sim-assessment-reports' &&
+                    this.trackerType !== 'sim-library-view' &&
                     this.trackerType !== 'sim-fsa') {
                     return;
                 }
@@ -2993,15 +3026,18 @@
                     // Create and add the HAR file uploader container
                     const harUploaderHTML = `
                         <div class="form-group" id="harUploaderContainer" style="display: none;">
-                            <label for="harFileInput" class="file-upload-button">
-                                <i class="fas fa-cloud-upload-alt"></i> Upload HAR File
-                                <input type="file" id="harFileInput" name="harFileInput" accept=".har" class="hidden-file-input">
-                            </label>
-                            <div class="hint"><i class="fas fa-info-circle"></i> Upload a HAR file to provide detailed network information</div>
-                            <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
-                                <strong>⚠️ IMPORTANT:</strong> Maximum HAR file size is 20MB. Files exceeding this limit will NOT be attached to the ticket.
+                            <label for="harFileInput">Upload HAR File</label>
+                            <div class="attachment-input-container">
+                                <label for="harFileInput" class="file-upload-button">
+                                    <i class="fas fa-cloud-upload-alt"></i> Choose HAR File
+                                    <input type="file" id="harFileInput" name="harFileInput" accept=".har" class="hidden-file-input">
+                                </label>
+                                <div class="hint"><i class="fas fa-info-circle"></i> Upload a HAR file to provide detailed network information</div>
+                                <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
+                                    <strong>⚠️ IMPORTANT:</strong> Maximum HAR file size is 20MB.
+                                </div>
+                                <div id="harFilePreviewContainer" class="screenshot-preview"></div>
                             </div>
-                            <div id="harFilePreviewContainer" class="screenshot-preview"></div>
                         </div>
                     `;
 
@@ -3009,11 +3045,12 @@
                     harFileReasonContainer.insertAdjacentHTML('beforebegin', harUploaderHTML);
 
                     // Make sure initial state is correct
+                    const uploaderContainer = document.getElementById('harUploaderContainer');
                     if (harFileAttached.value === 'Yes') {
-                        document.getElementById('harUploaderContainer').style.display = 'block';
+                        if (uploaderContainer) uploaderContainer.style.display = 'block';
                         harFileReasonContainer.style.display = 'none';
                     } else {
-                        document.getElementById('harUploaderContainer').style.display = 'none';
+                        if (uploaderContainer) uploaderContainer.style.display = 'none';
                         harFileReasonContainer.style.display = 'block';
                     }
 
@@ -3862,6 +3899,29 @@
 
             // Add this method to the TrackerApp class
             updateSimFsaSubject() {
+                const isVIP = document.getElementById('isVIP')?.value || 'No';
+                const vipPrefix = isVIP === "Yes" ? "VIP* " : "";
+                const districtValue = document.getElementById('districtName')?.value || '';
+                const applicationValue = document.getElementById('application')?.value || '';
+                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
+                const userRoleValue = document.getElementById('userRole')?.value || '';
+
+                const formattedSubject =
+                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue} for ${userRoleValue}`;
+
+                const formattedSubjectField = document.getElementById('formattedSubject');
+                if (formattedSubjectField) {
+                    formattedSubjectField.value = formattedSubject;
+
+                    // Also update the hidden subject field to ensure it's submitted correctly
+                    const subjectField = document.getElementById('subject');
+                    if (subjectField) {
+                        subjectField.value = formattedSubject;
+                    }
+                }
+            }
+
+            updateSimLibraryViewSubject() {
                 const isVIP = document.getElementById('isVIP')?.value || 'No';
                 const vipPrefix = isVIP === "Yes" ? "VIP* " : "";
                 const districtValue = document.getElementById('districtName')?.value || '';
