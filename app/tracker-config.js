@@ -270,8 +270,7 @@ const TRACKER_CONFIGS = {
                     { id: "username", type: "text", label: "Username", required: false },
                     { id: "userEmail", type: "email", label: "Email", required: false },
                     {
-                        id: "userRole", type: "select", label: "Role", required: false,
-                        options: ["", "Teacher", "Student", "Admin", "Other"]
+                        id: "userRole", type: "text", label: "Role", required: false
                     },
                     { id: "productImpacted", type: "text", label: "Application/Program Impacted", required: false },
                     { id: "xcodeInfo", type: "text", label: "Xcode", required: false },
@@ -829,10 +828,9 @@ const TRACKER_CONFIGS = {
                     { id: "username", type: "text", label: "Username", required: false },
                     {
                         id: "userRole",
-                        type: "select",
+                        type: "text",
                         label: "Role",
-                        required: false,
-                        options: ["", "Teacher", "Admin", "Student", "Other"]
+                        required: false
                     },
                     { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
                     { id: "realm", type: "text", label: "Realm", required: false },
@@ -999,8 +997,7 @@ const TRACKER_CONFIGS = {
                         hint: "Provide the username of the user requesting the customized achievement levels"
                     },
                     {
-                        id: "userRole", type: "select", label: "Role", required: true,
-                        options: ["Student", "Teacher", "School Admin", "District Admin"],
+                        id: "userRole", type: "text", label: "Role", required: true,
                         hint: "Provide the role they have within Benchmark Universe (user must have a district admin. role)"
                     },
                     {
@@ -1343,7 +1340,7 @@ const TRACKER_CONFIGS = {
                 icon: "fa-user",
                 fields: [
                     { id: "username", type: "text", label: "Username", required: false },
-                    { id: "role", type: "select", label: "Role", required: false, options: ["", "Teacher", "Student", "Admin", "Other"] },
+                    { id: "role", type: "text", label: "Role", required: false },
                     { id: "studentInternalId", type: "text", label: "Student Internal ID", required: false },
                     { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
                     { id: "device", type: "text", label: "Device", required: false },
