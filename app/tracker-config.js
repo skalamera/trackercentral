@@ -1090,6 +1090,13 @@ const TRACKER_CONFIGS = {
                 title: "ISSUE DESCRIPTION",
                 icon: "fa-exclamation-circle",
                 fields: [
+                    {
+                        id: "issueDetails",
+                        type: "richtext",
+                        label: "Specific Issue Details",
+                        required: true,
+                        hint: "Provide specific details outlining the issue and user impact"
+                    },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "districtTechAdminLink", type: "text", label: "District TechAdmin link", required: true },
                     { id: "schoolName", type: "text", label: "School Name", required: false },
@@ -1179,13 +1186,14 @@ const TRACKER_CONFIGS = {
 
             // Issue Description
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
+            if (fields.issueDetails) {
+                description += `<div>${fields.issueDetails}</div>`;
+                description += '<div style="margin-bottom: 10px;"></div>';
+            }
             description += `District Name: ${fields.districtName || ''}<br>`;
             description += `District TechAdmin link: ${fields.districtTechAdminLink || ''}<br>`;
             if (fields.schoolName) description += `School Name: ${fields.schoolName}<br>`;
             if (fields.schoolTechAdminLink) description += `School TechAdmin link: ${fields.schoolTechAdminLink}<br>`;
-            if (fields.issueDetails) {
-                description += `<div>${fields.issueDetails}</div>`;
-            }
             description += '<div style="margin-bottom: 20px;"></div>';
 
             // Steps to Reproduce
