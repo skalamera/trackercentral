@@ -1065,84 +1065,162 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pen-fancy",
                 fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true }
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"]
+                    },
+                    { id: "districtName", type: "text", label: "District Name", required: true },
+                    { id: "application", type: "text", label: "Application", required: true },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    {
+                        id: "userRole",
+                        type: "select",
+                        label: "User Role",
+                        required: true,
+                        options: ["Teacher", "Student", "Admin", "Other"]
+                    },
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
             {
-                id: "assessmentDetails",
-                title: "ASSESSMENT DETAILS",
-                icon: "fa-clipboard-list",
+                id: "issueDescription",
+                title: "ISSUE DESCRIPTION",
+                icon: "fa-exclamation-circle",
                 fields: [
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "teacherName", type: "text", label: "Teacher Name", required: true },
-                    { id: "teacherEmail", type: "email", label: "Teacher Email", required: true },
-                    { id: "programName", type: "text", label: "Program Name", required: true },
-                    { id: "assessmentName", type: "text", label: "Assessment Name", required: true },
                     {
-                        id: "assessmentType", type: "select", label: "Assessment Type", required: true,
-                        options: ["Benchmark", "Progress Monitor", "Unit Test", "Running Record", "Other"]
+                        id: "issueDetails",
+                        type: "richtext",
+                        label: "Specific details outlining user impact",
+                        required: true,
+                        hint: "EX: Teacher is receiving a server error upon clicking Submit for the Unit 3 FSA (Gr. 2)"
                     }
                 ]
             },
             {
-                id: "issueDetails",
-                title: "ISSUE DETAILS",
-                icon: "fa-exclamation-circle",
+                id: "reproduction",
+                title: "STEPS TO REPRODUCE",
+                icon: "fa-list-ol",
                 fields: [
                     {
-                        id: "issueType", type: "select", label: "Issue Type", required: true,
-                        options: ["Administration", "Scoring", "Data Export", "Reporting", "Other"]
-                    },
-                    { id: "issueDescription", type: "richtext", label: "Issue Description", required: true },
-                    { id: "dateOccurred", type: "date", label: "Date Issue Occurred", required: true },
-                    { id: "affectedStudents", type: "textarea", label: "Affected Students (if applicable)", required: false }
+                        id: "stepsToReproduce",
+                        type: "richtext",
+                        label: "The exact path taken by the user and yourself to get to the reported issue",
+                        required: true
+                    }
                 ]
             },
             {
-                id: "browserInfo",
-                title: "ENVIRONMENT",
-                icon: "fa-desktop",
+                id: "screenshots",
+                title: "SCREENSHOTS and/or VIDEOS",
+                icon: "fa-images",
                 fields: [
-                    { id: "browserInfo", type: "text", label: "Browser/OS Information", required: false },
                     {
-                        id: "deviceType", type: "select", label: "Device Type", required: false,
-                        options: ["", "Desktop", "Laptop", "Tablet", "Smartphone", "Other"]
+                        id: "fileAttachmentNote",
+                        type: "info",
+                        label: "⚠️ FILE SIZE LIMITATION",
+                        hint: "Each file must be under 20MB, and the TOTAL size of all attachments MUST NOT exceed 20MB. Files over this limit WILL NOT be attached to the ticket."
+                    },
+                    {
+                        id: "screenshotsDescription",
+                        type: "richtext",
+                        label: "(please include URL in screen capture)",
+                        required: false
+                    }
+                ]
+            },
+            {
+                id: "userInfo",
+                title: "IMPACTED USER INFO",
+                icon: "fa-user",
+                fields: [
+                    { id: "username", type: "text", label: "Username", required: false },
+                    { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
+                    { id: "device", type: "text", label: "Device", required: false },
+                    { id: "realm", type: "text", label: "Realm", required: false },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
+                    {
+                        id: "harFileAttached",
+                        type: "select",
+                        label: "HAR file attached",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "HAR files help identify browser network issues"
+                    },
+                    {
+                        id: "harFileReason",
+                        type: "text",
+                        label: "Reason if HAR file not attached",
+                        required: false
+                    }
+                ]
+            },
+            {
+                id: "expectedResults",
+                title: "EXPECTED RESULTS",
+                icon: "fa-check-circle",
+                fields: [
+                    {
+                        id: "expectedResults",
+                        type: "richtext",
+                        label: "Explain/Show how the system should be functioning if working correctly",
+                        required: true
                     }
                 ]
             }
         ],
         descriptionGenerator: function (fields) {
             let description = '';
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SIM FSA ISSUE</span></div>';
-            description += `<div>${fields.subject || 'SIM FSA Issue'}</div>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
 
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ASSESSMENT DETAILS</span></div>';
-            description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `Teacher Name: ${fields.teacherName || ''}<br>`;
-            description += `Teacher Email: ${fields.teacherEmail || ''}<br>`;
-            description += `Program Name: ${fields.programName || ''}<br>`;
-            description += `Assessment Name: ${fields.assessmentName || ''}<br>`;
-            description += `Assessment Type: ${fields.assessmentType || ''}<br>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
-            description += `Issue Type: ${fields.issueType || ''}<br>`;
-            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
-            if (fields.issueDescription) {
-                description += `<div><strong>Description:</strong></div>`;
-                description += `<div>${fields.issueDescription}</div>`;
-            }
-            if (fields.affectedStudents) {
-                description += `<div><strong>Affected Students:</strong></div>`;
-                description += `<div>${fields.affectedStudents}</div>`;
+            // Issue Description
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
+            if (fields.issueDetails) {
+                description += `<div>${fields.issueDetails}</div>`;
             }
             description += '<div style="margin-bottom: 20px;"></div>';
 
-            if (fields.browserInfo || fields.deviceType) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ENVIRONMENT</span></div>';
-                if (fields.browserInfo) description += `Browser/OS Information: ${fields.browserInfo}<br>`;
-                if (fields.deviceType) description += `Device Type: ${fields.deviceType}<br>`;
+            // Steps to Reproduce
+            if (fields.stepsToReproduce) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
+                description += `<div>${fields.stepsToReproduce}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Screenshots and Videos
+            if (fields.screenshotsDescription) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS and/or VIDEOS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Impacted User Info
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
+            if (fields.username) description += `Username: ${fields.username}<br>`;
+            if (fields.techAdminLink) {
+                let techLink = fields.techAdminLink.trim();
+                if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
+                    techLink = 'https://' + techLink;
+                }
+                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+            }
+            if (fields.device) description += `Device: ${fields.device}<br>`;
+            if (fields.realm) description += `Realm: ${fields.realm}<br>`;
+            if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported)}<br>`;
+            if (fields.harFileAttached) {
+                description += `HAR file attached: ${fields.harFileAttached}`;
+                if (fields.harFileAttached === "No" && fields.harFileReason) {
+                    description += ` (${fields.harFileReason})`;
+                }
+                description += '<br>';
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Expected Results
+            if (fields.expectedResults) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
+                description += `<div>${fields.expectedResults}</div>`;
             }
 
             return description;

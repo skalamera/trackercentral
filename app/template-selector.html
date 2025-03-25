@@ -121,7 +121,7 @@
                         <div class="template-item" data-template="sim-fsa">
                             <a href="#" class="template-link">
                                 <i class="fas fa-check-circle"></i> SIM FSA
-                                <span class="badge badge-development">Development</span>
+                                <span class="badge badge-testing">Testing</span>
                             </a>
                             <div class="template-description">
                                 For issues with FSA functionality
@@ -424,35 +424,13 @@
 
                             // Get district name from custom fields
                             if (parsedData.custom_fields) {
-                                const districtFields = ['cf_district509811', 'cf_district', 'district', 'cf_school_district', 'cf_district_name'];
-                                for (const field of districtFields) {
-                                    if (parsedData.custom_fields[field]) {
-                                        dataToPass.districtName = parsedData.custom_fields[field];
-                                        // Store the same value for both district fields
-                                        dataToPass.districtField = parsedData.custom_fields[field];
-                                        dataToPass.districtDropdownValue = parsedData.custom_fields[field];
-                                        console.log(`Found district name in field ${field}: ${dataToPass.districtName}`);
-                                        console.log(`Set districtDropdownValue to: ${dataToPass.districtDropdownValue}`);
-                                        break;
-                                    }
-                                }
-
-                                // If still no district name, check additional fields
-                                if (!dataToPass.districtName) {
-                                    console.log('District not found in standard fields, checking additional custom fields:', parsedData.custom_fields);
-                                    // Log all custom fields to help identify the correct field
-                                    Object.keys(parsedData.custom_fields).forEach(key => {
-                                        if (key.toLowerCase().includes('district')) {
-                                            console.log(`Potential district field: ${key} = ${parsedData.custom_fields[key]}`);
-                                            if (parsedData.custom_fields[key]) {
-                                                // If any field contains 'district' and has a value, use it for both fields
-                                                dataToPass.districtName = parsedData.custom_fields[key];
-                                                dataToPass.districtField = parsedData.custom_fields[key];
-                                                dataToPass.districtDropdownValue = parsedData.custom_fields[key];
-                                                console.log(`Using value from ${key} for district fields: ${parsedData.custom_fields[key]}`);
-                                            }
-                                        }
-                                    });
+                                if (parsedData.custom_fields.cf_district509811) {
+                                    dataToPass.districtName = parsedData.custom_fields.cf_district509811;
+                                    dataToPass.districtDropdownValue = parsedData.custom_fields.cf_district509811;
+                                    console.log(`Found district name: ${dataToPass.districtName}`);
+                                    console.log(`Set districtDropdownValue to: ${dataToPass.districtDropdownValue}`);
+                                } else {
+                                    console.log('District field cf_district509811 not found or empty');
                                 }
                             }
 

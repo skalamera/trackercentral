@@ -359,7 +359,7 @@
                             const districtField = document.getElementById('districtField');
                             const districtNameField = document.getElementById('districtName');
 
-                            if (districtNameField) {
+                            if (districtField && districtField.value && districtNameField) {
                                 // If districtField has value, use it
                                 if (districtField && districtField.value) {
                                     districtNameField.value = districtField.value;
@@ -1111,6 +1111,33 @@
                     vipCheckbox.name = 'hiddenVIPStatus';
                     hiddenContainer.appendChild(vipCheckbox);
                 }
+
+                // Add this inside the initEventListeners method
+                if (this.trackerType === 'sim-fsa') {
+                    const subjectFields = ['isVIP', 'districtName', 'application', 'specificIssue', 'userRole'];
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+
+                    if (formattedSubjectField) {
+                        // Make it read-only
+                        formattedSubjectField.readOnly = true;
+
+                        // Update the formatted subject when any of the subject fields change
+                        subjectFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (field) {
+                                field.addEventListener('input', () => {
+                                    this.updateSimFsaSubject();
+                                });
+                                field.addEventListener('change', () => {
+                                    this.updateSimFsaSubject();
+                                });
+                            }
+                        });
+
+                        // Initial update
+                        this.updateSimFsaSubject();
+                    }
+                }
             }
 
             updateFormattedSubject() {
@@ -1208,7 +1235,7 @@
                     // First check if we already have a pre-formatted subject from template-selector
                     if (this.ticketData && this.ticketData.formattedSubject) {
                         const subject = this.ticketData.formattedSubject;
-                        
+
                         // Update DOM fields with the pre-formatted subject
                         const formattedSubjectField = document.getElementById('formattedSubject');
                         if (formattedSubjectField) {
@@ -1223,18 +1250,18 @@
                             // Cache for comparison
                             this._cachedSubjectLine = subject;
                         }
-                        
+
                         console.log('Using pre-formatted subject with VIP status:', subject);
                         return;
                     }
-                    
+
                     // If no pre-formatted subject, fall back to existing logic
                     const districtNameField = document.getElementById('districtName');
                     const districtName = districtNameField ? districtNameField.value || '' : '';
 
                     // SIMPLIFY VIP logic - use multiple sources
                     let isVip = false;
-                    
+
                     // Check all possible sources for VIP status
                     const vipCheckbox = document.getElementById('hiddenVIPStatus');
                     if (vipCheckbox && vipCheckbox.checked) {
@@ -2422,27 +2449,13 @@
                 try {
                     const loadingOverlay = document.getElementById('loadingOverlay');
 
-                    // Prepare the ticket data
-                    let subject = formData.subject;  // Using let here is fine
+                    // Get the formatted subject from the form
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+                    let subject = formattedSubjectField ? formattedSubjectField.value : formData.subject;
 
-                    // For assembly template, use the formatted subject
-                    if (this.trackerType === 'assembly' && formData.formattedSubject) {
-                        subject = formData.formattedSubject;
-                    }
-
-                    // For sedcust template, use the formatted subject
-                    if (this.trackerType === 'sedcust' && formData.formattedSubject) {
-                        subject = formData.formattedSubject;
-                    }
-
-                    // For sim-assignment template, use the formatted subject
-                    if (this.trackerType === 'sim-assignment' && formData.formattedSubject) {
-                        subject = formData.formattedSubject;
-                    }
-
-                    // For sim-assessment-reports template, use the formatted subject
-                    if (this.trackerType === 'sim-assessment-reports' && formData.formattedSubject) {
-                        subject = formData.formattedSubject;
+                    // If no formatted subject, fall back to regular subject
+                    if (!subject) {
+                        subject = formData.subject || `${this.config.title} - ${new Date().toLocaleDateString()}`;
                     }
 
                     // Parse related tickets
@@ -2460,58 +2473,43 @@
                         throw new Error("At least one related ticket ID is required to create a tracker ticket.");
                     }
 
-                    // Get description - FIX IMAGE URLS only
-                    let description = document.getElementById('description').value;
+                    // Generate description BEFORE creating ticketData
+                    const description = this.generateDescription();
+                    document.getElementById('description').value = description;
 
-                    // Ensure image URLs are properly formatted
-                    if (this.trackerType === 'sim-assignment') {
-                        description = this.fixImageUrls(description);
-                    }
-
-                    // Create the basic ticket data
-                    // Change from const to let so we can modify it later
-                    let ticketData = {  // <-- Changed from const to let
+                    // Create the ticket data object
+                    let ticketData = {
                         email: formData.email,
-                        subject: subject || `${this.config.title} - ${new Date().toLocaleDateString()}`,
+                        subject: subject,
                         description: description,
                         status: parseInt(formData.status || 2),
                         priority: parseInt(formData.priority || 2),
                         tags: [`tracker-${this.trackerType}`],
                         related_ticket_ids: relatedTicketIds,
-                        source: 101,  // Set the source to 101 as requested
-                        custom_fields: {}  // Initialize empty custom_fields
+                        source: 101,
+                        custom_fields: {}
                     };
 
                     // Initialize custom_fields if not already done
                     ticketData.custom_fields = ticketData.custom_fields || {};
 
-                    // IMPORTANT: Add the district dropdown field with the district field value
+                    // Set district field
                     if (formData.districtField) {
-                        // Add both district fields with the same value
-                        ticketData.custom_fields.cf_district = String(formData.districtField);
                         ticketData.custom_fields.cf_district509811 = String(formData.districtField);
-                        console.log(`Set district fields - cf_district: ${formData.districtField}, cf_district509811: ${formData.districtField}`);
+                        console.log(`Set district field - cf_district509811: ${formData.districtField}`);
                     }
                     // Use fallback methods if district field not available
                     else if (formData.districtName) {
-                        ticketData.custom_fields.cf_district = String(formData.districtName);
                         ticketData.custom_fields.cf_district509811 = String(formData.districtName);
-                        console.log(`Using districtName as fallback for district fields: ${formData.districtName}`);
+                        console.log(`Using districtName as fallback for district field: ${formData.districtName}`);
                     }
                     else if (formData.districtDropdownValue) {
-                        ticketData.custom_fields.cf_district = String(formData.districtDropdownValue);
                         ticketData.custom_fields.cf_district509811 = String(formData.districtDropdownValue);
-                        console.log(`Using districtDropdownValue as fallback for district fields: ${formData.districtDropdownValue}`);
-                    }
-
-                    // Add additional custom fields as needed (existing code)
-                    if (formData.districtField) {
-                        ticketData.custom_fields.cf_district = formData.districtField;
+                        console.log(`Using districtDropdownValue as fallback for district field: ${formData.districtDropdownValue}`);
                     }
 
                     // Add group if selected
                     if (formData.groupField && formData.groupField !== '') {
-                        // Make sure it's a number
                         const groupId = parseInt(formData.groupField, 10);
                         if (!isNaN(groupId)) {
                             ticketData.group_id = groupId;
@@ -2520,127 +2518,20 @@
 
                     // Add agent if selected
                     if (formData.agentField && formData.agentField !== '') {
-                        // Make sure it's a number
                         const responderId = parseInt(formData.agentField, 10);
                         if (!isNaN(responderId)) {
                             ticketData.responder_id = responderId;
                         }
                     }
 
-                    // Add district field if available
-                    if (formData.districtField) {
-                        // Use the appropriate custom field ID for district
-                        ticketData.custom_fields.cf_district = formData.districtField;
-
-                        // IMPORTANT: Also add the district dropdown field with the same value
-                        ticketData.custom_fields.cf_district509811 = formData.districtField;
-                        console.log(`Set district dropdown field (cf_district509811) to: ${formData.districtField}`);
-                    }
-
-                    // Get source ticket data to copy custom fields, priority, and product fields
-                    try {
-                        // Use the first related ticket ID as the source ticket
-                        const sourceTicketId = relatedTicketIds[0];
-                        console.log(`Fetching source ticket #${sourceTicketId} data for copying fields...`);
-
-                        const sourceTicketResponse = await this.client.request.invokeTemplate("getTicketDetails", {
-                            context: {
-                                ticketId: sourceTicketId
-                            }
-                        });
-
-                        const sourceTicket = JSON.parse(sourceTicketResponse.response);
-                        let isVip = false;
-
-                        // Copy custom fields from source ticket
-                        if (sourceTicket && sourceTicket.custom_fields) {
-                            // List of custom fields to copy over
-                            const customFieldsToCopy = [
-                                'cf_categorization',
-                                'cf_subcategory',
-                                'cf_issue_detail',
-                                'cf_account_manager',
-                                'cf_rvp',
-                                'cf_vip',  // Always copy cf_vip to ensure it gets copied
-                                'cf_product_type', // Product type field
-                                'cf_product',  // Add product field
-                                'cf_product_subsection' // Add product subsection field
-                            ];
-
-                            customFieldsToCopy.forEach(field => {
-                                if (sourceTicket.custom_fields[field] !== undefined) {
-                                    ticketData.custom_fields[field] = sourceTicket.custom_fields[field];
-                                    console.log(`Copied custom field ${field} from source ticket:`, sourceTicket.custom_fields[field]);
-                                }
-                            });
-
-                            // Additional logic to handle product fields from ticketData if not already set
-                            // Handle product type
-                            if (this.ticketData && this.ticketData.productType && !ticketData.custom_fields.cf_product_type) {
-                                ticketData.custom_fields.cf_product_type = this.ticketData.productType;
-                                console.log(`Set product type from stored data:`, this.ticketData.productType);
-                            }
-
-                            // Handle product 
-                            if (this.ticketData && this.ticketData.product && !ticketData.custom_fields.cf_product) {
-                                ticketData.custom_fields.cf_product = this.ticketData.product;
-                                console.log(`Set product from stored data:`, this.ticketData.product);
-                            }
-
-                            // Handle product subsection
-                            if (this.ticketData && this.ticketData.productSubsection && !ticketData.custom_fields.cf_product_subsection) {
-                                ticketData.custom_fields.cf_product_subsection = this.ticketData.productSubsection;
-                                console.log(`Set product subsection from stored data:`, this.ticketData.productSubsection);
-                            }
-
-                            // ... existing code ...
-                        }
-                    } catch (sourceTicketError) {
-                        console.error(`Error getting source ticket data: ${sourceTicketError}`);
-
-                        // If we failed to get from API but have it in local data, use that
-                        if (this.ticketData) {
-                            ticketData.custom_fields = ticketData.custom_fields || {};
-
-                            // Use product type from local data if available
-                            if (this.ticketData.productType) {
-                                ticketData.custom_fields.cf_product_type = this.ticketData.productType;
-                                console.log(`Using product type from stored data (fallback):`, this.ticketData.productType);
-                            }
-
-                            // Use product from local data if available
-                            if (this.ticketData.product) {
-                                ticketData.custom_fields.cf_product = this.ticketData.product;
-                                console.log(`Using product from stored data (fallback):`, this.ticketData.product);
-                            }
-
-                            // Use product subsection from local data if available
-                            if (this.ticketData.productSubsection) {
-                                ticketData.custom_fields.cf_product_subsection = this.ticketData.productSubsection;
-                                console.log(`Using product subsection from stored data (fallback):`, this.ticketData.productSubsection);
-                            }
-                        }
-
-                        // Continue creating the ticket even if we can't get source ticket data
-                    }
-
-                    // Debug the district field values before submission
-                    this.debugDistrictSubmission(ticketData);
-
-                    console.log('Ticket data to be sent:', JSON.stringify(ticketData, null, 2));
-
-                    // Add this right before creating the ticket in the createTicket method
-                    if (relatedTicketIds.length > 0) {
-                        // Use the first related ticket to get the district field format
-                        ticketData = await this.preserveDistrictFieldFormat(ticketData, relatedTicketIds[0]);
-                    }
-
-                    // ADD THIS NEW CODE:
-                    // Final check to ensure VIP tickets get high priority
+                    // Final check for VIP status and priority
                     if (this.ticketData && this.ticketData.isVip) {
                         console.log("Final check: Setting priority to HIGH (3) for VIP ticket");
                         ticketData.priority = 3;
                     }
+
+                    // Debug log the final ticket data
+                    console.log('Final ticket data to be sent:', JSON.stringify(ticketData, null, 2));
 
                     // Create the ticket
                     const response = await this.client.request.invokeTemplate("createfdTicket", {
@@ -2654,45 +2545,10 @@
                     this.handleTicketCreationSuccess(responseData);
                 } catch (error) {
                     console.error('Error creating ticket:', error);
-
-                    // Log the original error for debugging
-                    console.group('Detailed Error Information');
-                    console.error('Error object:', error);
-                    console.error('Error response:', error.response);
-                    console.error('Error status:', error.status);
-                    console.groupEnd();
-
-                    const loadingOverlay = document.getElementById('loadingOverlay');
                     if (loadingOverlay) {
                         loadingOverlay.style.display = 'none';
                     }
-
-                    // Try to extract meaningful error message from API response
-                    let errorMessage = 'Unknown error';
-                    if (error.response) {
-                        try {
-                            const errorJson = JSON.parse(error.response);
-                            if (errorJson.description) {
-                                errorMessage = errorJson.description;
-
-                                // Add details from specific errors if available
-                                if (errorJson.errors && Array.isArray(errorJson.errors)) {
-                                    errorMessage += ': ' + errorJson.errors.map(e =>
-                                        `${e.field || ''} ${e.message || e.code || ''}`
-                                    ).join(', ');
-                                }
-                            }
-                        } catch (parseError) {
-                            // If we can't parse the response, use it directly if it's a string
-                            if (typeof error.response === 'string') {
-                                errorMessage = error.response.substring(0, 100); // Limit length
-                            }
-                        }
-                    } else if (error.message) {
-                        errorMessage = error.message;
-                    }
-
-                    this.showError('Failed to create ticket: ' + errorMessage);
+                    this.showError('Failed to create ticket: ' + (error.message || 'Unknown error'));
                 }
             }
 
@@ -2969,8 +2825,10 @@
 
             // Add this method to your TrackerApp class
             setupCustomFileUploaders() {
-                // Apply to both sim-assignment and sim-assessment-reports templates
-                if (this.trackerType !== 'sim-assignment' && this.trackerType !== 'sim-assessment-reports') {
+                // Apply to sim-assignment, sim-assessment-reports, and sim-fsa templates
+                if (this.trackerType !== 'sim-assignment' &&
+                    this.trackerType !== 'sim-assessment-reports' &&
+                    this.trackerType !== 'sim-fsa') {
                     return;
                 }
 
@@ -3113,8 +2971,10 @@
 
             // Add a method to set up the HAR file uploader
             setupHarFileUploader() {
-                // Apply to both sim-assignment and sim-assessment-reports templates
-                if (this.trackerType !== 'sim-assignment' && this.trackerType !== 'sim-assessment-reports') {
+                // Apply to both sim-assignment, sim-assessment-reports and sim-fsa templates
+                if (this.trackerType !== 'sim-assignment' &&
+                    this.trackerType !== 'sim-assessment-reports' &&
+                    this.trackerType !== 'sim-fsa') {
                     return;
                 }
 
@@ -3125,40 +2985,36 @@
                     return;
                 }
 
-                // Create and add the HAR file uploader container
-                const harUploaderHTML = `
-                    <div class="attachment-input-container" id="harUploaderContainer" style="display: none;">
-                        <label for="harFileInput" class="file-upload-button">
-                            <i class="fas fa-cloud-upload-alt"></i> Upload HAR File
-                            <input type="file" id="harFileInput" name="harFileInput" accept=".har" class="hidden-file-input">
-                        </label>
-                        <div class="hint"><i class="fas fa-info-circle"></i> Upload a HAR file to provide detailed network information</div>
-                            <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
-                            <strong>⚠️ IMPORTANT:</strong> Maximum HAR file size is 20MB. Files exceeding this limit will NOT be attached to the ticket. You can still attach HAR files to the Tracker as a note once created.
-                        </div>
-                        <div id="harFilePreviewContainer" class="screenshot-preview"></div>
-                    </div>
-                `;
-
                 // Find the harFileReason field and its container
                 const harFileReason = document.getElementById('harFileReason');
                 const harFileReasonContainer = harFileReason ? this.findParentWithClass(harFileReason, 'form-group') : null;
 
                 if (harFileReasonContainer) {
-                    // Insert the HAR uploader after the reason field
-                    const containerDiv = document.createElement('div');
-                    containerDiv.className = 'har-uploader-container';
-                    containerDiv.innerHTML = harUploaderHTML;
+                    // Create and add the HAR file uploader container
+                    const harUploaderHTML = `
+                        <div class="form-group" id="harUploaderContainer" style="display: none;">
+                            <label for="harFileInput" class="file-upload-button">
+                                <i class="fas fa-cloud-upload-alt"></i> Upload HAR File
+                                <input type="file" id="harFileInput" name="harFileInput" accept=".har" class="hidden-file-input">
+                            </label>
+                            <div class="hint"><i class="fas fa-info-circle"></i> Upload a HAR file to provide detailed network information</div>
+                            <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
+                                <strong>⚠️ IMPORTANT:</strong> Maximum HAR file size is 20MB. Files exceeding this limit will NOT be attached to the ticket.
+                            </div>
+                            <div id="harFilePreviewContainer" class="screenshot-preview"></div>
+                        </div>
+                    `;
 
-                    harFileReasonContainer.parentNode.insertBefore(containerDiv, harFileReasonContainer.nextSibling);
+                    // Insert the HAR uploader before the reason field container
+                    harFileReasonContainer.insertAdjacentHTML('beforebegin', harUploaderHTML);
 
                     // Make sure initial state is correct
                     if (harFileAttached.value === 'Yes') {
                         document.getElementById('harUploaderContainer').style.display = 'block';
-                        if (harFileReasonContainer) harFileReasonContainer.style.display = 'none';
+                        harFileReasonContainer.style.display = 'none';
                     } else {
                         document.getElementById('harUploaderContainer').style.display = 'none';
-                        if (harFileReasonContainer) harFileReasonContainer.style.display = 'block';
+                        harFileReasonContainer.style.display = 'block';
                     }
 
                     // Add event listener to the HAR file input
@@ -3168,6 +3024,31 @@
                             this.handleHarFileInputChange(e);
                         });
                     }
+
+                    // Add change listener to harFileAttached dropdown
+                    harFileAttached.addEventListener('change', function () {
+                        const uploaderContainer = document.getElementById('harUploaderContainer');
+                        const reasonContainer = document.getElementById('harFileReason') ?
+                            window.trackerApp.findParentWithClass(document.getElementById('harFileReason'), 'form-group') : null;
+
+                        if (this.value === 'Yes') {
+                            if (uploaderContainer) uploaderContainer.style.display = 'block';
+                            if (reasonContainer) {
+                                reasonContainer.style.display = 'none';
+                                // Remove the required indication
+                                const label = reasonContainer.querySelector('label');
+                                if (label) label.classList.remove('required-field');
+                            }
+                        } else {
+                            if (uploaderContainer) uploaderContainer.style.display = 'none';
+                            if (reasonContainer) {
+                                reasonContainer.style.display = 'block';
+                                // Add visual indication that the field is now required
+                                const label = reasonContainer.querySelector('label');
+                                if (label) label.classList.add('required-field');
+                            }
+                        }
+                    });
                 } else {
                     console.warn('Could not find HAR file reason container');
                 }
@@ -3265,7 +3146,10 @@
             // Replace the addAttachmentsAsNote method with this version that uses a single note
             async addAttachmentsAsNote(ticketId) {
                 const hasScreenshots = this.aggregatedScreenshotFiles && this.aggregatedScreenshotFiles.length > 0;
-                const hasHarFile = this.trackerType === 'sim-assignment' && this.harFile;
+                const hasHarFile = (this.trackerType === 'sim-assignment' ||
+                    this.trackerType === 'sim-assessment-reports' ||
+                    this.trackerType === 'sim-fsa') &&
+                    this.harFile;
 
                 if (!hasScreenshots && !hasHarFile) {
                     return Promise.resolve(); // Nothing to do
@@ -3285,6 +3169,7 @@
                     // Add HAR file if present
                     if (hasHarFile) {
                         filesToUpload.push(this.harFile);
+                        console.log('Added HAR file to upload queue:', this.harFile.name);
                     }
 
                     // Show progress in loading overlay
@@ -3435,21 +3320,9 @@
                                     let districtValue = null;
                                     const customFields = ticketData.ticket.custom_fields;
 
-                                    // Try various known district field IDs
-                                    if (customFields.cf_district) {
-                                        districtValue = customFields.cf_district;
-                                    } else if (customFields.cf_district509811) {
+                                    // Only check cf_district509811 field
+                                    if (customFields.cf_district509811) {
                                         districtValue = customFields.cf_district509811;
-                                    }
-
-                                    // If still not found, search for any field with "district" in the name
-                                    if (!districtValue) {
-                                        for (const key in customFields) {
-                                            if (key.toLowerCase().includes('district') && customFields[key]) {
-                                                districtValue = customFields[key];
-                                                break;
-                                            }
-                                        }
                                     }
 
                                     console.log("District value from parent ticket:", districtValue);
@@ -3985,6 +3858,30 @@
                 console.log('ticketData.priority:', this.ticketData?.priority);
                 console.log('VIP checkbox value:', document.getElementById('hiddenVIPStatus')?.checked);
                 console.groupEnd();
+            }
+
+            // Add this method to the TrackerApp class
+            updateSimFsaSubject() {
+                const isVIP = document.getElementById('isVIP')?.value || 'No';
+                const vipPrefix = isVIP === "Yes" ? "VIP* " : "";
+                const districtValue = document.getElementById('districtName')?.value || '';
+                const applicationValue = document.getElementById('application')?.value || '';
+                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
+                const userRoleValue = document.getElementById('userRole')?.value || '';
+
+                const formattedSubject =
+                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue} for ${userRoleValue}`;
+
+                const formattedSubjectField = document.getElementById('formattedSubject');
+                if (formattedSubjectField) {
+                    formattedSubjectField.value = formattedSubject;
+
+                    // Also update the hidden subject field to ensure it's submitted correctly
+                    const subjectField = document.getElementById('subject');
+                    if (subjectField) {
+                        subjectField.value = formattedSubject;
+                    }
+                }
             }
         }
     </script>
