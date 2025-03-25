@@ -16,6 +16,30 @@
             background-color: #2C3E50;
             color: white;
         }
+
+        /* ... existing styles ... */
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-input {
+            margin: 0;
+        }
+
+        .checkbox-label {
+            margin: 0;
+            font-weight: normal;
+        }
     </style>
 </head>
 
@@ -281,6 +305,23 @@
                                 <textarea id="${field.id}" name="${field.id}" style="display: none;"></textarea>
                             </div>
                         `;
+                        break;
+
+                    case 'checkboxes':
+                        html += `<div class="checkbox-group">`;
+                        field.options.forEach(option => {
+                            html += `
+                                <div class="checkbox-item">
+                                    <input type="checkbox" 
+                                        id="${option.id}" 
+                                        name="${field.id}" 
+                                        value="${option.id}"
+                                        class="checkbox-input">
+                                    <label for="${option.id}" class="checkbox-label">${option.label}</label>
+                                </div>
+                            `;
+                        });
+                        html += `</div>`;
                         break;
 
                     default:
@@ -1165,6 +1206,52 @@
                         this.updateSimFsaSubject();
                     }
                 }
+
+                // Add to the initEventListeners method
+                if (this.trackerType === 'sim-assignment' ||
+                    this.trackerType === 'sim-assessment-reports' ||
+                    this.trackerType === 'sim-fsa' ||
+                    this.trackerType === 'sim-library-view') {
+
+                    // Handle "All Users" checkbox
+                    const allUsersCheckbox = document.querySelector('input[value="allUsers"]');
+                    const individualRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:not([value="allUsers"])');
+
+                    if (allUsersCheckbox) {
+                        allUsersCheckbox.addEventListener('change', (e) => {
+                            // If "All Users" is checked, uncheck other options
+                            if (e.target.checked) {
+                                individualRoleCheckboxes.forEach(cb => {
+                                    cb.checked = false;
+                                    cb.disabled = true;
+                                });
+                            } else {
+                                individualRoleCheckboxes.forEach(cb => {
+                                    cb.disabled = false;
+                                });
+                            }
+                            this.updateSubjectLine();
+                        });
+                    }
+
+                    // Handle individual role checkboxes
+                    individualRoleCheckboxes.forEach(checkbox => {
+                        checkbox.addEventListener('change', () => {
+                            // If all individual roles are selected, check "All Users" instead
+                            const allIndividualSelected = Array.from(individualRoleCheckboxes)
+                                .every(cb => cb.checked);
+
+                            if (allIndividualSelected && allUsersCheckbox) {
+                                allUsersCheckbox.checked = true;
+                                individualRoleCheckboxes.forEach(cb => {
+                                    cb.checked = false;
+                                    cb.disabled = true;
+                                });
+                            }
+                            this.updateSubjectLine();
+                        });
+                    });
+                }
             }
 
             updateFormattedSubject() {
@@ -1210,22 +1297,62 @@
                 }
             }
 
+            // Replace the existing formatUserRoles method with this updated version
+            formatUserRoles(selectedRoles) {
+                // If "All Users" is selected, return that
+                if (selectedRoles.includes('allUsers')) {
+                    return "All Users";
+                }
+
+                // If all three individual roles are selected, return "All Users"
+                if (selectedRoles.includes('students') &&
+                    selectedRoles.includes('teachers') &&
+                    selectedRoles.includes('admin')) {
+                    return "All Users";
+                }
+
+                // Format multiple selections
+                const roleMap = {
+                    'students': 'Students',
+                    'teachers': 'Teachers',
+                    'admin': 'Admin'
+                };
+
+                const selectedLabels = selectedRoles
+                    .filter(role => role !== 'allUsers')
+                    .map(role => roleMap[role]);
+
+                // At this point, we should only have 1 or 2 roles
+                // Join with & if there are 2 roles
+                if (selectedLabels.length === 2) {
+                    return selectedLabels.join(' & ');
+                }
+
+                // Return single role
+                return selectedLabels[0] || '';
+            }
+
+            // Update the subject line methods for each template
             updateSimAssignmentSubject() {
                 const isVIP = document.getElementById('isVIP')?.value || 'No';
-                const vipPrefix = isVIP === "Yes" ? "VIP* " : "";
+                const vipPrefix = isVIP === "Yes" ? "VIP * " : "";
                 const districtValue = document.getElementById('districtName')?.value || '';
                 const applicationValue = document.getElementById('application')?.value || '';
                 const specificIssueValue = document.getElementById('specificIssue')?.value || '';
-                const userRoleValue = document.getElementById('userRole')?.value || '';
+
+                // Get all checked user role checkboxes
+                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
+                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
+                const formattedUserRole = this.formatUserRoles(selectedRoles);
 
                 const formattedSubject =
-                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue}: ${userRoleValue}`;
+                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue} for ${formattedUserRole}`;
 
                 const formattedSubjectField = document.getElementById('formattedSubject');
                 if (formattedSubjectField) {
                     formattedSubjectField.value = formattedSubject;
 
-                    // Also update the hidden subject field to ensure it's submitted correctly
+                    // Also update the hidden subject field
                     const subjectField = document.getElementById('subject');
                     if (subjectField) {
                         subjectField.value = formattedSubject;
@@ -1233,26 +1360,103 @@
                 }
             }
 
+            // Update the other template methods similarly
             updateSIMAssessmentReportsSubject() {
+                // Same pattern as above with VIP * spacing and user role formatting
                 const isVIP = document.getElementById('isVIP')?.value || 'No';
-                const vipPrefix = isVIP === "Yes" ? "VIP* " : "";
+                const vipPrefix = isVIP === "Yes" ? "VIP * " : "";
                 const districtValue = document.getElementById('districtName')?.value || '';
                 const applicationValue = document.getElementById('application')?.value || '';
                 const specificIssueValue = document.getElementById('specificIssue')?.value || '';
-                const userRoleValue = document.getElementById('userRole')?.value || '';
+
+                // Get all checked user role checkboxes
+                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
+                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
+                const formattedUserRole = this.formatUserRoles(selectedRoles);
 
                 const formattedSubject =
-                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue} for ${userRoleValue}`;
+                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue} for ${formattedUserRole}`;
 
                 const formattedSubjectField = document.getElementById('formattedSubject');
                 if (formattedSubjectField) {
                     formattedSubjectField.value = formattedSubject;
 
-                    // Also update the hidden subject field to ensure it's submitted correctly
+                    // Also update the hidden subject field
                     const subjectField = document.getElementById('subject');
                     if (subjectField) {
                         subjectField.value = formattedSubject;
                     }
+                }
+            }
+
+            updateSimLibraryViewSubject() {
+                const isVIP = document.getElementById('isVIP')?.value || 'No';
+                const vipPrefix = isVIP === "Yes" ? "VIP * " : "";
+                const districtValue = document.getElementById('districtName')?.value || '';
+                const applicationValue = document.getElementById('application')?.value || '';
+                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
+
+                // Get all checked user role checkboxes
+                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
+                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
+                const formattedUserRole = this.formatUserRoles(selectedRoles);
+
+                // Only add the "for" part if there are selected roles
+                const userRolePart = formattedUserRole ? ` for ${formattedUserRole}` : '';
+
+                const formattedSubject =
+                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue}${userRolePart}`;
+
+                const formattedSubjectField = document.getElementById('formattedSubject');
+                if (formattedSubjectField) {
+                    formattedSubjectField.value = formattedSubject;
+
+                    // Also update the hidden subject field
+                    const subjectField = document.getElementById('subject');
+                    if (subjectField) {
+                        subjectField.value = formattedSubject;
+                    }
+                }
+            }
+
+            updateSimFsaSubject() {
+                const isVIPField = document.querySelector('select[name="isVIP"]');
+                const districtNameField = document.querySelector('input[name="districtName"]');
+                const applicationField = document.querySelector('input[name="application"]');
+                const specificIssueField = document.querySelector('input[name="specificIssue"]');
+
+                // Get all checked user role checkboxes
+                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
+                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
+                const formattedUserRole = this.formatUserRoles(selectedRoles);
+
+                // Build the subject line
+                let subject = '';
+                if (isVIPField && isVIPField.value === 'Yes') {
+                    subject += 'VIP* ';
+                }
+                if (districtNameField && districtNameField.value) {
+                    subject += `${districtNameField.value} | `;
+                }
+                if (applicationField && applicationField.value) {
+                    subject += applicationField.value;
+                }
+                if (specificIssueField && specificIssueField.value) {
+                    subject += ` - ${specificIssueField.value}`;
+                }
+                if (formattedUserRole) {
+                    subject += ` for ${formattedUserRole}`;
+                }
+
+                // Update both the formatted and hidden subject fields
+                const formattedSubjectField = document.querySelector('input[name="formattedSubject"]');
+                const hiddenSubjectField = document.querySelector('input[name="subject"]');
+
+                if (formattedSubjectField) {
+                    formattedSubjectField.value = subject;
+                }
+                if (hiddenSubjectField) {
+                    hiddenSubjectField.value = subject;
                 }
             }
 
@@ -3899,21 +4103,69 @@
 
             // Add this method to the TrackerApp class
             updateSimFsaSubject() {
+                const isVIPField = document.querySelector('select[name="isVIP"]');
+                const districtNameField = document.querySelector('input[name="districtName"]');
+                const applicationField = document.querySelector('input[name="application"]');
+                const specificIssueField = document.querySelector('input[name="specificIssue"]');
+
+                // Get all checked user role checkboxes
+                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
+                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
+                const formattedUserRole = this.formatUserRoles(selectedRoles);
+
+                // Build the subject line
+                let subject = '';
+                if (isVIPField && isVIPField.value === 'Yes') {
+                    subject += 'VIP* ';
+                }
+                if (districtNameField && districtNameField.value) {
+                    subject += `${districtNameField.value} | `;
+                }
+                if (applicationField && applicationField.value) {
+                    subject += applicationField.value;
+                }
+                if (specificIssueField && specificIssueField.value) {
+                    subject += ` - ${specificIssueField.value}`;
+                }
+                if (formattedUserRole) {
+                    subject += ` for ${formattedUserRole}`;
+                }
+
+                // Update both the formatted and hidden subject fields
+                const formattedSubjectField = document.querySelector('input[name="formattedSubject"]');
+                const hiddenSubjectField = document.querySelector('input[name="subject"]');
+
+                if (formattedSubjectField) {
+                    formattedSubjectField.value = subject;
+                }
+                if (hiddenSubjectField) {
+                    hiddenSubjectField.value = subject;
+                }
+            }
+
+            updateSimLibraryViewSubject() {
                 const isVIP = document.getElementById('isVIP')?.value || 'No';
-                const vipPrefix = isVIP === "Yes" ? "VIP* " : "";
+                const vipPrefix = isVIP === "Yes" ? "VIP * " : "";
                 const districtValue = document.getElementById('districtName')?.value || '';
                 const applicationValue = document.getElementById('application')?.value || '';
                 const specificIssueValue = document.getElementById('specificIssue')?.value || '';
-                const userRoleValue = document.getElementById('userRole')?.value || '';
+
+                // Get all checked user role checkboxes
+                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
+                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
+                const formattedUserRole = this.formatUserRoles(selectedRoles);
+
+                // Only add the "for" part if there are selected roles
+                const userRolePart = formattedUserRole ? ` for ${formattedUserRole}` : '';
 
                 const formattedSubject =
-                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue} for ${userRoleValue}`;
+                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue}${userRolePart}`;
 
                 const formattedSubjectField = document.getElementById('formattedSubject');
                 if (formattedSubjectField) {
                     formattedSubjectField.value = formattedSubject;
 
-                    // Also update the hidden subject field to ensure it's submitted correctly
+                    // Also update the hidden subject field
                     const subjectField = document.getElementById('subject');
                     if (subjectField) {
                         subjectField.value = formattedSubject;
@@ -3921,26 +4173,56 @@
                 }
             }
 
-            updateSimLibraryViewSubject() {
-                const isVIP = document.getElementById('isVIP')?.value || 'No';
-                const vipPrefix = isVIP === "Yes" ? "VIP* " : "";
-                const districtValue = document.getElementById('districtName')?.value || '';
-                const applicationValue = document.getElementById('application')?.value || '';
-                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
-                const userRoleValue = document.getElementById('userRole')?.value || '';
+            // Add this helper method to format user roles
+            formatUserRoles(selectedRoles) {
+                // If "All Users" is selected, return that
+                if (selectedRoles.includes('allUsers')) {
+                    return "All Users";
+                }
 
-                const formattedSubject =
-                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue} for ${userRoleValue}`;
+                // If all three individual roles are selected, return "All Users"
+                if (selectedRoles.includes('students') &&
+                    selectedRoles.includes('teachers') &&
+                    selectedRoles.includes('admin')) {
+                    return "All Users";
+                }
 
-                const formattedSubjectField = document.getElementById('formattedSubject');
-                if (formattedSubjectField) {
-                    formattedSubjectField.value = formattedSubject;
+                // Format multiple selections
+                const roleMap = {
+                    'students': 'Students',
+                    'teachers': 'Teachers',
+                    'admin': 'Admin'
+                };
 
-                    // Also update the hidden subject field to ensure it's submitted correctly
-                    const subjectField = document.getElementById('subject');
-                    if (subjectField) {
-                        subjectField.value = formattedSubject;
-                    }
+                const selectedLabels = selectedRoles
+                    .filter(role => role !== 'allUsers')
+                    .map(role => roleMap[role]);
+
+                // At this point, we should only have 1 or 2 roles
+                // Join with & if there are 2 roles
+                if (selectedLabels.length === 2) {
+                    return selectedLabels.join(' & ');
+                }
+
+                // Return single role
+                return selectedLabels[0] || '';
+            }
+
+            // Helper method to call the appropriate subject update method
+            updateSubjectLine() {
+                switch (this.trackerType) {
+                    case 'sim-assignment':
+                        this.updateSimAssignmentSubject();
+                        break;
+                    case 'sim-assessment-reports':
+                        this.updateSIMAssessmentReportsSubject();
+                        break;
+                    case 'sim-fsa':
+                        this.updateSimFsaSubject();
+                        break;
+                    case 'sim-library-view':
+                        this.updateSimLibraryViewSubject();
+                        break;
                 }
             }
         }

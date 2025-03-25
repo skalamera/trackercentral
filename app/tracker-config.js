@@ -386,10 +386,15 @@ const TRACKER_CONFIGS = {
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
                     {
                         id: "userRole",
-                        type: "select",
+                        type: "checkboxes",
                         label: "User Role",
                         required: true,
-                        options: ["Teacher", "Student", "Admin", "Other"]
+                        options: [
+                            { id: "students", label: "Students" },
+                            { id: "teachers", label: "Teachers" },
+                            { id: "admin", label: "Admin" },
+                            { id: "allUsers", label: "All Users" }
+                        ]
                     },
                     { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
@@ -756,10 +761,15 @@ const TRACKER_CONFIGS = {
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
                     {
                         id: "userRole",
-                        type: "select",
+                        type: "checkboxes",
                         label: "User Role",
                         required: true,
-                        options: ["Teacher", "Student", "Admin", "Other"]
+                        options: [
+                            { id: "students", label: "Students" },
+                            { id: "teachers", label: "Teachers" },
+                            { id: "admin", label: "Admin" },
+                            { id: "allUsers", label: "All Users" }
+                        ]
                     },
                     { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
@@ -1077,10 +1087,15 @@ const TRACKER_CONFIGS = {
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
                     {
                         id: "userRole",
-                        type: "select",
+                        type: "checkboxes",
                         label: "User Role",
                         required: true,
-                        options: ["Teacher", "Student", "Admin", "Other"]
+                        options: [
+                            { id: "students", label: "Students" },
+                            { id: "teachers", label: "Teachers" },
+                            { id: "admin", label: "Admin" },
+                            { id: "allUsers", label: "All Users" }
+                        ]
                     },
                     { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
@@ -1273,10 +1288,15 @@ const TRACKER_CONFIGS = {
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
                     {
                         id: "userRole",
-                        type: "select",
+                        type: "checkboxes",
                         label: "User Role",
                         required: true,
-                        options: ["Teacher", "Student", "Admin", "Other"]
+                        options: [
+                            { id: "students", label: "Students" },
+                            { id: "teachers", label: "Teachers" },
+                            { id: "admin", label: "Admin" },
+                            { id: "allUsers", label: "All Users" }
+                        ]
                     },
                     { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
