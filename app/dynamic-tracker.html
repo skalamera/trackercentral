@@ -389,6 +389,16 @@
                     // Remove the Attachments card at the bottom
                     this.removeBottomAttachmentsCard();
 
+                    // Call the onLoad function if it exists in the template config
+                    if (this.config.onLoad && typeof this.config.onLoad === 'function') {
+                        console.log(`Calling onLoad function for template ${this.trackerType}`);
+                        try {
+                            this.config.onLoad();
+                        } catch (onLoadError) {
+                            console.error(`Error in onLoad function for ${this.trackerType}:`, onLoadError);
+                        }
+                    }
+
                     // Move the debug to the end, after all initialization is complete
                     this.debugDistrictFields();
 
@@ -3138,12 +3148,14 @@
 
             // Add this method to your TrackerApp class
             setupCustomFileUploaders() {
-                // Apply to sim-assignment, sim-assessment-reports, sim-library-view, and sim-fsa templates
+                // Apply to sim-assignment, sim-assessment-reports, sim-library-view, sim-fsa, sim-orr, sim-plan-teach, and sim-reading-log templates
                 if (this.trackerType !== 'sim-assignment' &&
                     this.trackerType !== 'sim-assessment-reports' &&
                     this.trackerType !== 'sim-library-view' &&
                     this.trackerType !== 'sim-fsa' &&
-                    this.trackerType !== 'sim-orr') {
+                    this.trackerType !== 'sim-orr' &&
+                    this.trackerType !== 'sim-plan-teach' &&
+                    this.trackerType !== 'sim-reading-log') {
                     return;
                 }
 
@@ -3319,11 +3331,14 @@
 
             // Add a method to set up the HAR file uploader
             setupHarFileUploader() {
-                // Apply to sim-assignment, sim-assessment-reports, sim-library-view and sim-fsa templates
+                // Apply to all SIM templates that need HAR file uploader
                 if (this.trackerType !== 'sim-assignment' &&
                     this.trackerType !== 'sim-assessment-reports' &&
                     this.trackerType !== 'sim-library-view' &&
-                    this.trackerType !== 'sim-fsa') {
+                    this.trackerType !== 'sim-fsa' &&
+                    this.trackerType !== 'sim-orr' &&
+                    this.trackerType !== 'sim-plan-teach' &&
+                    this.trackerType !== 'sim-reading-log') {
                     return;
                 }
 
@@ -3501,7 +3516,11 @@
                 const hasScreenshots = this.aggregatedScreenshotFiles && this.aggregatedScreenshotFiles.length > 0;
                 const hasHarFile = (this.trackerType === 'sim-assignment' ||
                     this.trackerType === 'sim-assessment-reports' ||
-                    this.trackerType === 'sim-fsa') &&
+                    this.trackerType === 'sim-fsa' ||
+                    this.trackerType === 'sim-library-view' ||
+                    this.trackerType === 'sim-orr' ||
+                    this.trackerType === 'sim-plan-teach' ||
+                    this.trackerType === 'sim-reading-log') &&
                     this.harFile;
 
                 if (!hasScreenshots && !hasHarFile) {

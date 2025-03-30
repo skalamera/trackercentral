@@ -1484,15 +1484,12 @@ const TRACKER_CONFIGS = {
                 title: "ISSUE DESCRIPTION",
                 icon: "fa-exclamation-circle",
                 fields: [
-                    { id: "resourceXcode", type: "text", label: "Resource xcode", required: false },
-                    { id: "resourceTitle", type: "text", label: "Resource title", required: false },
-                    { id: "pathFilters", type: "text", label: "Path/Filters", required: false },
                     {
                         id: "issueDetails",
                         type: "richtext",
                         label: "Specific details outlining user impact",
                         required: true,
-                        hint: "EX: Teacher is unable to access content in the library view for Grade 2 Reading Materials"
+                        hint: "EX: teacher administered ORR but it is not appearing"
                     }
                 ]
             },
@@ -1567,12 +1564,7 @@ const TRACKER_CONFIGS = {
 
             // Issue Description
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
-            description += `Resource xcode: ${fields.resourceXcode || ''}<br>`;
-            description += `Resource title: ${fields.resourceTitle || ''}<br>`;
-            description += `Path/Filters: ${fields.pathFilters || ''}<br>`;
-            if (fields.issueDetails) {
-                description += `<div>${fields.issueDetails}</div>`;
-            }
+            description += `<div>${fields.issueDetails}</div>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
             // Steps to Reproduce
@@ -1594,6 +1586,8 @@ const TRACKER_CONFIGS = {
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.role) description += `Role: ${fields.role}<br>`;
             if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
+
+            // Handle Tech Admin link as a hyperlink
             if (fields.techAdminLink) {
                 let techLink = fields.techAdminLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
@@ -1601,10 +1595,11 @@ const TRACKER_CONFIGS = {
                 }
                 description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
             }
+
             if (fields.device) description += `Device: ${fields.device}<br>`;
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
             if (fields.assignmentId) description += `Assignment ID: ${fields.assignmentId}<br>`;
-            if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported)}<br>`;
+            if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported) || ''}<br>`;
             if (fields.harFileAttached) {
                 description += `HAR file attached: ${fields.harFileAttached}`;
                 if (fields.harFileAttached === "No" && fields.harFileReason) {
@@ -1615,203 +1610,126 @@ const TRACKER_CONFIGS = {
             description += '<div style="margin-bottom: 20px;"></div>';
 
             // Expected Results
-            if (fields.expectedResults) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
-                description += `<div>${fields.expectedResults}</div>`;
-            }
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
+            description += `<div>${fields.expectedResults}</div>`;
 
             return description;
+        },
+
+        // Simplified onLoad function for SIM ORR
+        onLoad: function () {
+            console.log("SIM ORR onLoad function executing");
+
+            function updateSubjectLine() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const applicationField = document.getElementById('application');
+                const specificIssueField = document.getElementById('specificIssue');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!isVipField || !districtNameField || !applicationField ||
+                    !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
+                    }
+                });
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const application = applicationField.value || '';
+                const specificIssue = specificIssueField.value || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(', ') : '';
+
+                // Format: "VIP * District Name | Application - Specific Issue for User Role"
+                let subject = '';
+                if (isVip) {
+                    subject = `VIP * ${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
+                } else {
+                    subject = `${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
+                }
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+            }
+
+            // Set up the HAR file condition
+            function setupHarFileCondition() {
+                const harFileAttachedField = document.getElementById('harFileAttached');
+                if (!harFileAttachedField) return;
+
+                // Get related elements
+                const harFileReasonContainer = document.getElementById('harFileReason')?.closest('.form-group');
+                const harFileUploaderContainer = document.getElementById('harFileUploader')?.closest('.form-group');
+                const harPlaceholderContainer = document.getElementById('harPlaceholder')?.closest('.form-group');
+
+                // Function to toggle HAR-related fields
+                function toggleHarFileFields() {
+                    const isYes = harFileAttachedField.value === 'Yes';
+
+                    // Toggle reason field (show when "No" is selected)
+                    if (harFileReasonContainer) {
+                        harFileReasonContainer.style.display = isYes ? 'none' : 'block';
+                    }
+
+                    // Toggle uploader fields (show when "Yes" is selected)
+                    if (harFileUploaderContainer) {
+                        harFileUploaderContainer.style.display = isYes ? 'block' : 'none';
+                    }
+
+                    if (harPlaceholderContainer) {
+                        harPlaceholderContainer.style.display = isYes ? 'block' : 'none';
+                    }
+                }
+
+                // Add event listener to the select field
+                harFileAttachedField.addEventListener('change', toggleHarFileFields);
+
+                // Initial setup
+                toggleHarFileFields();
+            }
+
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
+
+            // Add listeners to all checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSubjectLine);
+            });
+
+            // Initial update attempt
+            updateSubjectLine();
+
+            // Set up HAR file upload conditional display
+            setupHarFileCondition();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(() => {
+                updateSubjectLine();
+                setupHarFileCondition();
+            }, 500);
         }
     },
-
 
     // 7. SIM Plan & Teach
     "sim-plan-teach": {
         title: "SIM Plan & Teach Tracker",
         icon: "fa-chalkboard-teacher",
         description: "For issues regarding Plan & Teach functionality",
-        sections: [
-            {
-                id: "subject",
-                title: "SUBJECT",
-                icon: "fa-pen-fancy",
-                fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true }
-                ]
-            },
-            {
-                id: "planTeachDetails",
-                title: "PLAN & TEACH DETAILS",
-                icon: "fa-clipboard-list",
-                fields: [
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "teacherName", type: "text", label: "Teacher Name", required: true },
-                    { id: "teacherEmail", type: "email", label: "Teacher Email", required: true },
-                    { id: "programName", type: "text", label: "Program Name", required: true },
-                    { id: "lessonInfo", type: "text", label: "Lesson/Unit Information", required: false },
-                    {
-                        id: "feature", type: "select", label: "Feature", required: true,
-                        options: ["Calendar", "Planner", "Resources", "Lesson Navigator", "Standards", "Other"]
-                    }
-                ]
-            },
-            {
-                id: "issueDetails",
-                title: "ISSUE DETAILS",
-                icon: "fa-exclamation-circle",
-                fields: [
-                    {
-                        id: "issueType", type: "select", label: "Issue Type", required: true,
-                        options: ["Content Missing", "Planning Issue", "Navigation Problem", "Resource Access", "Calendar Issue", "Other"]
-                    },
-                    { id: "issueDescription", type: "richtext", label: "Issue Description", required: true },
-                    { id: "dateOccurred", type: "date", label: "Date Issue Occurred", required: true }
-                ]
-            },
-            {
-                id: "reproduction",
-                title: "STEPS TO REPRODUCE",
-                icon: "fa-list-ol",
-                fields: [
-                    { id: "stepsToReproduce", type: "richtext", label: "Steps to Reproduce", required: false },
-                    { id: "browserInfo", type: "text", label: "Browser/Device Info", required: false }
-                ]
-            }
-        ],
-        descriptionGenerator: function (fields) {
-            let description = '';
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SIM PLAN & TEACH ISSUE</span></div>';
-            description += `<div>${fields.subject || 'SIM Plan & Teach Issue'}</div>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">PLAN & TEACH DETAILS</span></div>';
-            description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `Teacher Name: ${fields.teacherName || ''}<br>`;
-            description += `Teacher Email: ${fields.teacherEmail || ''}<br>`;
-            description += `Program Name: ${fields.programName || ''}<br>`;
-            if (fields.lessonInfo) description += `Lesson/Unit Information: ${fields.lessonInfo}<br>`;
-            description += `Feature: ${fields.feature || ''}<br>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
-            description += `Issue Type: ${fields.issueType || ''}<br>`;
-            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
-            if (fields.issueDescription) {
-                description += `<div><strong>Description:</strong></div>`;
-                description += `<div>${fields.issueDescription}</div>`;
-            }
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            if (fields.stepsToReproduce || fields.browserInfo) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">REPRODUCTION</span></div>';
-                if (fields.stepsToReproduce) {
-                    description += `<div><strong>Steps to Reproduce:</strong></div>`;
-                    description += `<div>${fields.stepsToReproduce}</div>`;
-                }
-                if (fields.browserInfo) description += `<br>Browser/Device: ${fields.browserInfo}<br>`;
-            }
-
-            return description;
-        }
-    },
-
-    // 8. SIM Reading Log
-    "sim-reading-log": {
-        title: "SIM Reading Log Tracker",
-        icon: "fa-book-reader",
-        description: "For issues regarding Reading Log functionality",
-        sections: [
-            {
-                id: "subject",
-                title: "SUBJECT",
-                icon: "fa-pen-fancy",
-                fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true }
-                ]
-            },
-            {
-                id: "readingLogDetails",
-                title: "READING LOG DETAILS",
-                icon: "fa-clipboard-list",
-                fields: [
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "teacherName", type: "text", label: "Teacher Name", required: true },
-                    { id: "teacherEmail", type: "email", label: "Teacher Email", required: true },
-                    { id: "programName", type: "text", label: "Program Name", required: true },
-                    { id: "studentName", type: "text", label: "Student Name (if applicable)", required: false },
-                    { id: "bookTitle", type: "text", label: "Book Title (if applicable)", required: false }
-                ]
-            },
-            {
-                id: "issueDetails",
-                title: "ISSUE DETAILS",
-                icon: "fa-exclamation-circle",
-                fields: [
-                    {
-                        id: "issueType", type: "select", label: "Issue Type", required: true,
-                        options: ["Log Entry", "Data Missing", "Reporting Issue", "Assignment Problem", "Book Search", "Other"]
-                    },
-                    { id: "issueDescription", type: "richtext", label: "Issue Description", required: true },
-                    { id: "dateOccurred", type: "date", label: "Date Issue Occurred", required: true },
-                    {
-                        id: "userRole", type: "select", label: "User Experiencing Issue", required: true,
-                        options: ["Teacher", "Student", "Both", "Admin", "Other"]
-                    }
-                ]
-            },
-            {
-                id: "reproduction",
-                title: "STEPS TO REPRODUCE",
-                icon: "fa-list-ol",
-                fields: [
-                    { id: "stepsToReproduce", type: "richtext", label: "Steps to Reproduce", required: false },
-                    { id: "browserInfo", type: "text", label: "Browser/Device Info", required: false }
-                ]
-            }
-        ],
-        descriptionGenerator: function (fields) {
-            let description = '';
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SIM READING LOG ISSUE</span></div>';
-            description += `<div>${fields.subject || 'SIM Reading Log Issue'}</div>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">READING LOG DETAILS</span></div>';
-            description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `Teacher Name: ${fields.teacherName || ''}<br>`;
-            description += `Teacher Email: ${fields.teacherEmail || ''}<br>`;
-            description += `Program Name: ${fields.programName || ''}<br>`;
-            if (fields.studentName) description += `Student Name: ${fields.studentName}<br>`;
-            if (fields.bookTitle) description += `Book Title: ${fields.bookTitle}<br>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
-            description += `Issue Type: ${fields.issueType || ''}<br>`;
-            description += `Date Occurred: ${formatDate(fields.dateOccurred) || ''}<br>`;
-            description += `User Experiencing Issue: ${fields.userRole || ''}<br>`;
-            if (fields.issueDescription) {
-                description += `<div><strong>Description:</strong></div>`;
-                description += `<div>${fields.issueDescription}</div>`;
-            }
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            if (fields.stepsToReproduce || fields.browserInfo) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">REPRODUCTION</span></div>';
-                if (fields.stepsToReproduce) {
-                    description += `<div><strong>Steps to Reproduce:</strong></div>`;
-                    description += `<div>${fields.stepsToReproduce}</div>`;
-                }
-                if (fields.browserInfo) description += `<br>Browser/Device: ${fields.browserInfo}<br>`;
-            }
-
-            return description;
-        }
-    },
-
-    // SIM Oral Reading Records
-    "sim-oral-reading-records": {
-        title: "SIM Oral Reading Records Tracker",
-        icon: "fa-book-reader",
-        description: "For issues regarding Oral Reading Records functionality",
         sections: [
             {
                 id: "subject",
@@ -1844,106 +1762,144 @@ const TRACKER_CONFIGS = {
                 ]
             },
             {
-                id: "fileUpload",
-                title: "FILE ATTACHMENTS",
-                icon: "fa-file-upload",
+                id: "issueDetails",
+                title: "ISSUE DESCRIPTION",
+                icon: "fa-exclamation-circle",
                 fields: [
                     {
-                        id: "fileUploadInfo",
-                        type: "info",
-                        label: "FILE UPLOAD INSTRUCTIONS",
-                        hint: "Please attach files directly to the ticket after submission. This ensures your files are properly linked to the ticket."
-                    },
-                    {
-                        id: "filesDescription",
-                        type: "textarea",
-                        label: "Description of Files to be Attached",
-                        required: false,
-                        hint: "Describe the files you will attach to the ticket and what they show."
+                        id: "issueDescription",
+                        type: "richtext",
+                        label: "Issue Description: Specific details outlining user impact.",
+                        hint: "EX: The Filters are not displaying for teachers in Plan & Teach",
+                        required: true
                     }
                 ]
             },
             {
-                id: "issueDetails",
-                title: "ISSUE DETAILS",
-                icon: "fa-exclamation-circle",
+                id: "reproduction",
+                title: "STEPS TO REPRODUCE",
+                icon: "fa-list-ol",
                 fields: [
-                    { id: "teacherName", type: "text", label: "Teacher Name", required: false },
-                    { id: "teacherEmail", type: "email", label: "Teacher Email", required: false },
-                    { id: "studentName", type: "text", label: "Student Name (if applicable)", required: false },
-                    { id: "issueDescription", type: "richtext", label: "Issue Description", required: true }
+                    { id: "stepsToReproduce", type: "richtext", label: "Steps to Reproduce", required: false }
                 ]
             },
             {
-                id: "environment",
-                title: "ENVIRONMENT",
-                icon: "fa-desktop",
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [] // Empty array since we handle this in setupCustomFileUploaders
+            },
+            {
+                id: "userInfo",
+                title: "IMPACTED USER INFO",
+                icon: "fa-user",
                 fields: [
-                    { id: "browserInfo", type: "text", label: "Browser/OS Information", required: false },
+                    { id: "username", type: "text", label: "Username", required: false },
+                    { id: "role", type: "text", label: "Role", required: false },
+                    { id: "studentInternalID", type: "text", label: "Student Internal ID", required: false },
+                    { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
+                    { id: "device", type: "text", label: "Device", required: false },
+                    { id: "realm", type: "text", label: "Realm", required: false },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
+                    { id: "subscriptions", type: "text", label: "List of District Subscriptions", required: false },
                     {
-                        id: "deviceType",
+                        id: "harFileAttached",
                         type: "select",
-                        label: "Device Type",
-                        required: false,
-                        options: ["", "Desktop", "Laptop", "Tablet", "Smartphone", "Other"]
+                        label: "HAR file attached",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "HAR files help identify browser network issues"
                     },
-                    { id: "dateOccurred", type: "date", label: "Date Issue Occurred", required: false }
+                    {
+                        id: "harFileReason",
+                        type: "text",
+                        label: "Reason if HAR file not attached",
+                        required: false,
+                        condition: {
+                            field: "harFileAttached",
+                            value: "No"
+                        }
+                    }
+                ]
+            },
+            {
+                id: "expectedResults",
+                title: "EXPECTED RESULTS",
+                icon: "fa-check-circle",
+                fields: [
+                    {
+                        id: "expectedResults",
+                        type: "richtext",
+                        label: "Explain/Show how the system should be functioning if working correctly",
+                        required: true
+                    }
                 ]
             }
         ],
         descriptionGenerator: function (fields) {
             let description = '';
+            // Removed: description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SIM PLAN & TEACH ISSUE</span></div>';
 
-            // Subject information
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SIM ORAL READING RECORDS ISSUE</span></div>';
-            description += `VIP Status: ${fields.isVIP || 'No'}<br>`;
-            description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `Application: ${fields.application || ''}<br>`;
-            description += `Specific Issue: ${fields.specificIssue || ''}<br>`;
-
-            // User role handling
-            let userRoles = [];
-            if (fields.students) userRoles.push("Students");
-            if (fields.teachers) userRoles.push("Teachers");
-            if (fields.admin) userRoles.push("Admin");
-            if (fields.allUsers) userRoles.push("All Users");
-
-            description += `User Role: ${userRoles.join(", ") || ''}<br>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            // Include file attachments description if available
-            if (fields.filesDescription) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">FILE ATTACHMENTS</span></div>';
-                description += `<div>${fields.filesDescription}</div>`;
-                description += '<div style="margin-bottom: 20px;"></div>';
-            }
-
-            // Issue details
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DETAILS</span></div>';
-            if (fields.teacherName) description += `Teacher Name: ${fields.teacherName}<br>`;
-            if (fields.teacherEmail) description += `Teacher Email: ${fields.teacherEmail}<br>`;
-            if (fields.studentName) description += `Student Name: ${fields.studentName}<br>`;
-
+            // Issue Description
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
             if (fields.issueDescription) {
-                description += `<div><strong>Description:</strong></div>`;
                 description += `<div>${fields.issueDescription}</div>`;
             }
             description += '<div style="margin-bottom: 20px;"></div>';
 
-            // Environment details
-            if (fields.browserInfo || fields.deviceType || fields.dateOccurred) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ENVIRONMENT</span></div>';
-                if (fields.browserInfo) description += `Browser/OS Information: ${fields.browserInfo}<br>`;
-                if (fields.deviceType) description += `Device Type: ${fields.deviceType}<br>`;
-                if (fields.dateOccurred) description += `Date Issue Occurred: ${formatDate(fields.dateOccurred)}<br>`;
+            // Steps to Reproduce
+            if (fields.stepsToReproduce) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
+                description += `<div>${fields.stepsToReproduce}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
             }
+
+            // Screenshots and Videos
+            if (fields.screenshotsDescription) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Impacted User Info
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
+            if (fields.username) description += `Username: ${fields.username}<br>`;
+            if (fields.role) description += `Role: ${fields.role}<br>`;
+            if (fields.studentInternalID) description += `Student Internal ID: ${fields.studentInternalID}<br>`;
+
+            // Handle Tech Admin link as a hyperlink
+            if (fields.techAdminLink) {
+                let techLink = fields.techAdminLink.trim();
+                if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
+                    techLink = 'https://' + techLink;
+                }
+                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+            }
+
+            if (fields.device) description += `Device: ${fields.device}<br>`;
+            if (fields.realm) description += `Realm: ${fields.realm}<br>`;
+            if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported) || ''}<br>`;
+            if (fields.subscriptions) description += `List of District Subscriptions: ${fields.subscriptions}<br>`;
+            if (fields.harFileAttached) {
+                description += `HAR file attached: ${fields.harFileAttached}`;
+                if (fields.harFileAttached === "No" && fields.harFileReason) {
+                    description += ` (${fields.harFileReason})`;
+                }
+                description += '<br>';
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Expected Results
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
+            description += `<div>${fields.expectedResults}</div>`;
 
             return description;
         },
 
-        // Add initialization function for subject formatting
+        // Add onLoad function for dynamic subject line formatting
         onLoad: function () {
-            // Set up the subject line formatting
+            console.log("SIM Plan & Teach onLoad function executing");
+
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
                 const districtNameField = document.getElementById('districtName');
@@ -1952,18 +1908,20 @@ const TRACKER_CONFIGS = {
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
                 if (!isVipField || !districtNameField || !applicationField ||
-                    !specificIssueField || !formattedSubjectField) return;
+                    !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
 
-                // Get all selected user roles
-                let userRoles = [];
+                // Get user roles
+                const userRoles = [];
                 const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
                 roleCheckboxes.forEach(cb => {
                     if (cb.id === 'allUsers') {
-                        userRoles = ['All Users'];
-                        return;
-                    }
-                    if (cb.checked && cb.id !== 'allUsers') {
-                        userRoles.push(cb.labels[0].textContent.trim());
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
                     }
                 });
 
@@ -1971,32 +1929,288 @@ const TRACKER_CONFIGS = {
                 const districtName = districtNameField.value || '';
                 const application = applicationField.value || '';
                 const specificIssue = specificIssueField.value || '';
-                const userRoleText = userRoles.join(', ') || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(', ') : '';
 
-                // Format the subject line
-                let formattedSubject = '';
+                // Format: "VIP * District Name | Application - Specific Issue for User Role"
+                let subject = '';
                 if (isVip) {
-                    formattedSubject = `VIP* ${districtName} | ${application} | ${specificIssue} | ${userRoleText}`;
+                    subject = `VIP * ${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
                 } else {
-                    formattedSubject = `${districtName} | ${application} | ${specificIssue} | ${userRoleText}`;
+                    subject = `${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
                 }
 
-                formattedSubjectField.value = formattedSubject;
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
             }
 
-            // Add event listeners to update the subject line
+            // Set up event listeners
             document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
             document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
-            // Add listeners to the checkboxes
-            document.querySelectorAll('input[type="checkbox"][name^="userRole"]').forEach(checkbox => {
+            // Add listeners to all checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
+            checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', updateSubjectLine);
             });
 
-            // Initialize the subject line
+            // Initial update attempt
             updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
+        }
+    },
+
+    // 8. SIM Reading Log
+    "sim-reading-log": {
+        title: "SIM Reading Log Tracker",
+        icon: "fa-book-reader",
+        description: "For issues regarding Reading Log functionality",
+        sections: [
+            {
+                id: "subject",
+                title: "SUBJECT",
+                icon: "fa-pen-fancy",
+                fields: [
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"]
+                    },
+                    { id: "districtName", type: "text", label: "District Name", required: true },
+                    { id: "application", type: "text", label: "Application", required: true },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    {
+                        id: "userRole",
+                        type: "checkboxes",
+                        label: "User Role",
+                        required: true,
+                        options: [
+                            { id: "students", label: "Students" },
+                            { id: "teachers", label: "Teachers" },
+                            { id: "admin", label: "Admin" },
+                            { id: "allUsers", label: "All Users" }
+                        ]
+                    },
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                ]
+            },
+            {
+                id: "issueDetails",
+                title: "ISSUE DESCRIPTION",
+                icon: "fa-exclamation-circle",
+                fields: [
+                    {
+                        id: "issueDescription",
+                        type: "richtext",
+                        label: "Issue Description: Specific details outlining user impact:",
+                        hint: "EX: A book has a 5 star rating, however my student has not been assigned this book.",
+                        required: true
+                    }
+                ]
+            },
+            {
+                id: "reproduction",
+                title: "STEPS TO REPRODUCE",
+                icon: "fa-list-ol",
+                fields: [
+                    { id: "stepsToReproduce", type: "richtext", label: "Steps to Reproduce", required: false }
+                ]
+            },
+            {
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [] // Empty array since we handle this in setupCustomFileUploaders
+            },
+            {
+                id: "userInfo",
+                title: "IMPACTED USER INFO",
+                icon: "fa-user",
+                fields: [
+                    { id: "username", type: "text", label: "Username", required: false },
+                    { id: "role", type: "text", label: "Role", required: false },
+                    { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
+                    { id: "className", type: "text", label: "Class Name", required: false },
+                    { id: "classTechAdminLink", type: "text", label: "Class Tech Admin Link", required: false },
+                    { id: "studentInternalID", type: "text", label: "Student Internal ID", required: false },
+                    { id: "device", type: "text", label: "Device", required: false },
+                    { id: "realm", type: "text", label: "Realm", required: false },
+                    { id: "assignmentID", type: "text", label: "Assignment ID", required: false },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
+                    {
+                        id: "harFileAttached",
+                        type: "select",
+                        label: "HAR file attached",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "HAR files help identify browser network issues"
+                    },
+                    {
+                        id: "harFileReason",
+                        type: "text",
+                        label: "Reason if HAR file not attached",
+                        required: false,
+                        condition: {
+                            field: "harFileAttached",
+                            value: "No"
+                        }
+                    }
+                ]
+            },
+            {
+                id: "expectedResults",
+                title: "EXPECTED RESULTS",
+                icon: "fa-check-circle",
+                fields: [
+                    {
+                        id: "expectedResults",
+                        type: "richtext",
+                        label: "Explain/Show how the system should be functioning if working correctly",
+                        required: true
+                    }
+                ]
+            }
+        ],
+        descriptionGenerator: function (fields) {
+            let description = '';
+            // Removed: description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SIM READING LOG ISSUE</span></div>';
+
+            // Issue Description
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
+            if (fields.issueDescription) {
+                description += `<div>${fields.issueDescription}</div>`;
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Steps to Reproduce
+            if (fields.stepsToReproduce) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
+                description += `<div>${fields.stepsToReproduce}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Screenshots and Videos
+            if (fields.screenshotsDescription) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Impacted User Info
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
+            if (fields.username) description += `Username: ${fields.username}<br>`;
+            if (fields.role) description += `Role: ${fields.role}<br>`;
+
+            // Handle Tech Admin link as a hyperlink
+            if (fields.techAdminLink) {
+                let techLink = fields.techAdminLink.trim();
+                if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
+                    techLink = 'https://' + techLink;
+                }
+                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+            }
+
+            if (fields.className) description += `Class Name: ${fields.className}<br>`;
+
+            // Handle Class Tech Admin link as a hyperlink
+            if (fields.classTechAdminLink) {
+                let classTechLink = fields.classTechAdminLink.trim();
+                if (!classTechLink.startsWith('http://') && !classTechLink.startsWith('https://')) {
+                    classTechLink = 'https://' + classTechLink;
+                }
+                description += `Class Tech Admin Link: <a href="${classTechLink}" target="_blank">${fields.classTechAdminLink}</a><br>`;
+            }
+
+            if (fields.studentInternalID) description += `Student Internal ID: ${fields.studentInternalID}<br>`;
+            if (fields.device) description += `Device: ${fields.device}<br>`;
+            if (fields.realm) description += `Realm: ${fields.realm}<br>`;
+            if (fields.assignmentID) description += `Assignment ID: ${fields.assignmentID}<br>`;
+            if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported) || ''}<br>`;
+            if (fields.harFileAttached) {
+                description += `HAR file attached: ${fields.harFileAttached}`;
+                if (fields.harFileAttached === "No" && fields.harFileReason) {
+                    description += ` (${fields.harFileReason})`;
+                }
+                description += '<br>';
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Expected Results
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
+            description += `<div>${fields.expectedResults}</div>`;
+
+            return description;
+        },
+
+        // Add onLoad function for dynamic subject line formatting
+        onLoad: function () {
+            console.log("SIM Reading Log onLoad function executing");
+
+            function updateSubjectLine() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const applicationField = document.getElementById('application');
+                const specificIssueField = document.getElementById('specificIssue');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!isVipField || !districtNameField || !applicationField ||
+                    !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
+                    }
+                });
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const application = applicationField.value || '';
+                const specificIssue = specificIssueField.value || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(', ') : '';
+
+                // Format: "VIP * District Name | Application - Specific Issue for User Role"
+                let subject = '';
+                if (isVip) {
+                    subject = `VIP * ${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
+                } else {
+                    subject = `${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
+                }
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+            }
+
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
+
+            // Add listeners to all checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSubjectLine);
+            });
+
+            // Initial update attempt
+            updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
         }
     }
 }; 
