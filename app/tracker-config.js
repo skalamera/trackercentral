@@ -20,7 +20,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     { id: "subject", type: "text", label: "Subject", required: true, hint: "BL Xcode removal request" }
                 ]
@@ -31,7 +31,7 @@ const TRACKER_CONFIGS = {
                 icon: "fa-clipboard-list",
                 fields: [
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "realm", type: "text", label: "Realm (Tech Admin Link)", required: true },
+                    { id: "realm", type: "text", label: "User BURC Link", required: true },
                     { id: "effectiveDate", type: "date", label: "Effective Return Date", required: true },
                     { id: "assemblyCodes", type: "textarea", label: "Assembly Codes To Be Removed", required: true }
                 ]
@@ -45,7 +45,7 @@ const TRACKER_CONFIGS = {
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
             description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `Realm (Tech Admin Link): ${fields.realm || ''}<br>`;
+            description += `User BURC Link: ${fields.realm || ''}<br>`;
             description += `Effective Return Date: ${formatDate(fields.effectiveDate) || ''}<br>`;
             description += `Assembly Codes To Be Removed:<br>${fields.assemblyCodes || ''}`;
 
@@ -62,7 +62,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     { id: "xcode", type: "text", label: "XCODE", required: true, hint: "Indicate if more than one", placeholder: "e.g. X56723" },
                     { id: "application", type: "text", label: "Application Name", required: true, placeholder: "e.g. BAdvance c2022" },
@@ -149,7 +149,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     { id: "subject", type: "text", label: "Subject", required: true }
                 ]
@@ -236,7 +236,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     { id: "xcode", type: "text", label: "XCODE", required: true, placeholder: "e.g. X56723" },
                     { id: "application", type: "text", label: "Application Name", required: true, placeholder: "e.g. BAdvance -c2022" },
@@ -371,7 +371,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     {
                         id: "isVIP",
@@ -545,7 +545,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     { id: "subject", type: "text", label: "Subject", required: true }
                 ]
@@ -625,7 +625,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     { id: "subject", type: "text", label: "Subject", required: true }
                 ]
@@ -676,7 +676,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     { id: "subject", type: "text", label: "Subject", required: true }
                 ]
@@ -729,7 +729,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     { id: "subject", type: "text", label: "Subject", required: true }
                 ]
@@ -817,7 +817,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     {
                         id: "isVIP",
@@ -1041,7 +1041,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     // Remove the isVIP and districtName fields, keep only formattedSubject
                     { id: "formattedSubject", type: "text", label: "Subject", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
@@ -1141,7 +1141,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     {
                         id: "isVIP",
@@ -1342,7 +1342,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     {
                         id: "isVIP",
@@ -1523,7 +1523,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     {
                         id: "isVIP",
@@ -1805,7 +1805,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     {
                         id: "isVIP",
@@ -2043,7 +2043,7 @@ const TRACKER_CONFIGS = {
             {
                 id: "subject",
                 title: "SUBJECT",
-                icon: "fa-pen-fancy",
+                icon: "fa-pencil-alt",
                 fields: [
                     {
                         id: "isVIP",
