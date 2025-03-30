@@ -409,7 +409,7 @@ const TRACKER_CONFIGS = {
                     },
                     {
                         id: "resourceXcode", type: "text", label: "Resource Xcode", required: false,
-                        hint: "How to Find a Resource Xcode"
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>"
                     },
                     {
                         id: "resourceTitle", type: "text", label: "Resource Title", required: false,
@@ -434,11 +434,20 @@ const TRACKER_CONFIGS = {
                 icon: "fa-user",
                 fields: [
                     { id: "username", type: "text", label: "Username", required: false },
-                    { id: "studentInternalId", type: "text", label: "Student Internal ID", required: false },
+                    {
+                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                    },
                     { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
                     { id: "device", type: "text", label: "Device", required: false },
-                    { id: "realm", type: "text", label: "Realm", required: false },
-                    { id: "assignmentId", type: "text", label: "Assignment ID", required: false },
+                    {
+                        id: "realm", type: "text", label: "Realm", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                    },
+                    {
+                        id: "assignmentId", type: "text", label: "Assignment ID", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>How to Find Assignment ID</a>"
+                    },
                     { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
                     {
                         id: "harFileAttached",
@@ -904,15 +913,24 @@ const TRACKER_CONFIGS = {
                         required: false
                     },
                     { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
-                    { id: "realm", type: "text", label: "Realm", required: false },
+                    {
+                        id: "realm", type: "text", label: "Realm", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                    },
                     { id: "browser", type: "text", label: "Browser", required: false },
-                    { id: "assessmentId", type: "text", label: "Assessment Assignment ID", required: false },
+                    {
+                        id: "assessmentId", type: "text", label: "Assessment Assignment ID", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>How to Find Assignment ID</a>"
+                    },
                     { id: "assessmentUrl", type: "text", label: "Assessment Assignment URL", required: false },
                     { id: "dateTaken", type: "date", label: "Date test was taken", required: false },
                     { id: "dateGraded", type: "date", label: "Date test was graded", required: false },
                     { id: "className", type: "text", label: "Impacted Class Name", required: false },
                     { id: "classLink", type: "text", label: "Impacted Class Tech Admin Link", required: false },
-                    { id: "studentIds", type: "text", label: "Impacted Student(s) Internal ID(s)", required: false },
+                    {
+                        id: "studentIds", type: "text", label: "Impacted Student(s) Internal ID(s)", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                    },
                     { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
                     {
                         id: "harFileAttached",
@@ -1412,11 +1430,20 @@ const TRACKER_CONFIGS = {
                 fields: [
                     { id: "username", type: "text", label: "Username", required: false },
                     { id: "role", type: "text", label: "Role", required: false },
-                    { id: "studentInternalId", type: "text", label: "Student Internal ID", required: false },
+                    {
+                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                    },
                     { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
                     { id: "device", type: "text", label: "Device", required: false },
-                    { id: "realm", type: "text", label: "Realm", required: false },
-                    { id: "assignmentId", type: "text", label: "Assignment ID", required: false },
+                    {
+                        id: "realm", type: "text", label: "Realm", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                    },
+                    {
+                        id: "assignmentId", type: "text", label: "Assignment ID", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>How to Find Assignment ID</a>"
+                    },
                     { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
                     {
                         id: "harFileAttached",
@@ -1590,11 +1617,20 @@ const TRACKER_CONFIGS = {
                 fields: [
                     { id: "username", type: "text", label: "Username", required: false },
                     { id: "role", type: "text", label: "Role", required: false },
-                    { id: "studentInternalId", type: "text", label: "Student Internal ID", required: false },
+                    {
+                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                    },
                     { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
                     { id: "device", type: "text", label: "Device", required: false },
-                    { id: "realm", type: "text", label: "Realm", required: false },
-                    { id: "assignmentId", type: "text", label: "Assignment ID", required: false },
+                    {
+                        id: "realm", type: "text", label: "Realm", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                    },
+                    {
+                        id: "assignmentId", type: "text", label: "Assignment ID", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>How to Find Assignment ID</a>"
+                    },
                     { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
                     {
                         id: "harFileAttached",
@@ -1867,10 +1903,16 @@ const TRACKER_CONFIGS = {
                 fields: [
                     { id: "username", type: "text", label: "Username", required: false },
                     { id: "role", type: "text", label: "Role", required: false },
-                    { id: "studentInternalID", type: "text", label: "Student Internal ID", required: false },
+                    {
+                        id: "studentInternalID", type: "text", label: "Student Internal ID", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                    },
                     { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
                     { id: "device", type: "text", label: "Device", required: false },
-                    { id: "realm", type: "text", label: "Realm", required: false },
+                    {
+                        id: "realm", type: "text", label: "Realm", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                    },
                     { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
                     { id: "subscriptions", type: "text", label: "List of District Subscriptions", required: false },
                     {
@@ -2108,10 +2150,19 @@ const TRACKER_CONFIGS = {
                     { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
                     { id: "className", type: "text", label: "Class Name", required: false },
                     { id: "classTechAdminLink", type: "text", label: "Class Tech Admin Link", required: false },
-                    { id: "studentInternalID", type: "text", label: "Student Internal ID", required: false },
+                    {
+                        id: "studentInternalID", type: "text", label: "Student Internal ID", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                    },
                     { id: "device", type: "text", label: "Device", required: false },
-                    { id: "realm", type: "text", label: "Realm", required: false },
-                    { id: "assignmentID", type: "text", label: "Assignment ID", required: false },
+                    {
+                        id: "realm", type: "text", label: "Realm", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                    },
+                    {
+                        id: "assignmentID", type: "text", label: "Assignment ID", required: false,
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>How to Find Assignment ID</a>"
+                    },
                     { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
                     {
                         id: "harFileAttached",
