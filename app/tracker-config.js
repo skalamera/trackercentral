@@ -151,7 +151,30 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pencil-alt",
                 fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true }
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"]
+                    },
+                    { id: "districtName", type: "text", label: "District Name", required: true },
+                    { id: "application", type: "text", label: "Application Name", required: true },
+                    { id: "resourceName", type: "text", label: "Resource Name", required: true },
+                    { id: "shortDescription", type: "text", label: "Short Description of Request", required: true },
+                    {
+                        id: "userRole",
+                        type: "checkboxes",
+                        label: "User Role",
+                        required: true,
+                        options: [
+                            { id: "students", label: "Students" },
+                            { id: "teachers", label: "Teachers" },
+                            { id: "admin", label: "Admin" },
+                            { id: "allUsers", label: "All Users" }
+                        ]
+                    },
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
             {
@@ -160,8 +183,7 @@ const TRACKER_CONFIGS = {
                 icon: "fa-users",
                 fields: [
                     {
-                        id: "team", type: "select", label: "Team", required: true,
-                        options: ["Content", "Engineering", "Product", "QA", "UX/Design"]
+                        id: "team", type: "text", label: "Team", required: true
                     }
                 ]
             },
@@ -170,8 +192,20 @@ const TRACKER_CONFIGS = {
                 title: "FEATURE REQUEST SUMMARY",
                 icon: "fa-clipboard-list",
                 fields: [
-                    { id: "application", type: "text", label: "Application", required: true },
-                    { id: "shortDescription", type: "textarea", label: "Short description", required: true }
+                    {
+                        id: "applicationDetails",
+                        type: "richtext",
+                        label: "Application",
+                        required: true,
+                        hint: "Provide the application in which the user is referring to. EX: Assessments."
+                    },
+                    {
+                        id: "shortDescriptionDetails",
+                        type: "richtext",
+                        label: "Short description",
+                        required: true,
+                        hint: "Explain what the user is requesting. EX: Allow students to enable text to speech for the writing portion of assessments."
+                    }
                 ]
             },
             {
@@ -187,12 +221,10 @@ const TRACKER_CONFIGS = {
                 title: "USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "isVIP", type: "select", label: "VIP", required: true, options: ["No", "Yes"] },
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "username", type: "text", label: "Username", required: false },
-                    { id: "role", type: "text", label: "Role", required: false },
-                    { id: "name", type: "text", label: "Name", required: false },
-                    { id: "email", type: "email", label: "Email", required: false },
+                    { id: "username", type: "text", label: "Username", required: false, hint: "Provide the username of the customer submitting the request. EX: mitizishepard." },
+                    { id: "role", type: "text", label: "Role", required: false, hint: "Provide the role of the customer submitting the request. EX: District Admin, School Admin, Teacher, or Student." },
+                    { id: "name", type: "text", label: "Name", required: false, hint: "Provide the name of the customer submitting the request. EX: Mitizi Shepard" },
+                    { id: "customer_email", type: "email", label: "Email", required: false, hint: "Provide the email of the customer submitting the request." },
                     { id: "dateRequested", type: "date", label: "Date Requested", required: false }
                 ]
             }
@@ -204,8 +236,10 @@ const TRACKER_CONFIGS = {
             description += '<div style="margin-bottom: 20px;"></div>';
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">FEATURE REQUEST SUMMARY</span></div>';
-            description += `Application: ${fields.application || ''}<br>`;
-            description += `Short description: ${fields.shortDescription || ''}<br>`;
+            description += `<div><strong>Application:</strong></div>`;
+            description += `<div>${fields.applicationDetails || ''}</div>`;
+            description += `<div><strong>Short description:</strong></div>`;
+            description += `<div>${fields.shortDescriptionDetails || ''}</div>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
             if (fields.additionalDetails) {
@@ -220,10 +254,195 @@ const TRACKER_CONFIGS = {
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.role) description += `Role: ${fields.role}<br>`;
             if (fields.name) description += `Name: ${fields.name}<br>`;
-            if (fields.email) description += `Email: ${fields.email}<br>`;
+            if (fields.customer_email) description += `Email: ${fields.customer_email}<br>`;
             if (fields.dateRequested) description += `Date Requested: ${formatDate(fields.dateRequested) || ''}<br>`;
 
             return description;
+        },
+
+        // Add onLoad function for dynamic subject line formatting
+        onLoad: function () {
+            console.log("Feature Request onLoad function executing");
+
+            // Hide the Requester Email property field as it will always be the logged in agent
+            // Look specifically for the ticket property field, not our custom form field
+            const hideRequesterEmail = function () {
+                // Try multiple selectors to find the ticket properties requester email field
+                const requesterEmailSelectors = [
+                    'label[for="email"].required-field', // Label with "for" attribute
+                    '.ticket-property-field label:contains("Requester Email")', // Label text contains
+                    '[data-field-name="requester_email"]', // Data attribute
+                    '#requesterEmail', // Direct ID
+                    '.field-container:has(label:contains("Requester Email"))' // Container with label
+                ];
+
+                // Try each selector
+                for (const selector of requesterEmailSelectors) {
+                    try {
+                        const elements = document.querySelectorAll(selector);
+                        if (elements.length > 0) {
+                            elements.forEach(el => {
+                                // Find the parent container and hide it
+                                const container = el.closest('.field-container') || el.closest('.field-group') ||
+                                    el.closest('.form-group') || el.closest('.field') || el.parentElement;
+                                if (container) {
+                                    container.style.display = 'none';
+                                    console.log(`Successfully hid requester email field using selector: ${selector}`);
+                                    return true;
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.error(`Error with selector ${selector}:`, e);
+                    }
+                }
+
+                console.log("Could not find requester email field to hide");
+                return false;
+            };
+
+            // Try immediately
+            hideRequesterEmail();
+
+            // And also try after a short delay to ensure the DOM is fully loaded
+            setTimeout(hideRequesterEmail, 500);
+
+            function updateSubjectLine() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const applicationField = document.getElementById('application');
+                const resourceNameField = document.getElementById('resourceName');
+                const shortDescriptionField = document.getElementById('shortDescription');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!isVipField || !districtNameField || !applicationField ||
+                    !resourceNameField || !shortDescriptionField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
+                    }
+                });
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const application = applicationField.value || '';
+                const resourceName = resourceNameField.value || '';
+                const shortDescription = shortDescriptionField.value || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(', ') : '';
+
+                // Format: "VIP * District Name | Application Name | Resource Name - Short Description of Request for User Role"
+                let subject = '';
+                if (isVip) {
+                    subject = `VIP * ${districtName} | ${application} | ${resourceName} - ${shortDescription} for ${userRoleText}`;
+                } else {
+                    subject = `${districtName} | ${application} | ${resourceName} - ${shortDescription} for ${userRoleText}`;
+                }
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+            }
+
+            // Set default date for Date Requested field to today
+            const dateRequestedField = document.getElementById('dateRequested');
+            if (dateRequestedField) {
+                const today = new Date().toISOString().split('T')[0];
+                dateRequestedField.value = today;
+                console.log("Set default date for Date Requested:", today);
+            }
+
+            // Autopopulate VIP and District Name from the subject section
+            function syncUserInfoFields() {
+                // These fields should be synchronized from subject fields to user info display
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+
+                if (isVipField && districtNameField) {
+                    // Display VIP status and district name in the USER INFO section
+                    const userInfoSection = document.querySelector('#userInfo');
+                    if (userInfoSection) {
+                        // Create a display element for VIP status if not exists
+                        let vipDisplay = document.getElementById('vipDisplay');
+                        if (!vipDisplay) {
+                            vipDisplay = document.createElement('div');
+                            vipDisplay.id = 'vipDisplay';
+                            vipDisplay.className = 'form-group';
+                            vipDisplay.innerHTML = `
+                                <label>VIP</label>
+                                <div id="vipValue" class="field-value"></div>
+                            `;
+                            userInfoSection.prepend(vipDisplay);
+                        }
+
+                        // Create a display element for district name if not exists
+                        let districtDisplay = document.getElementById('districtDisplay');
+                        if (!districtDisplay) {
+                            districtDisplay = document.createElement('div');
+                            districtDisplay.id = 'districtDisplay';
+                            districtDisplay.className = 'form-group';
+                            districtDisplay.innerHTML = `
+                                <label>District Name</label>
+                                <div id="districtValue" class="field-value"></div>
+                            `;
+                            userInfoSection.prepend(districtDisplay);
+                        }
+
+                        // Update the display values
+                        document.getElementById('vipValue').textContent = isVipField.value || 'No';
+                        document.getElementById('districtValue').textContent = districtNameField.value || '';
+
+                        // Add style to make it look like a field
+                        const style = document.createElement('style');
+                        style.textContent = `
+                            .field-value {
+                                padding: 8px;
+                                border: 1px solid #ccc;
+                                border-radius: 4px;
+                                background-color: #f9f9f9;
+                                min-height: 37px;
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }
+                }
+            }
+
+            // Run sync once at load
+            setTimeout(syncUserInfoFields, 500);
+
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', function () {
+                updateSubjectLine();
+                syncUserInfoFields();
+            });
+            document.getElementById('districtName')?.addEventListener('input', function () {
+                updateSubjectLine();
+                syncUserInfoFields();
+            });
+            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('resourceName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('shortDescription')?.addEventListener('input', updateSubjectLine);
+
+            // Add listeners to all checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSubjectLine);
+            });
+
+            // Initial update attempt
+            updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
         }
     },
 

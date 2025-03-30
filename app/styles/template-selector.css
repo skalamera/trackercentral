@@ -229,6 +229,13 @@ body {
     font-weight: bold;
 }
 
+.badge-review {
+    background-color: #FFA500;
+    /* Orange color for review */
+    color: white;
+    font-weight: bold;
+}
+
 .search-container {
     max-width: 600px;
     margin: 0 auto 30px;
