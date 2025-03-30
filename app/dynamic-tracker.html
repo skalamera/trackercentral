@@ -2805,7 +2805,8 @@
                         tags: [`tracker-${this.trackerType}`, "TESTING"],
                         related_ticket_ids: relatedTicketIds,
                         source: 101,
-                        custom_fields: {}
+                        custom_fields: {},
+                        type: "Incident" // Set ticket type to Incident by default
                     };
 
                     // Initialize custom_fields if not already done
@@ -3186,7 +3187,7 @@
 
             // Add this method to your TrackerApp class
             setupCustomFileUploaders() {
-                // Apply to sim-assignment, sim-assessment-reports, sim-library-view, sim-fsa, sim-orr, sim-plan-teach, sim-reading-log, and help-article templates
+                // Apply to sim-assignment, sim-assessment-reports, sim-library-view, sim-fsa, sim-orr, sim-plan-teach, sim-reading-log, help-article, and blank templates
                 if (this.trackerType !== 'sim-assignment' &&
                     this.trackerType !== 'sim-assessment-reports' &&
                     this.trackerType !== 'sim-library-view' &&
@@ -3194,7 +3195,8 @@
                     this.trackerType !== 'sim-orr' &&
                     this.trackerType !== 'sim-plan-teach' &&
                     this.trackerType !== 'sim-reading-log' &&
-                    this.trackerType !== 'help-article') {
+                    this.trackerType !== 'help-article' &&
+                    this.trackerType !== 'blank') {
                     return;
                 }
 
@@ -3561,7 +3563,8 @@
                     this.trackerType === 'sim-orr' ||
                     this.trackerType === 'sim-plan-teach' ||
                     this.trackerType === 'sim-reading-log' ||
-                    this.trackerType === 'help-article') &&
+                    this.trackerType === 'help-article' ||
+                    this.trackerType === 'blank') &&
                     this.harFile;
 
                 if (!hasScreenshots && !hasHarFile) {

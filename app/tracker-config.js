@@ -735,18 +735,74 @@ const TRACKER_CONFIGS = {
                 ]
             },
             {
-                id: "details",
-                title: "DETAILS",
-                icon: "fa-clipboard-list",
+                id: "summary",
+                title: "SUMMARY",
+                icon: "fa-file-alt",
                 fields: [
-                    { id: "description", type: "richtext", label: "Description", required: true }
+                    { id: "summary", type: "richtext", label: "", required: false }
                 ]
+            },
+            {
+                id: "issueDescription",
+                title: "ISSUE DESCRIPTION",
+                icon: "fa-exclamation-circle",
+                fields: [
+                    { id: "issueDescription", type: "richtext", label: "", required: true }
+                ]
+            },
+            {
+                id: "reproduction",
+                title: "STEPS TO REPRODUCE",
+                icon: "fa-list-ol",
+                fields: [
+                    { id: "path", type: "text", label: "Path", required: false },
+                    { id: "actualResults", type: "richtext", label: "Actual results", required: false },
+                    { id: "expectedResults", type: "richtext", label: "Expected results", required: false }
+                ]
+            },
+            {
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [] // Empty array since we handle this in setupCustomFileUploaders
             }
         ],
         descriptionGenerator: function (fields) {
             let description = '';
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">TRACKER DETAILS</span></div>';
-            description += `<div>${fields.description || ''}</div>`;
+
+            // Summary section
+            if (fields.summary && fields.summary.trim() !== '<p><br></p>') {
+                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+                description += `<div>${fields.summary || ''}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Issue Description
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
+            description += `<div>${fields.issueDescription || ''}</div>`;
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Steps to Reproduce
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
+            if (fields.path) description += `Path: ${fields.path}<br>`;
+
+            if (fields.actualResults && fields.actualResults.trim() !== '<p><br></p>') {
+                description += `<div><strong>Actual results:</strong></div>`;
+                description += `<div>${fields.actualResults}</div>`;
+            }
+
+            if (fields.expectedResults && fields.expectedResults.trim() !== '<p><br></p>') {
+                description += `<div><strong>Expected results:</strong></div>`;
+                description += `<div>${fields.expectedResults}</div>`;
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Screenshots section
+            if (fields.screenshotsDescription) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
 
             return description;
         }
