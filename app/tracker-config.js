@@ -906,45 +906,143 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pencil-alt",
                 fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true }
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"]
+                    },
+                    { id: "districtName", type: "text", label: "District Name", required: true },
+                    { id: "timeoutLength", type: "text", label: "Requested Time Out Length (max 12 hours)", required: true, placeholder: "e.g. 7 Hours" },
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
             {
-                id: "extensionDetails",
-                title: "EXTENSION DETAILS",
+                id: "description",
+                title: "DESCRIPTION",
                 icon: "fa-clipboard-list",
                 fields: [
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "realm", type: "text", label: "Realm (Tech Admin Link)", required: true },
-                    { id: "currentTimeout", type: "text", label: "Current Timeout (minutes)", required: false },
-                    { id: "requestedTimeout", type: "text", label: "Requested Timeout (minutes)", required: true },
-                    { id: "justification", type: "textarea", label: "Justification for Extension", required: true },
-                    { id: "requestedBy", type: "text", label: "Requested By", required: true },
-                    { id: "requestorEmail", type: "email", label: "Requestor Email", required: true },
-                    { id: "effectiveDate", type: "date", label: "Requested Effective Date", required: true }
+                    { id: "username", type: "text", label: "Username", required: true },
+                    { id: "role", type: "text", label: "Role (Must be district or tech admin)", required: true },
+                    { id: "burcLink", type: "text", label: "User BURC Link", required: true },
+                    { id: "realm", type: "text", label: "Realm", required: true },
+                    { id: "districtState", type: "text", label: "District State", required: true },
+                    { id: "dateRequested", type: "date", label: "Date requested by customer", required: true }
                 ]
             }
         ],
         descriptionGenerator: function (fields) {
             let description = '';
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">TIMEOUT EXTENSION REQUEST</span></div>';
-            description += `<div>${fields.subject || ''}</div>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
 
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXTENSION DETAILS</span></div>';
-            description += `District Name: ${fields.districtName || ''}<br>`;
+            // Add the requested time out length section with specified format at the beginning
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">REQUESTED TIME OUT LENGTH (max 12 hours):</span></div>';
+            description += `<div style="font-weight: bold; margin-top: 5px;">${fields.timeoutLength || ''}</div>`;
+            description += '<div style="margin-top: 20px; margin-bottom: 20px;"></div>';
+
+            // Then add the description section with all other fields
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
+            description += `VIP: (${fields.isVIP || 'No'})<br>`;
+            description += `Username: ${fields.username || ''}<br>`;
+            description += `Role (Must be district or tech admin): ${fields.role || ''}<br>`;
+            description += `User BURC Link: ${fields.burcLink || ''}<br>`;
             description += `Realm: ${fields.realm || ''}<br>`;
-            if (fields.currentTimeout) description += `Current Timeout: ${fields.currentTimeout} minutes<br>`;
-            description += `Requested Timeout: ${fields.requestedTimeout || ''} minutes<br>`;
-            description += `Requested By: ${fields.requestedBy || ''}<br>`;
-            description += `Requestor Email: ${fields.requestorEmail || ''}<br>`;
-            description += `Requested Effective Date: ${formatDate(fields.effectiveDate) || ''}<br>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">JUSTIFICATION</span></div>';
-            description += `<div>${fields.justification || ''}</div>`;
+            description += `District Name: ${fields.districtName || ''}<br>`;
+            description += `District State: ${fields.districtState || ''}<br>`;
+            description += `Date requested by customer: ${formatDate(fields.dateRequested) || ''}<br>`;
 
             return description;
+        },
+
+        // Add onLoad function for dynamic subject line formatting
+        onLoad: function () {
+            console.log("Timeout Extension onLoad function executing");
+
+            // Hide the Requester Email property field
+            const hideRequesterEmail = function () {
+                // Try multiple selectors to find the ticket properties requester email field
+                const requesterEmailSelectors = [
+                    'label[for="email"].required-field',
+                    '.ticket-property-field label:contains("Requester Email")',
+                    '[data-field-name="requester_email"]',
+                    '#requesterEmail',
+                    '.field-container:has(label:contains("Requester Email"))'
+                ];
+
+                // Try each selector
+                for (const selector of requesterEmailSelectors) {
+                    try {
+                        const elements = document.querySelectorAll(selector);
+                        if (elements.length > 0) {
+                            elements.forEach(el => {
+                                // Find the parent container and hide it
+                                const container = el.closest('.field-container') || el.closest('.field-group') ||
+                                    el.closest('.form-group') || el.closest('.field') || el.parentElement;
+                                if (container) {
+                                    container.style.display = 'none';
+                                    console.log(`Successfully hid requester email field using selector: ${selector}`);
+                                    return true;
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.error(`Error with selector ${selector}:`, e);
+                    }
+                }
+
+                console.log("Could not find requester email field to hide");
+                return false;
+            };
+
+            // Try immediately and after a delay
+            hideRequesterEmail();
+            setTimeout(hideRequesterEmail, 500);
+
+            function updateSubjectLine() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const timeoutLengthField = document.getElementById('timeoutLength');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!isVipField || !districtNameField || !timeoutLengthField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const timeoutLength = timeoutLengthField.value || '';
+
+                // Format: "VIP* District Name | Time Out Extension - Time Out Length"
+                let subject = '';
+                if (isVip) {
+                    subject = `VIP* ${districtName} | Time Out Extension - ${timeoutLength}`;
+                } else {
+                    subject = `${districtName} | Time Out Extension - ${timeoutLength}`;
+                }
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+            }
+
+            // Set default date for Date Requested field to today
+            const dateRequestedField = document.getElementById('dateRequested');
+            if (dateRequestedField) {
+                const today = new Date().toISOString().split('T')[0];
+                dateRequestedField.value = today;
+                console.log("Set default date for Date Requested:", today);
+            }
+
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('timeoutLength')?.addEventListener('input', updateSubjectLine);
+
+            // Initial update attempt
+            updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
         }
     },
 
