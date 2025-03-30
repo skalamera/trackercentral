@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+
+- Never use placeholders as part of the code you generate. Alway use real, complete code.
+

@@ -1,0 +1,2208 @@
+1. Create the directory structure:
+
+app/
+├── index.html
+├── template-selector.html
+├── dynamic-tracker.html
+├── scripts/
+│   └── app.js
+├── styles/
+│   ├── style.css
+│   ├── template-selector.css
+│   └── dynamic-tracker.css
+config/
+├── iparams.json
+├── requests.json
+server/
+├── handle_attachments.js
+├── ticket_with_attachments.js
+manifest.json
+README.md
+4
+2. Configure the Manifest
+Start with the manifest.json to define the app's structure:
+
+{
+  "platform-version": "3.0",
+  "modules": {
+    "common": {
+      "requests": {
+        "createfdTicket": {},
+        "getAssociatedTickets": {},
+        "getCompanyDetails": {},
+        "getPrimeAssociation": {},
+        "getTicketDetails": {},
+        "getAgentDetails": {},
+        "addNoteToTicket": {},
+        "getGroups": {},
+        "getAgentsInGroup": {},
+        "getTicketFields": {},
+        "getAllAgents": {},
+        "associateTickets": {}
+      },
+      "serverless": {
+        "ticket_with_attachments": {
+          "algorithm": "ticket_with_attachments.js",
+          "export": "uploadTicketWithAttachments",
+          "timeout": 10
+        },
+        "handle_attachments": {
+          "algorithm": "handle_attachments.js",
+          "export": "uploadAttachment",
+          "timeout": 10
+        }
+      }
+    },
+    "support_ticket": {
+      "location": {
+        "ticket_sidebar": {
+          "url": "index.html",
+          "icon": "styles/images/icon.svg"
+        }
+      }
+    }
+  },
+  "engines": {
+    "node": "18.20.4",
+    "fdk": "9.3.1"
+  },
+  "app": {
+    "tracking_id": "y96p1svcp2bty3c6ch51"
+  }
+}
+
+3. Create the Installation Parameters
+Create iparams.json to define app installation parameters:
+
+{
+  "freshdesk_subdomain": {
+    "display_name": "Freshdesk Subdomain",
+    "description": "Please enter your Freshdesk subdomain only (without .freshdesk.com). For example, if your Freshdesk URL is 'benchmarkeducationcompany.freshdesk.com', enter only 'benchmarkeducationcompany'.",
+    "type": "text",
+    "required": true
+  },
+  "freshdesk_api_key": {
+    "display_name": "Freshdesk API Key",
+    "description": "Please enter your Freshdesk API key",
+    "type": "text",
+    "secure": true,
+    "required": true
+  }
+}
+
+4. Configure API Requests
+Create requests.json to define the API endpoints:
+
+{
+  "createfdTicket": {
+    "schema": {
+      "method": "POST",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
+      "path": "/api/v2/tickets",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "createfdTicketWithAttachments": {
+    "schema": {
+      "method": "POST",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
+      "path": "/api/v2/tickets",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key) %>",
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  },
+  "addNoteToTicket": {
+    "schema": {
+      "method": "POST",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
+      "path": "/api/v2/tickets/<%= context.ticketId %>/notes",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "associateTickets": {
+    "schema": {
+      "method": "PUT",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
+      "path": "/api/v2/tickets/<%= context.primaryTicketId %>/associations",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
+        "Content-Type": "application/json"
+      }
+    }
+  }
+}
+
+5. Create the Client Interface
+5.1. Create index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tracker Central</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="{{{appclient}}}"></script>
+  <link rel="stylesheet" type="text/css" href="styles/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+  <div class="main">
+    <div class="create-tracker-container">
+      <fw-button id="createTrackerLink" color="primary" class="create-tracker-button">
+        <i class="fas fa-crosshairs" style="margin-right: 8px;"></i> New Tracker
+      </fw-button>
+    </div>
+  </div>
+
+  <!-- Load the app.js script -->
+  <script defer src="scripts/app.js"></script>
+
+  <!-- Load Freshworks components -->
+  <script async type="module"
+    src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.esm.js"></script>
+  <script async nomodule src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.js"></script>
+</body>
+</html>
+
+
+5.2. Create app.js
+
+// Add this at the very top of app.js
+console.log("app.js loading started");
+
+/**
+ * Show a notification toast with the given type and message
+ *
+ * @param {String} type - type of the notification
+ * @param {String} message - content to be shown in the notification
+ **/
+function showNotification(type, message) {
+  return client.interface.trigger("showNotify", {
+    type: type,
+    message: message
+  });
+}
+
+/**
+ * Opens the tracker creation modal
+ */
+function openTrackerModal() {
+  client.interface.trigger("showModal", {
+    title: "Tracker Central",
+    template: "template-selector.html"
+  });
+}
+
+/**
+ * Sanitize the Freshdesk subdomain to ensure it doesn't include .freshdesk.com
+ * @param {string} subdomain - The subdomain from configuration
+ * @return {string} - The sanitized subdomain
+ */
+function sanitizeSubdomain(subdomain) {
+  if (!subdomain) return '';
+  // Remove any .freshdesk.com suffix if present
+  return subdomain.replace(/\.freshdesk\.com$/i, '');
+}
+
+document.onreadystatechange = function () {
+  if (document.readyState === 'complete') renderApp();
+
+  function renderApp() {
+    const onInit = app.initialized();
+
+    onInit.then(function (_client) {
+      window.client = _client;
+
+      // Check if Freshdesk subdomain is configured
+      client.iparams.get("freshdesk_subdomain").then(function (iparams) {
+        console.log("App initialization - iparams retrieved:", iparams);
+
+        // Sanitize the subdomain and store it for future use
+        if (iparams && iparams.freshdesk_subdomain) {
+          iparams.freshdesk_subdomain = sanitizeSubdomain(iparams.freshdesk_subdomain);
+          console.log("Sanitized subdomain:", iparams.freshdesk_subdomain);
+        }
+
+        if (!iparams || !iparams.freshdesk_subdomain || !iparams.freshdesk_subdomain.trim()) {
+          console.error("Missing or empty Freshdesk subdomain in configuration");
+          document.body.innerHTML = `
+            <div style="padding: 20px; background-color: #ffebee; color: #c62828; border-radius: 4px; margin: 10px;">
+              <h3>Configuration Error</h3>
+              <p>The Freshdesk subdomain is missing or invalid in the app configuration.</p>
+              <p>Please contact your administrator to reconfigure this app with a valid subdomain.</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Set up event listener for the Create New Tracker button
+        client.events.on("app.activated", function() {
+          const createTrackerLink = document.getElementById("createTrackerLink");
+          if (createTrackerLink) {
+            // Remove any existing listeners first
+            const newButton = createTrackerLink.cloneNode(true);
+            createTrackerLink.parentNode.replaceChild(newButton, createTrackerLink);
+
+            // Add click handler
+            newButton.addEventListener("click", function (e) {
+              e.preventDefault();
+              console.log("Create tracker clicked");
+
+              // Clear localStorage data
+              console.log("🧹 Purging all district data from localStorage before opening tracker");
+              const keysToCheck = ['sourceTicketData', 'sedcustData', 'assemblyData', 'districtCache'];
+
+              keysToCheck.forEach(key => {
+                try {
+                  if (localStorage.getItem(key)) {
+                    console.log(`Removing cached data from ${key}`);
+                    localStorage.removeItem(key);
+                  }
+                } catch (e) {
+                  console.error(`Error removing ${key}:`, e);
+                }
+              });
+
+              // Get current ticket data to pass to the modal
+              client.data.get("ticket").then(function (ticketData) {
+                if (ticketData && ticketData.ticket) {
+                  // Store ticket data for templates to use
+                  localStorage.setItem('ticketData', JSON.stringify(ticketData.ticket));
+                  
+                  // Open the modal
+                  openTrackerModal();
+                } else {
+                  showNotification("danger", "Could not retrieve ticket data");
+                }
+              }).catch(function (error) {
+                console.error("Error getting ticket data:", error);
+                showNotification("danger", "Failed to get ticket data");
+              });
+            });
+
+            // Make sure the button is styled properly
+            newButton.style.cursor = "pointer";
+          }
+        });
+      }).catch(function (error) {
+        console.error("Failed to get installation parameters:", error);
+        document.body.innerHTML = `
+          <div style="padding: 20px; background-color: #ffebee; color: #c62828; border-radius: 4px; margin: 10px;">
+            <h3>Configuration Error</h3>
+            <p>Failed to retrieve app configuration parameters.</p>
+            <p>Error: ${error.message || "Unknown error"}</p>
+          </div>
+        `;
+      });
+    }).catch(function (error) {
+      console.error('Error: Failed to initialise the app');
+      console.error(error);
+    });
+  }
+};
+
+5.3. Create template-selector.html
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tracker Template Selector</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="{{{appclient}}}"></script>
+  <link rel="stylesheet" type="text/css" href="styles/template-selector.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-title">
+      <h1>Tracker Templates</h1>
+      <p>Select the type of tracker you would like to create</p>
+    </div>
+
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" id="template-search" class="search-input" placeholder="Search templates...">
+    </div>
+
+    <div class="template-groups" id="template-groups-container">
+      <!-- Templates will be populated dynamically via JavaScript -->
+    </div>
+  </div>
+
+  <script>
+    // Add click handler for templates
+    function setupTemplateHandlers() {
+      document.querySelectorAll('.template-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const templateId = this.getAttribute('data-template');
+          console.log(`Selected template: ${templateId}`);
+          
+          // Store selected template in localStorage to retrieve in dynamic-tracker.html
+          localStorage.setItem('selectedTemplate', templateId);
+          window.location.href = 'dynamic-tracker.html';
+        });
+      });
+    }
+
+    // Initialize template groups
+    function initializeTemplates() {
+      // Get template groups container
+      const groupsContainer = document.getElementById('template-groups-container');
+      if (!groupsContainer) return;
+
+      // Define template groups
+      const groups = [
+        {
+          name: "SIM Templates",
+          templates: ["sim-assignment", "sim-assessment-reports", "sim-achievement-levels", "sim-fsa", "sim-library-view", "sim-orr", "sim-plan-teach", "sim-reading-log"]
+        },
+        {
+          name: "Content Templates",
+          templates: ["assembly", "assembly-rollover", "sedcust", "feature-request"]
+        },
+        {
+          name: "Other Templates",
+          templates: ["help-article", "student-transfer", "timeout-extension", "blank"]
+        }
+      ];
+
+      // Load the tracker configurations
+      const script = document.createElement('script');
+      script.src = 'tracker-config.js';
+      script.onload = function() {
+        // Loop through the groups and create the structure
+        groups.forEach(group => {
+          // Create template group
+          const groupElement = document.createElement('div');
+          groupElement.className = 'template-group';
+          
+          // Create group header
+          const header = document.createElement('div');
+          header.className = 'group-header';
+          header.innerHTML = `
+            <h2><i class="fas fa-folder"></i> ${group.name}</h2>
+            <span class="template-count">${group.templates.length}</span>
+            <i class="fas fa-chevron-down toggle-icon"></i>
+          `;
+          groupElement.appendChild(header);
+
+          // Create templates container
+          const templatesContainer = document.createElement('div');
+          templatesContainer.className = 'templates-container';
+          
+          // Create templates list
+          const templateList = document.createElement('div');
+          templateList.className = 'template-list';
+          
+          // Add templates to the list
+          group.templates.forEach(templateId => {
+            if (TRACKER_CONFIGS[templateId]) {
+              const template = TRACKER_CONFIGS[templateId];
+              const templateItem = document.createElement('div');
+              templateItem.className = 'template-item';
+              templateItem.innerHTML = `
+                <a href="#" class="template-link" data-template="${templateId}">
+                  <i class="fas ${template.icon}"></i> ${template.title}
+                </a>
+                <div class="template-description">${template.description}</div>
+              `;
+              templateList.appendChild(templateItem);
+            }
+          });
+          
+          templatesContainer.appendChild(templateList);
+          groupElement.appendChild(templatesContainer);
+          
+          // Create group description
+          const groupDescription = document.createElement('div');
+          groupDescription.className = 'group-description';
+          groupDescription.textContent = `Click on the ${group.name} to see available templates.`;
+          groupElement.appendChild(groupDescription);
+          
+          // Add to the page
+          groupsContainer.appendChild(groupElement);
+        });
+        
+        // Add expand/collapse functionality
+        document.querySelectorAll('.group-header').forEach(header => {
+          header.addEventListener('click', function() {
+            this.classList.toggle('collapsed');
+            const templatesContainer = this.nextElementSibling;
+            templatesContainer.classList.toggle('collapsed');
+          });
+        });
+        
+        // Setup template handlers
+        setupTemplateHandlers();
+        
+        // Add search functionality
+        const searchInput = document.getElementById('template-search');
+        if (searchInput) {
+          searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            document.querySelectorAll('.template-item').forEach(item => {
+              const title = item.querySelector('.template-link').textContent.toLowerCase();
+              const description = item.querySelector('.template-description').textContent.toLowerCase();
+              
+              if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                item.style.display = 'block';
+              } else {
+                item.style.display = 'none';
+              }
+            });
+            
+            // Check if any templates are visible in each group
+            document.querySelectorAll('.template-group').forEach(group => {
+              const hasVisibleTemplates = Array.from(group.querySelectorAll('.template-item')).some(item => item.style.display !== 'none');
+              
+              if (hasVisibleTemplates) {
+                group.style.display = 'block';
+              } else {
+                group.style.display = 'none';
+              }
+            });
+          });
+        }
+      };
+      
+      document.head.appendChild(script);
+    }
+
+    // Initialize when the document is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Template selector page initialized');
+      initializeTemplates();
+    });
+  </script>
+</body>
+</html>
+
+5.4. Modify the tracker-config.js
+For the tracker-config.js, you should update each template to include the standard sections you want. Here's an example of how to modify the "blank" template to include the standard sections you requested:
+
+// Add standard sections to all templates
+const standardSections = {
+    "subject": {
+        id: "subject",
+        title: "SUBJECT",
+        icon: "fa-pen-fancy",
+        fields: [
+            { id: "subject", type: "text", label: "Subject", required: true }
+        ]
+    },
+    "issueDescription": {
+        id: "issueDescription",
+        title: "ISSUE DESCRIPTION",
+        icon: "fa-exclamation-circle",
+        fields: [
+            { id: "description", type: "richtext", label: "Issue Description", required: true }
+        ]
+    },
+    "stepsToReproduce": {
+        id: "reproduction",
+        title: "STEPS TO REPRODUCE",
+        icon: "fa-list-ol",
+        fields: [
+            { id: "stepsToReproduce", type: "richtext", label: "Steps to Reproduce", required: false }
+        ]
+    },
+    "screenshots": {
+        id: "screenshots",
+        title: "SCREENSHOTS",
+        icon: "fa-images",
+        fields: []  // This will be handled by setupCustomFileUploaders
+    },
+    "actualResults": {
+        id: "actualResults",
+        title: "ACTUAL RESULTS",
+        icon: "fa-times-circle",
+        fields: [
+            { id: "actualResults", type: "richtext", label: "Actual Results", required: false }
+        ]
+    },
+    "expectedResults": {
+        id: "expectedResults",
+        title: "EXPECTED RESULTS",
+        icon: "fa-check-circle",
+        fields: [
+            { id: "expectedResults", type: "richtext", label: "Expected Results", required: false }
+        ]
+    },
+    "ticketProperties": {
+        id: "ticketProperties",
+        title: "TICKET PROPERTIES",
+        icon: "fa-cog",
+        fields: [
+            { id: "priority", type: "select", label: "Priority", required: true, options: ["Low", "Medium", "High", "Urgent"] },
+            { id: "status", type: "select", label: "Status", required: true, options: ["Open", "Pending", "Resolved", "Closed"] }
+        ]
+    }
+};
+
+// Modify the blank template as an example
+const TRACKER_CONFIGS = {
+    // Blank Tracker - Minimalist default template
+    "blank": {
+        title: "Blank Tracker Template",
+        icon: "fa-file-alt",
+        description: "A general-purpose tracker template with universal ticket properties",
+        sections: [
+            standardSections.subject,
+            standardSections.issueDescription,
+            standardSections.stepsToReproduce,
+            standardSections.screenshots,
+            standardSections.actualResults,
+            standardSections.expectedResults,
+            standardSections.ticketProperties
+        ],
+        descriptionGenerator: function (fields) {
+            let description = '';
+            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
+            description += `<div>${fields.description || ''}</div>`;
+            description += '<div style="margin-bottom: 20px;"></div>';
+            
+            if (fields.stepsToReproduce) {
+                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
+                description += `<div>${fields.stepsToReproduce || ''}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+            
+            if (fields.actualResults) {
+                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">ACTUAL RESULTS</span></div>';
+                description += `<div>${fields.actualResults || ''}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+            
+            if (fields.expectedResults) {
+                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
+                description += `<div>${fields.expectedResults || ''}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+            
+            return description;
+        }
+    },
+    // ... other templates would be modified similarly
+};
+
+
+5.5. Create dynamic-tracker.html
+This file needs to dynamically build the form based on the selected template from tracker-config.js and include the ImgBB integration:
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Tracker</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="{{{appclient}}}"></script>
+  <link rel="stylesheet" type="text/css" href="styles/dynamic-tracker.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+</head>
+
+<body>
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Processing...</div>
+  </div>
+
+  <div class="container">
+    <div id="tracker-form-container">
+      <h1 id="template-title">Loading Template...</h1>
+      <div id="form-container">
+        <form id="tracker-form">
+          <!-- Dynamic content will be inserted here -->
+        </form>
+        <div class="form-actions">
+          <fw-button id="btnCancel" color="secondary">Cancel</fw-button>
+          <fw-button id="btnCreateTracker" color="primary">Create Tracker</fw-button>
+        </div>
+      </div>
+    </div>
+    <div id="success-message" style="display: none;">
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h2>Tracker Created Successfully!</h2>
+      <p>Your tracker ticket has been created. Ticket #<span id="ticketId"></span></p>
+      <div class="success-actions">
+        <fw-button id="btnOpenTicket" color="primary">Open Ticket</fw-button>
+        <fw-button id="btnBackToTemplates" color="secondary">Back to Templates</fw-button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class TrackerApp {
+      constructor() {
+        this.client = null;
+        this.selectedTemplate = null;
+        this.templateConfig = null;
+        this.quillEditors = {};
+        this.aggregatedScreenshotFiles = [];
+        this.harFile = null;
+        this.createdTicketId = null;
+
+        // Initialize app
+        this.initialize();
+      }
+
+      async initialize() {
+        try {
+          // Initialize Freshworks client
+          this.client = await app.initialized();
+          console.log('App initialized');
+
+          // Load tracker configurations
+          this.loadTrackerConfig();
+        } catch (error) {
+          console.error('Error initializing app:', error);
+          this.showError('Failed to initialize the app. Please try again.');
+        }
+      }
+
+      loadTrackerConfig() {
+        const script = document.createElement('script');
+        script.src = 'tracker-config.js';
+        script.onload = () => {
+          console.log('Tracker config loaded');
+          // Get selected template from localStorage
+          this.selectedTemplate = localStorage.getItem('selectedTemplate');
+          
+          if (!this.selectedTemplate || !TRACKER_CONFIGS[this.selectedTemplate]) {
+            this.showError('Invalid template selected. Please go back and select a valid template.');
+            return;
+          }
+          
+          this.templateConfig = TRACKER_CONFIGS[this.selectedTemplate];
+          console.log(`Selected template: ${this.selectedTemplate}`, this.templateConfig);
+          
+          // Build the form
+          this.buildForm();
+          
+          // Setup event handlers
+          this.setupEventHandlers();
+        };
+        
+        script.onerror = () => {
+          console.error('Failed to load tracker configuration');
+          this.showError('Failed to load tracker configuration. Please try again.');
+        };
+        
+        document.head.appendChild(script);
+      }
+
+      buildForm() {
+        // Set the template title
+        document.getElementById('template-title').textContent = this.templateConfig.title;
+        
+        // Get the form container
+        const form = document.getElementById('tracker-form');
+        form.innerHTML = '';
+        
+        // Build each section
+        this.templateConfig.sections.forEach(section => {
+          const sectionElement = document.createElement('div');
+          sectionElement.className = 'form-section';
+          
+          // Create section header
+          const sectionHeader = document.createElement('div');
+          sectionHeader.className = 'section-header';
+          sectionHeader.innerHTML = `
+            <i class="fas ${section.icon}"></i>
+            <h2>${section.title}</h2>
+          `;
+          sectionElement.appendChild(sectionHeader);
+          
+          // Create section content
+          const sectionContent = document.createElement('div');
+          sectionContent.className = 'section-content';
+          
+          // Add fields
+          if (section.fields && section.fields.length > 0) {
+            section.fields.forEach(field => {
+              const fieldElement = this.createFieldElement(field);
+              sectionContent.appendChild(fieldElement);
+            });
+          }
+          
+          sectionElement.appendChild(sectionContent);
+          form.appendChild(sectionElement);
+        });
+        
+        // Add screenshots section if not already present
+        if (!this.templateConfig.sections.some(section => section.id === 'screenshots')) {
+          const screenshotsSection = document.createElement('div');
+          screenshotsSection.className = 'form-section';
+          
+          // Create section header
+          const sectionHeader = document.createElement('div');
+          sectionHeader.className = 'section-header';
+          sectionHeader.innerHTML = `
+            <i class="fas fa-images"></i>
+            <h2>SCREENSHOTS</h2>
+          `;
+          screenshotsSection.appendChild(sectionHeader);
+          
+          // Create section content
+          const sectionContent = document.createElement('div');
+          sectionContent.className = 'section-content';
+          
+          // Add file uploader
+          const fileUploaderElement = this.createFileUploaderElement();
+          sectionContent.appendChild(fileUploaderElement);
+          
+          screenshotsSection.appendChild(sectionContent);
+          form.appendChild(screenshotsSection);
+        }
+        
+        // Initialize Quill editors
+        this.initializeQuillEditors();
+        
+        // Initialize file uploaders
+        this.setupCustomFileUploaders();
+      }
+
+      createFieldElement(field) {
+        const fieldContainer = document.createElement('div');
+        fieldContainer.className = 'field-container';
+        
+        if (field.type === 'hidden') {
+          const hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.id = field.id;
+          hiddenInput.name = field.id;
+          fieldContainer.appendChild(hiddenInput);
+          return fieldContainer;
+        }
+        
+        // Create label (except for richtext fields)
+        if (field.type !== 'richtext' && field.type !== 'info') {
+          const label = document.createElement('label');
+          label.htmlFor = field.id;
+          label.textContent = field.label;
+          if (field.required) {
+            label.innerHTML += ' <span class="required">*</span>';
+          }
+          fieldContainer.appendChild(label);
+        }
+        
+        // Create the field input
+        let inputElement;
+        
+        switch (field.type) {
+          case 'text':
+          case 'email':
+          case 'date':
+            inputElement = document.createElement('input');
+            inputElement.type = field.type;
+            inputElement.id = field.id;
+            inputElement.name = field.id;
+            inputElement.required = field.required || false;
+            if (field.placeholder) inputElement.placeholder = field.placeholder;
+            if (field.readOnly) inputElement.readOnly = true;
+            break;
+            
+          case 'textarea':
+            inputElement = document.createElement('textarea');
+            inputElement.id = field.id;
+            inputElement.name = field.id;
+            inputElement.required = field.required || false;
+            if (field.placeholder) inputElement.placeholder = field.placeholder;
+            break;
+            
+          case 'richtext':
+            const editorContainer = document.createElement('div');
+            editorContainer.className = 'quill-editor-container';
+            
+            if (field.label) {
+              const editorLabel = document.createElement('label');
+              editorLabel.htmlFor = field.id;
+              editorLabel.textContent = field.label;
+              if (field.required) {
+                editorLabel.innerHTML += ' <span class="required">*</span>';
+              }
+              editorContainer.appendChild(editorLabel);
+            }
+            
+            // Create the editor element
+            const editorElement = document.createElement('div');
+            editorElement.id = `${field.id}Editor`;
+            editorElement.className = 'quill-editor';
+            editorContainer.appendChild(editorElement);
+            
+            // Create hidden input to store the HTML content
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.id = field.id;
+            hiddenInput.name = field.id;
+            editorContainer.appendChild(hiddenInput);
+            
+            inputElement = editorContainer;
+            break;
+            
+          case 'select':
+            inputElement = document.createElement('select');
+            inputElement.id = field.id;
+            inputElement.name = field.id;
+            inputElement.required = field.required || false;
+            
+            // Add options
+            if (field.options && field.options.length > 0) {
+              field.options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                inputElement.appendChild(optionElement);
+              });
+            }
+            break;
+            
+          case 'checkboxes':
+            inputElement = document.createElement('div');
+            inputElement.className = 'checkbox-group';
+            
+            // Add options
+            if (field.options && field.options.length > 0) {
+              field.options.forEach(option => {
+                const checkboxContainer = document.createElement('div');
+                checkboxContainer.className = 'checkbox-container';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = option.id || option;
+                checkbox.name = `${field.id}[${option.id || option}]`;
+                
+                const checkboxLabel = document.createElement('label');
+                checkboxLabel.htmlFor = option.id || option;
+                checkboxLabel.textContent = option.label || option;
+                
+                checkboxContainer.appendChild(checkbox);
+                checkboxContainer.appendChild(checkboxLabel);
+                inputElement.appendChild(checkboxContainer);
+              });
+            }
+            break;
+            
+          case 'info':
+            inputElement = document.createElement('div');
+            inputElement.className = 'info-box';
+            
+            const infoTitle = document.createElement('div');
+            infoTitle.className = 'info-title';
+            infoTitle.textContent = field.label;
+            inputElement.appendChild(infoTitle);
+            
+            if (field.hint) {
+              const infoHint = document.createElement('div');
+              infoHint.className = 'hint';
+              infoHint.textContent = field.hint;
+              inputElement.appendChild(infoHint);
+            }
+            break;
+            
+          default:
+            inputElement = document.createElement('input');
+            inputElement.type = 'text';
+            inputElement.id = field.id;
+            inputElement.name = field.id;
+            break;
+        }
+        
+        // Add hint if present
+        if (field.hint && field.type !== 'info') {
+          const hint = document.createElement('div');
+          hint.className = 'hint';
+          hint.textContent = field.hint;
+          fieldContainer.appendChild(inputElement);
+          fieldContainer.appendChild(hint);
+        } else {
+          fieldContainer.appendChild(inputElement);
+        }
+        
+        return fieldContainer;
+      }
+
+      createFileUploaderElement() {
+        const fileUploaderContainer = document.createElement('div');
+        fileUploaderContainer.className = 'attachment-input-container';
+        
+        // Add title and note
+        const title = document.createElement('div');
+        title.className = 'info-title';
+        title.textContent = 'File Attachments';
+        fileUploaderContainer.appendChild(title);
+        
+        const hint = document.createElement('div');
+        hint.className = 'hint';
+        hint.textContent = 'Each file must be under 20MB, and the TOTAL size of all attachments MUST NOT exceed 20MB.';
+        fileUploaderContainer.appendChild(hint);
+        
+        // Add file input
+        const fileInputContainer = document.createElement('div');
+        fileInputContainer.className = 'file-upload-container';
+        
+        const fileUploadButton = document.createElement('label');
+        fileUploadButton.className = 'file-upload-button';
+        fileUploadButton.innerHTML = '<i class="fas fa-paperclip"></i> Attach Files';
+        
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.id = 'screenshotsUploader';
+        fileInput.className = 'hidden-file-input';
+        fileInput.multiple = true;
+        fileInput.accept = 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt';
+        
+        // Add event listener for file selection
+        fileInput.addEventListener('change', this.handleFileSelect.bind(this));
+        
+        fileUploadButton.appendChild(fileInput);
+        fileInputContainer.appendChild(fileUploadButton);
+        fileUploaderContainer.appendChild(fileInputContainer);
+        
+        // Add preview container
+        const previewContainer = document.createElement('div');
+        previewContainer.id = 'screenshot-preview';
+        previewContainer.className = 'screenshot-preview';
+        fileUploaderContainer.appendChild(previewContainer);
+        
+        // Add textarea for description
+        const descriptionContainer = document.createElement('div');
+        descriptionContainer.className = 'field-container';
+        
+        const descriptionLabel = document.createElement('label');
+        descriptionLabel.htmlFor = 'screenshotsDescription';
+        descriptionLabel.textContent = 'Description for Screenshots/Attachments';
+        descriptionContainer.appendChild(descriptionLabel);
+        
+        const description = document.createElement('textarea');
+        description.id = 'screenshotsDescription';
+        description.name = 'screenshotsDescription';
+        description.placeholder = 'Provide additional context about the attached files...';
+        descriptionContainer.appendChild(description);
+        
+        fileUploaderContainer.appendChild(descriptionContainer);
+        
+        // Create hidden input to store the screenshot data
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.id = 'screenshotData';
+        hiddenInput.name = 'screenshotData';
+        fileUploaderContainer.appendChild(hiddenInput);
+        
+        return fileUploaderContainer;
+      }
+
+      initializeQuillEditors() {
+        // Find all quill editor elements
+        document.querySelectorAll('.quill-editor').forEach(editorElement => {
+          const fieldId = editorElement.id.replace('Editor', '');
+          
+          try {
+            // Define a custom image handler for the toolbar
+            const customImageHandler = () => {
+              const input = document.createElement('input');
+              input.setAttribute('type', 'file');
+              input.setAttribute('accept', 'image/*');
+              input.click();
+              
+              input.onchange = () => {
+                if (input.files && input.files[0]) {
+                  const file = input.files[0];
+                  
+                  // Show loading indicator
+                  const range = editor.getSelection(true);
+                  editor.insertText(range.index, "Uploading image... ", { italic: true, color: '#999' });
+                  const placeholderIndex = range.index;
+                  
+                  // Upload to ImgBB
+                  this.uploadImageToImgBB(file).then(imageUrl => {
+                    // Delete the placeholder text
+                    editor.deleteText(placeholderIndex, "Uploading image... ".length);
+                    
+                    // Insert the image
+                    editor.insertEmbed(placeholderIndex, 'image', imageUrl);
+                    editor.setSelection(placeholderIndex + 1);
+                  }).catch(error => {
+                    console.error('Error uploading image:', error);
+                    
+                    // Replace placeholder with error message
+                    editor.deleteText(placeholderIndex, "Uploading image... ".length);
+                    editor.insertText(placeholderIndex, ⚠️ Image upload failed ", { italic: true, color: 'red' });
+                  });
+                }
+              };
+            };
+            
+            // Initialize the Quill editor
+            const editor = new Quill(editorElement, {
+              theme: 'snow',
+              placeholder: 'Type your content here...',
+              modules: {
+                toolbar: {
+                  container: [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    ['link', 'image']
+                  ],
+                  handlers: {
+                    'image': customImageHandler
+                  }
+                }
+              }
+            });
+            
+            // Ensure the editor is properly enabled
+            editor.enable();
+            
+            // Store reference in our global map
+            this.quillEditors[fieldId] = editor;
+            
+            // Add paste image handling
+            editor.root.addEventListener('paste', e => this.handlePasteImage(e, editor));
+            
+            // Add drop handling for images
+            editor.root.addEventListener('drop', e => this.handleDropImage(e, editor));
+            
+            // Update hidden input when editor changes
+            editor.on('text-change', () => {
+              const hiddenInput = document.getElementById(fieldId);
+              if (hiddenInput) {
+                hiddenInput.value = editor.root.innerHTML;
+              }
+            });
+            
+            console.log(`Initialized Quill editor for ${fieldId}`);
+          } catch (error) {
+            console.error(`Error initializing Quill editor for ${fieldId}:`, error);
+          }
+        });
+      }
+
+      setupCustomFileUploaders() {
+        // We've already set up the main file uploader in createFileUploaderElement
+        // This method would handle any additional specialized uploaders (e.g., HAR files)
+      }
+
+      setupEventHandlers() {
+        // Setup cancel button
+        document.getElementById('btnCancel').addEventListener('click', () => {
+          window.location.href = 'template-selector.html';
+        });
+        
+        // Setup create button
+        document.getElementById('btnCreateTracker').addEventListener('click', this.submitForm.bind(this));
+        
+        // Setup success buttons
+        document.getElementById('btnOpenTicket').addEventListener('click', () => {
+          if (this.createdTicketId) {
+            this.openTicket(this.createdTicketId);
+          }
+        });
+        
+        document.getElementById('btnBackToTemplates').addEventListener('click', () => {
+          window.location.href = 'template-selector.html';
+        });
+      }
+
+      handleFileSelect(event) {
+        const files = event.target.files;
+        if (!files || files.length === 0) return;
+        
+        // Check file size limits
+        let totalSize = 0;
+        for (let i = 0; i < files.length; i++) {
+          totalSize += files[i].size;
+          
+          // Check individual file size (20MB limit)
+          if (files[i].size > 20 * 1024 * 1024) {
+            this.showError(`File "${files[i].name}" exceeds the 20MB size limit.`);
+            return;
+          }
+        }
+        
+        // Check combined size (20MB limit)
+        const existingFilesSize = this.aggregatedScreenshotFiles.reduce((total, file) => total + file.size, 0);
+        if (existingFilesSize + totalSize > 20 * 1024 * 1024) {
+          this.showError('The total size of all attachments exceeds the 20MB limit.');
+          return;
+        }
+        
+        // Add files to the collection
+        for (let i = 0; i < files.length; i++) {
+          this.aggregatedScreenshotFiles.push(files[i]);
+        }
+        
+        // Update preview
+        this.updateScreenshotPreview();
+      }
+
+      updateScreenshotPreview() {
+        const previewContainer = document.getElementById('screenshot-preview');
+        if (!previewContainer) return;
+        
+        // Clear existing preview
+        previewContainer.innerHTML = '';
+        
+        // Add new thumbnails
+        this.aggregatedScreenshotFiles.forEach((file, index) => {
+          const thumbnail = document.createElement('div');
+          thumbnail.className = 'screenshot-thumbnail';
+          
+          // Create thumbnail content based on file type
+          if (file.type.startsWith('image/')) {
+            // Create image preview
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            thumbnail.appendChild(img);
+          } else {
+            // Create icon for non-image files
+            const fileTypeIcon = this.getFileTypeIcon(file.type);
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'file-preview';
+            iconDiv.innerHTML = `<i class="${fileTypeIcon}"></i>`;
+            thumbnail.appendChild(iconDiv);
+          }
+          
+          // Add filename
+          const filenameDiv = document.createElement('div');
+          filenameDiv.className = 'screenshot-filename';
+          filenameDiv.textContent = file.name;
+          thumbnail.appendChild(filenameDiv);
+          
+          // Add remove button
+          const removeButton = document.createElement('div');
+          removeButton.className = 'screenshot-remove';
+          removeButton.innerHTML = '<i class="fas fa-times"></i>';
+          removeButton.addEventListener('click', () => {
+            this.aggregatedScreenshotFiles.splice(index, 1);
+            this.updateScreenshotPreview();
+          });
+          thumbnail.appendChild(removeButton);
+          
+          previewContainer.appendChild(thumbnail);
+        });
+      }
+
+      getFileTypeIcon(mimeType) {
+        if (mimeType.startsWith('image/')) return 'fas fa-file-image';
+        if (mimeType === 'application/pdf') return 'fas fa-file-pdf';
+        if (mimeType.includes('word') || mimeType.includes('document')) return 'fas fa-file-word';
+        if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return 'fas fa-file-excel';
+        if (mimeType.includes('text/')) return 'fas fa-file-alt';
+        return 'fas fa-file';
+      }
+
+      handlePasteImage(event, editor) {
+        const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+        
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf('image') === 0) {
+            // Prevent default paste behavior
+            event.preventDefault();
+            
+            // Get the image blob
+            const blob = items[i].getAsFile();
+            
+            // Show loading indicator
+            const range = editor.getSelection(true);
+            editor.insertText(range.index, "Uploading image... ", { italic: true, color: '#999' });
+            const placeholderIndex = range.index;
+            
+            // Upload to ImgBB
+            this.uploadImageToImgBB(blob).then(imageUrl => {
+              // Delete the placeholder text
+              editor.deleteText(placeholderIndex, "Uploading image... ".length);
+              
+              // Insert the image
+              editor.insertEmbed(placeholderIndex, 'image', imageUrl);
+              editor.setSelection(placeholderIndex + 1);
+            }).catch(error => {
+              console.error('Error uploading pasted image:', error);
+              
+              // Replace placeholder with error message
+              editor.deleteText(placeholderIndex, "Uploading image... ".length);
+              editor.insertText(placeholderIndex, ⚠️ Image upload failed ", { italic: true, color: 'red' });
+            });
+            
+            break;
+          }
+        }
+      }
+
+      handleDropImage(event, editor) {
+        event.preventDefault();
+        
+        // Get the dropped files
+        const files = event.dataTransfer.files;
+        
+        if (files && files.length && files[0].type.indexOf('image/') === 0) {
+          const file = files[0];
+          
+          // Show loading indicator
+          const range = editor.getSelection(true);
+          if (range) {
+            editor.insertText(range.index, "Uploading image... ", { italic: true, color: '#999' });
+            const placeholderIndex = range.index;
+            
+            // Upload to ImgBB
+            this.uploadImageToImgBB(file).then(imageUrl => {
+              // Delete the placeholder text
+              editor.deleteText(placeholderIndex, "Uploading image... ".length);
+              
+              // Insert the image
+              editor.insertEmbed(placeholderIndex, 'image', imageUrl);
+              editor.setSelection(placeholderIndex + 1);
+            }).catch(error => {
+              console.error('Error uploading dropped image:', error);
+              
+              // Replace placeholder with error message
+              editor.deleteText(placeholderIndex, "Uploading image... ".length);
+              editor.insertText(placeholderIndex, "⚠️ Image upload failed ", { italic: true, color: 'red' });
+            });
+          }
+        }
+      }
+
+      async uploadImageToImgBB(imageFile) {
+        console.log(`Uploading image to ImgBB: ${imageFile.name} (${this.formatFileSize(imageFile.size)})`);
+
+        try {
+          // Convert the image to base64
+          const base64Image = await this.readFileAsBase64(imageFile);
+
+          // Create form data for the API request
+          const formData = new FormData();
+          formData.append('key', 'b3da8c974bc40dd87d896d84436dd76e'); // Your ImgBB API key
+          formData.append('image', base64Image);
+          formData.append('name', imageFile.name);
+
+          // Make the API request
+          const response = await fetch('https://api.imgbb.com/1/upload', {
+            method: 'POST',
+            body: formData
+          });
+
+          // Parse the response
+          const result = await response.json();
+
+          if (result.success) {
+            console.log('Image uploaded successfully:', result.data.url);
+            // Return the display URL (medium size) for better quality
+            return result.data.display_url;
+          } else {
+            throw new Error(result.error?.message || 'Upload failed');
+          }
+        } catch (error) {
+          console.error('Error uploading to ImgBB:', error);
+          throw error;
+        }
+      }
+
+      readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            // Get the base64 part without the prefix
+            const base64 = reader.result.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+
+      base64ToBlob(base64, contentType) {
+        const byteCharacters = atob(base64);
+        const byteArrays = [];
+        
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+          const slice = byteCharacters.slice(offset, offset + 512);
+          
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+          
+          const byteArray = new Uint8Array(byteNumbers);
+          byteArrays.push(byteArray);
+        }
+        
+        return new Blob(byteArrays, {type: contentType});
+      }
+
+      async submitForm(event) {
+        event.preventDefault();
+        
+        // Show loading overlay
+        this.showLoadingOverlay('Creating tracker...');
+        
+        try {
+          // Validate the form
+          if (!this.validateForm()) {
+            this.hideLoadingOverlay();
+            return;
+          }
+          
+          // Update all Quill editors' hidden inputs
+          Object.entries(this.quillEditors).forEach(([fieldId, editor]) => {
+            const hiddenInput = document.getElementById(fieldId);
+            if (hiddenInput) {
+              hiddenInput.value = editor.root.innerHTML;
+            }
+          });
+          
+          // Collect form data
+          const formData = {};
+          const form = document.getElementById('tracker-form');
+          
+          // Get ticket data from source ticket
+          const sourceTicketData = JSON.parse(localStorage.getItem('ticketData') || '{}');
+          
+          // Process form fields
+          Array.from(form.elements).forEach(element => {
+            if (element.name && element.name !== 'screenshotData') {
+              if (element.type === 'checkbox') {
+                formData[element.name] = element.checked;
+              } else {
+                formData[element.name] = element.value;
+              }
+            }
+          });
+          
+          // Extract values from the form data to generate the subject and description
+          const subject = this.generateSubject(formData);
+          const description = this.generateDescription(formData);
+          
+          // Create ticket data object
+          const ticketData = {
+            subject: subject,
+            description: description,
+            status: 2, // Open
+            priority: sourceTicketData.priority || 2,
+            source: 101, // API (used for tracking app-created tickets),
+            custom_fields: {}
+          };
+
+          // Copy required custom fields from source ticket
+          const customFieldsToPreserve = [
+            'cf_categorization',
+            'cf_subcategory',
+            'cf_issue_detail',
+            'cf_account_manager',
+            'cf_rvp',
+            'cf_product_type',
+            'cf_product',
+            'cf_product_subsection',
+            'cf_district_name',
+            'cf_vip'
+          ];
+
+          if (sourceTicketData.custom_fields) {
+            customFieldsToPreserve.forEach(field => {
+              if (sourceTicketData.custom_fields[field] !== undefined) {
+                ticketData.custom_fields[field] = sourceTicketData.custom_fields[field];
+              }
+            });
+          }
+
+          // Add association data
+          if (sourceTicketData.id) {
+            ticketData.association_type = 3; // Tracker
+            // Related ticket IDs need to be sent separately after ticket creation
+          }
+
+          // Define tags array
+          const tags = ['tracker', 'tracker-central', this.selectedTemplate];
+          if (formData.isVIP && formData.isVIP === 'Yes') {
+            tags.push('vip');
+          }
+          if (formData.districtName) {
+            tags.push(formData.districtName.trim().toLowerCase().replace(/\s+/g, '-'));
+          }
+          ticketData.tags = tags;
+
+          console.log('Creating ticket with data:', ticketData);
+
+          // Create attachments array for upload
+          let attachmentPromises = [];
+          if (this.aggregatedScreenshotFiles.length > 0) {
+            // Convert each file to base64 for server processing
+            attachmentPromises = this.aggregatedScreenshotFiles.map(file => {
+              return this.readFileAsBase64(file).then(base64Content => {
+                return {
+                  name: file.name,
+                  content: base64Content,
+                  contentType: file.type
+                };
+              });
+            });
+          }
+
+          // Wait for all attachment conversions
+          const attachments = await Promise.all(attachmentPromises);
+
+          // Create the ticket (with or without attachments)
+          let ticketResponse;
+          if (attachments.length > 0) {
+            // Use the server component to create with attachments
+            ticketResponse = await this.client.request.invoke('ticket_with_attachments', {
+              data: {
+                ticket: ticketData,
+                attachments: attachments
+              }
+            });
+          } else {
+            // Use the regular API request for ticket without attachments
+            ticketResponse = await this.client.request.invokeTemplate("createfdTicket", {
+              body: JSON.stringify(ticketData)
+            });
+            
+            // Parse the response if needed
+            if (typeof ticketResponse.response === 'string') {
+              ticketResponse.data = JSON.parse(ticketResponse.response);
+            }
+          }
+
+          console.log('Ticket created:', ticketResponse);
+
+          // Check if the ticket was created successfully
+          if (ticketResponse.status === 201 || ticketResponse.status === 200) {
+            const createdTicket = ticketResponse.data;
+            this.createdTicketId = createdTicket.id;
+
+            // If there's a source ticket, associate it
+            if (sourceTicketData.id) {
+              try {
+                await this.associateTickets(createdTicket.id, sourceTicketData.id);
+                console.log('Tickets associated successfully');
+              } catch (associationError) {
+                console.error('Error associating tickets:', associationError);
+                // Continue even if association fails
+              }
+            }
+
+            // Show success message
+            this.hideLoadingOverlay();
+            this.showSuccessMessage(createdTicket.id);
+          } else {
+            console.error('Error creating ticket:', ticketResponse);
+            this.hideLoadingOverlay();
+            this.showError('Failed to create the ticket. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error submitting form:', error);
+          this.hideLoadingOverlay();
+          this.showError('An error occurred while creating the ticket. Please try again.');
+        }
+      }
+
+      async associateTickets(primaryTicketId, secondaryTicketId) {
+        return this.client.request.invokeTemplate("associateTickets", {
+          context: {
+            primaryTicketId: primaryTicketId
+          },
+          body: JSON.stringify({
+            association_type: 3, // Tracker type
+            ticket_id: secondaryTicketId
+          })
+        });
+      }
+
+      generateSubject(formData) {
+        // Check if template has a custom subject formatting function
+        if (this.templateConfig.subjectFormatter) {
+          return this.templateConfig.subjectFormatter(formData);
+        }
+
+        // Use the formattedSubject if available
+        if (formData.formattedSubject) {
+          return formData.formattedSubject;
+        }
+
+        // Fallback to subject field
+        if (formData.subject) {
+          return formData.subject;
+        }
+
+        // Generate a default subject
+        return `${this.templateConfig.title} - ${new Date().toLocaleDateString()}`;
+      }
+
+      generateDescription(formData) {
+        // Use the template's description generator if available
+        if (this.templateConfig.descriptionGenerator) {
+          return this.templateConfig.descriptionGenerator(formData);
+        }
+
+        // Create a default description
+        let description = '';
+        description += `<div><strong>Template Type:</strong> ${this.templateConfig.title}</div>`;
+        
+        // Add basic form data
+        Object.entries(formData).forEach(([key, value]) => {
+          if (value && key !== 'subject' && key !== 'formattedSubject') {
+            description += `<div><strong>${key}:</strong> ${value}</div>`;
+          }
+        });
+        
+        return description;
+      }
+
+      validateForm() {
+        const form = document.getElementById('tracker-form');
+        const requiredFields = form.querySelectorAll('[required]');
+        
+        let isValid = true;
+        
+        // Check each required field
+        requiredFields.forEach(field => {
+          if (!field.value.trim()) {
+            isValid = false;
+            field.classList.add('invalid');
+            
+            // Find the label for this field
+            const fieldContainer = field.closest('.field-container');
+            if (fieldContainer) {
+              const label = fieldContainer.querySelector('label');
+              if (label) {
+                const fieldName = label.textContent.replace(' *', '');
+                this.showError(`"${fieldName}" is a required field.`);
+              }
+            }
+          } else {
+            field.classList.remove('invalid');
+          }
+        });
+        
+        return isValid;
+      }
+
+      openTicket(ticketId) {
+        this.client.iparams.get("freshdesk_subdomain").then(iparams => {
+          const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
+          window.open(`https://${subdomain}.freshdesk.com/a/tickets/${ticketId}`, "_blank");
+        }).catch(error => {
+          console.error("Error getting freshdesk subdomain:", error);
+          window.open(`https://freshdesk.com/a/tickets/${ticketId}`, "_blank");
+        });
+      }
+
+      showSuccessMessage(ticketId) {
+        document.getElementById('tracker-form-container').style.display = 'none';
+        
+        const successMessage = document.getElementById('success-message');
+        document.getElementById('ticketId').textContent = ticketId;
+        successMessage.style.display = 'block';
+      }
+
+      showLoadingOverlay(message) {
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+          const loadingText = loadingOverlay.querySelector('.loading-text');
+          if (loadingText) {
+            loadingText.textContent = message || 'Processing...';
+          }
+          loadingOverlay.style.display = 'flex';
+        }
+      }
+
+      hideLoadingOverlay() {
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+          loadingOverlay.style.display = 'none';
+        }
+      }
+
+      showError(message) {
+        this.client.interface.trigger("showNotify", {
+          type: "danger",
+          message: message
+        });
+      }
+    }
+
+    // Initialize the app when the document is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      window.trackerApp = new TrackerApp();
+    });
+  </script>
+</body>
+</html>
+
+
+6. Create Server Component Files
+6.1. Create handle_attachments.js
+
+/**
+ * Server component to handle file uploads for Freshdesk tickets
+ * Based on Freshdesk API documentation for adding a note with attachment
+ */
+
+exports = {
+    /**
+     * Upload an attachment as a note to a ticket
+     * @param {object} args - Arguments containing file information and ticket ID
+     */
+    uploadAttachment: async function (args) {
+        console.log("Processing attachment upload request");
+
+        try {
+            // Extract the data from the request
+            const { ticketId, noteBody, isPrivate, fileContent, fileName, fileType } = args.data;
+
+            if (!ticketId || !fileContent || !fileName) {
+                console.error("Missing required fields for attachment upload");
+                return {
+                    status: 400,
+                    body: { error: "Missing required fields: ticketId, fileContent, or fileName" }
+                };
+            }
+
+            console.log(`Preparing to upload file ${fileName} to ticket #${ticketId}`);
+
+            // Get installation parameters
+            const iparams = await $request.getIparams();
+            if (!iparams || !iparams.freshdesk_subdomain || !iparams.freshdesk_api_key) {
+                console.error("Missing required installation parameters");
+                return {
+                    status: 500,
+                    body: { error: "Missing installation parameters" }
+                };
+            }
+
+            // Create boundary for multipart/form-data
+            const boundary = 'freshdesk-attachment-boundary';
+
+            // Create the multipart form-data body manually
+            let reqBody = '';
+
+            // Add body field
+            reqBody += `--${boundary}\r\n`;
+            reqBody += 'Content-Disposition: form-data; name="body"\r\n\r\n';
+            reqBody += noteBody || `Attachment: ${fileName}`;
+            reqBody += `\r\n`;
+
+            // Add private field
+            reqBody += `--${boundary}\r\n`;
+            reqBody += 'Content-Disposition: form-data; name="private"\r\n\r\n';
+            reqBody += (isPrivate ? 'true' : 'false');
+            reqBody += `\r\n`;
+
+            // Add attachment field
+            reqBody += `--${boundary}\r\n`;
+            reqBody += `Content-Disposition: form-data; name="attachments[]"; filename="${fileName}"\r\n`;
+            reqBody += `Content-Type: ${fileType || 'application/octet-stream'}\r\n\r\n`;
+
+            // Convert base64 to binary for the file contents
+            const binaryData = Buffer.from(fileContent, 'base64');
+            reqBody += binaryData;
+            reqBody += `\r\n`;
+
+            // End boundary
+            reqBody += `--${boundary}--`;
+
+            // Construct auth header
+            const authHeader = `Basic ${Buffer.from(iparams.freshdesk_api_key + ':X').toString('base64')}`;
+
+            // Make the API request to create a note with attachment using raw request
+            const response = await $request.request({
+                method: 'POST',
+                url: `https://${iparams.freshdesk_subdomain}.freshdesk.com/api/v2/tickets/${ticketId}/notes`,
+                headers: {
+                    'Authorization': authHeader,
+                    'Content-Type': `multipart/form-data; boundary=${boundary}`
+                },
+                body: reqBody,
+                isEncodedBody: true  // Important to indicate we've already encoded the body
+            });
+
+            console.log("Attachment uploaded successfully");
+
+            return {
+                status: response.status,
+                body: response.body
+            };
+        } catch (error) {
+            console.error("Error uploading attachment:", error);
+            return {
+                status: 500,
+                body: { error: error.message || "Unknown error during file upload" }
+            };
+        }
+    }
+};
+
+6.2. Create ticket_with_attachments.js
+
+/**
+ * Server component to handle ticket creation with attachments
+ * This bypasses CORS limitations by running server-side
+ */
+
+exports = {
+    /**
+     * Creates a ticket with attachments
+     * 
+     * @param {object} args - Arguments from the client
+     * @returns {object} - Response with status and data
+     */
+    uploadTicketWithAttachments: async function (args) {
+        const { iparams } = args;
+
+        try {
+            // Sanitize subdomain - ensure it doesn't contain .freshdesk.com
+            const sanitizedSubdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
+
+            // Extract data from the request
+            const ticketData = args.data.ticket;
+            const attachments = args.data.attachments || [];
+
+            if (!ticketData) {
+                return {
+                    status: 400,
+                    data: { error: "Missing required parameter (ticketData)" }
+                };
+            }
+
+            console.log(`Creating ticket with ${attachments.length} attachments`);
+
+            // Freshdesk API requires multipart/form-data for attachments
+            // We'll use the request library with formData
+            const options = {
+                method: 'POST',
+                url: `https://${sanitizedSubdomain}.freshdesk.com/api/v2/tickets`,
+                headers: {
+                    'Authorization': 'Basic ' + Buffer.from(`${iparams.freshdesk_api_key}:X`).toString('base64')
+                },
+                formData: {}
+            };
+
+            // Add ticket data to form
+            Object.keys(ticketData).forEach(key => {
+                if (key === 'custom_fields') {
+                    // Handle custom_fields differently as it's an object
+                    Object.keys(ticketData.custom_fields).forEach(cfKey => {
+                        options.formData[`custom_fields[${cfKey}]`] = ticketData.custom_fields[cfKey];
+                    });
+                } else {
+                    options.formData[key] = ticketData[key];
+                }
+            });
+
+            // Add attachments if any
+            if (attachments && attachments.length > 0) {
+                options.formData['attachments[]'] = attachments.map(attachment => {
+                    return {
+                        value: Buffer.from(attachment.content, 'base64'),
+                        options: {
+                            filename: attachment.name,
+                            contentType: attachment.contentType
+                        }
+                    };
+                });
+            }
+
+            // Make the API request
+            const request = require('request');
+
+            return new Promise((resolve, reject) => {
+                request(options, function (error, response, body) {
+                    if (error) {
+                        console.error('Error in uploadTicketWithAttachments:', error);
+                        reject({
+                            status: 500,
+                            data: { error: error.message }
+                        });
+                    } else {
+                        try {
+                            const responseData = JSON.parse(body);
+
+                            if (response.statusCode >= 400) {
+                                reject({
+                                    status: response.statusCode,
+                                    data: responseData
+                                });
+                            } else {
+                                resolve({
+                                    status: response.statusCode,
+                                    data: responseData
+                                });
+                            }
+                        } catch (parseError) {
+                            console.error('Error parsing response:', parseError);
+                            resolve({
+                                status: response.statusCode,
+                                data: { message: body }
+                            });
+                        }
+                    }
+                });
+            });
+        } catch (error) {
+            console.error('Unexpected error in uploadTicketWithAttachments:', error);
+            return {
+                status: 500,
+                data: { error: error.message || 'Unknown server error' }
+            };
+        }
+    }
+};
+
+7. Create CSS Files
+7.1. Create dynamic-tracker.css
+
+/* Main styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #042648;
+    text-align: center;
+}
+
+/* Form section styles */
+.form-section {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.section-header {
+    background-color: #042648;
+    color: white;
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+}
+
+.section-header i {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.section-content {
+    padding: 15px;
+}
+
+/* Field container styles */
+.field-container {
+    margin-bottom: 15px;
+}
+
+.field-container:last-child {
+    margin-bottom: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: 500;
+}
+
+.required {
+    color: #e74c3c;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+.invalid {
+    border-color: #e74c3c !important;
+    background-color: #fff6f6;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Hints */
+.hint {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* File upload styling - fixing the issue */
+.attachment-input-container {
+    margin-bottom: 15px;
+}
+
+.file-upload-button {
+    display: inline-block;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.file-upload-button:hover {
+    background-color: #e0e0e0;
+}
+
+.file-upload-button i {
+    margin-right: 8px;
+}
+
+.hidden-file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Screenshot preview */
+.screenshot-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.screenshot-thumbnail {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 120px;
+    text-align: center;
+}
+
+.screenshot-thumbnail img {
+    max-width: 100%;
+    max-height: 80px;
+    object-fit: contain;
+}
+
+.screenshot-filename {
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 3px;
+}
+
+.screenshot-remove {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #f44336;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Form buttons */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eaeaea;
+}
+
+/* Checkbox styling */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.checkbox-container input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Quill editor styling */
+.quill-editor-container {
+    margin-bottom: 15px;
+}
+
+.quill-editor {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.ql-toolbar {
+    border-bottom: 1px solid #ddd !important;
+    background-color: #f9f9f9;
+}
+
+.ql-container {
+    min-height: 120px;
+    font-size: 14px !important;
+}
+
+/* Loading overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #4caf50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    color: white;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Success message */
+#success-message {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.success-icon i {
+    font-size: 60px;
+    color: #4caf50;
+    margin-bottom: 20px;
+}
+
+.success-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Info box */
+.info-box {
+    background-color: #f5f5f5;
+    border-left: 3px solid #4caf50;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.info-title {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+/* File preview */
+.file-preview {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #666;
+}
+
+
+Note for ImgBB setup: The ImgBB API key is hardcoded in the provided code (b3da8c974bc40dd87d896d84436dd76e)
