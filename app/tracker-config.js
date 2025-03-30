@@ -551,51 +551,66 @@ const TRACKER_CONFIGS = {
                 ]
             },
             {
-                id: "articleDetails",
-                title: "ARTICLE DETAILS",
-                icon: "fa-clipboard-list",
+                id: "summary",
+                title: "SUMMARY",
+                icon: "fa-file-alt",
                 fields: [
                     {
-                        id: "requestType",
-                        type: "select",
-                        label: "Request Type",
-                        required: true,
-                        options: ["New Article", "Update Existing Article", "Article Removal"]
-                    },
-                    { id: "articleTitle", type: "text", label: "Article Title", required: true },
-                    { id: "articleURL", type: "text", label: "Existing Article URL (for updates)", required: false },
-                    { id: "articleContent", type: "richtext", label: "Proposed Content", required: false }
+                        id: "summaryContent",
+                        type: "richtext",
+                        label: "Include information of what needs to be updated or changed.",
+                        hint: "Ex: The dropdown menu options no longer reflect the listed items in the article.",
+                        required: true
+                    }
                 ]
             },
             {
-                id: "justification",
-                title: "JUSTIFICATION",
-                icon: "fa-comment-alt",
+                id: "articleDetails",
+                title: "DESCRIPTION",
+                icon: "fa-clipboard-list",
                 fields: [
-                    { id: "justification", type: "richtext", label: "Justification for the request", required: true }
+                    { id: "requestor", type: "text", label: "Requestor", required: true, hint: "Provide the name of the requestor. EX: Jen Boyle" },
+                    { id: "dateRequested", type: "date", label: "Date requested", required: true, hint: "Provide date requested. EX: 4/1/2024" },
+                    { id: "articleTitle", type: "text", label: "Name of BU Help Article", required: true, hint: "Provide the name of the help article. EX: About Grading eAssessments" },
+                    { id: "articleURL", type: "text", label: "URL of BU Help Article", required: true, hint: "Provide the URL of the article. EX: https://help.benchmarkuniverse.com/bubateacher/Content/eAssessments/Grading/About%20Grading%20eAssessments.htm" }
                 ]
+            },
+            {
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [] // Empty array since we handle this in setupCustomFileUploaders
             }
         ],
         descriptionGenerator: function (fields) {
             let description = '';
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">HELP ARTICLE REQUEST</span></div>';
-            description += `<div>${fields.subject || ''}</div>`;
+
+            // Summary section
+            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+            description += `<div>${fields.summaryContent || ''}</div>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ARTICLE DETAILS</span></div>';
-            description += `Request Type: ${fields.requestType || ''}<br>`;
-            description += `Article Title: ${fields.articleTitle || ''}<br>`;
-            if (fields.articleURL) description += `Existing Article URL: ${fields.articleURL}<br>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
+            // Description section
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
+            description += `Requestor: ${fields.requestor || ''}<br>`;
+            description += `Date requested: ${formatDate(fields.dateRequested) || ''}<br>`;
+            description += `Name of BU Help Article: ${fields.articleTitle || ''}<br>`;
 
-            if (fields.articleContent) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">PROPOSED CONTENT</span></div>';
-                description += `<div>${fields.articleContent}</div>`;
-                description += '<div style="margin-bottom: 20px;"></div>';
+            // Handle URL as hyperlink
+            if (fields.articleURL) {
+                let url = fields.articleURL.trim();
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = 'https://' + url;
+                }
+                description += `URL of BU Help Article: <a href="${url}" target="_blank">${fields.articleURL}</a><br>`;
             }
+            description += '<div style="margin-bottom: 20px;"></div>';
 
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">JUSTIFICATION</span></div>';
-            description += `<div>${fields.justification || ''}</div>`;
+            // Screenshots section
+            if (fields.screenshotsDescription) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+            }
 
             return description;
         }

@@ -1756,6 +1756,18 @@
                                 console.log("Prepopulated related tickets field with current ticket ID");
                             }
 
+                            // Get the priority from the current ticket and use it for the new ticket
+                            if (ticketData.ticket.priority) {
+                                const priorityField = document.getElementById('priority');
+                                if (priorityField) {
+                                    priorityField.value = ticketData.ticket.priority.toString();
+                                    console.log(`Set priority from source ticket: ${ticketData.ticket.priority}`);
+
+                                    // Store for later use
+                                    this.ticketData.priority = ticketData.ticket.priority;
+                                }
+                            }
+
                             // Handle district field synchronization for specific templates
                             if (this.trackerType === 'assembly' || this.trackerType === 'assembly-rollover' || this.trackerType === 'sim-assignment') {
                                 const districtField = document.getElementById('districtField');
@@ -2197,7 +2209,14 @@
                     console.log("Form validation: Ensuring HIGH priority (3) for VIP ticket");
                     const priorityField = document.getElementById('priority');
                     if (priorityField) {
-                        priorityField.value = "3";
+                        // Only increase priority if it's currently lower than HIGH (3)
+                        // This preserves URGENT (4) if it was intentionally set
+                        if (parseInt(priorityField.value) < 3) {
+                            priorityField.value = "3";
+                            console.log("Increased priority to HIGH (3) for VIP ticket");
+                        } else {
+                            console.log(`Keeping existing priority (${priorityField.value}) as it's already HIGH or URGENT`);
+                        }
                     }
                 }
 
@@ -2792,6 +2811,18 @@
                     // Initialize custom_fields if not already done
                     ticketData.custom_fields = ticketData.custom_fields || {};
 
+                    // Use source ticket priority if available
+                    if (sourceTicketData && sourceTicketData.priority) {
+                        console.log(`Using source ticket priority: ${sourceTicketData.priority}`);
+                        ticketData.priority = sourceTicketData.priority;
+
+                        // Also update the priority field in the form for consistency
+                        const priorityField = document.getElementById('priority');
+                        if (priorityField) {
+                            priorityField.value = sourceTicketData.priority.toString();
+                        }
+                    }
+
                     // Copy custom fields from source ticket if available
                     if (sourceTicketData && sourceTicketData.custom_fields) {
                         // List of custom fields to include from source ticket
@@ -2850,7 +2881,14 @@
                     // Final check for VIP status and priority
                     if (this.ticketData && this.ticketData.isVip) {
                         console.log("Final check: Setting priority to HIGH (3) for VIP ticket");
-                        ticketData.priority = 3;
+                        // Only increase priority if it's currently lower than HIGH (3)
+                        // This preserves URGENT (4) if it was intentionally set
+                        if (parseInt(ticketData.priority) < 3) {
+                            ticketData.priority = 3;
+                            console.log("Increased priority to HIGH (3) for VIP ticket");
+                        } else {
+                            console.log(`Keeping existing priority (${ticketData.priority}) as it's already HIGH or URGENT`);
+                        }
                     }
 
                     // Debug log the final ticket data
@@ -3148,14 +3186,15 @@
 
             // Add this method to your TrackerApp class
             setupCustomFileUploaders() {
-                // Apply to sim-assignment, sim-assessment-reports, sim-library-view, sim-fsa, sim-orr, sim-plan-teach, and sim-reading-log templates
+                // Apply to sim-assignment, sim-assessment-reports, sim-library-view, sim-fsa, sim-orr, sim-plan-teach, sim-reading-log, and help-article templates
                 if (this.trackerType !== 'sim-assignment' &&
                     this.trackerType !== 'sim-assessment-reports' &&
                     this.trackerType !== 'sim-library-view' &&
                     this.trackerType !== 'sim-fsa' &&
                     this.trackerType !== 'sim-orr' &&
                     this.trackerType !== 'sim-plan-teach' &&
-                    this.trackerType !== 'sim-reading-log') {
+                    this.trackerType !== 'sim-reading-log' &&
+                    this.trackerType !== 'help-article') {
                     return;
                 }
 
@@ -3338,7 +3377,8 @@
                     this.trackerType !== 'sim-fsa' &&
                     this.trackerType !== 'sim-orr' &&
                     this.trackerType !== 'sim-plan-teach' &&
-                    this.trackerType !== 'sim-reading-log') {
+                    this.trackerType !== 'sim-reading-log' &&
+                    this.trackerType !== 'help-article') {
                     return;
                 }
 
@@ -3520,7 +3560,8 @@
                     this.trackerType === 'sim-library-view' ||
                     this.trackerType === 'sim-orr' ||
                     this.trackerType === 'sim-plan-teach' ||
-                    this.trackerType === 'sim-reading-log') &&
+                    this.trackerType === 'sim-reading-log' ||
+                    this.trackerType === 'help-article') &&
                     this.harFile;
 
                 if (!hasScreenshots && !hasHarFile) {
