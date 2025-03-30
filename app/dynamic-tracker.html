@@ -2733,6 +2733,21 @@
                             .filter(id => !isNaN(id));
                     }
 
+                    // Get source ticket data from the first related ticket
+                    let sourceTicketData = null;
+                    if (relatedTicketIds.length > 0) {
+                        try {
+                            const sourceTicketId = relatedTicketIds[0];
+                            const response = await this.client.request.invokeTemplate("getTicketDetails", {
+                                context: { ticketId: sourceTicketId }
+                            });
+                            sourceTicketData = JSON.parse(response.response);
+                            console.log("Retrieved source ticket data:", sourceTicketData);
+                        } catch (error) {
+                            console.error("Error getting source ticket data:", error);
+                        }
+                    }
+
                     // Add validation to check if related tickets exist
                     try {
                         for (const ticketId of relatedTicketIds) {
@@ -2766,6 +2781,30 @@
 
                     // Initialize custom_fields if not already done
                     ticketData.custom_fields = ticketData.custom_fields || {};
+
+                    // Copy custom fields from source ticket if available
+                    if (sourceTicketData && sourceTicketData.custom_fields) {
+                        // List of custom fields to include from source ticket
+                        const customFieldsToPreserve = [
+                            'cf_account_manager',
+                            'cf_rvp',
+                            'cf_categorization',
+                            'cf_subcategory',
+                            'cf_issue_detail',
+                            'cf_product_type',
+                            'cf_product',
+                            'cf_product_subsection',
+                            'cf_vip'
+                        ];
+
+                        // Copy the custom fields
+                        customFieldsToPreserve.forEach(field => {
+                            if (sourceTicketData.custom_fields[field] !== undefined) {
+                                ticketData.custom_fields[field] = sourceTicketData.custom_fields[field];
+                                console.log(`Copied custom field ${field} from source ticket:`, ticketData.custom_fields[field]);
+                            }
+                        });
+                    }
 
                     // Set district field
                     if (formData.districtField) {
