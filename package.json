@@ -1,0 +1,17 @@
+{
+    "name": "custom-tracker",
+    "version": "1.0.0",
+    "description": "Custom tracking system for support tickets",
+    "main": "app/index.js",
+    "scripts": {
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:coverage": "jest --coverage"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "jest": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0"
+    }
+}

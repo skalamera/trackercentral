@@ -376,7 +376,7 @@ document.onreadystatechange = function () {
         },
         {
           name: "Other Templates",
-          templates: ["help-article", "student-transfer", "timeout-extension", "blank"]
+          templates: ["help-article", "timeout-extension", "blank"]
         }
       ];
 

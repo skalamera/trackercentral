@@ -2,8 +2,20 @@ function formatDate(dateString) {
     if (!dateString) return '';
 
     try {
-        const [year, month, day] = dateString.split('-');
-        return `${month}/${day}/${year}`;
+        // Check if the string follows the YYYY-MM-DD pattern
+        // A valid date should have exactly two hyphens and split into 3 parts
+        const parts = dateString.split('-');
+        if (parts.length !== 3) {
+            return dateString; // Return original if not in YYYY-MM-DD format
+        }
+
+        // Additional validation - check if the first part looks like a year
+        const year = parts[0];
+        if (year.length !== 4 || isNaN(parseInt(year))) {
+            return dateString;
+        }
+
+        return `${parts[1]}/${parts[2]}/${parts[0]}`;
     } catch (e) {
         console.error('Error formatting date:', e);
         return dateString; // Return original if parsing fails
@@ -838,296 +850,6 @@ const TRACKER_CONFIGS = {
             if (fields.screenshotsDescription) {
                 description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
                 description += `<div>${fields.screenshotsDescription}</div>`;
-            }
-
-            return description;
-        }
-    },
-
-    // Student Transfer
-    "student-transfer": {
-        title: "Student Transfer Tracker",
-        icon: "fa-exchange-alt",
-        description: "For issues regarding transferring student data and accounts",
-        sections: [
-            {
-                id: "subject",
-                title: "SUBJECT",
-                icon: "fa-pencil-alt",
-                fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true }
-                ]
-            },
-            {
-                id: "transferDetails",
-                title: "TRANSFER DETAILS",
-                icon: "fa-clipboard-list",
-                fields: [
-                    { id: "sourceDistrict", type: "text", label: "Source District", required: true },
-                    { id: "destinationDistrict", type: "text", label: "Destination District", required: true },
-                    { id: "studentName", type: "text", label: "Student Name", required: true },
-                    { id: "studentUsername", type: "text", label: "Student Username", required: true },
-                    { id: "requestorName", type: "text", label: "Requestor Name", required: true },
-                    { id: "requestorEmail", type: "email", label: "Requestor Email", required: true },
-                    { id: "dataToTransfer", type: "richtext", label: "Data to Transfer (Scores, Assignments, etc.)", required: true }
-                ]
-            }
-        ],
-        descriptionGenerator: function (fields) {
-            let description = '';
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">STUDENT TRANSFER REQUEST</span></div>';
-            description += `<div>${fields.subject || ''}</div>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">TRANSFER DETAILS</span></div>';
-            description += `Source District: ${fields.sourceDistrict || ''}<br>`;
-            description += `Destination District: ${fields.destinationDistrict || ''}<br>`;
-            description += `Student Name: ${fields.studentName || ''}<br>`;
-            description += `Student Username: ${fields.studentUsername || ''}<br>`;
-            description += `Requestor Name: ${fields.requestorName || ''}<br>`;
-            description += `Requestor Email: ${fields.requestorEmail || ''}<br>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DATA TO TRANSFER</span></div>';
-            description += `<div>${fields.dataToTransfer || ''}</div>`;
-
-            return description;
-        }
-    },
-
-    // Timeout Extension
-    "timeout-extension": {
-        title: "Timeout Extension Tracker",
-        icon: "fa-hourglass-half",
-        description: "For requests to extend session timeout periods",
-        sections: [
-            {
-                id: "subject",
-                title: "SUBJECT",
-                icon: "fa-pencil-alt",
-                fields: [
-                    {
-                        id: "isVIP",
-                        type: "select",
-                        label: "VIP Status",
-                        required: true,
-                        options: ["No", "Yes"]
-                    },
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "timeoutLength", type: "text", label: "Requested Time Out Length (max 12 hours)", required: true, placeholder: "e.g. 7 Hours" },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
-                ]
-            },
-            {
-                id: "description",
-                title: "DESCRIPTION",
-                icon: "fa-clipboard-list",
-                fields: [
-                    { id: "username", type: "text", label: "Username", required: true },
-                    { id: "role", type: "text", label: "Role (Must be district or tech admin)", required: true },
-                    { id: "burcLink", type: "text", label: "User BURC Link", required: true },
-                    { id: "realm", type: "text", label: "Realm", required: true },
-                    { id: "districtState", type: "text", label: "District State", required: true },
-                    { id: "dateRequested", type: "date", label: "Date requested by customer", required: true }
-                ]
-            }
-        ],
-        descriptionGenerator: function (fields) {
-            let description = '';
-
-            // Add the requested time out length section with specified format at the beginning
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">REQUESTED TIME OUT LENGTH (max 12 hours):</span></div>';
-            description += `<div style="font-weight: bold; margin-top: 5px;">${fields.timeoutLength || ''}</div>`;
-            description += '<div style="margin-top: 20px; margin-bottom: 20px;"></div>';
-
-            // Then add the description section with all other fields
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
-            description += `VIP: (${fields.isVIP || 'No'})<br>`;
-            description += `Username: ${fields.username || ''}<br>`;
-            description += `Role (Must be district or tech admin): ${fields.role || ''}<br>`;
-            description += `User BURC Link: ${fields.burcLink || ''}<br>`;
-            description += `Realm: ${fields.realm || ''}<br>`;
-            description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `District State: ${fields.districtState || ''}<br>`;
-            description += `Date requested by customer: ${formatDate(fields.dateRequested) || ''}<br>`;
-
-            return description;
-        },
-
-        // Add onLoad function for dynamic subject line formatting
-        onLoad: function () {
-            console.log("Timeout Extension onLoad function executing");
-
-            // Hide the Requester Email property field
-            const hideRequesterEmail = function () {
-                // Try multiple selectors to find the ticket properties requester email field
-                const requesterEmailSelectors = [
-                    'label[for="email"].required-field',
-                    '.ticket-property-field label:contains("Requester Email")',
-                    '[data-field-name="requester_email"]',
-                    '#requesterEmail',
-                    '.field-container:has(label:contains("Requester Email"))'
-                ];
-
-                // Try each selector
-                for (const selector of requesterEmailSelectors) {
-                    try {
-                        const elements = document.querySelectorAll(selector);
-                        if (elements.length > 0) {
-                            elements.forEach(el => {
-                                // Find the parent container and hide it
-                                const container = el.closest('.field-container') || el.closest('.field-group') ||
-                                    el.closest('.form-group') || el.closest('.field') || el.parentElement;
-                                if (container) {
-                                    container.style.display = 'none';
-                                    console.log(`Successfully hid requester email field using selector: ${selector}`);
-                                    return true;
-                                }
-                            });
-                        }
-                    } catch (e) {
-                        console.error(`Error with selector ${selector}:`, e);
-                    }
-                }
-
-                console.log("Could not find requester email field to hide");
-                return false;
-            };
-
-            // Try immediately and after a delay
-            hideRequesterEmail();
-            setTimeout(hideRequesterEmail, 500);
-
-            function updateSubjectLine() {
-                const isVipField = document.getElementById('isVIP');
-                const districtNameField = document.getElementById('districtName');
-                const timeoutLengthField = document.getElementById('timeoutLength');
-                const formattedSubjectField = document.getElementById('formattedSubject');
-
-                if (!isVipField || !districtNameField || !timeoutLengthField || !formattedSubjectField) {
-                    console.log("Missing required fields for subject formatting");
-                    return;
-                }
-
-                const isVip = isVipField.value === 'Yes';
-                const districtName = districtNameField.value || '';
-                const timeoutLength = timeoutLengthField.value || '';
-
-                // Format: "VIP* District Name | Time Out Extension - Time Out Length"
-                let subject = '';
-                if (isVip) {
-                    subject = `VIP* ${districtName} | Time Out Extension - ${timeoutLength}`;
-                } else {
-                    subject = `${districtName} | Time Out Extension - ${timeoutLength}`;
-                }
-
-                formattedSubjectField.value = subject;
-                console.log("Updated subject line:", subject);
-            }
-
-            // Set default date for Date Requested field to today
-            const dateRequestedField = document.getElementById('dateRequested');
-            if (dateRequestedField) {
-                const today = new Date().toISOString().split('T')[0];
-                dateRequestedField.value = today;
-                console.log("Set default date for Date Requested:", today);
-            }
-
-            // Set up event listeners
-            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('timeoutLength')?.addEventListener('input', updateSubjectLine);
-
-            // Initial update attempt
-            updateSubjectLine();
-
-            // Schedule another update after a small delay to ensure fields are populated
-            setTimeout(updateSubjectLine, 500);
-        }
-    },
-
-    // Blank Tracker - Minimalist default template
-    "blank": {
-        title: "Blank Tracker Template",
-        icon: "fa-file-alt",
-        description: "A general-purpose tracker template with universal ticket properties",
-        sections: [
-            {
-                id: "subject",
-                title: "SUBJECT",
-                icon: "fa-pencil-alt",
-                fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true }
-                ]
-            },
-            {
-                id: "summary",
-                title: "SUMMARY",
-                icon: "fa-file-alt",
-                fields: [
-                    { id: "summary", type: "richtext", label: "", required: false }
-                ]
-            },
-            {
-                id: "issueDescription",
-                title: "ISSUE DESCRIPTION",
-                icon: "fa-exclamation-circle",
-                fields: [
-                    { id: "issueDescription", type: "richtext", label: "", required: true }
-                ]
-            },
-            {
-                id: "reproduction",
-                title: "STEPS TO REPRODUCE",
-                icon: "fa-list-ol",
-                fields: [
-                    { id: "path", type: "text", label: "Path", required: false },
-                    { id: "actualResults", type: "richtext", label: "Actual results", required: false },
-                    { id: "expectedResults", type: "richtext", label: "Expected results", required: false }
-                ]
-            },
-            {
-                id: "screenshots",
-                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
-                icon: "fa-images",
-                fields: [] // Empty array since we handle this in setupCustomFileUploaders
-            }
-        ],
-        descriptionGenerator: function (fields) {
-            let description = '';
-
-            // Summary section
-            if (fields.summary && fields.summary.trim() !== '<p><br></p>') {
-                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
-                description += `<div>${fields.summary || ''}</div>`;
-                description += '<div style="margin-bottom: 20px;"></div>';
-            }
-
-            // Issue Description
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
-            description += `<div>${fields.issueDescription || ''}</div>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            // Steps to Reproduce
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
-            if (fields.path) description += `Path: ${fields.path}<br>`;
-
-            if (fields.actualResults && fields.actualResults.trim() !== '<p><br></p>') {
-                description += `<div><strong>Actual results:</strong></div>`;
-                description += `<div>${fields.actualResults}</div>`;
-            }
-
-            if (fields.expectedResults && fields.expectedResults.trim() !== '<p><br></p>') {
-                description += `<div><strong>Expected results:</strong></div>`;
-                description += `<div>${fields.expectedResults}</div>`;
-            }
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            // Screenshots section
-            if (fields.screenshotsDescription) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
-                description += `<div>${fields.screenshotsDescription}</div>`;
-                description += '<div style="margin-bottom: 20px;"></div>';
             }
 
             return description;
@@ -2651,5 +2373,247 @@ const TRACKER_CONFIGS = {
             // Schedule another update after a small delay to ensure fields are populated
             setTimeout(updateSubjectLine, 500);
         }
+    },
+
+    // Timeout Extension
+    "timeout-extension": {
+        title: "Timeout Extension Tracker",
+        icon: "fa-hourglass-half",
+        description: "For requests to extend session timeout periods",
+        sections: [
+            {
+                id: "subject",
+                title: "SUBJECT",
+                icon: "fa-pencil-alt",
+                fields: [
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"]
+                    },
+                    { id: "districtName", type: "text", label: "District Name", required: true },
+                    { id: "timeoutLength", type: "text", label: "Requested Time Out Length (max 12 hours)", required: true, placeholder: "e.g. 7 Hours" },
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                ]
+            },
+            {
+                id: "description",
+                title: "DESCRIPTION",
+                icon: "fa-clipboard-list",
+                fields: [
+                    { id: "username", type: "text", label: "Username", required: true },
+                    { id: "role", type: "text", label: "Role (Must be district or tech admin)", required: true },
+                    { id: "burcLink", type: "text", label: "User BURC Link", required: true },
+                    { id: "realm", type: "text", label: "Realm", required: true },
+                    { id: "districtState", type: "text", label: "District State", required: true },
+                    { id: "dateRequested", type: "date", label: "Date requested by customer", required: true }
+                ]
+            }
+        ],
+        descriptionGenerator: function (fields) {
+            let description = '';
+
+            // Add the requested time out length section with specified format at the beginning
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">REQUESTED TIME OUT LENGTH (max 12 hours):</span></div>';
+            description += `<div style="font-weight: bold; margin-top: 5px;">${fields.timeoutLength || ''}</div>`;
+            description += '<div style="margin-top: 20px; margin-bottom: 20px;"></div>';
+
+            // Then add the description section with all other fields
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
+            description += `VIP: (${fields.isVIP || 'No'})<br>`;
+            description += `Username: ${fields.username || ''}<br>`;
+            description += `Role (Must be district or tech admin): ${fields.role || ''}<br>`;
+            description += `User BURC Link: ${fields.burcLink || ''}<br>`;
+            description += `Realm: ${fields.realm || ''}<br>`;
+            description += `District Name: ${fields.districtName || ''}<br>`;
+            description += `District State: ${fields.districtState || ''}<br>`;
+            description += `Date requested by customer: ${formatDate(fields.dateRequested) || ''}<br>`;
+
+            return description;
+        },
+
+        // Add onLoad function for dynamic subject line formatting
+        onLoad: function () {
+            console.log("Timeout Extension onLoad function executing");
+
+            // Hide the Requester Email property field
+            const hideRequesterEmail = function () {
+                // Try multiple selectors to find the ticket properties requester email field
+                const requesterEmailSelectors = [
+                    'label[for="email"].required-field',
+                    '.ticket-property-field label:contains("Requester Email")',
+                    '[data-field-name="requester_email"]',
+                    '#requesterEmail',
+                    '.field-container:has(label:contains("Requester Email"))'
+                ];
+
+                // Try each selector
+                for (const selector of requesterEmailSelectors) {
+                    try {
+                        const elements = document.querySelectorAll(selector);
+                        if (elements.length > 0) {
+                            elements.forEach(el => {
+                                // Find the parent container and hide it
+                                const container = el.closest('.field-container') || el.closest('.field-group') ||
+                                    el.closest('.form-group') || el.closest('.field') || el.parentElement;
+                                if (container) {
+                                    container.style.display = 'none';
+                                    console.log(`Successfully hid requester email field using selector: ${selector}`);
+                                    return true;
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.error(`Error with selector ${selector}:`, e);
+                    }
+                }
+
+                console.log("Could not find requester email field to hide");
+                return false;
+            };
+
+            // Try immediately and after a delay
+            hideRequesterEmail();
+            setTimeout(hideRequesterEmail, 500);
+
+            function updateSubjectLine() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const timeoutLengthField = document.getElementById('timeoutLength');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!isVipField || !districtNameField || !timeoutLengthField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const timeoutLength = timeoutLengthField.value || '';
+
+                // Format: "VIP* District Name | Time Out Extension - Time Out Length"
+                let subject = '';
+                if (isVip) {
+                    subject = `VIP* ${districtName} | Time Out Extension - ${timeoutLength}`;
+                } else {
+                    subject = `${districtName} | Time Out Extension - ${timeoutLength}`;
+                }
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+            }
+
+            // Set default date for Date Requested field to today
+            const dateRequestedField = document.getElementById('dateRequested');
+            if (dateRequestedField) {
+                const today = new Date().toISOString().split('T')[0];
+                dateRequestedField.value = today;
+                console.log("Set default date for Date Requested:", today);
+            }
+
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('timeoutLength')?.addEventListener('input', updateSubjectLine);
+
+            // Initial update attempt
+            updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
+        }
+    },
+
+    // Blank Tracker - Minimalist default template
+    "blank": {
+        title: "Blank Tracker Template",
+        icon: "fa-file-alt",
+        description: "A general-purpose tracker template with universal ticket properties",
+        sections: [
+            {
+                id: "subject",
+                title: "SUBJECT",
+                icon: "fa-pencil-alt",
+                fields: [
+                    { id: "subject", type: "text", label: "Subject", required: true }
+                ]
+            },
+            {
+                id: "summary",
+                title: "SUMMARY",
+                icon: "fa-file-alt",
+                fields: [
+                    { id: "summary", type: "richtext", label: "", required: false }
+                ]
+            },
+            {
+                id: "issueDescription",
+                title: "ISSUE DESCRIPTION",
+                icon: "fa-exclamation-circle",
+                fields: [
+                    { id: "issueDescription", type: "richtext", label: "", required: true }
+                ]
+            },
+            {
+                id: "reproduction",
+                title: "STEPS TO REPRODUCE",
+                icon: "fa-list-ol",
+                fields: [
+                    { id: "path", type: "text", label: "Path", required: false },
+                    { id: "actualResults", type: "richtext", label: "Actual results", required: false },
+                    { id: "expectedResults", type: "richtext", label: "Expected results", required: false }
+                ]
+            },
+            {
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [] // Empty array since we handle this in setupCustomFileUploaders
+            }
+        ],
+        descriptionGenerator: function (fields) {
+            let description = '';
+
+            // Summary section
+            if (fields.summary && fields.summary.trim() !== '<p><br></p>') {
+                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+                description += `<div>${fields.summary || ''}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Issue Description
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
+            description += `<div>${fields.issueDescription || ''}</div>`;
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Steps to Reproduce
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
+            if (fields.path) description += `Path: ${fields.path}<br>`;
+
+            if (fields.actualResults && fields.actualResults.trim() !== '<p><br></p>') {
+                description += `<div><strong>Actual results:</strong></div>`;
+                description += `<div>${fields.actualResults}</div>`;
+            }
+
+            if (fields.expectedResults && fields.expectedResults.trim() !== '<p><br></p>') {
+                description += `<div><strong>Expected results:</strong></div>`;
+                description += `<div>${fields.expectedResults}</div>`;
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Screenshots section
+            if (fields.screenshotsDescription) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            return description;
+        }
     }
-}; 
+};
+
+// Export the tracker configurations for use in tests
+module.exports = { TRACKER_CONFIGS };
