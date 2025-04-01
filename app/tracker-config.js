@@ -62,6 +62,114 @@ const TRACKER_CONFIGS = {
             description += `Assembly Codes To Be Removed:<br>${fields.assemblyCodes || ''}`;
 
             return description;
+        },
+        // Add onLoad function to tag the source ticket with "ESCALATED TO ASSEMBLY"
+        onLoad: function () {
+            console.log("Assembly Rollover onLoad function executing");
+
+            // Try to get the source ticket ID from localStorage
+            let sourceTicketId = null;
+            try {
+                const ticketData = localStorage.getItem('ticketData');
+                if (ticketData) {
+                    const parsedData = JSON.parse(ticketData);
+                    if (parsedData && parsedData.id) {
+                        sourceTicketId = parsedData.id;
+                        console.log(`Found source ticket ID: ${sourceTicketId}`);
+                    }
+                }
+            } catch (error) {
+                console.error("Error getting source ticket ID from localStorage:", error);
+            }
+
+            // If we have a source ticket ID, add the tag
+            if (sourceTicketId) {
+                console.log(`Adding "ESCALATED TO ASSEMBLY" tag to source ticket ${sourceTicketId}`);
+
+                // Function to update source ticket tags
+                const updateSourceTicketTags = async () => {
+                    try {
+                        // First get the current ticket details to retrieve existing tags
+                        const response = await client.request.invokeTemplate("getTicketDetails", {
+                            context: { ticketId: sourceTicketId }
+                        });
+
+                        if (response && response.response) {
+                            const ticketDetails = JSON.parse(response.response);
+
+                            // Get existing tags and add the new one if it doesn't exist
+                            let tags = ticketDetails.tags || [];
+
+                            // Convert to array if it's not already
+                            if (!Array.isArray(tags)) {
+                                tags = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+                            }
+
+                            // Check if tag already exists
+                            if (!tags.includes("ESCALATED TO ASSEMBLY")) {
+                                tags.push("ESCALATED TO ASSEMBLY");
+
+                                // Prepare data for update
+                                const updateData = {
+                                    tags: tags
+                                };
+
+                                try {
+                                    // Use the updateTicket template instead of direct API call
+                                    console.log(`Updating source ticket ${sourceTicketId} tags using updateTicket template`);
+                                    await client.request.invokeTemplate("updateTicket", {
+                                        context: {
+                                            ticketId: sourceTicketId
+                                        },
+                                        body: JSON.stringify(updateData)
+                                    });
+
+                                    console.log("Source ticket successfully tagged with ESCALATED TO ASSEMBLY");
+
+                                    // Add a private note about the escalation
+                                    await client.request.invokeTemplate("addNoteToTicket", {
+                                        context: {
+                                            ticketId: sourceTicketId
+                                        },
+                                        body: JSON.stringify({
+                                            body: "This ticket has been escalated to Assembly. An Assembly tracker ticket has been created.",
+                                            private: true
+                                        })
+                                    });
+
+                                    console.log("Private note added to source ticket");
+                                } catch (error) {
+                                    console.error("Error updating source ticket:", error);
+
+                                    // Try to add at least a private note as fallback
+                                    try {
+                                        console.log("Attempting to add private note as fallback");
+                                        await client.request.invokeTemplate("addNoteToTicket", {
+                                            context: {
+                                                ticketId: sourceTicketId
+                                            },
+                                            body: JSON.stringify({
+                                                body: "This ticket has been escalated to Assembly. An Assembly tracker ticket has been created. (Note: Unable to add ESCALATED TO ASSEMBLY tag automatically)",
+                                                private: true
+                                            })
+                                        });
+                                        console.log("Private note added to source ticket as fallback");
+                                    } catch (noteError) {
+                                        console.error("Error adding private note:", noteError);
+                                    }
+                                }
+                            } else {
+                                console.log("Source ticket already has ESCALATED TO ASSEMBLY tag");
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Error updating source ticket tags:", error);
+                    }
+                };
+
+                // Execute the update
+                updateSourceTicketTags();
+            }
         }
     },
 
@@ -149,6 +257,114 @@ const TRACKER_CONFIGS = {
             description += `VIP Customer: ${fields.isVIP || 'No'}<br>`;
 
             return description;
+        },
+        // Add onLoad function to tag the source ticket with "ESCALATED TO ASSEMBLY"
+        onLoad: function () {
+            console.log("Assembly Tracker onLoad function executing");
+
+            // Try to get the source ticket ID from localStorage
+            let sourceTicketId = null;
+            try {
+                const ticketData = localStorage.getItem('ticketData');
+                if (ticketData) {
+                    const parsedData = JSON.parse(ticketData);
+                    if (parsedData && parsedData.id) {
+                        sourceTicketId = parsedData.id;
+                        console.log(`Found source ticket ID: ${sourceTicketId}`);
+                    }
+                }
+            } catch (error) {
+                console.error("Error getting source ticket ID from localStorage:", error);
+            }
+
+            // If we have a source ticket ID, add the tag
+            if (sourceTicketId) {
+                console.log(`Adding "ESCALATED TO ASSEMBLY" tag to source ticket ${sourceTicketId}`);
+
+                // Function to update source ticket tags
+                const updateSourceTicketTags = async () => {
+                    try {
+                        // First get the current ticket details to retrieve existing tags
+                        const response = await client.request.invokeTemplate("getTicketDetails", {
+                            context: { ticketId: sourceTicketId }
+                        });
+
+                        if (response && response.response) {
+                            const ticketDetails = JSON.parse(response.response);
+
+                            // Get existing tags and add the new one if it doesn't exist
+                            let tags = ticketDetails.tags || [];
+
+                            // Convert to array if it's not already
+                            if (!Array.isArray(tags)) {
+                                tags = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+                            }
+
+                            // Check if tag already exists
+                            if (!tags.includes("ESCALATED TO ASSEMBLY")) {
+                                tags.push("ESCALATED TO ASSEMBLY");
+
+                                // Prepare data for update
+                                const updateData = {
+                                    tags: tags
+                                };
+
+                                try {
+                                    // Use the updateTicket template instead of direct API call
+                                    console.log(`Updating source ticket ${sourceTicketId} tags using updateTicket template`);
+                                    await client.request.invokeTemplate("updateTicket", {
+                                        context: {
+                                            ticketId: sourceTicketId
+                                        },
+                                        body: JSON.stringify(updateData)
+                                    });
+
+                                    console.log("Source ticket successfully tagged with ESCALATED TO ASSEMBLY");
+
+                                    // Add a private note about the escalation
+                                    await client.request.invokeTemplate("addNoteToTicket", {
+                                        context: {
+                                            ticketId: sourceTicketId
+                                        },
+                                        body: JSON.stringify({
+                                            body: "This ticket has been escalated to Assembly. An Assembly tracker ticket has been created.",
+                                            private: true
+                                        })
+                                    });
+
+                                    console.log("Private note added to source ticket");
+                                } catch (error) {
+                                    console.error("Error updating source ticket:", error);
+
+                                    // Try to add at least a private note as fallback
+                                    try {
+                                        console.log("Attempting to add private note as fallback");
+                                        await client.request.invokeTemplate("addNoteToTicket", {
+                                            context: {
+                                                ticketId: sourceTicketId
+                                            },
+                                            body: JSON.stringify({
+                                                body: "This ticket has been escalated to Assembly. An Assembly tracker ticket has been created. (Note: Unable to add ESCALATED TO ASSEMBLY tag automatically)",
+                                                private: true
+                                            })
+                                        });
+                                        console.log("Private note added to source ticket as fallback");
+                                    } catch (noteError) {
+                                        console.error("Error adding private note:", noteError);
+                                    }
+                                }
+                            } else {
+                                console.log("Source ticket already has ESCALATED TO ASSEMBLY tag");
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Error updating source ticket tags:", error);
+                    }
+                };
+
+                // Execute the update
+                updateSourceTicketTags();
+            }
         }
     },
 
@@ -481,7 +697,10 @@ const TRACKER_CONFIGS = {
                 title: "SUMMARY",
                 icon: "fa-file-alt",
                 fields: [
-                    { id: "issueSummary", type: "richtext", label: "", required: false }
+                    {
+                        id: "issueSummary", type: "richtext", label: "", required: false,
+                        hint: "Short descriptor of the issue being reported. EX: User reports that in BAdvance -c2022 > TRS > G5 > U1> W2 > L12 the title is missing for the lesson."
+                    }
                 ]
             },
             {
@@ -489,7 +708,10 @@ const TRACKER_CONFIGS = {
                 title: "ISSUE DETAILS",
                 icon: "fa-clipboard-list",
                 fields: [
-                    { id: "issueDetails", type: "richtext", label: "", required: false }
+                    {
+                        id: "issueDetails", type: "richtext", label: "", required: false,
+                        hint: "Describe in detail the issue reported by the user. You can insert exactly what the user reports in their submitted ticket. EX: User reports \"On the Benchmark Advance platform, unit 1 of grade 5, please filter to week 2 lesson 12. The title is missing from the lesson plan. Please add the title.\""
+                    }
                 ]
             },
             {
@@ -497,23 +719,47 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "isVIP", type: "select", label: "VIP Customer", required: false, options: ["No", "Yes"] },
-                    { id: "username", type: "text", label: "Username", required: false },
-                    { id: "userEmail", type: "email", label: "Email", required: false },
                     {
-                        id: "userRole", type: "text", label: "Role", required: false
+                        id: "isVIP", type: "select", label: "VIP Customer", required: false, options: ["No", "Yes"],
+                        hint: "If the district is VIP, select yes. If the district is not, select no. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
                     },
-                    { id: "productImpacted", type: "text", label: "Application/Program Impacted", required: false },
-                    { id: "xcodeInfo", type: "text", label: "Xcode", required: false },
-                    { id: "districtState", type: "text", label: "District state", required: false },
+                    {
+                        id: "username", type: "text", label: "Username", required: false,
+                        hint: "Provide the username of the user that the issue is affecting. Note: the username and email is often the same for many users. EX: amiller3"
+                    },
+                    {
+                        id: "userEmail", type: "email", label: "Email", required: false,
+                        hint: "Provide the email of the user that the issue is affecting. Note: the username and email are often the same for many users. EX: adam.miller@palmbeachschools.org"
+                    },
+                    {
+                        id: "userRole", type: "text", label: "Role", required: false,
+                        hint: "Provide the role of the user that the issue is affecting. EX: District Admin, School Admin, Teacher or Student"
+                    },
+                    {
+                        id: "productImpacted", type: "text", label: "Application/Program Impacted", required: false,
+                        hint: "Provide the name of the product where the issue is prevalent. Ex: Benchmark Advance Florida"
+                    },
+                    {
+                        id: "xcodeInfo", type: "text", label: "Xcode", required: false,
+                        hint: "Provide the Xcode of component where the issue is prevalent. EX: X72525. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to find an Xcode</a>"
+                    },
+                    {
+                        id: "districtState", type: "text", label: "District state", required: false,
+                        hint: "Provide the state where the district is located. EX: Florida or FL. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>Verify district realm/state</a>"
+                    },
                     {
                         id: "impactType", type: "select", label: "Digital and/or Print Impact", required: false,
-                        options: ["", "Digital Only", "Print Only", "Both Digital and Print"]
+                        options: ["", "Digital Only", "Print Only", "Both Digital and Print"],
+                        hint: "Identify if the issue only occurs on the digital platform or if it occurs in both digital and print. EX: Digital"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue reported by user", required: false },
+                    {
+                        id: "dateReported", type: "date", label: "Date Issue reported by user", required: false,
+                        hint: "Provide the date the user reported the issue. EX: 5/18/23"
+                    },
                     {
                         id: "impactScope", type: "select", label: "Teacher and/or Student impact", required: false,
-                        options: ["", "Teacher Only", "Student Only", "Both Teacher and Student"]
+                        options: ["", "Teacher Only", "Student Only", "Both Teacher and Student"],
+                        hint: "Identify if the teacher or the student is impacted by the issue. EX: Teacher"
                     }
                 ]
             },
@@ -522,7 +768,10 @@ const TRACKER_CONFIGS = {
                 title: "PROGRAM COMPONENTS",
                 icon: "fa-puzzle-piece",
                 fields: [
-                    { id: "components", type: "richtext", label: "", required: false }
+                    {
+                        id: "components", type: "richtext", label: "", required: false,
+                        hint: "Specific application or component affected e.g., Assessment, Assignments, ePlanner, TRS. EX: TRS (teacher resource system)"
+                    }
                 ]
             },
             {
@@ -530,12 +779,18 @@ const TRACKER_CONFIGS = {
                 title: "STEPS TO REPRODUCE",
                 icon: "fa-list-ol",
                 fields: [
-                    { id: "pathField", type: "text", label: "Path", required: false },
+                    {
+                        id: "pathField", type: "text", label: "Path", required: false,
+                        hint: "Path taken to recreate issue and screenshots if necessary. EX: BAdvance -c2022 > TRS > G5 > U1 > W2 > L12"
+                    },
                     {
                         id: "actualResults", type: "richtext", label: "Actual results", required: false,
-                        hint: "(screenshots and/or videos should include the URL in screen capture)"
+                        hint: "Provide Screenshots and any other information that would be helpful to replicate the reported issue."
                     },
-                    { id: "expectedResults", type: "richtext", label: "Expected results", required: false }
+                    {
+                        id: "expectedResults", type: "richtext", label: "Expected results", required: false,
+                        hint: "Explain/show how the system should be functioning if working correctly. Our role is to convey what the user is requesting. Ie. the user feels a certain standard is missing from a lesson. Request that rationale be provided. Example of expected results: Provide title for lesson, Fix hyperlink, Provide rationale, Fix grammatical errors."
+                    }
                 ]
             }
         ],
@@ -554,7 +809,7 @@ const TRACKER_CONFIGS = {
                 description += '<div style="margin-bottom: 20px;"></div>';
             }
 
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">USER INFO</span></div>';
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
             if (fields.isVIP) description += `VIP Customer: ${fields.isVIP}<br>`;
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.userEmail) description += `Email: ${fields.userEmail}<br>`;
@@ -577,14 +832,16 @@ const TRACKER_CONFIGS = {
             if (fields.pathField || fields.actualResults || fields.expectedResults) {
                 description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
                 if (fields.pathField) description += `Path: ${fields.pathField}<br>`;
+                description += '<div style="margin-bottom: 10px;"></div>';
 
                 if (fields.actualResults) {
-                    description += `<div><strong>Actual Results:</strong></div>`;
+                    description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Actual results</span></div>`;
                     description += `<div>${fields.actualResults}</div>`;
+                    description += '<div style="margin-bottom: 10px;"></div>';
                 }
 
                 if (fields.expectedResults) {
-                    description += `<div><strong>Expected Results:</strong></div>`;
+                    description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Expected results</span></div>`;
                     description += `<div>${fields.expectedResults}</div>`;
                 }
             }

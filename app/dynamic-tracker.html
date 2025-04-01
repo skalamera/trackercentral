@@ -203,6 +203,11 @@
             // Log the tracker type
             console.log("Loading tracker template:", trackerType);
 
+            // Extra logging for assembly trackers
+            if (trackerType === 'assembly' || trackerType === 'assembly-rollover') {
+                console.log(`This is an ASSEMBLY tracker (${trackerType}). Source tickets will be tagged with "ESCALATED TO ASSEMBLY"`);
+            }
+
             // Get the config for this tracker type
             const config = TRACKER_CONFIGS[trackerType] || {
                 title: "Blank Tracker",
@@ -2895,6 +2900,23 @@
                     // Debug log the final ticket data
                     console.log('Final ticket data to be sent:', JSON.stringify(ticketData, null, 2));
 
+                    // Store tracker type explicitly in the tags for easier identification
+                    if (!ticketData.tags.includes(`tracker-${this.trackerType}`)) {
+                        ticketData.tags.push(`tracker-${this.trackerType}`);
+                    }
+
+                    // For assembly trackers, ensure we have the right tag format
+                    if (this.trackerType === 'assembly') {
+                        // Make sure we have the right tag 
+                        if (!ticketData.tags.includes('tracker-assembly')) {
+                            ticketData.tags.push('tracker-assembly');
+                        }
+                        // Add custom field for assembly tracker if available in the API
+                        if (ticketData.custom_fields) {
+                            ticketData.custom_fields.cf_assembly_tracker = true;
+                        }
+                    }
+
                     // Create the ticket
                     const response = await this.client.request.invokeTemplate("createfdTicket", {
                         body: JSON.stringify(ticketData)
@@ -2903,6 +2925,34 @@
                     console.log('Ticket created successfully, raw response:', response.response);
                     const responseData = JSON.parse(response.response);
                     console.log('Parsed ticket data:', responseData);
+
+                    // Tag source ticket with ESCALATED TO ASSEMBLY if this is an assembly-related tracker
+                    console.log("Checking conditions for tagging source ticket:", {
+                        trackerType: this.trackerType,
+                        isAssembly: this.trackerType === 'assembly',
+                        isAssemblyRollover: this.trackerType === 'assembly-rollover',
+                        relatedTicketIds: relatedTicketIds,
+                        hasRelatedTickets: relatedTicketIds.length > 0
+                    });
+
+                    // Force this to run for tracker-type assembly regardless of how trackerType is stored internally
+                    const isAssemblyType = this.trackerType === 'assembly' ||
+                        this.trackerType === 'assembly-rollover' ||
+                        ticketData.tags.includes('tracker-assembly');
+
+                    if (isAssemblyType && relatedTicketIds.length > 0) {
+                        // Add tag to source ticket
+                        try {
+                            const sourceTicketId = relatedTicketIds[0];
+                            console.log(`Will attempt to add ESCALATED TO ASSEMBLY tag to source ticket ${sourceTicketId}`);
+                            await this.addEscalatedToAssemblyTag(sourceTicketId);
+                        } catch (tagError) {
+                            console.error("Error tagging source ticket:", tagError);
+                            // Continue with success flow even if tagging fails
+                        }
+                    } else {
+                        console.log("Conditions not met for adding ESCALATED TO ASSEMBLY tag to source ticket");
+                    }
 
                     this.handleTicketCreationSuccess(responseData);
                 } catch (error) {
@@ -4398,6 +4448,110 @@
                     case 'sim-library-view':
                         this.updateSimLibraryViewSubject();
                         break;
+                }
+            }
+
+            // Method to add "ESCALATED TO ASSEMBLY" tag to source ticket
+            async addEscalatedToAssemblyTag(sourceTicketId) {
+                console.log(`Adding "ESCALATED TO ASSEMBLY" tag to source ticket ${sourceTicketId}`);
+
+                if (!sourceTicketId) {
+                    console.error("Cannot add tag: No source ticket ID provided");
+                    return;
+                }
+
+                try {
+                    // First get the current ticket details to retrieve existing tags
+                    console.log(`Fetching ticket details for source ticket ${sourceTicketId}`);
+                    const response = await this.client.request.invokeTemplate("getTicketDetails", {
+                        context: { ticketId: sourceTicketId }
+                    });
+
+                    if (!response) {
+                        console.error("No response received when fetching source ticket details");
+                        return;
+                    }
+
+                    if (!response.response) {
+                        console.error("Invalid response format when fetching source ticket details", response);
+                        return;
+                    }
+
+                    const ticketDetails = JSON.parse(response.response);
+                    console.log(`Retrieved source ticket details, current tags:`, ticketDetails.tags);
+
+                    // Get existing tags and add the new one if it doesn't exist
+                    let tags = ticketDetails.tags || [];
+
+                    // Convert to array if it's not already
+                    if (!Array.isArray(tags)) {
+                        tags = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+                        console.log(`Converted tags to array:`, tags);
+                    }
+
+                    // Check if tag already exists
+                    if (!tags.includes("ESCALATED TO ASSEMBLY")) {
+                        console.log("Tag not found, adding it now");
+                        tags.push("ESCALATED TO ASSEMBLY");
+
+                        // Prepare data for update
+                        const updateData = {
+                            tags: tags
+                        };
+                        console.log(`Updating source ticket with new tags:`, updateData);
+
+                        try {
+                            // First: Update the ticket tags using the updateTicket template
+                            console.log(`Updating source ticket ${sourceTicketId} tags using updateTicket template`);
+                            const updateResponse = await this.client.request.invokeTemplate("updateTicket", {
+                                context: {
+                                    ticketId: sourceTicketId
+                                },
+                                body: JSON.stringify(updateData)
+                            });
+
+                            console.log("Source ticket update response:", updateResponse);
+                            console.log("Source ticket successfully tagged with ESCALATED TO ASSEMBLY");
+
+                            // Second: Add a private note to the ticket
+                            await this.client.request.invokeTemplate("addNoteToTicket", {
+                                context: {
+                                    ticketId: sourceTicketId
+                                },
+                                body: JSON.stringify({
+                                    body: "This ticket has been escalated to Assembly. An Assembly tracker ticket has been created.",
+                                    private: true // Set to private
+                                })
+                            });
+
+                            console.log("Private note added to source ticket");
+                        } catch (updateError) {
+                            console.error("Error updating source ticket:", updateError);
+
+                            // If updating the ticket fails, still try to add a private note
+                            try {
+                                console.log("Attempting to add private note as fallback");
+                                await this.client.request.invokeTemplate("addNoteToTicket", {
+                                    context: {
+                                        ticketId: sourceTicketId
+                                    },
+                                    body: JSON.stringify({
+                                        body: "This ticket has been escalated to Assembly. An Assembly tracker ticket has been created. (Note: Unable to add ESCALATED TO ASSEMBLY tag automatically)",
+                                        private: true // Set to private
+                                    })
+                                });
+                                console.log("Private note added to source ticket as fallback");
+                            } catch (noteError) {
+                                console.error("Error adding private note to source ticket:", noteError);
+                            }
+                        }
+                    } else {
+                        console.log("Source ticket already has ESCALATED TO ASSEMBLY tag");
+                    }
+                } catch (error) {
+                    console.error("Error updating source ticket tags:", error);
+                    // Don't rethrow, just log the error
+                    console.log("Continuing with ticket creation despite tag error");
                 }
             }
         }

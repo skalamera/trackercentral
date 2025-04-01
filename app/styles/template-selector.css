@@ -154,6 +154,7 @@ body {
     position: relative;
     overflow: hidden;
     border-left: 3px solid transparent;
+    padding: 3px;
 }
 
 .template-item:last-child {

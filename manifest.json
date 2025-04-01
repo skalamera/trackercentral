@@ -10,6 +10,7 @@
         "getTicketDetails": {},
         "getAgentDetails": {},
         "addNoteToTicket": {},
+        "updateTicket": {},
         "getGroups": {},
         "getAgentsInGroup": {},
         "getTicketFields": {},
