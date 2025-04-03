@@ -2783,6 +2783,283 @@ const TRACKER_CONFIGS = {
         }
     },
 
+    // 9. SIM Dashboard
+    "sim-dashboard": {
+        title: "SIM Dashboard Tracker",
+        icon: "fa-tachometer-alt",
+        description: "For issues regarding Dashboard functionality",
+        sections: [
+            {
+                id: "subject",
+                title: "SUBJECT",
+                icon: "fa-pencil-alt",
+                fields: [
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"]
+                    },
+                    { id: "districtName", type: "text", label: "District Name", required: true },
+                    { id: "application", type: "text", label: "Application", required: true },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    {
+                        id: "userRole",
+                        type: "checkboxes",
+                        label: "User Role",
+                        required: true,
+                        options: [
+                            { id: "students", label: "Students" },
+                            { id: "teachers", label: "Teachers" },
+                            { id: "admin", label: "Admin" },
+                            { id: "allUsers", label: "All Users" }
+                        ]
+                    },
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                ]
+            },
+            {
+                id: "issueDetails",
+                title: "ISSUE DESCRIPTION",
+                icon: "fa-exclamation-circle",
+                fields: [
+                    {
+                        id: "issueDescription",
+                        type: "richtext",
+                        label: "Issue Description: Specific details outlining user impact:",
+                        hint: "EX: Teacher cannot access student data in their dashboard.",
+                        required: true
+                    }
+                ]
+            },
+            {
+                id: "reproduction",
+                title: "STEPS TO REPRODUCE",
+                icon: "fa-list-ol",
+                fields: [
+                    { id: "stepsToReproduce", type: "richtext", label: "Steps to Reproduce", required: false }
+                ]
+            },
+            {
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [] // Empty array since we handle this in setupCustomFileUploaders
+            },
+            {
+                id: "userInfo",
+                title: "IMPACTED USER INFO",
+                icon: "fa-user",
+                fields: [
+                    {
+                        id: "username",
+                        type: "text",
+                        label: "Username",
+                        required: false,
+                        hint: "Provide the users username at the district. EX: mitzisheppard"
+                    },
+                    {
+                        id: "role",
+                        type: "text",
+                        label: "Role",
+                        required: false,
+                        hint: "Provide the users role at the district."
+                    },
+                    {
+                        id: "techAdminLink",
+                        type: "text",
+                        label: "Teacher / Admin Tech Admin Link",
+                        required: false,
+                        hint: "Provide TechAdmin Link to the affected teacher/administrator. EX: https://techadmin.benchmarkuniverse.com/district/544931/teachers/?query=jkropp@benchmarkeducation.com&sortBy=firstName-asc&limit=25. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to find TechAdmin link</a>"
+                    },
+                    {
+                        id: "studentInternalId",
+                        type: "text",
+                        label: "Student Internal ID",
+                        required: false,
+                        hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
+                    },
+                    {
+                        id: "device",
+                        type: "text",
+                        label: "Device",
+                        required: false,
+                        hint: "Provide the device the users are on. EX: Chromebook"
+                    },
+                    {
+                        id: "realm",
+                        type: "text",
+                        label: "Realm",
+                        required: false,
+                        hint: "Provide the districts realm. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                    },
+                    {
+                        id: "dateReported",
+                        type: "date",
+                        label: "Date Issue Reported By Customer",
+                        required: false,
+                        hint: "Provide the date the user reported the issue. EX: 01/10/2023"
+                    },
+                    {
+                        id: "harFileAttached",
+                        type: "select",
+                        label: "HAR File Attached",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "If possible include screenshots of the developer tools when replicating the issue. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739640' target='_blank'>How to Obtain a HAR File</a>"
+                    },
+                    {
+                        id: "harFileReason",
+                        type: "text",
+                        label: "Reason if HAR file not attached",
+                        required: false,
+                        condition: {
+                            field: "harFileAttached",
+                            value: "No"
+                        }
+                    }
+                ]
+            },
+            {
+                id: "expectedResults",
+                title: "EXPECTED RESULTS",
+                icon: "fa-check-circle",
+                fields: [
+                    {
+                        id: "expectedResults",
+                        type: "richtext",
+                        label: "Explain/Show how the system should be functioning if working correctly",
+                        required: true
+                    }
+                ]
+            }
+        ],
+        descriptionGenerator: function (fields) {
+            let description = '';
+
+            // Issue Description
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
+            if (fields.issueDescription) {
+                description += `<div>${fields.issueDescription}</div>`;
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Steps to Reproduce
+            if (fields.stepsToReproduce) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
+                description += `<div>${fields.stepsToReproduce}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Screenshots and Videos
+            if (fields.screenshotsDescription) {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Impacted User Info
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
+            if (fields.username) description += `Username: ${fields.username}<br>`;
+            if (fields.role) description += `Role: ${fields.role}<br>`;
+
+            // Handle Tech Admin link as a hyperlink
+            if (fields.techAdminLink) {
+                let techLink = fields.techAdminLink.trim();
+                if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
+                    techLink = 'https://' + techLink;
+                }
+                description += `Teacher / Admin Tech Admin Link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+            }
+
+            if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
+            if (fields.device) description += `Device: ${fields.device}<br>`;
+            if (fields.realm) description += `Realm: ${fields.realm}<br>`;
+            if (fields.dateReported) description += `Date Issue Reported By Customer: ${formatDate(fields.dateReported) || ''}<br>`;
+            if (fields.harFileAttached) {
+                description += `HAR File Attached: ${fields.harFileAttached}`;
+                if (fields.harFileAttached === "No" && fields.harFileReason) {
+                    description += ` (${fields.harFileReason})`;
+                }
+                description += '<br>';
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Expected Results
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
+            description += `<div>${fields.expectedResults}</div>`;
+
+            return description;
+        },
+
+        // Add onLoad function for dynamic subject line formatting
+        onLoad: function () {
+            console.log("SIM Dashboard onLoad function executing");
+
+            function updateSubjectLine() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const applicationField = document.getElementById('application');
+                const specificIssueField = document.getElementById('specificIssue');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!isVipField || !districtNameField || !applicationField ||
+                    !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
+                    }
+                });
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const application = applicationField.value || '';
+                const specificIssue = specificIssueField.value || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(', ') : '';
+
+                // Format: "VIP * District Name | Application - Specific Issue for User Role"
+                let subject = '';
+                if (isVip) {
+                    subject = `VIP * ${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
+                } else {
+                    subject = `${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
+                }
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+            }
+
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
+
+            // Add listeners to all checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSubjectLine);
+            });
+
+            // Initial update attempt
+            updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
+        }
+    },
+
     // Blank Tracker - Minimalist default template
     "blank": {
         title: "Blank Tracker Template",

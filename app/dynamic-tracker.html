@@ -3237,82 +3237,78 @@
 
             // Add this method to your TrackerApp class
             setupCustomFileUploaders() {
-                // Apply to sim-assignment, sim-assessment-reports, sim-library-view, sim-fsa, sim-orr, sim-plan-teach, sim-reading-log, help-article, and blank templates
-                if (this.trackerType !== 'sim-assignment' &&
-                    this.trackerType !== 'sim-assessment-reports' &&
-                    this.trackerType !== 'sim-library-view' &&
-                    this.trackerType !== 'sim-fsa' &&
-                    this.trackerType !== 'sim-orr' &&
-                    this.trackerType !== 'sim-plan-teach' &&
-                    this.trackerType !== 'sim-reading-log' &&
-                    this.trackerType !== 'help-article' &&
-                    this.trackerType !== 'blank') {
-                    return;
-                }
-
                 try {
-                    // Track if we've added a screenshots section
+                    console.log('Setting up custom file uploaders');
+
+                    // Track if we've found a screenshots section
                     let hasScreenshotsSection = false;
 
-                    // Add file uploader to Screenshots & Videos section
-                    const screenshotsSection = document.getElementById('section-screenshots');
-                    if (screenshotsSection) {
-                        hasScreenshotsSection = true;
+                    // Look for sections with id 'screenshots'
+                    document.querySelectorAll('.card').forEach(section => {
+                        if (section.id === 'section-screenshots') {
+                            hasScreenshotsSection = true;
+                            console.log('Found screenshots section, adding file uploader');
 
-                        // First update the section title to the new longer name
-                        const headerElement = screenshotsSection.querySelector('.card-header h3');
-                        if (headerElement) {
-                            headerElement.textContent = "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS";
+                            const sectionBody = section.querySelector('.card-body');
+                            if (!sectionBody) {
+                                console.warn('Section body not found in screenshots section');
+                                return;
+                            }
+
+                            // Check if there's already a Quill editor
+                            let hasEditor = sectionBody.querySelector('.quill-editor-container');
+
+                            // If no editor, add one first
+                            if (!hasEditor) {
+                                console.log('Adding Quill editor to screenshots section');
+                                const quillContainer = document.createElement('div');
+                                quillContainer.className = 'quill-editor-container';
+                                quillContainer.innerHTML = `
+                                    <div id="screenshotsDescriptionEditor" style="min-height: 120px;"></div>
+                                    <textarea id="screenshotsDescription" name="screenshotsDescription" style="display: none;"></textarea>
+                                    <div class="hint"><i class="fas fa-info-circle"></i> Add description for your screenshots and videos</div>
+                                `;
+                                sectionBody.appendChild(quillContainer);
+
+                                // Initialize the Quill editor
+                                this.initializeQuillEditor('screenshotsDescription', 'screenshotsDescriptionEditor');
+                            }
+
+                            // Check if uploader already exists
+                            const existingUploader = sectionBody.querySelector('.attachment-input-container');
+                            if (existingUploader) {
+                                console.log('File uploader already exists, skipping');
+                                return;
+                            }
+
+                            // Add file uploader
+                            console.log('Adding file uploader to screenshots section');
+                            const uploaderContainer = document.createElement('div');
+                            uploaderContainer.className = 'attachment-input-container';
+                            uploaderContainer.style.marginTop = '15px';
+                            uploaderContainer.innerHTML = `
+                                <label for="screenshots" class="file-upload-button">
+                                    <i class="fas fa-cloud-upload-alt"></i> Upload Files
+                                    <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
+                                </label>
+                                <div class="hint"><i class="fas fa-info-circle"></i> Add screenshots, videos or other supporting files to help illustrate the issue</div>
+                                <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
+                                    <strong>⚠️ IMPORTANT:</strong> Maximum total attachment size is 20MB. Files exceeding this limit will NOT be attached to the ticket.
+                                </div>
+                                <div id="screenshotPreview" class="screenshot-preview"></div>
+                                <div id="attachmentCounter" class="attachment-counter"></div>
+                            `;
+                            sectionBody.appendChild(uploaderContainer);
+
+                            // Add event listener to the file input
+                            const fileInput = sectionBody.querySelector('#screenshots');
+                            if (fileInput) {
+                                fileInput.addEventListener('change', (e) => {
+                                    this.handleFileInputChange(e);
+                                });
+                            }
                         }
-
-                        const sectionBody = screenshotsSection.querySelector('.card-body');
-                        if (!sectionBody) {
-                            console.error('Screenshots section body not found');
-                            return;
-                        }
-
-                        // Clear existing content
-                        sectionBody.innerHTML = '';
-
-                        // Add a Quill editor first
-                        const quillContainer = document.createElement('div');
-                        quillContainer.className = 'quill-editor-container';
-                        quillContainer.innerHTML = `
-                            <div id="screenshotsDescriptionEditor" style="min-height: 120px;"></div>
-                            <textarea id="screenshotsDescription" name="screenshotsDescription" style="display: none;"></textarea>
-                            <div class="hint"><i class="fas fa-info-circle"></i> Add description for your screenshots and videos</div>
-                        `;
-                        sectionBody.appendChild(quillContainer);
-
-                        // Initialize Quill editor
-                        this.initializeQuillEditor('screenshotsDescription', 'screenshotsDescriptionEditor');
-
-                        // Then add file uploader after the Quill editor
-                        const uploaderContainer = document.createElement('div');
-                        uploaderContainer.className = 'attachment-input-container';
-                        uploaderContainer.style.marginTop = '15px';
-                        uploaderContainer.innerHTML = `
-                            <label for="screenshots" class="file-upload-button">
-                                <i class="fas fa-cloud-upload-alt"></i> Upload Files
-                                <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
-                            </label>
-                            <div class="hint"><i class="fas fa-info-circle"></i> Add screenshots, videos or other supporting files to help illustrate the issue</div>
-                            <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
-                                <strong>⚠️ IMPORTANT:</strong> Maximum total attachment size is 20MB. Files exceeding this limit will NOT be attached to the ticket.
-                            </div>
-                            <div id="screenshotPreview" class="screenshot-preview"></div>
-                            <div id="attachmentCounter" class="attachment-counter"></div>
-                        `;
-                        sectionBody.appendChild(uploaderContainer);
-
-                        // Add event listener to the file input
-                        const fileInput = sectionBody.querySelector('#screenshots');
-                        if (fileInput) {
-                            fileInput.addEventListener('change', (e) => {
-                                this.handleFileInputChange(e);
-                            });
-                        }
-                    }
+                    });
 
                     // If we didn't find a screenshots section, add one
                     if (!hasScreenshotsSection) {
@@ -3422,6 +3418,8 @@
 
             // Add a method to set up the HAR file uploader
             setupHarFileUploader() {
+                console.log('Setting up HAR file uploader for template type:', this.trackerType);
+
                 // Apply to all SIM templates that need HAR file uploader
                 if (this.trackerType !== 'sim-assignment' &&
                     this.trackerType !== 'sim-assessment-reports' &&
@@ -3430,7 +3428,9 @@
                     this.trackerType !== 'sim-orr' &&
                     this.trackerType !== 'sim-plan-teach' &&
                     this.trackerType !== 'sim-reading-log' &&
+                    this.trackerType !== 'sim-dashboard' &&
                     this.trackerType !== 'help-article') {
+                    console.log('Template type not eligible for HAR file uploader');
                     return;
                 }
 
@@ -3441,74 +3441,116 @@
                     return;
                 }
 
+                console.log('Found HAR file attached dropdown with value:', harFileAttached.value);
+
                 // Find the harFileReason field and its container
                 const harFileReason = document.getElementById('harFileReason');
                 const harFileReasonContainer = harFileReason ? this.findParentWithClass(harFileReason, 'form-group') : null;
 
                 if (harFileReasonContainer) {
-                    // Create and add the HAR file uploader container
-                    const harUploaderHTML = `
-                        <div class="form-group" id="harUploaderContainer" style="display: none;">
-                            <label for="harFileInput">Upload HAR File</label>
-                            <div class="attachment-input-container">
-                                <label for="harFileInput" class="file-upload-button">
-                                    <i class="fas fa-cloud-upload-alt"></i> Choose HAR File
-                                    <input type="file" id="harFileInput" name="harFileInput" accept=".har" class="hidden-file-input">
-                                </label>
-                                <div class="hint"><i class="fas fa-info-circle"></i> Upload a HAR file to provide detailed network information</div>
-                                <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
-                                    <strong>⚠️ IMPORTANT:</strong> Maximum HAR file size is 20MB.
-                                </div>
-                                <div id="harFilePreviewContainer" class="screenshot-preview"></div>
-                            </div>
-                        </div>
-                    `;
+                    console.log('Found HAR file reason container');
 
-                    // Insert the HAR uploader before the reason field container
-                    harFileReasonContainer.insertAdjacentHTML('beforebegin', harUploaderHTML);
+                    // Check if we already created a HAR uploader container
+                    let uploaderContainer = document.getElementById('harUploaderContainer');
+                    if (uploaderContainer) {
+                        console.log('HAR uploader container already exists, updating visibility');
+                    } else {
+                        console.log('Creating new HAR uploader container');
+
+                        // Create and add the HAR file uploader container
+                        const harUploaderHTML = `
+                            <div class="form-group" id="harUploaderContainer" style="display: none;">
+                                <label for="harFileInput">Upload HAR File</label>
+                                <div class="attachment-input-container">
+                                    <label for="harFileInput" class="file-upload-button">
+                                        <i class="fas fa-cloud-upload-alt"></i> Choose HAR File
+                                        <input type="file" id="harFileInput" name="harFileInput" accept=".har" class="hidden-file-input">
+                                    </label>
+                                    <div class="hint"><i class="fas fa-info-circle"></i> Upload a HAR file to provide detailed network information</div>
+                                    <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
+                                        <strong>⚠️ IMPORTANT:</strong> Maximum HAR file size is 20MB.
+                                    </div>
+                                    <div id="harFilePreviewContainer" class="screenshot-preview"></div>
+                                </div>
+                            </div>
+                        `;
+
+                        // Insert the HAR uploader before the reason field container
+                        harFileReasonContainer.insertAdjacentHTML('beforebegin', harUploaderHTML);
+                        uploaderContainer = document.getElementById('harUploaderContainer');
+                    }
 
                     // Make sure initial state is correct
-                    const uploaderContainer = document.getElementById('harUploaderContainer');
                     if (harFileAttached.value === 'Yes') {
-                        if (uploaderContainer) uploaderContainer.style.display = 'block';
+                        if (uploaderContainer) {
+                            uploaderContainer.style.display = 'block';
+                            console.log('Showing HAR uploader container');
+                        }
                         harFileReasonContainer.style.display = 'none';
+                        console.log('Hiding HAR file reason container');
                     } else {
-                        if (uploaderContainer) uploaderContainer.style.display = 'none';
+                        if (uploaderContainer) {
+                            uploaderContainer.style.display = 'none';
+                            console.log('Hiding HAR uploader container');
+                        }
                         harFileReasonContainer.style.display = 'block';
+                        console.log('Showing HAR file reason container');
                     }
 
                     // Add event listener to the HAR file input
                     const harFileInput = document.getElementById('harFileInput');
                     if (harFileInput) {
-                        harFileInput.addEventListener('change', (e) => {
+                        // Remove existing event listeners to avoid duplicates
+                        const newHarFileInput = harFileInput.cloneNode(true);
+                        harFileInput.parentNode.replaceChild(newHarFileInput, harFileInput);
+
+                        newHarFileInput.addEventListener('change', (e) => {
+                            console.log('HAR file input changed');
                             this.handleHarFileInputChange(e);
                         });
                     }
 
+                    // Remove existing event listeners to avoid duplicates
+                    const newHarFileAttached = harFileAttached.cloneNode(true);
+                    harFileAttached.parentNode.replaceChild(newHarFileAttached, harFileAttached);
+
                     // Add change listener to harFileAttached dropdown
-                    harFileAttached.addEventListener('change', function () {
+                    newHarFileAttached.addEventListener('change', function () {
+                        console.log('HAR file attached dropdown changed to:', this.value);
                         const uploaderContainer = document.getElementById('harUploaderContainer');
                         const reasonContainer = document.getElementById('harFileReason') ?
                             window.trackerApp.findParentWithClass(document.getElementById('harFileReason'), 'form-group') : null;
 
                         if (this.value === 'Yes') {
-                            if (uploaderContainer) uploaderContainer.style.display = 'block';
+                            if (uploaderContainer) {
+                                uploaderContainer.style.display = 'block';
+                                console.log('Showing HAR uploader container after dropdown change');
+                            }
                             if (reasonContainer) {
                                 reasonContainer.style.display = 'none';
                                 // Remove the required indication
                                 const label = reasonContainer.querySelector('label');
                                 if (label) label.classList.remove('required-field');
+                                console.log('Hiding HAR file reason container after dropdown change');
                             }
                         } else {
-                            if (uploaderContainer) uploaderContainer.style.display = 'none';
+                            if (uploaderContainer) {
+                                uploaderContainer.style.display = 'none';
+                                console.log('Hiding HAR uploader container after dropdown change');
+                            }
                             if (reasonContainer) {
                                 reasonContainer.style.display = 'block';
                                 // Add visual indication that the field is now required
                                 const label = reasonContainer.querySelector('label');
                                 if (label) label.classList.add('required-field');
+                                console.log('Showing HAR file reason container after dropdown change');
                             }
                         }
                     });
+
+                    // Trigger the change event to ensure correct initial state
+                    const event = new Event('change');
+                    newHarFileAttached.dispatchEvent(event);
                 } else {
                     console.warn('Could not find HAR file reason container');
                 }
@@ -3613,6 +3655,7 @@
                     this.trackerType === 'sim-orr' ||
                     this.trackerType === 'sim-plan-teach' ||
                     this.trackerType === 'sim-reading-log' ||
+                    this.trackerType === 'sim-dashboard' ||
                     this.trackerType === 'help-article' ||
                     this.trackerType === 'blank') &&
                     this.harFile;

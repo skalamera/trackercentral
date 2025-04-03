@@ -1,0 +1,167 @@
+code to call the onLoad function in the application:
+
+dynamic-tracker.html:
+async init() {
+                try {
+                    console.log('Initializing TrackerApp');
+                    await this.initClient();
+
+                    // Move debugDistrictFields to the end
+                    // this.debugDistrictFields(); - REMOVE THIS LINE
+
+                    this.initEventListeners();
+                    this.initQuillEditors();
+                    this.initFormData();
+                    await this.loadInitialData();
+
+                    // Add hidden description field if it doesn't exist
+                    this.ensureHiddenFields();
+
+                    // Set up custom file uploaders
+                    this.setupCustomFileUploaders();
+
+                    // Load data from localStorage based on tracker type
+                    this.loadDataFromStorage();
+
+                    // Hide specified ticket property fields
+                    this.hideTicketPropertyFields();
+
+                    // Remove the Attachments card at the bottom
+                    this.removeBottomAttachmentsCard();
+
+                    // Call the onLoad function if it exists in the template config
+                    if (this.config.onLoad && typeof this.config.onLoad === 'function') {
+                        console.log(`Calling onLoad function for template ${this.trackerType}`);
+                        try {
+                            this.config.onLoad();
+                        } catch (onLoadError) {
+                            console.error(`Error in onLoad function for ${this.trackerType}:`, onLoadError);
+                        }
+                    }
+
+                    // Move the debug to the end, after all initialization is complete
+                    this.debugDistrictFields();
+
+
+// 6. SIM ORR
+    "sim-orr": {
+        title: "SIM ORR",
+        icon: "fa-book-open",
+        description: "For issues with the SIM ORR",
+        sections: [
+            {
+                id: "subject",
+                title: "SUBJECT",
+                icon: "fa-pen-fancy",
+                fields: [
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"]
+                    },
+                    { id: "districtName", type: "text", label: "District Name", required: true },
+                    { id: "application", type: "text", label: "Application", required: true },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    {
+                        id: "userRole",
+                        type: "checkboxes",
+                        label: "User Role",
+                        required: true,
+                        options: [
+                            { id: "students", label: "Students" },
+                            { id: "teachers", label: "Teachers" },
+                            { id: "admin", label: "Admin" },
+                            { id: "allUsers", label: "All Users" }
+                        ]
+                    },
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                ]
+            },
+            // ... other sections remain unchanged ...
+        ],
+        // Description generator remains unchanged
+        descriptionGenerator: function (fields) { /* ... existing code ... */ },
+
+tracker-config.js:
+        // Simplified onLoad function for SIM ORR
+        onLoad: function() {
+            console.log("SIM ORR onLoad function executing");
+            
+            function updateSubjectLine() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const applicationField = document.getElementById('application');
+                const specificIssueField = document.getElementById('specificIssue');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+                
+                if (!isVipField || !districtNameField || !applicationField || 
+                    !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+                
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
+                    }
+                });
+                
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const application = applicationField.value || '';
+                const specificIssue = specificIssueField.value || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(', ') : '';
+                
+                // Format: "VIP * District Name | Application - Specific Issue for User Role"
+                let subject = '';
+                if (isVip) {
+                    subject = `VIP * ${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
+                } else {
+                    subject = `${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
+                }
+                
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+            }
+            
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
+            
+            // Add listeners to all checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSubjectLine);
+            });
+            
+            // Initial update attempt
+            updateSubjectLine();
+            
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
+        }
+    },
+
+These changes should fix the issue with the dynamic subject line not populating in the SIM ORR template. Here's what I've done:
+
+1. Added code to the TrackerApp.init() method in dynamic-tracker.html to call the onLoad function of templates if it exists. This was missing before, which is why your subject line wasn't being dynamically updated.
+
+2. Simplified and improved the onLoad function in the SIM ORR template:
+	-Added console logs to help with debugging
+	-Improved how user roles are detected from checkboxes
+	-Added error handling for when fields are missing
+	-Added a delayed update (500ms) to ensure the subject line is populated even if field values 	are loaded asynchronously
+
+These changes follow the same pattern used in other templates like SIM Library View, but with better error handling and logging.
+
+The dynamic subject line should now auto populate correctly when you enter the application, specific issue, and select user roles in the SIM ORR template. The format will follow the requested structure: "VIP * District Name | Application - Specific Issue for User Role".

@@ -1,0 +1,113 @@
+The issue is occurring because your templates include standardSections.screenshots in their configuration, which means the conditional check:
+
+if (!this.templateConfig.sections.some(section => section.id === 'screenshots'))
+
+is returning false (since the screenshots section already exists), but that section doesn't have the actual file uploader logic attached to it.
+
+Here's the fix:
+
+            buildForm() {
+                // Mark that we've built the form to avoid duplicate builds
+                this.formBuilt = true;
+                console.log('Building form with template:', this.templateConfig.title);
+
+                // Set the template title
+                document.getElementById('template-title').textContent = this.templateConfig.title;
+
+                // Get the form container
+                const form = document.getElementById('tracker-form');
+                form.innerHTML = '';
+
+                // Track if we've added a screenshots section
+                let hasScreenshotsSection = false;
+
+                // Build each section
+                this.templateConfig.sections.forEach(section => {
+                    const sectionElement = document.createElement('div');
+                    sectionElement.className = 'form-section';
+
+                    // Create section header
+                    const sectionHeader = document.createElement('div');
+                    sectionHeader.className = 'section-header';
+                    sectionHeader.innerHTML = `
+            <i class="fas ${section.icon}"></i>
+            <h2>${section.title}</h2>
+          `;
+                    sectionElement.appendChild(sectionHeader);
+
+                    // Create section content
+                    const sectionContent = document.createElement('div');
+                    sectionContent.className = 'section-content';
+
+                    // If this is the screenshots section, add the file uploader
+                    if (section.id === 'screenshots') {
+                        hasScreenshotsSection = true;
+                        // Add file uploader
+                        const fileUploaderElement = this.createFileUploaderElement();
+                        sectionContent.appendChild(fileUploaderElement);
+                    } 
+                    // For other sections, add their regular fields
+                    else if (section.fields && section.fields.length > 0) {
+                        section.fields.forEach(field => {
+                            const fieldElement = this.createFieldElement(field);
+                            sectionContent.appendChild(fieldElement);
+                        });
+                    }
+
+                    sectionElement.appendChild(sectionContent);
+                    form.appendChild(sectionElement);
+                });
+
+                // Add screenshots section if not already present in the template
+                if (!hasScreenshotsSection) {
+                    console.log('Adding screenshots section as it was not found in the template');
+                    const screenshotsSection = document.createElement('div');
+                    screenshotsSection.className = 'form-section';
+
+                    // Create section header
+                    const sectionHeader = document.createElement('div');
+                    sectionHeader.className = 'section-header';
+                    sectionHeader.innerHTML = `
+            <i class="fas fa-images"></i>
+            <h2>SCREENSHOTS</h2>
+          `;
+                    screenshotsSection.appendChild(sectionHeader);
+
+                    // Create section content
+                    const sectionContent = document.createElement('div');
+                    sectionContent.className = 'section-content';
+
+                    // Add file uploader
+                    const fileUploaderElement = this.createFileUploaderElement();
+                    sectionContent.appendChild(fileUploaderElement);
+
+                    screenshotsSection.appendChild(sectionContent);
+                    form.appendChild(screenshotsSection);
+                }
+
+Now we need to make a small fix to make sure the Quill editors still initialize properly:
+
+                    screenshotsSection.appendChild(sectionContent);
+                    form.appendChild(screenshotsSection);
+                }
+
+                // Initialize Quill editors
+                this.initializeQuillEditors();
+
+                // Initialize file uploaders
+                this.setupCustomFileUploaders();
+            }
+
+The file uploader section wasn't appearing correctly because the screenshots section in your template configuration was defined but had an empty fields array. Your code was checking if the screenshots section existed, but it wasn't actually adding the file uploader to it.
+
+I've fixed this by:
+
+Adding a tracking variable hasScreenshotsSection to know if we've seen a screenshots section
+Special-casing the screenshots section to always add the file uploader regardless of the fields array
+Only adding a new screenshots section if we didn't encounter one in the template
+
+This ensures that:
+
+If a template has a screenshots section defined, we add the file uploader to it
+If a template doesn't have a screenshots section, we add one with the file uploader
+Try refreshing the page, and you should now see the file uploader in all template forms.
