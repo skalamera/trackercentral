@@ -1182,12 +1182,6 @@ const TRACKER_CONFIGS = {
                 icon: "fa-images",
                 fields: [
                     {
-                        id: "fileAttachmentNote",
-                        type: "info",
-                        label: "⚠️ FILE SIZE LIMITATION",
-                        hint: "Each file must be under 20MB, and the TOTAL size of all attachments MUST NOT exceed 20MB. Files over this limit WILL NOT be attached to the ticket."
-                    },
-                    {
                         id: "screenshotsDescription",
                         type: "richtext",
                         label: "(please include URL in screen capture)",
@@ -1265,7 +1259,7 @@ const TRACKER_CONFIGS = {
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
             description += `Name of impacted report: ${fields.reportName || ''}<br>`;
             if (fields.issueDetails) {
-                description += `<div><strong>Specific details outlining user impact:</strong></div>`;
+                description += `<div>Specific details outlining user impact:</div>`;
                 description += `<div>${fields.issueDetails}</div>`;
             }
             description += '<div style="margin-bottom: 20px;"></div>';
@@ -1325,7 +1319,7 @@ const TRACKER_CONFIGS = {
                 description += `Impacted Class Tech Admin Link: <a href="${classAdminLink}" target="_blank">${fields.classLink}</a><br>`;
             }
 
-            if (fields.studentIds) description += `Impacted Student(s) Internal ID(s): ${fields.studentIds}<br>`;
+            if (fields.studentIds) description += `Impacted Student(s) Internal ID(s): ${fields.studentIds}<br><br>`;
             if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported)}<br>`;
             if (fields.harFileAttached) {
                 description += `HAR file attached: ${fields.harFileAttached}`;
@@ -1518,12 +1512,6 @@ const TRACKER_CONFIGS = {
                 title: "SCREENSHOTS and/or VIDEOS",
                 icon: "fa-images",
                 fields: [
-                    {
-                        id: "fileAttachmentNote",
-                        type: "info",
-                        label: "⚠️ FILE SIZE LIMITATION",
-                        hint: "Each file must be under 20MB, and the TOTAL size of all attachments MUST NOT exceed 20MB. Files over this limit WILL NOT be attached to the ticket."
-                    },
                     {
                         id: "screenshotsDescription",
                         type: "richtext",

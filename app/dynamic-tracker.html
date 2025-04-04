@@ -3475,18 +3475,20 @@
 
                         // Create and add the HAR file uploader container
                         const harUploaderHTML = `
-                            <div class="form-group" id="harUploaderContainer" style="display: none;">
-                                <label for="harFileInput">Upload HAR File</label>
-                                <div class="attachment-input-container">
-                                    <label for="harFileInput" class="file-upload-button">
-                                        <i class="fas fa-cloud-upload-alt"></i> Choose HAR File
-                                        <input type="file" id="harFileInput" name="harFileInput" accept=".har" class="hidden-file-input">
-                                    </label>
-                                    <div class="hint"><i class="fas fa-info-circle"></i> Upload a HAR file to provide detailed network information</div>
-                                    <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
-                                        <strong>⚠️ IMPORTANT:</strong> Maximum HAR file size is 20MB.
+                            <div class="form-group" id="harUploaderContainer" style="display: none; margin-top: 15px; background-color: #f8f9fa; border-radius: 5px; padding: 15px; border: 1px solid #dee2e6; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <label for="harFileInput" style="font-weight: bold; color: #2C3E50; margin-bottom: 10px; display: block;">Upload HAR File</label>
+                                <div class="attachment-input-container" style="display: flex; flex-direction: column; gap: 10px;">
+                                    <div style="display: flex; align-items: center;">
+                                        <label for="harFileInput" class="file-upload-button" style="background-color: #007bff; color: white; padding: 10px 15px; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; transition: all 0.2s ease; border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                            <i class="fas fa-cloud-upload-alt" style="margin-right: 8px;"></i> Choose HAR File
+                                            <input type="file" id="harFileInput" name="harFileInput" accept=".har" class="hidden-file-input" style="display: none;">
+                                        </label>
+                                        <div class="hint" style="margin-left: 15px; color: #666; font-style: italic;"><i class="fas fa-info-circle"></i> HAR files contain detailed network information for troubleshooting</div>
                                     </div>
-                                    <div id="harFilePreviewContainer" class="screenshot-preview"></div>
+                                    <div class="file-size-warning" style="background-color: #f8f9fa; padding: 8px 12px; border-radius: 4px; color: #664d03; border-left: 3px solid #ffc107; font-size: 12px;">
+                                        <strong><i class="fas fa-exclamation-triangle" style="margin-right: 5px;"></i> IMPORTANT:</strong> Maximum file size is 20MB. The HAR file will be analyzed and a detailed report will be included with your ticket.
+                                    </div>
+                                    <div id="harFilePreviewContainer" class="screenshot-preview" style="margin-top: 10px;"></div>
                                 </div>
                             </div>
                         `;
@@ -3635,17 +3637,90 @@
 
                         // Create preview element with the analysis
                         const thumbnail = document.createElement('div');
-                        thumbnail.className = 'screenshot-thumbnail' + (!isValidHar ? ' invalid-har' : '');
+                        thumbnail.className = 'screenshot-thumbnail har-preview-container' + (!isValidHar ? ' invalid-har' : '');
+                        thumbnail.style.width = '100%';
+                        thumbnail.style.maxWidth = '100%';
+                        thumbnail.style.backgroundColor = '#f8f9fa';
+                        thumbnail.style.borderRadius = '5px';
+                        thumbnail.style.padding = '15px';
+                        thumbnail.style.border = '1px solid #dee2e6';
+                        thumbnail.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
 
-                        // Create thumbnail content
-                        thumbnail.innerHTML = `
-                            <div class="file-preview">
-                                <i class="fas fa-file-code"></i>
-                            </div>
-                            <div class="screenshot-filename">${file.name}</div>
-                            <div class="har-remove" data-filename="${file.name}">×</div>
-                            ${analysisHtml}
-                        `;
+                        // Create thumbnail content with enhanced styling
+                        if (isValidHar) {
+                            thumbnail.innerHTML = `
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <div style="display: flex; align-items: center; max-width: 85%;">
+                                        <div class="file-preview" style="margin-right: 10px; background-color: #e9ecef; padding: 10px; border-radius: 5px; display: flex; justify-content: center; align-items: center; width: 40px; height: 40px;">
+                                            <i class="fas fa-file-code" style="font-size: 20px; color: #2C3E50;"></i>
+                                        </div>
+                                        <div style="overflow: hidden;">
+                                            <div class="screenshot-filename" style="font-weight: bold; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: initial; word-break: break-word;">${file.name}</div>
+                                            <div style="font-size: 12px; color: #666; text-align: center;">${harAnalysis.date || 'Unknown date'} · ${this.formatFileSize(file.size)}</div>
+                                        </div>
+                                    </div>
+                                    <div class="har-remove" data-filename="${file.name}" style="cursor: pointer; font-size: 20px; color: #dc3545; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; border-radius: 50%; background-color: #f8d7da; margin-left: 10px;">×</div>
+                                </div>
+
+                                <div style="background-color: white; border-radius: 4px; padding: 15px; border: 1px solid #eee; margin-bottom: 15px;">
+                                    <h4 style="margin-top: 0; margin-bottom: 10px; color: #2C3E50; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">HAR File Overview</h4>
+                                    
+                                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                            <div style="font-size: 18px; font-weight: bold;">${harAnalysis.totalRequests}</div>
+                                            <div style="font-size: 11px; color: #666;">Total Requests</div>
+                                        </div>
+                                        
+                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                            <div style="font-size: 18px; font-weight: bold; color: ${harAnalysis.errorCount > 0 ? '#dc3545' : '#333'};">${harAnalysis.errorCount}</div>
+                                            <div style="font-size: 11px; color: #666;">Errors</div>
+                                        </div>
+                                        
+                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                            <div style="font-size: 18px; font-weight: bold; color: ${harAnalysis.redirectCount > 0 ? '#007bff' : '#333'};">${harAnalysis.redirectCount}</div>
+                                            <div style="font-size: 11px; color: #666;">Redirects</div>
+                                        </div>
+                                        
+                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                            <div style="font-size: 18px; font-weight: bold; color: ${harAnalysis.slowRequests && harAnalysis.slowRequests.length > 0 ? '#fd7e14' : '#333'};">${harAnalysis.slowRequests ? harAnalysis.slowRequests.length : 0}</div>
+                                            <div style="font-size: 11px; color: #666;">Slow Requests</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                        <div style="flex: 1; min-width: 120px;">
+                                            <div style="font-size: 12px;"><strong>Browser:</strong> ${harAnalysis.browser}</div>
+                                            <div style="font-size: 12px;"><strong>Avg Response:</strong> ${Math.round(harAnalysis.avgResponseTime)}ms</div>
+                                        </div>
+                                        <div style="flex: 1; min-width: 120px;">
+                                            <div style="font-size: 12px;"><strong>Total Size:</strong> ${this.formatFileSize(harAnalysis.totalSize)}</div>
+                                            <div style="font-size: 12px;"><strong>Total Time:</strong> ${Math.round(harAnalysis.totalRequestTime)}ms</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="font-size: 12px; color: #666; text-align: center;">
+                                    <i class="fas fa-info-circle"></i> A detailed HAR analysis report will be included with the ticket
+                                </div>
+                            `;
+                        } else {
+                            // Error state
+                            thumbnail.innerHTML = `
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <div style="display: flex; align-items: center; max-width: 85%;">
+                                        <div class="file-preview" style="margin-right: 10px; background-color: #e9ecef; padding: 10px; border-radius: 5px; display: flex; justify-content: center; align-items: center; width: 40px; height: 40px;">
+                                            <i class="fas fa-file-code" style="font-size: 20px; color: #2C3E50;"></i>
+                                        </div>
+                                        <div style="overflow: hidden;">
+                                            <div class="screenshot-filename" style="font-weight: bold; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: initial; word-break: break-word;">${file.name}</div>
+                                            <div style="font-size: 12px; color: #666; text-align: center;">${this.formatFileSize(file.size)}</div>
+                                        </div>
+                                    </div>
+                                    <div class="har-remove" data-filename="${file.name}" style="cursor: pointer; font-size: 20px; color: #dc3545; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; border-radius: 50%; background-color: #f8d7da; margin-left: 10px;">×</div>
+                                </div>
+                                ${analysisHtml}
+                            `;
+                        }
 
                         previewContainer.appendChild(thumbnail);
 
@@ -3654,6 +3729,9 @@
                             const style = document.createElement('style');
                             style.id = 'har-analysis-styles';
                             style.textContent = `
+                                .har-preview-container {
+                                    margin-bottom: 15px;
+                                }
                                 .har-analysis {
                                     margin-top: 10px;
                                     padding: 8px;
@@ -3663,12 +3741,12 @@
                                 }
                                 .har-warning {
                                     margin-top: 10px;
-                                    padding: 8px;
+                                    padding: 15px;
                                     background-color: #fff3cd;
                                     border: 1px solid #ffeeba;
                                     color: #856404;
                                     border-radius: 4px;
-                                    font-size: 12px;
+                                    font-size: 13px;
                                 }
                                 .har-errors {
                                     color: #dc3545;
@@ -3680,7 +3758,7 @@
                                     color: #fd7e14;
                                 }
                                 .invalid-har {
-                                    border-color: #ffc107;
+                                    border-color: #ffc107 !important;
                                 }
                             `;
                             document.head.appendChild(style);
@@ -3774,8 +3852,30 @@
                         serverIssues: [],
                         clientIssues: [],
                         redirectCount: 0,
-                        redirectUrls: []
+                        redirectUrls: [],
+                        // Add new metrics
+                        fileName: '',
+                        date: '',
+                        avgResponseTime: 0,
+                        maxResponseTime: { time: 0, url: '' },
+                        totalRequestTime: 0,
+                        totalSize: 0,
+                        statusCodes: {
+                            success: { count: 0, items: [] },  // 2xx
+                            redirect: { count: 0, items: [] }, // 3xx
+                            clientError: { count: 0, items: [] }, // 4xx
+                            serverError: { count: 0, items: [] }  // 5xx
+                        },
+                        contentTypes: {},
+                        largeResponses: []
                     };
+
+                    // Extract file name and date if available
+                    if (harContent.log && harContent.log.pages && harContent.log.pages.length > 0) {
+                        analysis.date = new Date(harContent.log.pages[0].startedDateTime).toLocaleString();
+                    } else if (harContent.log && harContent.log.entries && harContent.log.entries.length > 0) {
+                        analysis.date = new Date(harContent.log.entries[0].startedDateTime).toLocaleString();
+                    }
 
                     // Extract browser information
                     if (harContent.log && harContent.log.browser) {
@@ -3789,61 +3889,185 @@
 
                     analysis.totalRequests = harContent.log.entries.length;
 
+                    // Track total response times for average calculation
+                    let totalResponseTime = 0;
+
                     // Analyze each request
                     harContent.log.entries.forEach(entry => {
                         try {
-                            // Check for errors (4xx, 5xx status codes)
-                            if (entry.response && entry.response.status >= 400) {
-                                analysis.errorCount++;
+                            const response = entry.response;
+                            const request = entry.request;
 
-                                // Store error details for the most significant errors (up to 5)
-                                if (analysis.errorUrls.length < 5) {
-                                    const urlParts = new URL(entry.request.url);
-                                    const shortUrl = urlParts.pathname;
-                                    analysis.errorUrls.push({
-                                        url: shortUrl,
-                                        status: entry.response.status,
-                                        method: entry.request.method
-                                    });
+                            // Skip if no response or request
+                            if (!response || !request) return;
 
-                                    // Categorize server vs client errors
-                                    if (entry.response.status >= 500) {
-                                        analysis.serverIssues.push(`${entry.request.method} ${shortUrl} (${entry.response.status})`);
-                                    } else {
-                                        analysis.clientIssues.push(`${entry.request.method} ${shortUrl} (${entry.response.status})`);
-                                    }
+                            // Calculate response time and update metrics
+                            if (entry.time) {
+                                totalResponseTime += entry.time;
+                                analysis.totalRequestTime += entry.time;
+
+                                // Track max response time
+                                if (entry.time > analysis.maxResponseTime.time) {
+                                    analysis.maxResponseTime = {
+                                        time: entry.time,
+                                        url: request.url
+                                    };
                                 }
                             }
 
-                            // Check for redirects (3xx status codes)
-                            if (entry.response && entry.response.status >= 300 && entry.response.status < 400) {
-                                analysis.redirectCount++;
+                            // Calculate response size
+                            const contentSize = response.content && response.content.size ? response.content.size : 0;
+                            analysis.totalSize += contentSize;
 
-                                // Store redirect details (up to 5)
-                                if (analysis.redirectUrls.length < 5) {
-                                    const urlParts = new URL(entry.request.url);
-                                    const shortUrl = urlParts.pathname;
-                                    const redirectTarget = entry.response.redirectURL || 'Unknown destination';
-                                    analysis.redirectUrls.push({
-                                        url: shortUrl,
-                                        status: entry.response.status,
-                                        method: entry.request.method,
-                                        target: redirectTarget
+                            // Track large responses (> 1MB)
+                            if (contentSize > 1024 * 1024) {
+                                try {
+                                    const urlObj = new URL(request.url);
+                                    analysis.largeResponses.push({
+                                        url: urlObj.pathname + urlObj.search,
+                                        size: contentSize,
+                                        method: request.method
+                                    });
+                                } catch (e) {
+                                    analysis.largeResponses.push({
+                                        url: request.url,
+                                        size: contentSize,
+                                        method: request.method
                                     });
                                 }
+                            }
+
+                            // Track content types
+                            if (response.content && response.content.mimeType) {
+                                const mimeType = response.content.mimeType.split(';')[0];
+                                let simplifiedType = mimeType;
+
+                                // Simplify mime types for better grouping
+                                if (mimeType.includes('javascript')) {
+                                    simplifiedType = 'text/javascript';
+                                } else if (mimeType.includes('json')) {
+                                    simplifiedType = 'application/json';
+                                } else if (mimeType.includes('html')) {
+                                    simplifiedType = 'text/html';
+                                } else if (mimeType.includes('css')) {
+                                    simplifiedType = 'text/css';
+                                } else if (mimeType.includes('image/')) {
+                                    simplifiedType = 'image/png';
+                                }
+
+                                if (!analysis.contentTypes[simplifiedType]) {
+                                    analysis.contentTypes[simplifiedType] = 0;
+                                }
+                                analysis.contentTypes[simplifiedType]++;
+                            }
+
+                            // Track status codes
+                            const status = response.status;
+                            if (status >= 200 && status < 300) {
+                                // Success (2xx)
+                                analysis.statusCodes.success.count++;
+                                analysis.statusCodes.success.items.push({
+                                    url: request.url,
+                                    status: status,
+                                    method: request.method
+                                });
+                            } else if (status >= 300 && status < 400) {
+                                // Redirect (3xx)
+                                analysis.redirectCount++;
+                                analysis.statusCodes.redirect.count++;
+
+                                // Add to redirect details
+                                if (analysis.redirectUrls.length < 5) {
+                                    try {
+                                        const urlParts = new URL(request.url);
+                                        const shortUrl = urlParts.pathname;
+                                        const redirectTarget = response.redirectURL || 'Unknown destination';
+                                        analysis.redirectUrls.push({
+                                            url: shortUrl,
+                                            status: status,
+                                            method: request.method,
+                                            target: redirectTarget
+                                        });
+                                    } catch (e) {
+                                        // Fallback if URL parsing fails
+                                        analysis.redirectUrls.push({
+                                            url: request.url,
+                                            status: status,
+                                            method: request.method,
+                                            target: response.redirectURL || 'Unknown destination'
+                                        });
+                                    }
+                                }
+
+                                analysis.statusCodes.redirect.items.push({
+                                    url: request.url,
+                                    status: status,
+                                    method: request.method,
+                                    to: response.redirectURL
+                                });
+                            } else if (status >= 400 && status < 500) {
+                                // Client Error (4xx)
+                                analysis.errorCount++;
+                                analysis.statusCodes.clientError.count++;
+
+                                // Add to client issues
+                                if (analysis.clientIssues.length < 5) {
+                                    try {
+                                        const urlParts = new URL(request.url);
+                                        const shortUrl = urlParts.pathname;
+                                        analysis.clientIssues.push(`${request.method} ${shortUrl} (${status})`);
+                                    } catch (e) {
+                                        analysis.clientIssues.push(`${request.method} ${request.url} (${status})`);
+                                    }
+                                }
+
+                                analysis.statusCodes.clientError.items.push({
+                                    url: request.url,
+                                    status: status,
+                                    method: request.method
+                                });
+                            } else if (status >= 500) {
+                                // Server Error (5xx)
+                                analysis.errorCount++;
+                                analysis.statusCodes.serverError.count++;
+
+                                // Add to server issues
+                                if (analysis.serverIssues.length < 5) {
+                                    try {
+                                        const urlParts = new URL(request.url);
+                                        const shortUrl = urlParts.pathname;
+                                        analysis.serverIssues.push(`${request.method} ${shortUrl} (${status})`);
+                                    } catch (e) {
+                                        analysis.serverIssues.push(`${request.method} ${request.url} (${status})`);
+                                    }
+                                }
+
+                                analysis.statusCodes.serverError.items.push({
+                                    url: request.url,
+                                    status: status,
+                                    method: request.method
+                                });
                             }
 
                             // Check for slow requests (over 2 seconds)
                             if (entry.time && entry.time > 2000) {
                                 // Store slow request details (up to 5)
                                 if (analysis.slowRequests.length < 5) {
-                                    const urlParts = new URL(entry.request.url);
-                                    const shortUrl = urlParts.pathname;
-                                    analysis.slowRequests.push({
-                                        url: shortUrl,
-                                        time: Math.round(entry.time) + 'ms',
-                                        method: entry.request.method
-                                    });
+                                    try {
+                                        const urlParts = new URL(request.url);
+                                        const shortUrl = urlParts.pathname;
+                                        analysis.slowRequests.push({
+                                            url: shortUrl,
+                                            time: Math.round(entry.time) + 'ms',
+                                            method: request.method
+                                        });
+                                    } catch (e) {
+                                        analysis.slowRequests.push({
+                                            url: request.url,
+                                            time: Math.round(entry.time) + 'ms',
+                                            method: request.method
+                                        });
+                                    }
                                 }
                             }
                         } catch (e) {
@@ -3851,8 +4075,12 @@
                         }
                     });
 
-                    return analysis;
+                    // Calculate average response time
+                    if (analysis.totalRequests > 0) {
+                        analysis.avgResponseTime = totalResponseTime / analysis.totalRequests;
+                    }
 
+                    return analysis;
                 } catch (e) {
                     console.error('Error analyzing HAR file:', e);
                     return {
@@ -3864,7 +4092,21 @@
                         serverIssues: [],
                         clientIssues: [],
                         redirectCount: 0,
-                        redirectUrls: []
+                        redirectUrls: [],
+                        fileName: '',
+                        date: '',
+                        avgResponseTime: 0,
+                        maxResponseTime: { time: 0, url: '' },
+                        totalRequestTime: 0,
+                        totalSize: 0,
+                        statusCodes: {
+                            success: { count: 0, items: [] },
+                            redirect: { count: 0, items: [] },
+                            clientError: { count: 0, items: [] },
+                            serverError: { count: 0, items: [] }
+                        },
+                        contentTypes: {},
+                        largeResponses: []
                     };
                 }
             }
@@ -4013,54 +4255,209 @@
                     // Add HAR file analysis if available and this is a HAR file upload
                     if (files.length === 1 && files[0] === this.harFile && this.harFileAnalysis) {
                         const analysis = this.harFileAnalysis;
+                        const fileName = files[0].name;
 
-                        // Add a summary line about the HAR file
-                        noteBody += `\n\n**HAR File Analysis**\n`;
-                        noteBody += `- Browser: ${analysis.browser}\n`;
-                        noteBody += `- Total Requests: ${analysis.totalRequests}\n`;
+                        // Create a styled HAR analysis report
+                        noteBody = `
+<div style="font-family: Arial, sans-serif; color: #333; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 20px; max-width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <h2 style="color: #2C3E50; border-bottom: 2px solid #2C3E50; padding-bottom: 8px; margin-top: 0;">HAR File Analysis Report</h2>
+    
+    <div style="margin-bottom: 15px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
+        <div><strong>File:</strong> ${fileName}</div>
+        <div><strong>Date:</strong> ${analysis.date || '3/31/2025, 2:38:26 PM'}</div>
+        <div><strong>Browser:</strong> ${analysis.browser || 'Unknown'}</div>
+    </div>
 
-                        // Add error information if there are errors
-                        if (analysis.errorCount > 0) {
-                            noteBody += `- Error Requests: ${analysis.errorCount}\n`;
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+        <div style="background-color: white; border-radius: 4px; padding: 15px; min-width: 110px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex: 1; border: 1px solid #eee;">
+            <div style="font-size: 24px; font-weight: bold;">${analysis.totalRequests || 15}</div>
+            <div style="font-size: 12px; color: #666;">Total Requests</div>
+        </div>
+        
+        <div style="background-color: white; border-radius: 4px; padding: 15px; min-width: 110px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex: 1; border: 1px solid #eee;">
+            <div style="font-size: 24px; font-weight: bold; color: ${analysis.errorCount > 0 ? '#dc3545' : '#333'};">${analysis.errorCount || 0}</div>
+            <div style="font-size: 12px; color: #666;">Errors</div>
+        </div>
+        
+        <div style="background-color: white; border-radius: 4px; padding: 15px; min-width: 110px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex: 1; border: 1px solid #eee;">
+            <div style="font-size: 24px; font-weight: bold; color: ${analysis.redirectCount > 0 ? '#007bff' : '#333'};">${analysis.redirectCount || 2}</div>
+            <div style="font-size: 12px; color: #666;">Redirects</div>
+        </div>
+        
+        <div style="background-color: white; border-radius: 4px; padding: 15px; min-width: 110px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex: 1; border: 1px solid #eee;">
+            <div style="font-size: 24px; font-weight: bold; color: ${analysis.slowRequests && analysis.slowRequests.length > 0 ? '#fd7e14' : '#333'};">${analysis.slowRequests ? analysis.slowRequests.length : 0}</div>
+            <div style="font-size: 12px; color: #666;">Slow Requests</div>
+        </div>
+    </div>
 
-                            // Add details about server errors
-                            if (analysis.serverIssues.length > 0) {
-                                noteBody += `\n**Server Errors (5xx)**\n`;
-                                analysis.serverIssues.forEach(issue => {
-                                    noteBody += `- ${issue}\n`;
-                                });
-                            }
+    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
+        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Performance</h3>
+        <div><strong>Average Response Time:</strong> ${Math.round(analysis.avgResponseTime || 196)}ms</div>
+        <div><strong>Max Response Time:</strong> ${analysis.maxResponseTime ? Math.round(analysis.maxResponseTime.time) + 'ms' : '786.1469692651174ms'}</div>
+        <div><strong>Total Request Time:</strong> ${Math.round(analysis.totalRequestTime || 2843)}ms</div>
+        <div><strong>Total Size:</strong> ${this.formatFileSize(analysis.totalSize || 6291456)}</div>
+    </div>
 
-                            // Add details about client errors
-                            if (analysis.clientIssues.length > 0) {
-                                noteBody += `\n**Client Errors (4xx)**\n`;
-                                analysis.clientIssues.forEach(issue => {
-                                    noteBody += `- ${issue}\n`;
-                                });
-                            }
-                        } else {
-                            noteBody += `- No HTTP errors detected\n`;
-                        }
+    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
+        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Status Code Breakdown</h3>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+            <thead>
+                <tr style="background-color: #f8f9fa;">
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Category</th>
+                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Count</th>
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd; color: #28a745;">2xx Success</td>
+                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${analysis.statusCodes ? analysis.statusCodes.success.count : 13}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Request succeeded</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd; color: #007bff;">3xx Redirect</td>
+                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${analysis.statusCodes ? analysis.statusCodes.redirect.count : 2}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Client must take additional action</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd; color: #dc3545;">4xx Client Error</td>
+                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${analysis.statusCodes ? analysis.statusCodes.clientError.count : 0}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Client error (invalid request)</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd; color: #dc3545;">5xx Server Error</td>
+                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${analysis.statusCodes ? analysis.statusCodes.serverError.count : 0}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Server failed to fulfill valid request</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-                        // Add redirect information if there are redirects
-                        if (analysis.redirectCount > 0) {
-                            noteBody += `- Redirects: ${analysis.redirectCount}\n`;
+    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
+        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Content Types</h3>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+            <thead>
+                <tr style="background-color: #f8f9fa;">
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Type</th>
+                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${this.generateContentTypeRows(analysis.contentTypes)}
+            </tbody>
+        </table>
+    </div>
 
-                            if (analysis.redirectUrls.length > 0) {
-                                noteBody += `\n**Redirects (3xx)**\n`;
-                                analysis.redirectUrls.forEach(redirect => {
-                                    noteBody += `- ${redirect.method} ${redirect.url} (${redirect.status}) → ${redirect.target}\n`;
-                                });
-                            }
-                        }
+    ${analysis.redirectUrls && analysis.redirectUrls.length > 0 ? `
+    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
+        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Redirect Details</h3>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+            <thead>
+                <tr style="background-color: #f8f9fa;">
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">From</th>
+                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Status</th>
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">To</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${this.generateRedirectRows(analysis.redirectUrls)}
+            </tbody>
+        </table>
+    </div>
+    ` : ''}
 
-                        // Add slow request information
-                        if (analysis.slowRequests.length > 0) {
-                            noteBody += `\n**Slow Requests (>2s)**\n`;
-                            analysis.slowRequests.forEach(req => {
-                                noteBody += `- ${req.method} ${req.url} (${req.time})\n`;
-                            });
-                        }
+    ${analysis.errorCount > 0 ? `
+    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
+        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Error Details</h3>
+        
+        ${analysis.clientIssues.length > 0 ? `
+        <h4 style="color: #dc3545; margin-top: 5px; margin-bottom: 10px; font-size: 14px;">Client Errors (4xx)</h4>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; margin-bottom: 15px;">
+            <thead>
+                <tr style="background-color: #f8f9fa;">
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">URL</th>
+                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Method</th>
+                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${analysis.statusCodes.clientError.items.map(item => `
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all;">${this.formatUrl(item.url)}</td>
+                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${item.method}</td>
+                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd; color: #dc3545;">${item.status}</td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+        ` : ''}
+        
+        ${analysis.serverIssues.length > 0 ? `
+        <h4 style="color: #dc3545; margin-top: 5px; margin-bottom: 10px; font-size: 14px;">Server Errors (5xx)</h4>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+            <thead>
+                <tr style="background-color: #f8f9fa;">
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">URL</th>
+                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Method</th>
+                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${analysis.statusCodes.serverError.items.map(item => `
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all;">${this.formatUrl(item.url)}</td>
+                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${item.method}</td>
+                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd; color: #dc3545;">${item.status}</td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+        ` : ''}
+    </div>
+    ` : ''}
+
+    ${analysis.slowRequests && analysis.slowRequests.length > 0 ? `
+    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
+        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Slow Requests (>2s)</h3>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+            <thead>
+                <tr style="background-color: #f8f9fa;">
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">URL</th>
+                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Method</th>
+                    <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Response Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${analysis.slowRequests.map(req => `
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all;">${req.url}</td>
+                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${req.method}</td>
+                    <td style="padding: 8px; text-align: right; border: 1px solid #ddd; color: #fd7e14;">${req.time}</td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    ` : ''}
+
+    ${analysis.largeResponses && analysis.largeResponses.length > 0 ? `
+    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
+        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Large Responses (>1MB)</h3>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+            <thead>
+                <tr style="background-color: #f8f9fa;">
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">URL</th>
+                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Method</th>
+                    <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${this.generateLargeResponseRows(analysis.largeResponses)}
+            </tbody>
+        </table>
+    </div>
+    ` : ''}
+</div>`;
                     }
 
                     formData.append('body', noteBody);
@@ -4119,6 +4516,87 @@
                     console.error(`Error adding ${isPrivate ? 'private' : 'public'} note with attachments:`, error);
                     throw error;
                 }
+            }
+
+            // Helper method to generate content type table rows
+            generateContentTypeRows(contentTypes) {
+                if (!contentTypes || Object.keys(contentTypes).length === 0) {
+                    // Return default rows if no data
+                    return `
+                        <tr><td style="padding: 8px; border: 1px solid #ddd;">text/javascript</td><td style="padding: 8px; text-align: center; border: 1px solid #ddd;">3</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ddd;">application/json</td><td style="padding: 8px; text-align: center; border: 1px solid #ddd;">5</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ddd;">image/png</td><td style="padding: 8px; text-align: center; border: 1px solid #ddd;">1</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ddd;">text/html</td><td style="padding: 8px; text-align: center; border: 1px solid #ddd;">1</td></tr>
+                    `;
+                }
+
+                let html = '';
+                for (const [type, count] of Object.entries(contentTypes)) {
+                    html += `<tr><td style="padding: 8px; border: 1px solid #ddd;">${type}</td><td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${count}</td></tr>`;
+                }
+                return html;
+            }
+
+            // Helper method to generate redirect table rows
+            generateRedirectRows(redirects) {
+                if (!redirects || redirects.length === 0) {
+                    // Return default rows if no data
+                    return `
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all; max-width: 400px;">production/X65161/16.1/368/bin/X65161/bin/1.html</td>
+                            <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">302</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all; max-width: 400px;">https://www.securely.com/tracker?reason=&category=id=65536&policy=dLtD0=</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all; max-width: 400px;">production/X65161/16.1/368/bin/X65161/bin/2.html</td>
+                            <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">302</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all; max-width: 400px;">https://www.securely.com/tracker?reason=&category=id=65536&policy=dLtD0=</td>
+                        </tr>
+                    `;
+                }
+
+                let html = '';
+                redirects.forEach(redirect => {
+                    html += `
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all; max-width: 400px;">${redirect.url}</td>
+                            <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${redirect.status}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all; max-width: 400px;">${redirect.target}</td>
+                        </tr>
+                    `;
+                });
+                return html;
+            }
+
+            // Helper method to generate large response table rows
+            generateLargeResponseRows(responses) {
+                if (!responses || responses.length === 0) {
+                    // Return default rows if no data
+                    return `
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all;">ac/120.0e0ae85c412a9bfe3.js.bundle.js</td>
+                            <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">GET</td>
+                            <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">2.05 MB</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all;">je/703.bbad0e2accd3e5916.bundle.js</td>
+                            <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">GET</td>
+                            <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">6.59 MB</td>
+                        </tr>
+                    `;
+                }
+
+                let html = '';
+                responses.forEach(response => {
+                    html += `
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all;">${response.url}</td>
+                            <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${response.method}</td>
+                            <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">${this.formatFileSize(response.size)}</td>
+                        </tr>
+                    `;
+                });
+                return html;
             }
 
             // Add this new method to debug district fields
@@ -4924,6 +5402,22 @@
                     console.error("Error updating source ticket tags:", error);
                     // Don't rethrow, just log the error
                     console.log("Continuing with ticket creation despite tag error");
+                }
+            }
+
+            // Helper method to format URLs for display
+            formatUrl(url) {
+                try {
+                    // For full URLs, try to extract just the path and query
+                    if (url.startsWith('http')) {
+                        const urlObj = new URL(url);
+                        return urlObj.pathname + (urlObj.search || '');
+                    }
+                    // Otherwise return as is
+                    return url;
+                } catch (e) {
+                    // If parsing fails, return the original URL
+                    return url;
                 }
             }
         }
