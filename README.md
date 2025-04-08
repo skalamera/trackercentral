@@ -276,7 +276,7 @@ test('should handle error getting subdomain', async () => {
     "_blank"
   );
 });
-```
+
 
 #### Edge Case and Error Path Testing
 We systematically test edge cases and error paths to ensure application stability:
