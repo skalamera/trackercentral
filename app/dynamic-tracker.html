@@ -66,143 +66,142 @@
         <div class="spinner-text">Creating ticket...</div>
         <div class="progress-status" style="margin-top: 10px; font-size: 12px;"></div>
     </div>
-
+    <!-- Debug Button 
     <div class="tracker-form-container">
-        <!-- Debug Button -->
         <div class="debug-container">
             <button id="debugFillForm" class="debug-button">Fill Form with Demo Data</button>
+        </div>-->
+
+    <!-- Form Title -->
+    <div class="form-title">
+        <h2 id="trackerTitle">Dynamic Tracker</h2>
+    </div>
+
+    <!-- Back Button -->
+    <div class="back-button-container">
+        <fw-button id="backButton" color="secondary" size="small"
+            style="cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;"
+            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';"
+            onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';">
+            <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>Back to Tracker Templates
+        </fw-button>
+    </div>
+
+    <form id="trackerForm">
+        <div class="cards-container" id="dynamicSections">
+            <!-- Dynamic sections will be inserted here -->
         </div>
 
-        <!-- Form Title -->
-        <div class="form-title">
-            <h2 id="trackerTitle">Dynamic Tracker</h2>
+        <!-- Common ticket properties section -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-tasks fa-lg section-icon"></i>
+                <h3>Ticket Properties</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="email" class="required-field">Requester Email</label>
+                    <div class="input-with-icon">
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="hint"><i class="fas fa-info-circle"></i> This ticket will be created by you (the
+                        logged-in agent)</div>
+                    <div id="emailStatus" class="email-status"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="relatedTickets" class="required-field">Related Ticket IDs</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="relatedTickets" name="relatedTickets" required>
+                        </div>
+                        <div class="hint"><i class="fas fa-info-circle"></i> <strong>Required:</strong>
+                            Comma-separated ticket IDs (e.g., 1,2,3). At least one ticket ID is required to create a
+                            tracker.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="priority">Priority</label>
+                        <select id="priority" name="priority">
+                            <option value="1">Low</option>
+                            <option value="2">Medium</option>
+                            <option value="3">High</option>
+                            <option value="4">Urgent</option>
+                        </select>
+                        <div class="hint"><i class="fas fa-info-circle"></i> Select ticket priority</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status">
+                            <option value="2">Open</option>
+                            <option value="3">Pending</option>
+                            <option value="4">Resolved</option>
+                            <option value="5">Closed</option>
+                        </select>
+                        <div class="hint"><i class="fas fa-info-circle"></i> Select ticket status</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="groupField">Group</label>
+                        <select id="groupField" name="groupField">
+                            <option>Loading groups...</option>
+                        </select>
+                        <div class="hint"><i class="fas fa-info-circle"></i> Select a support group</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="agentField">Agent</label>
+                        <select id="agentField" name="agentField"></select>
+                        <div class="hint"><i class="fas fa-info-circle"></i> Select an agent</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="districtField">District</label>
+                        <input type="text" id="districtField" name="districtField" readonly>
+                        <div class="hint"><i class="fas fa-info-circle"></i> Auto-populated from source ticket</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Back Button -->
-        <div class="back-button-container">
-            <fw-button id="backButton" color="secondary" size="small"
-                style="cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;"
-                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';"
-                onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';">
-                <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>Back to Tracker Templates
+        <!-- Attachments card -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-paperclip fa-lg section-icon"></i>
+                <h3>ATTACHMENTS</h3>
+            </div>
+            <div class="card-body">
+                <div class="attachment-input-container">
+                    <label for="screenshots" class="file-upload-button">
+                        <i class="fas fa-cloud-upload-alt"></i> Choose files
+                        <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
+                    </label>
+                    <div class="hint"><i class="fas fa-info-circle"></i> Upload files to include in the ticket (15MB
+                        total)</div>
+                </div>
+                <div id="screenshotPreview" class="screenshot-preview"></div>
+                <div id="attachmentCounter" class="attachment-counter"></div>
+            </div>
+        </div>
+        <div style="display: none;">
+            <textarea id="description" name="description"></textarea>
+            <input type="hidden" id="trackerType" name="trackerType">
+        </div>
+
+        <div class="form-actions">
+            <fw-button id="cancelTracker" color="secondary" size="small">
+                <i class="fas fa-times" style="margin-right: 8px;"></i>Cancel
+            </fw-button>
+
+            <fw-button id="createTracker" color="primary" type="submit" size="small" style="margin-left: 10px;">
+                <i class="fas fa-check" style="margin-right: 8px;"></i>Create Tracker
             </fw-button>
         </div>
-
-        <form id="trackerForm">
-            <div class="cards-container" id="dynamicSections">
-                <!-- Dynamic sections will be inserted here -->
-            </div>
-
-            <!-- Common ticket properties section -->
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-tasks fa-lg section-icon"></i>
-                    <h3>Ticket Properties</h3>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="email" class="required-field">Requester Email</label>
-                        <div class="input-with-icon">
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="hint"><i class="fas fa-info-circle"></i> This ticket will be created by you (the
-                            logged-in agent)</div>
-                        <div id="emailStatus" class="email-status"></div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="relatedTickets" class="required-field">Related Ticket IDs</label>
-                            <div class="input-with-icon">
-                                <input type="text" id="relatedTickets" name="relatedTickets" required>
-                            </div>
-                            <div class="hint"><i class="fas fa-info-circle"></i> <strong>Required:</strong>
-                                Comma-separated ticket IDs (e.g., 1,2,3). At least one ticket ID is required to create a
-                                tracker.</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="priority">Priority</label>
-                            <select id="priority" name="priority">
-                                <option value="1">Low</option>
-                                <option value="2">Medium</option>
-                                <option value="3">High</option>
-                                <option value="4">Urgent</option>
-                            </select>
-                            <div class="hint"><i class="fas fa-info-circle"></i> Select ticket priority</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                            <select id="status" name="status">
-                                <option value="2">Open</option>
-                                <option value="3">Pending</option>
-                                <option value="4">Resolved</option>
-                                <option value="5">Closed</option>
-                            </select>
-                            <div class="hint"><i class="fas fa-info-circle"></i> Select ticket status</div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="groupField">Group</label>
-                            <select id="groupField" name="groupField">
-                                <option>Loading groups...</option>
-                            </select>
-                            <div class="hint"><i class="fas fa-info-circle"></i> Select a support group</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="agentField">Agent</label>
-                            <select id="agentField" name="agentField"></select>
-                            <div class="hint"><i class="fas fa-info-circle"></i> Select an agent</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="districtField">District</label>
-                            <input type="text" id="districtField" name="districtField" readonly>
-                            <div class="hint"><i class="fas fa-info-circle"></i> Auto-populated from source ticket</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Attachments card -->
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-paperclip fa-lg section-icon"></i>
-                    <h3>ATTACHMENTS</h3>
-                </div>
-                <div class="card-body">
-                    <div class="attachment-input-container">
-                        <label for="screenshots" class="file-upload-button">
-                            <i class="fas fa-cloud-upload-alt"></i> Choose files
-                            <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
-                        </label>
-                        <div class="hint"><i class="fas fa-info-circle"></i> Upload files to include in the ticket (15MB
-                            total)</div>
-                    </div>
-                    <div id="screenshotPreview" class="screenshot-preview"></div>
-                    <div id="attachmentCounter" class="attachment-counter"></div>
-                </div>
-            </div>
-            <div style="display: none;">
-                <textarea id="description" name="description"></textarea>
-                <input type="hidden" id="trackerType" name="trackerType">
-            </div>
-
-            <div class="form-actions">
-                <fw-button id="cancelTracker" color="secondary" size="small">
-                    <i class="fas fa-times" style="margin-right: 8px;"></i>Cancel
-                </fw-button>
-
-                <fw-button id="createTracker" color="primary" type="submit" size="small" style="margin-left: 10px;">
-                    <i class="fas fa-check" style="margin-right: 8px;"></i>Create Tracker
-                </fw-button>
-            </div>
-    </div>
-    </div>
+        </div>
+        </div>
     </form>
     </div>
 
@@ -2823,7 +2822,7 @@
                         description: description,
                         status: parseInt(formData.status || 2),
                         priority: parseInt(formData.priority || 2),
-                        tags: [`tracker-${this.trackerType}`, "TESTING"],
+                        tags: [`tracker-${this.trackerType}`],
                         related_ticket_ids: relatedTicketIds,
                         source: 101,
                         custom_fields: {},
