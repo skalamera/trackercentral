@@ -32,18 +32,17 @@
       <!-- Company summary with collapsible ticket lists -->
       <div id="companySummary" class="company-summary-container"></div>
 
-      <!-- Refresh button at the bottom -->
-      <div class="app-footer">
-        <fw-button id="btnGetAssociated" color="primary" class="refresh-button">
+      <!-- App footer with buttons stacked vertically -->
+      <div class="app-footer" style="display: flex; flex-direction: column; width: 100%;">
+        <fw-button id="createTrackerLink" color="primary" class="create-tracker-button"
+          style="width: 100%; margin-bottom: 10px;">
+          <i class="fas fa-crosshairs" style="margin-right: 8px;"></i> Create a Tracker
+        </fw-button>
+
+        <fw-button id="btnGetAssociated" color="primary" class="refresh-button" style="width: 100%;">
           <i class="fas fa-sync-alt" style="margin-right: 8px;"></i> Refresh
         </fw-button>
       </div>
-    </div>
-
-    <div class="create-tracker-container">
-      <fw-button id="createTrackerLink" color="primary" class="create-tracker-button">
-        <i class="fas fa-crosshairs" style="margin-right: 8px;"></i> Create a Tracker
-      </fw-button>
     </div>
   </div>
 

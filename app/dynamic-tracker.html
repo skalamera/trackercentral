@@ -668,7 +668,9 @@
                                     // Initialize Quill with simplified toolbar
                                     const editor = new Quill(`#${editorId}`, {
                                         theme: 'snow',
-                                        placeholder: `Enter ${field.id.replace(/([A-Z])/g, ' $1').toLowerCase()}...`,
+                                        placeholder: field.id === 'stepsToReproduce' ?
+                                            "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR" :
+                                            `Enter ${field.id.replace(/([A-Z])/g, ' $1').toLowerCase()}...`,
                                         modules: {
                                             toolbar: {
                                                 container: [
@@ -747,7 +749,9 @@
                     try {
                         const editor = new Quill(`#${textarea.id}Editor`, {
                             theme: 'snow',
-                            placeholder: textarea.placeholder || `Enter ${textarea.id.replace(/([A-Z])/g, ' $1').toLowerCase()}...`,
+                            placeholder: textarea.id === 'stepsToReproduce' ?
+                                "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR" :
+                                (textarea.placeholder || `Enter ${textarea.id.replace(/([A-Z])/g, ' $1').toLowerCase()}...`),
                             modules: {
                                 toolbar: {
                                     container: [
@@ -3306,7 +3310,6 @@
                                     <i class="fas fa-cloud-upload-alt"></i> Upload Files
                                     <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
                                 </label>
-                                <div class="hint"><i class="fas fa-info-circle"></i> Add screenshots, videos or other supporting files to help illustrate the issue</div>
                                 <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
                                     <strong>⚠️ IMPORTANT:</strong> Maximum total attachment size is 20MB. Files exceeding this limit will NOT be attached to the ticket.
                                 </div>
@@ -3357,7 +3360,6 @@
                             quillContainer.innerHTML = `
                                 <div id="screenshotsDescriptionEditor" style="min-height: 120px;"></div>
                                 <textarea id="screenshotsDescription" name="screenshotsDescription" style="display: none;"></textarea>
-                                <div class="hint"><i class="fas fa-info-circle"></i> Add description for your screenshots and videos</div>
                             `;
                             sectionBody.appendChild(quillContainer);
 
@@ -3373,7 +3375,6 @@
                                     <i class="fas fa-cloud-upload-alt"></i> Upload Files
                                     <input type="file" id="screenshots" name="screenshots" multiple class="hidden-file-input">
                                 </label>
-                                <div class="hint"><i class="fas fa-info-circle"></i> Add screenshots, videos or other supporting files to help illustrate the issue</div>
                                 <div class="file-size-warning" style="margin-top: 10px; background-color: #f4c42f4d; color: #d3932ffc;">
                                     <strong>⚠️ IMPORTANT:</strong> Maximum total attachment size is 20MB. Files exceeding this limit will NOT be attached to the ticket.
                                 </div>
@@ -3405,7 +3406,7 @@
                 try {
                     const editor = new Quill(`#${editorId}`, {
                         theme: 'snow',
-                        placeholder: 'Add description for your files...',
+                        placeholder: 'Add screenshots, videos or other supporting files to help illustrate the issue',
                         modules: {
                             toolbar: {
                                 container: [

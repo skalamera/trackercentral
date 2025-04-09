@@ -38,14 +38,22 @@ const TRACKER_CONFIGS = {
                 ]
             },
             {
+                id: "summary",
+                title: "SUMMARY",
+                icon: "fa-file-alt",
+                fields: [
+                    { id: "summaryContent", type: "richtext", label: "", required: false }
+                ]
+            },
+            {
                 id: "details",
                 title: "DESCRIPTION",
                 icon: "fa-clipboard-list",
                 fields: [
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "realm", type: "text", label: "User BURC Link", required: true },
-                    { id: "effectiveDate", type: "date", label: "Effective Return Date", required: true },
-                    { id: "assemblyCodes", type: "textarea", label: "Assembly Codes To Be Removed", required: true }
+                    { id: "realm", type: "text", label: "Realm (BURC Link)", required: true, hint: "Provide BURC Link to the district realm." },
+                    { id: "effectiveDate", type: "date", label: "Effective Return Date", required: true, hint: "The effective return date is the date the customer service rep. processed the return in NetSuite. This date should be provided in the initial ticket request. If it is not provided you will need to ask the person who submitted the ticket." },
+                    { id: "assemblyCodes", type: "textarea", label: "Assembly Codes To Be Removed", required: true, hint: "Include the list of assembly codes that need to be removed from the district's account. This list of codes will be included in the initial ticket request." }
                 ]
             }
         ],
@@ -55,9 +63,16 @@ const TRACKER_CONFIGS = {
             description += '<div>Please see the BL Xcode removal request below.</div>';
             description += '<div style="margin-bottom: 20px;"></div>';
 
+            // Add summary section if provided
+            if (fields.summaryContent && fields.summaryContent.trim() !== '<p><br></p>') {
+                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+                description += `<div>${fields.summaryContent || ''}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
             description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `User BURC Link: ${fields.realm || ''}<br>`;
+            description += `Realm (BURC Link): ${fields.realm || ''}<br>`;
             description += `Effective Return Date: ${formatDate(fields.effectiveDate) || ''}<br>`;
             description += `Assembly Codes To Be Removed:<br>${fields.assemblyCodes || ''}`;
 
@@ -184,7 +199,7 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pencil-alt",
                 fields: [
-                    { id: "xcode", type: "text", label: "XCODE", required: true, hint: "Indicate if more than one", placeholder: "e.g. X56723" },
+                    { id: "xcode", type: "text", label: "XCODE", required: true, hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>", placeholder: "e.g. X56723" },
                     { id: "application", type: "text", label: "Application Name", required: true, placeholder: "e.g. BAdvance c2022" },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Symbols Of Our Country Missing" },
                     { id: "gradesImpacted", type: "text", label: "Grades Impacted", required: true, placeholder: "e.g. Grade 2" },
@@ -196,7 +211,7 @@ const TRACKER_CONFIGS = {
                 title: "SUMMARY",
                 icon: "fa-file-alt",
                 fields: [
-                    { id: "summary", type: "richtext", label: "", required: false }
+                    { id: "summary", type: "richtext", label: "", required: false, hint: "Short descriptor of the issue being reported. EX: The text \"Symbols Of Our Country\" does not appear within BA 2022 > Grade 2 > Unit 3 > Knowledge Building Topic Library." }
                 ]
             },
             {
@@ -204,27 +219,43 @@ const TRACKER_CONFIGS = {
                 title: "DESCRIPTION",
                 icon: "fa-clipboard-list",
                 fields: [
-                    { id: "issue", type: "richtext", label: "Issue", required: true },
+                    { id: "issue", type: "richtext", label: "Issue", required: true, hint: "Explain the issue the user has reported in detail." },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "schoolName", type: "text", label: "School Name", required: false },
+                    { id: "schoolName", type: "text", label: "School Name", required: false, hint: "Provide the customer account and name of the user that the issue is affecting, as well as the role they have within Benchmark Universe (district admin, school admin, teacher). EX: Echo Lake Elementary School" },
                     { id: "districtState", type: "text", label: "District State", required: false },
-                    { id: "program", type: "text", label: "Program/Product Impacted", required: true },
-                    { id: "programVariation", type: "text", label: "Program Variation (if known)", required: false },
-                    { id: "dateReported", type: "date", label: "Date issue reported by user", required: false },
-                    { id: "subscriptionCodes", type: "richtext", label: "Subscription codes customer is onboarded with", required: false },
+                    { id: "program", type: "text", label: "Program/Product Impacted", required: true, hint: "Provide the name of the product where the issue is prevalent. Include the assembly code (ie: subscription code pulled from TA Subs). Make sure you include the state if it a state specific assembly. EX: Benchmark Advance - c2022 VA:  X101055" },
+                    { id: "programVariation", type: "text", label: "Program Variation (if known)", required: false, hint: "Provide the program variation if known. This includes state variation and / or numerical variation such as 2.75 or 2.5. EX: Benchmark Advance -c2022 or Benchmark Advance 2.75" },
+                    { id: "dateReported", type: "date", label: "Date issue reported by user", required: false, hint: "Provide the date the user reported the issue. EX: 5/18/23" },
+                    { id: "subscriptionCodes", type: "richtext", label: "Subscription codes customer is onboarded with", required: false, hint: "Provide the subscription code of the product the user has the issue in. EX: X71647 <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to find an Xcode</a>" },
                     {
                         id: "impactScope",
                         type: "select",
                         label: "Teacher vs Student impact",
                         required: false,
-                        options: ["", "Teacher Only", "Student Only", "Both Teacher and Student"]
+                        options: ["", "Teacher Only", "Student Only", "Both Teacher and Student"],
+                        hint: "Identify if the teacher or the student is impacted by the issue. EX: Teacher and Student"
                     },
                     {
                         id: "isVIP",
                         type: "select",
                         label: "VIP Customer",
                         required: true,
-                        options: ["No", "Yes"]
+                        options: ["No", "Yes"],
+                        hint: "Identify if the user is a VIP customer. EX: No <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                    }
+                ]
+            },
+            {
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [
+                    {
+                        id: "screenshotsDescription",
+                        type: "richtext",
+                        label: "Screenshots and Supporting Materials",
+                        required: false,
+                        hint: "Paste screenshots or add descriptions of visual evidence here"
                     }
                 ]
             }
@@ -255,6 +286,13 @@ const TRACKER_CONFIGS = {
             }
             if (fields.impactScope) description += `Teacher vs Student impact: ${fields.impactScope}<br>`;
             description += `VIP Customer: ${fields.isVIP || 'No'}<br>`;
+
+            // Add screenshots section if provided
+            if (fields.screenshotsDescription && fields.screenshotsDescription.trim() !== '<p><br></p>') {
+                description += '<div style="margin-bottom: 20px;"></div>';
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+            }
 
             return description;
         },
@@ -866,11 +904,12 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "VIP Status",
                         required: true,
-                        options: ["No", "Yes"]
+                        options: ["No", "Yes"],
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "application", type: "text", label: "Application", required: true },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -897,7 +936,7 @@ const TRACKER_CONFIGS = {
                     },
                     {
                         id: "resourceXcode", type: "text", label: "Resource Xcode", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>"
+                        hint: "Provide the resource xcode. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>"
                     },
                     {
                         id: "resourceTitle", type: "text", label: "Resource Title", required: false,
@@ -911,8 +950,11 @@ const TRACKER_CONFIGS = {
                 icon: "fa-list-ol",
                 fields: [
                     {
-                        id: "stepsToReproduce", type: "richtext", label: "The exact path taken by the user and yourself to get to the reported issue",
-                        required: true, hint: "EX: Teacher dashboard > Assignments > Unit 3 Assessment (Gr. 2)"
+                        id: "stepsToReproduce",
+                        type: "richtext",
+                        label: "The exact path taken by the user and yourself to get to the reported issue",
+                        required: true,
+                        placeholder: "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR"
                     }
                 ]
             },
@@ -921,22 +963,23 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false },
+                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
                     {
                         id: "studentInternalId", type: "text", label: "Student Internal ID", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                        hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
-                    { id: "device", type: "text", label: "Device", required: false },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
                         id: "realm", type: "text", label: "Realm", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                        hint: "Provide the districts realm."
                     },
                     {
                         id: "assignmentId", type: "text", label: "Assignment ID", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>How to Find Assignment ID</a>"
+                        placeholder: "EX: https://bec-micro.benchmarkuniverse.com/?#assignments/6727303",
+                        hint: "Provide the assignment ID where the issue is prevalent. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -996,13 +1039,13 @@ const TRACKER_CONFIGS = {
             if (fields.userRole) description += `Role: ${fields.userRole}<br>`;
             if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
 
-            // Handle Tech Admin link as a hyperlink
-            if (fields.techAdminLink) {
-                let techLink = fields.techAdminLink.trim();
+            // Handle BURC link as a hyperlink
+            if (fields.BURCLink) {
+                let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
 
             if (fields.device) description += `Device: ${fields.device}<br>`;
@@ -1033,87 +1076,7 @@ const TRACKER_CONFIGS = {
         }
     },
 
-    // Help Article
-    "help-article": {
-        title: "Help Article Tracker",
-        icon: "fa-question-circle",
-        description: "For requests regarding new or updated help articles",
-        sections: [
-            {
-                id: "subject",
-                title: "SUBJECT",
-                icon: "fa-pencil-alt",
-                fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true }
-                ]
-            },
-            {
-                id: "summary",
-                title: "SUMMARY",
-                icon: "fa-file-alt",
-                fields: [
-                    {
-                        id: "summaryContent",
-                        type: "richtext",
-                        label: "Include information of what needs to be updated or changed.",
-                        hint: "Ex: The dropdown menu options no longer reflect the listed items in the article.",
-                        required: true
-                    }
-                ]
-            },
-            {
-                id: "articleDetails",
-                title: "DESCRIPTION",
-                icon: "fa-clipboard-list",
-                fields: [
-                    { id: "requestor", type: "text", label: "Requestor", required: true, hint: "Provide the name of the requestor. EX: Jen Boyle" },
-                    { id: "dateRequested", type: "date", label: "Date requested", required: true, hint: "Provide date requested. EX: 4/1/2024" },
-                    { id: "articleTitle", type: "text", label: "Name of BU Help Article", required: true, hint: "Provide the name of the help article. EX: About Grading eAssessments" },
-                    { id: "articleURL", type: "text", label: "URL of BU Help Article", required: true, hint: "Provide the URL of the article. EX: https://help.benchmarkuniverse.com/bubateacher/Content/eAssessments/Grading/About%20Grading%20eAssessments.htm" }
-                ]
-            },
-            {
-                id: "screenshots",
-                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
-                icon: "fa-images",
-                fields: [] // Empty array since we handle this in setupCustomFileUploaders
-            }
-        ],
-        descriptionGenerator: function (fields) {
-            let description = '';
-
-            // Summary section
-            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
-            description += `<div>${fields.summaryContent || ''}</div>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            // Description section
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
-            description += `Requestor: ${fields.requestor || ''}<br>`;
-            description += `Date requested: ${formatDate(fields.dateRequested) || ''}<br>`;
-            description += `Name of BU Help Article: ${fields.articleTitle || ''}<br>`;
-
-            // Handle URL as hyperlink
-            if (fields.articleURL) {
-                let url = fields.articleURL.trim();
-                if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                    url = 'https://' + url;
-                }
-                description += `URL of BU Help Article: <a href="${url}" target="_blank">${fields.articleURL}</a><br>`;
-            }
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            // Screenshots section
-            if (fields.screenshotsDescription) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
-                description += `<div>${fields.screenshotsDescription}</div>`;
-            }
-
-            return description;
-        }
-    },
-
-    // 2. SIM Assessment Reports
+    // SIM Assessment Reports
     "sim-assessment-reports": {
         title: "SIM Assessment Reports Tracker",
         icon: "fa-chart-bar",
@@ -1129,11 +1092,12 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "VIP Status",
                         required: true,
-                        options: ["No", "Yes"]
+                        options: ["No", "Yes"],
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "application", type: "text", label: "Application Name", required: true },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    { id: "application", type: "text", label: "Application Name", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -1159,7 +1123,8 @@ const TRACKER_CONFIGS = {
                         id: "issueDetails",
                         type: "richtext",
                         label: "Specific details outlining user impact",
-                        required: true
+                        required: true,
+                        hint: "EX: Teacher is receiving a server error upon clicking \"Grade View\" for the Unit 3 Assessment (Gr. 2)"
                     }
                 ]
             },
@@ -1172,7 +1137,8 @@ const TRACKER_CONFIGS = {
                         id: "stepsToReproduce",
                         type: "richtext",
                         label: "",
-                        required: true
+                        required: true,
+                        placeholder: "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR"
                     }
                 ]
             },
@@ -1195,33 +1161,35 @@ const TRACKER_CONFIGS = {
                 icon: "fa-user",
                 fields: [
                     { id: "teacherName", type: "text", label: "Teacher/Admin Name", required: false },
-                    { id: "username", type: "text", label: "Username", required: false },
+                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
                     {
                         id: "userRole",
                         type: "text",
                         label: "Role",
-                        required: false
+                        required: false,
+                        hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
                     },
-                    { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
                     {
                         id: "realm", type: "text", label: "Realm", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                        hint: "Provide the districts realm."
                     },
                     { id: "browser", type: "text", label: "Browser", required: false },
                     {
                         id: "assessmentId", type: "text", label: "Assessment Assignment ID", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>How to Find Assignment ID</a>"
+                        placeholder: "EX: https://bec-micro.benchmarkuniverse.com/?#assignments/6727303",
+                        hint: "Provide the assignment ID where the issue is prevalent. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
                     },
                     { id: "assessmentUrl", type: "text", label: "Assessment Assignment URL", required: false },
                     { id: "dateTaken", type: "date", label: "Date test was taken", required: false },
                     { id: "dateGraded", type: "date", label: "Date test was graded", required: false },
                     { id: "className", type: "text", label: "Impacted Class Name", required: false },
-                    { id: "classLink", type: "text", label: "Impacted Class Tech Admin Link", required: false },
+                    { id: "classLink", type: "text", label: "Impacted Class BURC Link", required: false },
                     {
                         id: "studentIds", type: "text", label: "Impacted Student(s) Internal ID(s)", required: false,
                         hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -1284,13 +1252,13 @@ const TRACKER_CONFIGS = {
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.userRole) description += `Role: ${fields.userRole}<br>`;
 
-            // Process Tech Admin link as hyperlink
-            if (fields.techAdminLink) {
-                let techLink = fields.techAdminLink.trim();
+            // Process BURC link as hyperlink
+            if (fields.BURCLink) {
+                let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
 
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
@@ -1310,13 +1278,13 @@ const TRACKER_CONFIGS = {
             if (fields.dateGraded) description += `Date test was graded: ${formatDate(fields.dateGraded)}<br>`;
             if (fields.className) description += `Impacted Class Name: ${fields.className}<br>`;
 
-            // Process Class Tech Admin Link as hyperlink
+            // Process Class BURC Link as hyperlink
             if (fields.classLink) {
                 let classAdminLink = fields.classLink.trim();
                 if (!classAdminLink.startsWith('http://') && !classAdminLink.startsWith('https://')) {
                     classAdminLink = 'https://' + classAdminLink;
                 }
-                description += `Impacted Class Tech Admin Link: <a href="${classAdminLink}" target="_blank">${fields.classLink}</a><br>`;
+                description += `Impacted Class BURC Link: <a href="${classAdminLink}" target="_blank">${fields.classLink}</a><br>`;
             }
 
             if (fields.studentIds) description += `Impacted Student(s) Internal ID(s): ${fields.studentIds}<br><br>`;
@@ -1380,8 +1348,8 @@ const TRACKER_CONFIGS = {
                         hint: "Provide the role they have within Benchmark Universe (user must have a district admin. role)"
                     },
                     {
-                        id: "realm", type: "text", label: "Realm (Tech Admin Link)", required: true,
-                        hint: "Provide TechAdmin Link to the district realm"
+                        id: "realm", type: "text", label: "Realm (BURC Link)", required: true,
+                        hint: "Provide BURC Link to the District realm"
                     },
                     {
                         id: "districtName", type: "text", label: "District Name", required: true,
@@ -1422,7 +1390,7 @@ const TRACKER_CONFIGS = {
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
             description += `Username: ${fields.username || ''}<br>`;
             description += `Role: ${fields.userRole || ''}<br>`;
-            description += `Realm (Tech Admin Link): ${fields.realm || ''}<br>`;
+            description += `Realm (BURC Link): ${fields.realm || ''}<br>`;
             description += `District Name: ${fields.districtName || ''}<br>`;
             description += `District State: ${fields.districtState || ''}<br>`;
             description += `Date Requested By Customer: ${formatDate(fields.dateRequested) || ''}<br>`;
@@ -1456,11 +1424,12 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "VIP Status",
                         required: true,
-                        options: ["No", "Yes"]
+                        options: ["No", "Yes"],
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "application", type: "text", label: "Application", required: true },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -1486,12 +1455,12 @@ const TRACKER_CONFIGS = {
                         type: "richtext",
                         label: "Specific Issue Details",
                         required: true,
-                        hint: "Provide specific details outlining the issue and user impact"
+                        hint: "EX: Teacher is receiving a server error upon clicking \"Grade View\" for the Unit 3 Assessment (Gr. 2)"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "districtTechAdminLink", type: "text", label: "District TechAdmin link", required: true },
+                    { id: "districtBURCLink", type: "text", label: "District BURC link", required: true, hint: "Provide BURC Link to the district" },
                     { id: "schoolName", type: "text", label: "School Name", required: false },
-                    { id: "schoolTechAdminLink", type: "text", label: "School TechAdmin link", required: false }
+                    { id: "schoolBURCLink", type: "text", label: "School BURC link", required: false, hint: "Provide BURC Link to the school" }
                 ]
             },
             {
@@ -1503,7 +1472,8 @@ const TRACKER_CONFIGS = {
                         id: "stepsToReproduce",
                         type: "richtext",
                         label: "The exact path taken by the user and yourself to get to the reported issue",
-                        required: true
+                        required: true,
+                        placeholder: "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR"
                     }
                 ]
             },
@@ -1525,13 +1495,16 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED TEACHER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false },
+                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
                     { id: "name", type: "text", label: "Name", required: false },
-                    { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
                     { id: "administrationUrl", type: "text", label: "Administration URL", required: false },
-                    { id: "device", type: "text", label: "Device", required: false },
-                    { id: "studentInternalId", type: "text", label: "Student Internal ID", required: false },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
+                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
+                    {
+                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: false,
+                        hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
+                    },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -1576,9 +1549,9 @@ const TRACKER_CONFIGS = {
                 description += '<div style="margin-bottom: 10px;"></div>';
             }
             description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `District TechAdmin link: ${fields.districtTechAdminLink || ''}<br>`;
+            description += `District BURC link: ${fields.districtBURCLink || ''}<br>`;
             if (fields.schoolName) description += `School Name: ${fields.schoolName}<br>`;
-            if (fields.schoolTechAdminLink) description += `School TechAdmin link: ${fields.schoolTechAdminLink}<br>`;
+            if (fields.schoolBURCLink) description += `School BURC link: ${fields.schoolBURCLink}<br>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
             // Steps to Reproduce
@@ -1599,12 +1572,12 @@ const TRACKER_CONFIGS = {
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED TEACHER INFO</span></div>';
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.name) description += `Name: ${fields.name}<br>`;
-            if (fields.techAdminLink) {
-                let techLink = fields.techAdminLink.trim();
+            if (fields.BURCLink) {
+                let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
             if (fields.administrationUrl) {
                 let adminUrl = fields.administrationUrl.trim();
@@ -1651,11 +1624,12 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "VIP Status",
                         required: true,
-                        options: ["No", "Yes"]
+                        options: ["No", "Yes"],
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "application", type: "text", label: "Application", required: true },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -1676,15 +1650,18 @@ const TRACKER_CONFIGS = {
                 title: "ISSUE DESCRIPTION",
                 icon: "fa-exclamation-circle",
                 fields: [
-                    { id: "resourceXcode", type: "text", label: "Resource xcode", required: false },
-                    { id: "resourceTitle", type: "text", label: "Resource title", required: false },
+                    {
+                        id: "resourceXcode", type: "text", label: "Resource xcode", required: false,
+                        hint: "Provide the resource xcode. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>"
+                    },
+                    { id: "resourceTitle", type: "text", label: "Resource title", required: false, hint: "Provide the title of the Resource" },
                     { id: "pathFilters", type: "text", label: "Path/Filters", required: false },
                     {
                         id: "issueDetails",
                         type: "richtext",
                         label: "Specific details outlining user impact",
                         required: true,
-                        hint: "EX: Teacher is unable to access content in the library view for Grade 2 Reading Materials"
+                        hint: "EX: Teacher is receiving a server error upon clicking \"Grade View\" for the Unit 3 Assessment (Gr. 2)"
                     }
                 ]
             },
@@ -1697,7 +1674,8 @@ const TRACKER_CONFIGS = {
                         id: "stepsToReproduce",
                         type: "richtext",
                         label: "The exact path taken by the user and yourself to get to the reported issue",
-                        required: true
+                        required: true,
+                        placeholder: "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR"
                     }
                 ]
             },
@@ -1712,23 +1690,27 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false },
-                    { id: "role", type: "text", label: "Role", required: false },
+                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    {
+                        id: "role", type: "text", label: "Role", required: false,
+                        hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
+                    },
                     {
                         id: "studentInternalId", type: "text", label: "Student Internal ID", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                        hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
-                    { id: "device", type: "text", label: "Device", required: false },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
                         id: "realm", type: "text", label: "Realm", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                        hint: "Provide the districts realm."
                     },
                     {
                         id: "assignmentId", type: "text", label: "Assignment ID", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>How to Find Assignment ID</a>"
+                        placeholder: "EX: https://bec-micro.benchmarkuniverse.com/?#assignments/6727303",
+                        hint: "Provide the assignment ID where the issue is prevalent. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -1795,12 +1777,12 @@ const TRACKER_CONFIGS = {
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.role) description += `Role: ${fields.role}<br>`;
             if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
-            if (fields.techAdminLink) {
-                let techLink = fields.techAdminLink.trim();
+            if (fields.BURCLink) {
+                let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
             if (fields.device) description += `Device: ${fields.device}<br>`;
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
@@ -1841,11 +1823,12 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "VIP Status",
                         required: true,
-                        options: ["No", "Yes"]
+                        options: ["No", "Yes"],
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "application", type: "text", label: "Application", required: true },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -1884,7 +1867,8 @@ const TRACKER_CONFIGS = {
                         id: "stepsToReproduce",
                         type: "richtext",
                         label: "The exact path taken by the user and yourself to get to the reported issue",
-                        required: true
+                        required: true,
+                        placeholder: "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR"
                     }
                 ]
             },
@@ -1899,23 +1883,27 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false },
-                    { id: "role", type: "text", label: "Role", required: false },
+                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    {
+                        id: "role", type: "text", label: "Role", required: false,
+                        hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
+                    },
                     {
                         id: "studentInternalId", type: "text", label: "Student Internal ID", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                        hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
-                    { id: "device", type: "text", label: "Device", required: false },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
                         id: "realm", type: "text", label: "Realm", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                        hint: "Provide the districts realm."
                     },
                     {
                         id: "assignmentId", type: "text", label: "Assignment ID", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>How to Find Assignment ID</a>"
+                        placeholder: "EX: https://bec-micro.benchmarkuniverse.com/?#assignments/6727303",
+                        hint: "Provide the assignment ID where the issue is prevalent. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -1978,13 +1966,13 @@ const TRACKER_CONFIGS = {
             if (fields.role) description += `Role: ${fields.role}<br>`;
             if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
 
-            // Handle Tech Admin link as a hyperlink
-            if (fields.techAdminLink) {
-                let techLink = fields.techAdminLink.trim();
+            // Handle BURC link as a hyperlink
+            if (fields.BURCLink) {
+                let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
 
             if (fields.device) description += `Device: ${fields.device}<br>`;
@@ -2132,11 +2120,12 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "VIP Status",
                         required: true,
-                        options: ["No", "Yes"]
+                        options: ["No", "Yes"],
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "application", type: "text", label: "Application", required: true },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -2161,7 +2150,7 @@ const TRACKER_CONFIGS = {
                         id: "issueDescription",
                         type: "richtext",
                         label: "Issue Description: Specific details outlining user impact.",
-                        hint: "EX: The Filters are not displaying for teachers in Plan & Teach",
+                        hint: "EX: Teacher is receiving a server error upon clicking \"Grade View\" for the Unit 3 Assessment (Gr. 2)",
                         required: true
                     }
                 ]
@@ -2171,7 +2160,14 @@ const TRACKER_CONFIGS = {
                 title: "STEPS TO REPRODUCE",
                 icon: "fa-list-ol",
                 fields: [
-                    { id: "stepsToReproduce", type: "richtext", label: "Steps to Reproduce", required: false }
+                    {
+                        id: "stepsToReproduce",
+                        type: "richtext",
+                        label: "Steps to Reproduce",
+                        required: false,
+                        placeholder: "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR",
+                        hint: "The exact path taken by the user and yourself to get to the reported issue"
+                    }
                 ]
             },
             {
@@ -2185,19 +2181,22 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false },
-                    { id: "role", type: "text", label: "Role", required: false },
+                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    {
+                        id: "role", type: "text", label: "Role", required: false,
+                        hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
+                    },
                     {
                         id: "studentInternalID", type: "text", label: "Student Internal ID", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                        hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
-                    { id: "device", type: "text", label: "Device", required: false },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
                         id: "realm", type: "text", label: "Realm", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                        hint: "Provide the districts realm."
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     { id: "subscriptions", type: "text", label: "List of District Subscriptions", required: false },
                     {
                         id: "harFileAttached",
@@ -2264,13 +2263,13 @@ const TRACKER_CONFIGS = {
             if (fields.role) description += `Role: ${fields.role}<br>`;
             if (fields.studentInternalID) description += `Student Internal ID: ${fields.studentInternalID}<br>`;
 
-            // Handle Tech Admin link as a hyperlink
-            if (fields.techAdminLink) {
-                let techLink = fields.techAdminLink.trim();
+            // Handle BURC link as a hyperlink
+            if (fields.BURCLink) {
+                let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
 
             if (fields.device) description += `Device: ${fields.device}<br>`;
@@ -2376,11 +2375,12 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "VIP Status",
                         required: true,
-                        options: ["No", "Yes"]
+                        options: ["No", "Yes"],
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "application", type: "text", label: "Application", required: true },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -2415,7 +2415,14 @@ const TRACKER_CONFIGS = {
                 title: "STEPS TO REPRODUCE",
                 icon: "fa-list-ol",
                 fields: [
-                    { id: "stepsToReproduce", type: "richtext", label: "Steps to Reproduce", required: false }
+                    {
+                        id: "stepsToReproduce",
+                        type: "richtext",
+                        label: "Steps to Reproduce",
+                        required: false,
+                        placeholder: "EX: Teacher dashboard > Assignments > Unit 3 Assessment (Gr. 2)",
+                        hint: "The exact path taken by the user and yourself to get to the reported issue"
+                    }
                 ]
             },
             {
@@ -2429,25 +2436,29 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false },
-                    { id: "role", type: "text", label: "Role", required: false },
-                    { id: "techAdminLink", type: "text", label: "Tech Admin link", required: false },
+                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    {
+                        id: "role", type: "text", label: "Role", required: false,
+                        hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
+                    },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
                     { id: "className", type: "text", label: "Class Name", required: false },
-                    { id: "classTechAdminLink", type: "text", label: "Class Tech Admin Link", required: false },
+                    { id: "classBURCLink", type: "text", label: "Class BURC Link", required: false, hint: "Provide BURC Link to the class" },
                     {
                         id: "studentInternalID", type: "text", label: "Student Internal ID", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                        hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "device", type: "text", label: "Device", required: false },
+                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
                         id: "realm", type: "text", label: "Realm", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                        hint: "Provide the districts realm."
                     },
                     {
                         id: "assignmentID", type: "text", label: "Assignment ID", required: false,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>How to Find Assignment ID</a>"
+                        placeholder: "EX: https://bec-micro.benchmarkuniverse.com/?#assignments/6727303",
+                        hint: "Provide the assignment ID where the issue is prevalent. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -2512,24 +2523,24 @@ const TRACKER_CONFIGS = {
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.role) description += `Role: ${fields.role}<br>`;
 
-            // Handle Tech Admin link as a hyperlink
-            if (fields.techAdminLink) {
-                let techLink = fields.techAdminLink.trim();
+            // Handle BURC link as a hyperlink
+            if (fields.BURCLink) {
+                let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `Tech Admin link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
 
             if (fields.className) description += `Class Name: ${fields.className}<br>`;
 
-            // Handle Class Tech Admin link as a hyperlink
-            if (fields.classTechAdminLink) {
-                let classTechLink = fields.classTechAdminLink.trim();
+            // Handle Class BURC link as a hyperlink
+            if (fields.classBURCLink) {
+                let classTechLink = fields.classBURCLink.trim();
                 if (!classTechLink.startsWith('http://') && !classTechLink.startsWith('https://')) {
                     classTechLink = 'https://' + classTechLink;
                 }
-                description += `Class Tech Admin Link: <a href="${classTechLink}" target="_blank">${fields.classTechAdminLink}</a><br>`;
+                description += `Class BURC Link: <a href="${classTechLink}" target="_blank">${fields.classBURCLink}</a><br>`;
             }
 
             if (fields.studentInternalID) description += `Student Internal ID: ${fields.studentInternalID}<br>`;
@@ -2787,11 +2798,12 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "VIP Status",
                         required: true,
-                        options: ["No", "Yes"]
+                        options: ["No", "Yes"],
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "application", type: "text", label: "Application", required: true },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true },
+                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -2816,7 +2828,7 @@ const TRACKER_CONFIGS = {
                         id: "issueDescription",
                         type: "richtext",
                         label: "Issue Description: Specific details outlining user impact:",
-                        hint: "EX: Teacher cannot access student data in their dashboard.",
+                        hint: "EX: Teacher is receiving a server error upon clicking \"Grade View\" for the Unit 3 Assessment (Gr. 2)",
                         required: true
                     }
                 ]
@@ -2826,7 +2838,14 @@ const TRACKER_CONFIGS = {
                 title: "STEPS TO REPRODUCE",
                 icon: "fa-list-ol",
                 fields: [
-                    { id: "stepsToReproduce", type: "richtext", label: "Steps to Reproduce", required: false }
+                    {
+                        id: "stepsToReproduce",
+                        type: "richtext",
+                        label: "Steps to Reproduce",
+                        required: false,
+                        placeholder: "EX: Teacher dashboard > Assignments > Unit 3 Assessment (Gr. 2)",
+                        hint: "The exact path taken by the user and yourself to get to the reported issue"
+                    }
                 ]
             },
             {
@@ -2845,21 +2864,22 @@ const TRACKER_CONFIGS = {
                         type: "text",
                         label: "Username",
                         required: false,
-                        hint: "Provide the users username at the district. EX: mitzisheppard"
+                        placeholder: "EX: mitzisheppard",
+                        hint: "Provide the users username at the district."
                     },
                     {
                         id: "role",
                         type: "text",
                         label: "Role",
                         required: false,
-                        hint: "Provide the users role at the district."
+                        hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
                     },
                     {
-                        id: "techAdminLink",
+                        id: "BURCLink",
                         type: "text",
-                        label: "Teacher / Admin Tech Admin Link",
+                        label: "Teacher / Admin BURC Link",
                         required: false,
-                        hint: "Provide TechAdmin Link to the affected teacher/administrator. EX: https://techadmin.benchmarkuniverse.com/district/544931/teachers/?query=jkropp@benchmarkeducation.com&sortBy=firstName-asc&limit=25. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to find TechAdmin link</a>"
+                        hint: "Provide BURC Link to the affected teacher/administrator"
                     },
                     {
                         id: "studentInternalId",
@@ -2873,14 +2893,15 @@ const TRACKER_CONFIGS = {
                         type: "text",
                         label: "Device",
                         required: false,
-                        hint: "Provide the device the users are on. EX: Chromebook"
+                        placeholder: "EX: Chromebook",
+                        hint: "Provide the device the users are on."
                     },
                     {
                         id: "realm",
                         type: "text",
                         label: "Realm",
                         required: false,
-                        hint: "Provide the districts realm. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>How to Find District Realm</a>"
+                        hint: "Provide the districts realm."
                     },
                     {
                         id: "dateReported",
@@ -2952,13 +2973,13 @@ const TRACKER_CONFIGS = {
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.role) description += `Role: ${fields.role}<br>`;
 
-            // Handle Tech Admin link as a hyperlink
-            if (fields.techAdminLink) {
-                let techLink = fields.techAdminLink.trim();
+            // Handle BURC link as a hyperlink
+            if (fields.BURCLink) {
+                let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `Teacher / Admin Tech Admin Link: <a href="${techLink}" target="_blank">${fields.techAdminLink}</a><br>`;
+                description += `Teacher / Admin BURC Link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
 
             if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
