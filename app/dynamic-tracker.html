@@ -2659,7 +2659,8 @@
 
                 // Upload any attachments as a separate note
                 const hasScreenshots = this.aggregatedScreenshotFiles && this.aggregatedScreenshotFiles.length > 0;
-                const hasHarFile = this.trackerType === 'sim-assignment' && this.harFile;
+                // Check for HAR file in all SIM templates
+                const hasHarFile = this.trackerType.startsWith('sim-') && this.harFile;
 
                 if (hasScreenshots || hasHarFile) {
                     processingTasks.push(this.addAttachmentsAsNote(ticketData.id));
@@ -3031,12 +3032,8 @@
             // Add this method to your TrackerApp class to upload attachments after ticket creation
             async uploadAttachmentsToTicket(ticketId) {
                 const hasScreenshots = this.aggregatedScreenshotFiles && this.aggregatedScreenshotFiles.length > 0;
-                let hasHarFile = false;
-
-                if (this.trackerType === 'sim-assignment' && this.harFile) {
-                    // Only for SIM Assignment, process the HAR file
-                    hasHarFile = true;
-                }
+                // Check for HAR file in all SIM templates
+                const hasHarFile = this.trackerType.startsWith('sim-') && this.harFile;
 
                 if (!hasScreenshots && !hasHarFile) {
                     return;
@@ -3437,15 +3434,7 @@
                 console.log('Setting up HAR file uploader for template type:', this.trackerType);
 
                 // Apply to all SIM templates that need HAR file uploader
-                if (this.trackerType !== 'sim-assignment' &&
-                    this.trackerType !== 'sim-assessment-reports' &&
-                    this.trackerType !== 'sim-library-view' &&
-                    this.trackerType !== 'sim-fsa' &&
-                    this.trackerType !== 'sim-orr' &&
-                    this.trackerType !== 'sim-plan-teach' &&
-                    this.trackerType !== 'sim-reading-log' &&
-                    this.trackerType !== 'sim-dashboard' &&
-                    this.trackerType !== 'help-article') {
+                if (!(this.trackerType.startsWith('sim-') || this.trackerType === 'help-article')) {
                     console.log('Template type not eligible for HAR file uploader');
                     return;
                 }
@@ -4160,17 +4149,7 @@
             // Replace the addAttachmentsAsNote method with this version that separates HAR files
             async addAttachmentsAsNote(ticketId) {
                 const hasScreenshots = this.aggregatedScreenshotFiles && this.aggregatedScreenshotFiles.length > 0;
-                const hasHarFile = (this.trackerType === 'sim-assignment' ||
-                    this.trackerType === 'sim-assessment-reports' ||
-                    this.trackerType === 'sim-fsa' ||
-                    this.trackerType === 'sim-library-view' ||
-                    this.trackerType === 'sim-orr' ||
-                    this.trackerType === 'sim-plan-teach' ||
-                    this.trackerType === 'sim-reading-log' ||
-                    this.trackerType === 'sim-dashboard' ||
-                    this.trackerType === 'help-article' ||
-                    this.trackerType === 'blank') &&
-                    this.harFile;
+                const hasHarFile = this.trackerType.startsWith('sim-') && this.harFile;
 
                 if (!hasScreenshots && !hasHarFile) {
                     return Promise.resolve(); // Nothing to do
