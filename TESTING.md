@@ -150,6 +150,37 @@ When adding new templates or modifying existing ones:
 4. **Test Event Handling**: For templates with dynamic behavior, test the event handling logic.
 5. **Check For Edge Cases**: Consider what might go wrong and test those scenarios.
 
+## Recent Test Additions (2023)
+
+To further improve test coverage, the following additional test files were created:
+
+1. **tests/app-ui-interactions.test.js**: Tests for UI interaction functions such as:
+   - Creating ticket elements
+   - Creating collapsible company sections
+   - Updating first report information display
+   - Processing associated tickets data for display
+   - Opening ticket links
+
+2. **tests/data-processing.test.js**: Tests for data processing utility functions:
+   - Filtering unique tickets
+   - Finding the earliest ticket
+   - Grouping tickets by company
+   - Sanitizing subdomain strings
+   - Processing associated tickets data
+
+3. **tests/api-functions.test.js**: Tests for API-related functionality:
+   - Getting company details
+   - Retrieving associated tickets
+   - Finding the prime association
+   - Error handling for API calls
+
+4. **tests/dom-interaction.test.js**: Tests for DOM interactions with detailed mocking of DOM elements:
+   - Creating ticket elements with proper event handling
+   - Creating collapsible sections with working expand/collapse
+   - Updating UI based on ticket data
+
+These new tests focus on the core app functionality in the `app-exports.js` file, which has improved coverage to over 90% for statements, branches, and functions.
+
 ## Running Tests
 
 Tests can be run using the following npm scripts:

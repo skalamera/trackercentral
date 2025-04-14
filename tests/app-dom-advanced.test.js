@@ -64,6 +64,12 @@ class MockElement {
         }
     }
 
+    prepend(child) {
+        this.children.unshift(child);
+        child.parentElement = this;
+        return this;
+    }
+
     addEventListener(event, callback) {
         if (!this.eventListeners[event]) {
             this.eventListeners[event] = [];

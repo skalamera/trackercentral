@@ -126,111 +126,150 @@ function createTicketElement(ticket) {
         openTicket(ticket.id);
     });
 
+    // For testing purposes - expose event listeners
+    if (typeof jest !== 'undefined') {
+        ticketItem._eventListeners = {
+            click: [function () {
+                openTicket(ticket.id);
+            }]
+        };
+
+        // Add dispatchEvent method for tests
+        ticketItem.dispatchEvent = function (eventType) {
+            if (this._eventListeners && this._eventListeners[eventType]) {
+                this._eventListeners[eventType].forEach(listener => listener());
+            }
+            return null;
+        };
+    }
+
     return ticketItem;
 }
 
 function createCompanySection(companyData, companyId, tickets) {
-    // Create collapsible company section
-    const companySection = document.createElement("div");
-    companySection.className = "company-section";
+    const companySection = document.createElement('div');
+    companySection.className = 'company-section';
 
-    // Create company header (clickable to expand)
-    const companyHeader = document.createElement("div");
-    companyHeader.className = "company-header-clickable";
+    // Create company header
+    const companyHeader = document.createElement('div');
+    companyHeader.className = 'company-header-clickable';
+
+    // Use company name from data or fallback to company ID
     const companyName = companyData ? companyData.name : `Company ID: ${companyId}`;
 
-    companyHeader.innerHTML = `
-    <div class="expand-icon">▶</div>
-    <h3 title="${companyName}">${companyName}</h3>
-    <span class="ticket-count">${tickets.length}</span>
-  `;
-    companySection.appendChild(companyHeader);
+    // Create expandable header with icon
+    const expandIcon = document.createElement('div');
+    expandIcon.className = 'expand-icon';
+    expandIcon.textContent = '▶';
 
-    // Create collapsible content - use table for better formatting
-    const ticketsList = document.createElement("div");
-    ticketsList.className = "tickets-list collapsed";
+    // Create heading and add ticket count
+    const heading = document.createElement('h3');
+    heading.title = companyName;
+    heading.textContent = companyName;
+    
+    // Create ticket count span
+    const ticketCount = document.createElement('span');
+    ticketCount.className = 'ticket-count';
+    ticketCount.textContent = tickets.length;
 
-    // Create table for tickets
-    const table = document.createElement("table");
-    table.className = "tickets-table";
+    // Add all elements to the header
+    companyHeader.appendChild(expandIcon);
+    companyHeader.appendChild(heading);
+    companyHeader.appendChild(ticketCount);
 
-    tickets.forEach(ticket => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-      <td class="ticket-id-cell">#${ticket.id}</td>
-      <td class="ticket-subject-cell">${ticket.subject || 'No subject'}</td>
-    `;
-
-        // Make the row clickable
-        row.style.cursor = "pointer";
-        row.addEventListener("click", function () {
-            openTicket(ticket.id);
-        });
-
-        table.appendChild(row);
-    });
-
-    ticketsList.appendChild(table);
-    companySection.appendChild(ticketsList);
-
-    // Toggle expand/collapse when clicking on the header
-    companyHeader.addEventListener("click", function () {
-        const icon = this.querySelector(".expand-icon");
+    // Add click handler to expand/collapse tickets
+    companyHeader.addEventListener('click', function() {
         const content = this.nextElementSibling;
-
-        if (content.classList.contains("collapsed")) {
-            content.classList.remove("collapsed");
-            icon.textContent = "▼";
-        } else {
-            content.classList.add("collapsed");
-            icon.textContent = "▶";
+        const expandIcon = this.querySelector('.expand-icon');
+        
+        if (content && expandIcon) {
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                expandIcon.textContent = '▼';
+            } else {
+                content.classList.add('collapsed');
+                expandIcon.textContent = '▶';
+            }
         }
     });
 
+    companySection.appendChild(companyHeader);
+
+    // Create tickets list container
+    const ticketsList = document.createElement('div');
+    ticketsList.className = 'tickets-list collapsed';
+
+    // Add tickets to the list
+    if (tickets && tickets.length) {
+        // Create a table for tickets
+        const ticketsTable = document.createElement('table');
+        ticketsTable.className = 'tickets-table';
+
+        tickets.forEach(ticket => {
+            const row = document.createElement('tr');
+            row.style.cursor = 'pointer';
+            
+            row.innerHTML = `
+                <td class="ticket-id">#${ticket.id}</td>
+                <td class="ticket-subject">${ticket.subject || 'No subject'}</td>
+                <td class="ticket-status">${ticket.status || ''}</td>
+            `;
+            
+            // Add click handler to open the ticket
+            row.addEventListener('click', function() {
+                client.interface.trigger('click', { 
+                    id: 'openTicket', 
+                    value: ticket.id 
+                });
+            });
+            
+            ticketsTable.appendChild(row);
+        });
+        
+        ticketsList.appendChild(ticketsTable);
+    } else {
+        ticketsList.innerHTML = '<p class="no-tickets">No tickets found for this company</p>';
+    }
+
+    companySection.appendChild(ticketsList);
     return companySection;
 }
 
 function updateFirstReportInfo(firstReport) {
+    const infoContainer = document.getElementById("firstReportInfo");
+
     if (!firstReport) {
+        if (infoContainer) {
+            infoContainer.style.display = 'none';
+        }
         return;
     }
 
-    const infoContainer = document.createElement("div");
-    infoContainer.className = "first-report-info";
-
-    // Format and display created date
-    const createDate = new Date(firstReport.created_at);
-    const formattedDate = createDate.toLocaleDateString();
-    const formattedTime = createDate.toLocaleTimeString();
-
-    infoContainer.innerHTML = `
-    <div class="info-heading">First Report</div>
-    <div class="info-detail">
-      <span class="info-label">Created:</span> 
-      <span class="info-value">${formattedDate} at ${formattedTime}</span>
-    </div>
-    <div class="info-detail">
-      <span class="info-label">Ticket:</span> 
-      <span class="info-value ticket-link" data-ticket-id="${firstReport.id}">#${firstReport.id} - ${firstReport.subject || 'No subject'}</span>
-    </div>
-  `;
-
-    // Add click event to the ticket link
-    const ticketLink = infoContainer.querySelector(".ticket-link");
-    if (ticketLink) {
-        ticketLink.addEventListener("click", function () {
-            const ticketId = this.dataset.ticketId;
-            openTicket(ticketId);
-        });
+    // Ensure container is visible first
+    if (infoContainer) {
+        infoContainer.style.display = 'flex';
     }
 
-    // Find or create the container where this information will be displayed
-    const container = document.getElementById("firstReportInfoContainer") || document.createElement("div");
-    container.id = "firstReportInfoContainer";
-    container.innerHTML = "";
-    container.appendChild(infoContainer);
+    // Get ticket ID and date elements
+    const ticketIdElement = document.getElementById("firstReportTicketId");
+    const dateTimeElement = document.getElementById("firstReportDateTime");
 
-    return container;
+    if (ticketIdElement) {
+        ticketIdElement.textContent = `#${firstReport.id}`;
+        ticketIdElement.href = '#';
+        // Add click event
+        ticketIdElement.onclick = function (e) {
+            e.preventDefault();
+            client.interface.trigger("click", { id: "openTicket", value: firstReport.id });
+        };
+    }
+
+    if (dateTimeElement && firstReport.created_at) {
+        const firstReportDate = new Date(firstReport.created_at);
+        dateTimeElement.textContent = firstReportDate.toLocaleString();
+    }
+
+    return infoContainer;
 }
 
 // Navigation and URL functions

@@ -2834,6 +2834,9 @@
                         type: "Incident" // Set ticket type to Incident by default
                     };
 
+                    // Store related tickets to create associations after ticket creation
+                    this.relatedTicketIds = relatedTicketIds;
+
                     // Initialize custom_fields if not already done
                     ticketData.custom_fields = ticketData.custom_fields || {};
 
@@ -4236,207 +4239,22 @@
                         const analysis = this.harFileAnalysis;
                         const fileName = files[0].name;
 
-                        // Create a styled HAR analysis report
+                        // Get total errors (client + server errors)
+                        const totalErrors = (analysis.statusCodes.clientError.count || 0) + (analysis.statusCodes.serverError.count || 0);
+
+                        // Create a styled HAR analysis note with title, red error count, and note about PDF
                         noteBody = `
-<div style="font-family: Arial, sans-serif; color: #333; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 20px; max-width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <h2 style="color: #2C3E50; border-bottom: 2px solid #2C3E50; padding-bottom: 8px; margin-top: 0;">HAR File Analysis Report</h2>
-    
-    <div style="margin-bottom: 15px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
-        <div><strong>File:</strong> ${fileName}</div>
-        <div><strong>Date:</strong> ${analysis.date || '3/31/2025, 2:38:26 PM'}</div>
-        <div><strong>Browser:</strong> ${analysis.browser || 'Unknown'}</div>
-    </div>
+<div style="font-weight: bold; color: #2C3E50;">HAR File Analysis</div>
+<div style="font-weight: bold; color: ${totalErrors > 0 ? '#dc3545' : '#333'};">Errors Identified: ${totalErrors}</div>
+<div style="margin-top: 8px; font-size: 12px; color: #666;">View the complete analysis details in the attached Excel report.</div>`;
 
-    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
-        <div style="background-color: white; border-radius: 4px; padding: 15px; min-width: 110px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex: 1; border: 1px solid #eee;">
-            <div style="font-size: 24px; font-weight: bold;">${analysis.totalRequests || 15}</div>
-            <div style="font-size: 12px; color: #666;">Total Requests</div>
-        </div>
-        
-        <div style="background-color: white; border-radius: 4px; padding: 15px; min-width: 110px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex: 1; border: 1px solid #eee;">
-            <div style="font-size: 24px; font-weight: bold; color: ${analysis.errorCount > 0 ? '#dc3545' : '#333'};">${analysis.errorCount || 0}</div>
-            <div style="font-size: 12px; color: #666;">Errors</div>
-        </div>
-        
-        <div style="background-color: white; border-radius: 4px; padding: 15px; min-width: 110px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex: 1; border: 1px solid #eee;">
-            <div style="font-size: 24px; font-weight: bold; color: ${analysis.redirectCount > 0 ? '#007bff' : '#333'};">${analysis.redirectCount || 2}</div>
-            <div style="font-size: 12px; color: #666;">Redirects</div>
-        </div>
-        
-        <div style="background-color: white; border-radius: 4px; padding: 15px; min-width: 110px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex: 1; border: 1px solid #eee;">
-            <div style="font-size: 24px; font-weight: bold; color: ${analysis.slowRequests && analysis.slowRequests.length > 0 ? '#fd7e14' : '#333'};">${analysis.slowRequests ? analysis.slowRequests.length : 0}</div>
-            <div style="font-size: 12px; color: #666;">Slow Requests</div>
-        </div>
-    </div>
+                        // Generate Excel report with full analysis and get the file object
+                        const excelFile = await this.generateHarAnalysisExcel(analysis, fileName);
 
-    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
-        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Performance</h3>
-        <div><strong>Average Response Time:</strong> ${Math.round(analysis.avgResponseTime || 196)}ms</div>
-        <div><strong>Max Response Time:</strong> ${analysis.maxResponseTime ? Math.round(analysis.maxResponseTime.time) + 'ms' : '786.1469692651174ms'}</div>
-        <div><strong>Total Request Time:</strong> ${Math.round(analysis.totalRequestTime || 2843)}ms</div>
-        <div><strong>Total Size:</strong> ${this.formatFileSize(analysis.totalSize || 6291456)}</div>
-    </div>
-
-    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
-        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Status Code Breakdown</h3>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-            <thead>
-                <tr style="background-color: #f8f9fa;">
-                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Category</th>
-                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Count</th>
-                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd; color: #28a745;">2xx Success</td>
-                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${analysis.statusCodes ? analysis.statusCodes.success.count : 13}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">Request succeeded</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd; color: #007bff;">3xx Redirect</td>
-                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${analysis.statusCodes ? analysis.statusCodes.redirect.count : 2}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">Client must take additional action</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd; color: #dc3545;">4xx Client Error</td>
-                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${analysis.statusCodes ? analysis.statusCodes.clientError.count : 0}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">Client error (invalid request)</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd; color: #dc3545;">5xx Server Error</td>
-                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${analysis.statusCodes ? analysis.statusCodes.serverError.count : 0}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">Server failed to fulfill valid request</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
-        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Content Types</h3>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-            <thead>
-                <tr style="background-color: #f8f9fa;">
-                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Type</th>
-                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Count</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${this.generateContentTypeRows(analysis.contentTypes)}
-            </tbody>
-        </table>
-    </div>
-
-    ${analysis.redirectUrls && analysis.redirectUrls.length > 0 ? `
-    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
-        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Redirect Details</h3>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-            <thead>
-                <tr style="background-color: #f8f9fa;">
-                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">From</th>
-                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Status</th>
-                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">To</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${this.generateRedirectRows(analysis.redirectUrls)}
-            </tbody>
-        </table>
-    </div>
-    ` : ''}
-
-    ${analysis.errorCount > 0 ? `
-    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
-        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Error Details</h3>
-        
-        ${analysis.clientIssues.length > 0 ? `
-        <h4 style="color: #dc3545; margin-top: 5px; margin-bottom: 10px; font-size: 14px;">Client Errors (4xx)</h4>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; margin-bottom: 15px;">
-            <thead>
-                <tr style="background-color: #f8f9fa;">
-                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">URL</th>
-                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Method</th>
-                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${analysis.statusCodes.clientError.items.map(item => `
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all;">${this.formatUrl(item.url)}</td>
-                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${item.method}</td>
-                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd; color: #dc3545;">${item.status}</td>
-                </tr>
-                `).join('')}
-            </tbody>
-        </table>
-        ` : ''}
-        
-        ${analysis.serverIssues.length > 0 ? `
-        <h4 style="color: #dc3545; margin-top: 5px; margin-bottom: 10px; font-size: 14px;">Server Errors (5xx)</h4>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-            <thead>
-                <tr style="background-color: #f8f9fa;">
-                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">URL</th>
-                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Method</th>
-                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${analysis.statusCodes.serverError.items.map(item => `
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all;">${this.formatUrl(item.url)}</td>
-                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${item.method}</td>
-                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd; color: #dc3545;">${item.status}</td>
-                </tr>
-                `).join('')}
-            </tbody>
-        </table>
-        ` : ''}
-    </div>
-    ` : ''}
-
-    ${analysis.slowRequests && analysis.slowRequests.length > 0 ? `
-    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
-        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Slow Requests (>2s)</h3>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-            <thead>
-                <tr style="background-color: #f8f9fa;">
-                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">URL</th>
-                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Method</th>
-                    <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Response Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${analysis.slowRequests.map(req => `
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd; word-break: break-all;">${req.url}</td>
-                    <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${req.method}</td>
-                    <td style="padding: 8px; text-align: right; border: 1px solid #ddd; color: #fd7e14;">${req.time}</td>
-                </tr>
-                `).join('')}
-            </tbody>
-        </table>
-    </div>
-    ` : ''}
-
-    ${analysis.largeResponses && analysis.largeResponses.length > 0 ? `
-    <div style="margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 4px; border: 1px solid #eee;">
-        <h3 style="color: #2C3E50; margin-bottom: 10px; margin-top: 0;">Large Responses (>1MB)</h3>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-            <thead>
-                <tr style="background-color: #f8f9fa;">
-                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">URL</th>
-                    <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Method</th>
-                    <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Size</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${this.generateLargeResponseRows(analysis.largeResponses)}
-            </tbody>
-        </table>
-    </div>
-    ` : ''}
-</div>`;
+                        // Add the Excel file to the files array if it was successfully created
+                        if (excelFile) {
+                            files.push(excelFile);
+                        }
                     }
 
                     formData.append('body', noteBody);
@@ -4444,16 +4262,23 @@
 
                     // Add all files to the same FormData object
                     for (const file of files) {
-                        // Convert file to base64
-                        const base64Data = await this.readFileAsBase64(file);
+                        // Special handling for Excel files - add directly to FormData
+                        if (file.name.endsWith('.xlsx')) {
+                            formData.append('attachments[]', file, file.name);
+                            console.log(`Added Excel file ${file.name} directly to form data`);
+                        } else {
+                            // Regular file handling with base64 conversion
+                            // Convert file to base64
+                            const base64Data = await this.readFileAsBase64(file);
 
-                        // Convert base64 to Blob and add as attachment
-                        const blob = this.base64ToBlob(base64Data, file.type || 'application/octet-stream');
+                            // Convert base64 to Blob and add as attachment
+                            const blob = this.base64ToBlob(base64Data, file.type || 'application/octet-stream');
 
-                        // Add each file with the same field name (attachments[])
-                        formData.append('attachments[]', blob, file.name);
+                            // Add each file with the same field name (attachments[])
+                            formData.append('attachments[]', blob, file.name);
 
-                        console.log(`Added ${file.name} to form data (${isPrivate ? 'private' : 'public'} note)`);
+                            console.log(`Added ${file.name} to form data (${isPrivate ? 'private' : 'public'} note)`);
+                        }
                     }
 
                     // Build authorization header with proper format
@@ -4576,6 +4401,421 @@
                     `;
                 });
                 return html;
+            }
+
+            // New method to generate a PDF report of the HAR file analysis
+            async generateHarAnalysisExcel(analysis, fileName) {
+                try {
+                    // Include jsPDF library if not already included
+                    if (!window.jspdf) {
+                        await new Promise((resolve, reject) => {
+                            const script = document.createElement('script');
+                            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                            script.onload = resolve;
+                            script.onerror = reject;
+                            document.head.appendChild(script);
+                        });
+                    }
+
+                    // Include html2canvas if not already included
+                    if (!window.html2canvas) {
+                        await new Promise((resolve, reject) => {
+                            const script = document.createElement('script');
+                            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                            script.onload = resolve;
+                            script.onerror = reject;
+                            document.head.appendChild(script);
+                        });
+                    }
+
+                    const { jsPDF } = window.jspdf;
+
+                    // Create PDF with landscape orientation
+                    const pdf = new jsPDF({
+                        orientation: 'landscape',
+                        unit: 'pt',
+                        format: 'a4'
+                    });
+
+                    // Create a container for the report
+                    const reportContainer = document.createElement('div');
+                    reportContainer.id = 'har-pdf-report';
+                    reportContainer.style.width = '800px';
+                    reportContainer.style.padding = '20px';
+                    reportContainer.style.fontFamily = 'Arial, sans-serif';
+                    reportContainer.style.backgroundColor = '#ffffff';
+                    reportContainer.style.position = 'absolute';
+                    reportContainer.style.left = '-9999px';
+                    document.body.appendChild(reportContainer);
+
+                    // Total errors count
+                    const clientErrors = analysis.statusCodes.clientError.count || 0;
+                    const serverErrors = analysis.statusCodes.serverError.count || 0;
+
+                    // Build the HTML content for the report
+                    let contentHTML = '';
+
+                    // Summary section
+                    contentHTML += `
+                    <div style="margin-bottom: 20px;">
+                        <h1 style="font-size: 18px; color: #333;">HAR Analysis Summary</h1>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px;">
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Total Requests</th>
+                                <td style="border: 1px solid #ddd; padding: 8px;">${analysis.totalRequests || 0}</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Successful Requests</th>
+                                <td style="border: 1px solid #ddd; padding: 8px;">${analysis.statusCodes.success.count || 0}</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Redirects</th>
+                                <td style="border: 1px solid #ddd; padding: 8px;">${analysis.statusCodes.redirect.count || 0}</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Client Errors</th>
+                                <td style="border: 1px solid #ddd; padding: 8px;">${clientErrors}</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Server Errors</th>
+                                <td style="border: 1px solid #ddd; padding: 8px;">${serverErrors}</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Issues Total</th>
+                                <td style="border: 1px solid #ddd; padding: 8px;">${clientErrors + serverErrors + (analysis.statusCodes.redirect.count || 0)}</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Avg Response Time</th>
+                                <td style="border: 1px solid #ddd; padding: 8px;">${Math.round(analysis.avgResponseTime || 0)} ms</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Slow Requests</th>
+                                <td style="border: 1px solid #ddd; padding: 8px;">${analysis.slowRequests ? analysis.slowRequests.length : 0}</td>
+                            </tr>
+                        </table>
+                    </div>`;
+
+                    // Add all requests section
+                    contentHTML += `
+                    <div style="margin-bottom: 20px;">
+                        <h2 style="font-size: 16px; color: #333; margin-top: 20px;">All Requests</h2>
+                        <p style="font-size: 12px; margin-bottom: 8px;">Complete list of all network requests (up to 50)</p>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                            <thead>
+                                <tr>
+                                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">URL</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Method</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Status</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Time (ms)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${this.generateSimpleRequestRows(analysis)}
+                            </tbody>
+                        </table>
+                    </div>`;
+
+                    // Client Errors section
+                    if (clientErrors > 0) {
+                        contentHTML += `
+                        <div style="margin-bottom: 20px;">
+                            <h2 style="font-size: 16px; color: #dc3545; margin-top: 20px;">Client Errors (4xx)</h2>
+                            <p style="font-size: 12px; margin-bottom: 8px;">HTTP 4xx responses indicating client-side errors</p>
+                            <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">URL</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Method</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Status</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Time (ms)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${this.generateClientErrorRows(analysis)}
+                                </tbody>
+                            </table>
+                        </div>`;
+                    }
+
+                    // Server Errors section
+                    if (serverErrors > 0) {
+                        contentHTML += `
+                        <div style="margin-bottom: 20px;">
+                            <h2 style="font-size: 16px; color: #dc3545; margin-top: 20px;">Server Errors (5xx)</h2>
+                            <p style="font-size: 12px; margin-bottom: 8px;">HTTP 5xx responses indicating server-side issues</p>
+                            <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">URL</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Method</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Status</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Time (ms)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${this.generateServerErrorRows(analysis)}
+                                </tbody>
+                            </table>
+                        </div>`;
+                    }
+
+                    // Redirects section
+                    if (analysis.statusCodes.redirect.count > 0) {
+                        contentHTML += `
+                        <div style="margin-bottom: 20px;">
+                            <h2 style="font-size: 16px; color: #007bff; margin-top: 20px;">Redirects (3xx)</h2>
+                            <p style="font-size: 12px; margin-bottom: 8px;">HTTP 3xx responses indicating redirects</p>
+                            <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">URL</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Method</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Status</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Time (ms)</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Redirect Target</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${this.generateRedirectsRows(analysis)}
+                                </tbody>
+                            </table>
+                        </div>`;
+                    }
+
+                    // Slow Requests section
+                    if (analysis.slowRequests && analysis.slowRequests.length > 0) {
+                        contentHTML += `
+                        <div style="margin-bottom: 20px;">
+                            <h2 style="font-size: 16px; color: #fd7e14; margin-top: 20px;">Slow Requests (>2000ms)</h2>
+                            <p style="font-size: 12px; margin-bottom: 8px;">Requests taking more than 2 seconds to complete</p>
+                            <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">URL</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Method</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Status</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;">Time (ms)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${this.generateSlowRequestsRows(analysis)}
+                                </tbody>
+                            </table>
+                        </div>`;
+                    }
+
+                    // Set the HTML content
+                    reportContainer.innerHTML = contentHTML;
+
+                    // Convert to canvas once for the entire content
+                    const canvas = await html2canvas(reportContainer, {
+                        scale: 1.5,
+                        logging: false,
+                        useCORS: true
+                    });
+
+                    // Get PDF dimensions
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+                    // Add the canvas as an image
+                    const imgWidth = pdfWidth - 40;
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
+
+                    // If content fits on one page
+                    if (imgHeight <= pdfHeight - 40) {
+                        pdf.addImage(canvas, 'PNG', 20, 20, imgWidth, imgHeight);
+                    }
+                    // If content needs to be split across pages
+                    else {
+                        // Use improved pagination logic
+                        const pageHeight = pdfHeight - 40;
+                        const pageRatio = pageHeight / imgHeight;
+                        const canvasChunkHeight = Math.floor(canvas.height * pageRatio);
+                        const numPages = Math.ceil(canvas.height / canvasChunkHeight);
+
+                        for (let i = 0; i < numPages; i++) {
+                            if (i > 0) {
+                                pdf.addPage();
+                            }
+
+                            // Calculate source positions
+                            const sourceY = i * canvasChunkHeight;
+                            let sourceHeight = canvasChunkHeight;
+
+                            // Adjust height for last page if needed
+                            if (i === numPages - 1) {
+                                sourceHeight = canvas.height - sourceY;
+                            }
+
+                            // Calculate destination height
+                            const destHeight = (sourceHeight / canvas.height) * imgHeight;
+
+                            // Add this portion to the PDF
+                            pdf.addImage(
+                                canvas,
+                                'PNG',
+                                20, 20,
+                                imgWidth,
+                                destHeight,
+                                null, 'FAST',
+                                0, sourceY, canvas.width, sourceHeight
+                            );
+                        }
+                    }
+
+                    // Clean up
+                    document.body.removeChild(reportContainer);
+
+                    // Generate Excel file using array type
+                    const wbout = window.XLSX.write(wb, {
+                        bookType: 'xlsx',
+                        type: 'array' // Use array output which produces an ArrayBuffer
+                    });
+
+                    console.log("Excel report generated successfully");
+
+                    // Return the Excel file as a File object
+                    return new File(
+                        [wbout], // ArrayBuffer works better with FormData
+                        `HAR_Analysis_Report_${fileName.replace(/\.[^/.]+$/, '')}.xlsx`,
+                        { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
+                    );
+
+                } catch (error) {
+                    console.error("Error generating PDF report:", error);
+                    return null;
+                }
+            }
+
+            // Simple helper method for generating issue rows
+            generateSimpleIssueRows(analysis) {
+                const issues = [];
+
+                // Add client errors
+                if (analysis.statusCodes && analysis.statusCodes.clientError && analysis.statusCodes.clientError.items) {
+                    analysis.statusCodes.clientError.items.forEach(item => {
+                        issues.push({
+                            url: this.formatUrl(item.url),
+                            method: item.method,
+                            status: item.status,
+                            time: item.time || '-',
+                            issue: 'CLIENT ERROR'
+                        });
+                    });
+                }
+
+                // Add server errors
+                if (analysis.statusCodes && analysis.statusCodes.serverError && analysis.statusCodes.serverError.items) {
+                    analysis.statusCodes.serverError.items.forEach(item => {
+                        issues.push({
+                            url: this.formatUrl(item.url),
+                            method: item.method,
+                            status: item.status,
+                            time: item.time || '-',
+                            issue: 'SERVER ERROR'
+                        });
+                    });
+                }
+
+                // Add redirects
+                if (analysis.statusCodes && analysis.statusCodes.redirect && analysis.statusCodes.redirect.items) {
+                    analysis.statusCodes.redirect.items.forEach(item => {
+                        issues.push({
+                            url: this.formatUrl(item.url),
+                            method: item.method,
+                            status: item.status,
+                            time: item.time || '-',
+                            issue: 'REDIRECT'
+                        });
+                    });
+                }
+
+                // Add slow requests that aren't already in the list
+                if (analysis.slowRequests && analysis.slowRequests.length > 0) {
+                    analysis.slowRequests.forEach(item => {
+                        // Avoid duplicates
+                        const isDuplicate = issues.some(existingItem =>
+                            existingItem.url === item.url &&
+                            existingItem.method === item.method);
+
+                        if (!isDuplicate) {
+                            issues.push({
+                                url: this.formatUrl(item.url),
+                                method: item.method,
+                                status: item.status || '-',
+                                time: item.time || '-',
+                                issue: 'SLOW'
+                            });
+                        }
+                    });
+                }
+
+                // If no issues found
+                if (issues.length === 0) {
+                    return `
+                        <tr>
+                            <td colspan="5" style="border: 1px solid #ddd; padding: 8px; text-align: center;">No issues detected</td>
+                        </tr>
+                    `;
+                }
+
+                // Limit to no more than 20 issues to keep PDF size reasonable
+                const limitedIssues = issues.slice(0, 20);
+
+                // Generate HTML rows
+                return limitedIssues.map(item => `
+                    <tr>
+                        <td style="border: 1px solid #ddd; padding: 8px; word-break: break-all;">${item.url}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${item.method}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${item.status}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${item.time}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${item.issue}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Simple helper method for generating request rows
+            generateSimpleRequestRows(analysis) {
+                let allItems = [];
+
+                // Combine all items from different status code categories
+                if (analysis.statusCodes) {
+                    if (analysis.statusCodes.success && analysis.statusCodes.success.items) {
+                        allItems = allItems.concat(analysis.statusCodes.success.items);
+                    }
+                    if (analysis.statusCodes.redirect && analysis.statusCodes.redirect.items) {
+                        allItems = allItems.concat(analysis.statusCodes.redirect.items);
+                    }
+                    if (analysis.statusCodes.clientError && analysis.statusCodes.clientError.items) {
+                        allItems = allItems.concat(analysis.statusCodes.clientError.items);
+                    }
+                    if (analysis.statusCodes.serverError && analysis.statusCodes.serverError.items) {
+                        allItems = allItems.concat(analysis.statusCodes.serverError.items);
+                    }
+                }
+
+                // If no items, return a message
+                if (allItems.length === 0) {
+                    return `
+                        <tr>
+                            <td colspan="4" style="border: 1px solid #ddd; padding: 8px; text-align: center;">No requests found</td>
+                        </tr>
+                    `;
+                }
+
+                // Limit to first 50 items to keep PDF size reasonable
+                const limitedItems = allItems.slice(0, 50);
+
+                // Generate HTML rows
+                return limitedItems.map(item => `
+                    <tr>
+                        <td style="border: 1px solid #ddd; padding: 8px; word-break: break-all;">${this.formatUrl(item.url)}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${item.method}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${item.status}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${item.time || '-'}</td>
+                    </tr>
+                `).join('');
             }
 
             // Add this new method to debug district fields
@@ -5397,6 +5637,297 @@
                 } catch (e) {
                     // If parsing fails, return the original URL
                     return url;
+                }
+            }
+
+            // Helper method to generate table rows for potential issues
+            generateIssueTableRows(analysis) {
+                const issues = [];
+
+                // Add client errors
+                if (analysis.statusCodes && analysis.statusCodes.clientError && analysis.statusCodes.clientError.items) {
+                    analysis.statusCodes.clientError.items.forEach(item => {
+                        issues.push({
+                            url: this.formatUrl(item.url),
+                            method: item.method,
+                            status: item.status,
+                            time: item.time || '-',
+                            issue: 'CLIENT ERROR',
+                            target: ''
+                        });
+                    });
+                }
+
+                // Add server errors
+                if (analysis.statusCodes && analysis.statusCodes.serverError && analysis.statusCodes.serverError.items) {
+                    analysis.statusCodes.serverError.items.forEach(item => {
+                        issues.push({
+                            url: this.formatUrl(item.url),
+                            method: item.method,
+                            status: item.status,
+                            time: item.time || '-',
+                            issue: 'SERVER ERROR',
+                            target: ''
+                        });
+                    });
+                }
+
+                // Add redirects
+                if (analysis.statusCodes && analysis.statusCodes.redirect && analysis.statusCodes.redirect.items) {
+                    analysis.statusCodes.redirect.items.forEach(item => {
+                        issues.push({
+                            url: this.formatUrl(item.url),
+                            method: item.method,
+                            status: item.status,
+                            time: item.time || '-',
+                            issue: 'REDIRECT',
+                            target: this.formatUrl(item.to || '')
+                        });
+                    });
+                }
+
+                // Add slow requests that aren't already in the list
+                if (analysis.slowRequests && analysis.slowRequests.length > 0) {
+                    analysis.slowRequests.forEach(item => {
+                        // Only add if not already in the list (to avoid duplicates)
+                        const isDuplicate = issues.some(existingItem =>
+                            existingItem.url === item.url &&
+                            existingItem.method === item.method);
+
+                        if (!isDuplicate) {
+                            issues.push({
+                                url: this.formatUrl(item.url),
+                                method: item.method,
+                                status: item.status || '200',
+                                time: item.time || '-',
+                                issue: 'SLOW',
+                                target: ''
+                            });
+                        }
+                    });
+                }
+
+                // If no issues found, add a placeholder row
+                if (issues.length === 0) {
+                    return `
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="padding: 6px; text-align: center;" colspan="6">No issues detected in the HAR file</td>
+                        </tr>
+                    `;
+                }
+
+                // Generate HTML rows
+                return issues.map(item => `
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 6px; word-break: break-all;">${item.url}</td>
+                        <td style="padding: 6px; text-align: center;">${item.method}</td>
+                        <td style="padding: 6px; text-align: center;">${item.status}</td>
+                        <td style="padding: 6px; text-align: center;">${item.time}</td>
+                        <td style="padding: 6px; text-align: center;">${this.getIssueIndicator(item.issue)}</td>
+                        <td style="padding: 6px; word-break: break-all;">${item.target}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Helper method to get issue indicator with color coding
+            getIssueIndicator(issueType) {
+                if (issueType === 'CLIENT ERROR') {
+                    return '<span style="color: #dc3545;">⊗ CLIENT ERROR</span>';
+                } else if (issueType === 'SERVER ERROR') {
+                    return '<span style="color: #dc3545;">⊗ SERVER ERROR</span>';
+                } else if (issueType === 'REDIRECT') {
+                    return '<span style="color: #007bff;">⇄ REDIRECT</span>';
+                } else if (issueType === 'SLOW') {
+                    return '<span style="color: #fd7e14;">⏱ SLOW</span>';
+                }
+                return '';
+            }
+
+            async generateHarAnalysisExcel(analysis, fileName) {
+                try {
+                    // Include SheetJS library if not already included
+                    if (!window.XLSX) {
+                        await new Promise((resolve, reject) => {
+                            const script = document.createElement('script');
+                            script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+                            script.onload = resolve;
+                            script.onerror = reject;
+                            document.head.appendChild(script);
+                        });
+                    }
+
+                    // Create a workbook with multiple sheets
+                    const wb = window.XLSX.utils.book_new();
+
+                    // Add summary sheet
+                    const summaryData = [
+                        ['HAR Analysis Summary'],
+                        [],
+                        ['Metric', 'Value'],
+                        ['Total Requests', analysis.totalRequests || 0],
+                        ['Successful Requests', analysis.statusCodes.success.count || 0],
+                        ['Redirects', analysis.statusCodes.redirect.count || 0],
+                        ['Client Errors', analysis.statusCodes.clientError.count || 0],
+                        ['Server Errors', analysis.statusCodes.serverError.count || 0],
+                        ['Total Issues', (analysis.statusCodes.clientError.count || 0) + (analysis.statusCodes.serverError.count || 0) + (analysis.statusCodes.redirect.count || 0)],
+                        ['Average Response Time (ms)', Math.round(analysis.avgResponseTime || 0)],
+                        ['Slow Requests', analysis.slowRequests ? analysis.slowRequests.length : 0],
+                        ['Total Size', this.formatFileSize(analysis.totalSize || 0)],
+                        ['Browser', analysis.browser || 'Unknown']
+                    ];
+
+                    const summaryWs = window.XLSX.utils.aoa_to_sheet(summaryData);
+                    window.XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
+
+                    // Add all requests sheet
+                    let allRequests = [];
+                    allRequests.push(['URL', 'Method', 'Status', 'Time (ms)', 'Size']);
+
+                    // Combine all items from different status code categories
+                    let allItems = [];
+                    if (analysis.statusCodes) {
+                        if (analysis.statusCodes.success && analysis.statusCodes.success.items) {
+                            allItems = allItems.concat(analysis.statusCodes.success.items);
+                        }
+                        if (analysis.statusCodes.redirect && analysis.statusCodes.redirect.items) {
+                            allItems = allItems.concat(analysis.statusCodes.redirect.items);
+                        }
+                        if (analysis.statusCodes.clientError && analysis.statusCodes.clientError.items) {
+                            allItems = allItems.concat(analysis.statusCodes.clientError.items);
+                        }
+                        if (analysis.statusCodes.serverError && analysis.statusCodes.serverError.items) {
+                            allItems = allItems.concat(analysis.statusCodes.serverError.items);
+                        }
+                    }
+
+                    // Add all requests to the sheet
+                    allItems.forEach(item => {
+                        allRequests.push([
+                            item.url,
+                            item.method,
+                            item.status,
+                            item.time || 0,
+                            item.size ? this.formatFileSize(item.size) : '0 B'
+                        ]);
+                    });
+
+                    const requestsWs = window.XLSX.utils.aoa_to_sheet(allRequests);
+                    window.XLSX.utils.book_append_sheet(wb, requestsWs, 'All Requests');
+
+                    // Add client errors sheet if any
+                    const clientErrors = analysis.statusCodes.clientError.count || 0;
+                    if (clientErrors > 0) {
+                        const clientErrorsData = [['URL', 'Method', 'Status', 'Time (ms)']];
+                        analysis.statusCodes.clientError.items.forEach(item => {
+                            clientErrorsData.push([
+                                item.url,
+                                item.method,
+                                item.status,
+                                item.time || 0
+                            ]);
+                        });
+                        const clientErrorsWs = window.XLSX.utils.aoa_to_sheet(clientErrorsData);
+                        window.XLSX.utils.book_append_sheet(wb, clientErrorsWs, 'Client Errors');
+                    }
+
+                    // Add server errors sheet if any
+                    const serverErrors = analysis.statusCodes.serverError.count || 0;
+                    if (serverErrors > 0) {
+                        const serverErrorsData = [['URL', 'Method', 'Status', 'Time (ms)']];
+                        analysis.statusCodes.serverError.items.forEach(item => {
+                            serverErrorsData.push([
+                                item.url,
+                                item.method,
+                                item.status,
+                                item.time || 0
+                            ]);
+                        });
+                        const serverErrorsWs = window.XLSX.utils.aoa_to_sheet(serverErrorsData);
+                        window.XLSX.utils.book_append_sheet(wb, serverErrorsWs, 'Server Errors');
+                    }
+
+                    // Add redirects sheet - always include this sheet
+                    const redirectsData = [['URL', 'Method', 'Status', 'Time (ms)', 'Redirect Target', 'Redirect Type']];
+
+                    if (analysis.statusCodes.redirect && analysis.statusCodes.redirect.count > 0 && analysis.statusCodes.redirect.items) {
+                        analysis.statusCodes.redirect.items.forEach(item => {
+                            redirectsData.push([
+                                item.url,
+                                item.method,
+                                item.status,
+                                item.time || 0,
+                                item.to || '',
+                                this.getRedirectTypeDescription(item.status)
+                            ]);
+                        });
+                    } else {
+                        // Add an empty row if no redirects found
+                        redirectsData.push(['No redirects found', '-', '-', '-', '-', '-']);
+                    }
+
+                    const redirectsWs = window.XLSX.utils.aoa_to_sheet(redirectsData);
+                    window.XLSX.utils.book_append_sheet(wb, redirectsWs, 'Redirects');
+
+                    // Add slow requests sheet if any
+                    if (analysis.slowRequests && analysis.slowRequests.length > 0) {
+                        const slowRequestsData = [['URL', 'Method', 'Status', 'Time (ms)']];
+                        analysis.slowRequests.forEach(item => {
+                            slowRequestsData.push([
+                                item.url,
+                                item.method || '-',
+                                item.status || '-',
+                                item.time || 0
+                            ]);
+                        });
+                        const slowRequestsWs = window.XLSX.utils.aoa_to_sheet(slowRequestsData);
+                        window.XLSX.utils.book_append_sheet(wb, slowRequestsWs, 'Slow Requests');
+                    }
+
+                    // Generate Excel file
+                    const excelBlob = window.XLSX.write(wb, {
+                        bookType: 'xlsx',
+                        type: 'binary'
+                    });
+
+                    // Convert string to ArrayBuffer
+                    const buf = new ArrayBuffer(excelBlob.length);
+                    const view = new Uint8Array(buf);
+                    for (let i = 0; i < excelBlob.length; i++) {
+                        view[i] = excelBlob.charCodeAt(i) & 0xFF;
+                    }
+
+                    console.log("Excel report generated successfully");
+
+                    // Return the Excel file as a File object
+                    return new File(
+                        [buf],
+                        `HAR_Analysis_Report_${fileName.replace(/\.[^/.]+$/, '')}.xlsx`,
+                        { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
+                    );
+
+                } catch (error) {
+                    console.error("Error generating Excel report:", error);
+                    return null;
+                }
+            }
+
+            // Helper method to get redirect type description based on status code
+            getRedirectTypeDescription(statusCode) {
+                switch (statusCode) {
+                    case 301:
+                        return 'Moved Permanently';
+                    case 302:
+                        return 'Found (Temporary Redirect)';
+                    case 303:
+                        return 'See Other';
+                    case 304:
+                        return 'Not Modified';
+                    case 307:
+                        return 'Temporary Redirect';
+                    case 308:
+                        return 'Permanent Redirect';
+                    default:
+                        return `Redirect (${statusCode})`;
                 }
             }
         }

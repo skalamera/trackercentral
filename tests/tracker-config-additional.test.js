@@ -109,12 +109,12 @@ describe('Additional tracker-config tests', () => {
             // Mock form data
             const formData = {
                 subject: 'New Help Article',
-                summary: { mainSummary: 'This is a summary' },
-                articleDetails: {
-                    articleTitle: 'Test Article',
-                    articleURL: 'https://test.com',
-                    contentRequest: 'New content needed'
-                }
+                summaryContent: 'This is a summary',
+                requestor: 'John Doe',
+                dateRequested: '2023-01-01',
+                articleTitle: 'Test Article',
+                articleURL: 'https://test.com',
+                articleDetails: 'New content needed'
             };
 
             const description = template.descriptionGenerator(formData);

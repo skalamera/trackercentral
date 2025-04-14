@@ -72,7 +72,7 @@ const TRACKER_CONFIGS = {
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
             description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `Realm (BURC Link): ${fields.realm || ''}<br>`;
+            description += `User BURC Link: ${fields.realm || ''}<br>`;
             description += `Effective Return Date: ${formatDate(fields.effectiveDate) || ''}<br>`;
             description += `Assembly Codes To Be Removed:<br>${fields.assemblyCodes || ''}`;
 
@@ -1018,59 +1018,34 @@ const TRACKER_CONFIGS = {
             let description = '';
 
             // Issue Description
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
+            description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">ISSUE DESCRIPTION</span></div>';
             if (fields.issueDetails) {
                 description += `<div>${fields.issueDetails}</div>`;
             }
             if (fields.resourceXcode) description += `Resource Xcode: ${fields.resourceXcode}<br>`;
             if (fields.resourceTitle) description += `Resource Title: ${fields.resourceTitle}<br>`;
-            description += '<div style="margin-bottom: 20px;"></div>';
+            description += '<div style=\"margin-bottom: 20px;\"></div>';
 
             // Steps to Reproduce
             if (fields.stepsToReproduce) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
+                description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">STEPS TO REPRODUCE</span></div>';
                 description += `<div>${fields.stepsToReproduce}</div>`;
-                description += '<div style="margin-bottom: 20px;"></div>';
+                description += '<div style=\"margin-bottom: 20px;\"></div>';
             }
 
-            // Impacted User Info
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
-            if (fields.username) description += `Username: ${fields.username}<br>`;
-            if (fields.userRole) description += `Role: ${fields.userRole}<br>`;
-            if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
-
-            // Handle BURC link as a hyperlink
-            if (fields.BURCLink) {
-                let techLink = fields.BURCLink.trim();
-                if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
-                    techLink = 'https://' + techLink;
-                }
-                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
-            }
-
+            // Technical
+            description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">TECHNICAL</span></div>';
             if (fields.device) description += `Device: ${fields.device}<br>`;
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
-            if (fields.assignmentId) description += `Assignment ID: ${fields.assignmentId}<br>`;
-            if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported) || ''}<br>`;
-            if (fields.harFileAttached) {
-                description += `HAR file attached: ${fields.harFileAttached}`;
-                if (fields.harFileAttached === "No" && fields.harFileReason) {
-                    description += ` (${fields.harFileReason})`;
+            if (fields.techAdminLink) {
+                let adminLink = fields.techAdminLink.trim();
+                if (!adminLink.startsWith('http://') && !adminLink.startsWith('https://')) {
+                    adminLink = 'https://' + adminLink;
                 }
-                description += '<br>';
+                description += `Tech Admin: <a href="${adminLink}" target=\"_blank\">${fields.techAdminLink}</a><br>`;
             }
-            description += '<div style="margin-bottom: 20px;"></div>';
-
-            // Screenshots and Videos
-            if (fields.screenshotsDescription) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
-                description += `<div>${fields.screenshotsDescription}</div>`;
-                description += '<div style="margin-bottom: 20px;"></div>';
-            }
-
-            // Expected Results
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
-            description += `<div>${fields.expectedResults}</div>`;
+            if (fields.assignmentId) description += `Assignment ID: ${fields.assignmentId}<br>`;
+            if (fields.pageNum) description += `Page Number: ${fields.pageNum}<br>`;
 
             return description;
         }
@@ -1224,30 +1199,30 @@ const TRACKER_CONFIGS = {
             let description = '';
 
             // Issue Description
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
+            description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">ISSUE DESCRIPTION</span></div>';
             description += `Name of impacted report: ${fields.reportName || ''}<br>`;
             if (fields.issueDetails) {
                 description += `<div>Specific details outlining user impact:</div>`;
                 description += `<div>${fields.issueDetails}</div>`;
             }
-            description += '<div style="margin-bottom: 20px;"></div>';
+            description += '<div style=\"margin-bottom: 20px;\"></div>';
 
             // Steps to Reproduce
             if (fields.stepsToReproduce) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS / FILTERS TO REPRODUCE</span></div>';
+                description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">STEPS / FILTERS TO REPRODUCE</span></div>';
                 description += `<div>${fields.stepsToReproduce}</div>`;
-                description += '<div style="margin-bottom: 20px;"></div>';
+                description += '<div style=\"margin-bottom: 20px;\"></div>';
             }
 
             // Screenshots and Videos
             if (fields.screenshotsDescription) {
-                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS and/or VIDEOS</span></div>';
+                description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">SCREENSHOTS and/or VIDEOS</span></div>';
                 description += `<div>${fields.screenshotsDescription}</div>`;
-                description += '<div style="margin-bottom: 20px;"></div>';
+                description += '<div style=\"margin-bottom: 20px;\"></div>';
             }
 
             // Impacted User Info
-            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
+            description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">IMPACTED USER INFO</span></div>';
             if (fields.teacherName) description += `Teacher/Admin Name: ${fields.teacherName}<br>`;
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.userRole) description += `Role: ${fields.userRole}<br>`;
@@ -1258,7 +1233,7 @@ const TRACKER_CONFIGS = {
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
+                description += `BURC link: <a href="${techLink}" target=\"_blank\">${fields.BURCLink}</a><br>`;
             }
 
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
@@ -1271,7 +1246,7 @@ const TRACKER_CONFIGS = {
                 if (!assessmentLink.startsWith('http://') && !assessmentLink.startsWith('https://')) {
                     assessmentLink = 'https://' + assessmentLink;
                 }
-                description += `Assessment Assignment URL: <a href="${assessmentLink}" target="_blank">${fields.assessmentUrl}</a><br>`;
+                description += `Assessment Assignment URL: <a href="${assessmentLink}" target=\"_blank\">${fields.assessmentUrl}</a><br>`;
             }
 
             if (fields.dateTaken) description += `Date test was taken: ${formatDate(fields.dateTaken)}<br>`;
@@ -1973,6 +1948,15 @@ const TRACKER_CONFIGS = {
                     techLink = 'https://' + techLink;
                 }
                 description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
+            }
+
+            // Handle Tech Admin Link as a hyperlink
+            if (fields.techAdminLink) {
+                let adminLink = fields.techAdminLink.trim();
+                if (!adminLink.startsWith('http://') && !adminLink.startsWith('https://')) {
+                    adminLink = 'https://' + adminLink;
+                }
+                description += `Tech Admin: <a href="${adminLink}" target="_blank">${fields.techAdminLink}</a><br>`;
             }
 
             if (fields.device) description += `Device: ${fields.device}<br>`;
@@ -3152,6 +3136,74 @@ const TRACKER_CONFIGS = {
                 description += `<div>${fields.screenshotsDescription}</div>`;
                 description += '<div style="margin-bottom: 20px;"></div>';
             }
+
+            return description;
+        }
+    },
+
+    // Help Article Tracker
+    "help-article": {
+        title: "Help Article Tracker",
+        icon: "fa-question-circle",
+        description: "For requests regarding BU Help Articles",
+        sections: [
+            {
+                id: "subject",
+                title: "SUBJECT",
+                icon: "fa-pencil-alt",
+                fields: [
+                    { id: "subject", type: "text", label: "Subject", required: true, hint: "Brief description of the request" }
+                ]
+            },
+            {
+                id: "summary",
+                title: "SUMMARY",
+                icon: "fa-file-alt",
+                fields: [
+                    { id: "summaryContent", type: "richtext", label: "", required: false, hint: "Provide a brief summary of the request" }
+                ]
+            },
+            {
+                id: "description",
+                title: "DESCRIPTION",
+                icon: "fa-clipboard-list",
+                fields: [
+                    { id: "requestor", type: "text", label: "Requestor", required: true, hint: "Name of the person requesting the article update" },
+                    { id: "dateRequested", type: "date", label: "Date Requested", required: true, hint: "When was this request made" },
+                    { id: "articleTitle", type: "text", label: "Name of BU Help Article", required: true, hint: "Title of the article to be updated" },
+                    { id: "articleURL", type: "text", label: "URL of BU Help Article", required: true, hint: "URL of the article to be updated" },
+                    { id: "articleDetails", type: "richtext", label: "Article Details", required: true, hint: "Details about what needs to be updated in the article" }
+                ]
+            }
+        ],
+        descriptionGenerator: function (fields) {
+            let description = '';
+
+            // Summary section
+            if (fields.summaryContent && fields.summaryContent.trim() !== '<p><br></p>') {
+                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+                description += `<div>${fields.summaryContent || ''}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Description section
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
+            description += `Requestor: ${fields.requestor || ''}<br>`;
+            description += `Date requested: ${formatDate(fields.dateRequested) || ''}<br>`;
+            if (fields.articleTitle) {
+                description += `Name of BU Help Article: ${fields.articleTitle}<br>`;
+            }
+            if (fields.articleURL) {
+                let articleLink = fields.articleURL.trim();
+                if (!articleLink.startsWith('http://') && !articleLink.startsWith('https://')) {
+                    articleLink = 'https://' + articleLink;
+                }
+                description += `URL of BU Help Article: <a href="${articleLink}" target="_blank">${fields.articleURL}</a><br>`;
+            }
+            description += '<div style="margin-top: 10px;"></div>';
+            description += `<div>The article needs to be updated with new screenshots.</div>`;
+            description += '<div style="margin-top: 10px;"></div>';
+            description += `<div>${fields.articleDetails || ''}</div>`;
 
             return description;
         }
