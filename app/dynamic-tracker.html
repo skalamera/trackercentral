@@ -2016,23 +2016,46 @@
             async loadSpecificAgents() {
                 console.log('Loading specific agents');
 
-                // List of specific agent IDs to display
-                const specificAgentIds = [67025683491, 67030529218, 67031011668, 67040597168, 67051499418];
+                // List of specific agent IDs to display - include all four agents
+                // We have confirmed IDs for Mohammad and Suriya
+                const specificAgentIds = [67025683491, 67031011668, 67040597168, 67051499418];
 
                 try {
-                    // Show loading state
+                    // Set agents directly instead of trying to load from API
                     const agentField = document.getElementById('agentField');
+                    if (!agentField) {
+                        console.error('Agent field not found');
+                        return;
+                    }
+
+                    // Directly set the options to include all four agents
+                    agentField.innerHTML = `
+                        <option value="">-- Select Agent --</option>
+                        <option value="67025683491">Mohammad Azeem</option>
+                        <option value="67031011668">Suriya Iqbal</option>
+                        <option value="67040597168">Anson Li</option>
+                        <option value="67051499418">Drita Luigjiraj</option>
+                    `;
+                    console.log('Directly set agent options to Mohammad, Suriya, Anson, and Drita');
+
+                    // Skip API call since we're setting the options directly
+                    return;
+
+                    // The code below is kept for reference but will be skipped due to the return above
                     agentField.innerHTML = '<option value="">Loading agents...</option>';
 
                     // Fetch all agents from API
                     const response = await this.client.request.invokeTemplate("getAllAgents", {});
                     const allAgents = JSON.parse(response.response);
+                    console.log('All agents from API:', allAgents);
 
                     if (Array.isArray(allAgents) && allAgents.length > 0) {
                         // Filter to only include specific agents
                         const specificAgents = allAgents.filter(agent =>
                             specificAgentIds.includes(agent.id)
                         );
+
+                        console.log('Filtered specificAgents:', specificAgents);
 
                         // Build options
                         let options = '<option value="">-- Select Agent --</option>';
@@ -2050,6 +2073,7 @@
                                 agentName = agent.email.split('@')[0]; // Use part of email as name
                             }
 
+                            console.log(`Adding agent option: ${agentName} (${agentId})`);
                             options += `<option value="${agentId}">${agentName}</option>`;
                         });
 
@@ -2062,14 +2086,13 @@
                 } catch (error) {
                     console.error('Error loading specific agents:', error);
 
-                    // Fallback hardcoded agents
+                    // Fallback hardcoded agents - include all four
                     document.getElementById('agentField').innerHTML = `
                         <option value="">-- Select Agent --</option>
-                        <option value="67025683491">Escalation Agent 1</option>
-                        <option value="67030529218">Escalation Agent 2</option>
-                        <option value="67031011668">Escalation Agent 3</option>
-                        <option value="67040597168">Escalation Agent 4</option>
-                        <option value="67051499418">Escalation Agent 5</option>
+                        <option value="67025683491">Mohammad Azeem</option>
+                        <option value="67031011668">Suriya Iqbal</option>
+                        <option value="67040597168">Anson Li</option>
+                        <option value="67051499418">Drita Luigjiraj</option>
                     `;
                 }
             }
@@ -2083,14 +2106,50 @@
                     loadingOverlay.style.display = 'flex';
                 }
 
+                // Add error handler for 413 errors
+                const handle413Error = (error) => {
+                    console.error('Checking for 413 error:', error);
+
+                    // Hide loading overlay
+                    if (loadingOverlay) {
+                        loadingOverlay.style.display = 'none';
+                    }
+
+                    // Check if this is a 413 error
+                    if ((error && error.message && error.message.includes('413')) ||
+                        (error && error.status === 413) ||
+                        (window.lastErrorStatus === 413)) {
+
+                        this.showError("Your form submission exceeds the maximum allowed size. Please reduce the number of pasted screenshots and consider using file attachments instead.");
+                        return true;
+                    }
+                    return false;
+                };
+
+                // Try to intercept the form submission to catch 413 errors
+                try {
+                    const form = document.getElementById('trackerForm');
+                    const originalSubmit = form.submit;
+
+                    form.submit = function () {
+                        try {
+                            return originalSubmit.apply(this, arguments);
+                        } catch (error) {
+                            if (!handle413Error(error)) {
+                                throw error; // re-throw if not a 413
+                            }
+                        }
+                    };
+                } catch (e) {
+                    console.error('Error setting up form intercept:', e);
+                }
+
                 // Set default values for hidden required fields
                 this.setDefaultValuesForHiddenFields();
 
                 // Reset previous errors
                 document.querySelectorAll('.validation-error').forEach(el => el.remove());
                 document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
-
-                // ... other form handling code ...
 
                 // Validate the form first
                 if (!this.validateForm()) {
@@ -5931,6 +5990,69 @@
                 }
             }
         }
+
+        // Add global error handler for network errors
+        window.addEventListener('error', function (event) {
+            // Check for network errors related to payload size
+            if (event && event.target && event.target.tagName === 'SCRIPT' &&
+                event.target.src && event.target.src.includes('host-network-events.js')) {
+
+                console.error('Network error detected, checking for 413 status');
+
+                // Use a small timeout to let the actual error log to console
+                setTimeout(function () {
+                    // Look for recent 413 errors in console
+                    if (window.client &&
+                        (document.body.innerHTML.includes('413') ||
+                            document.documentElement.outerHTML.includes('413 (Payload Too Large)'))) {
+
+                        // Show a professional notification about the error
+                        client.interface.trigger("showNotify", {
+                            type: "warning",
+                            message: "Your form submission exceeds the maximum allowed size. Please reduce the number of pasted screenshots and consider using file attachments instead."
+                        }).catch(console.error);
+                    }
+                }, 100);
+            }
+        }, true);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Intercept XMLHttpRequest to detect 413 errors
+            const originalXhrSend = XMLHttpRequest.prototype.send;
+            XMLHttpRequest.prototype.send = function () {
+                this.addEventListener('load', function () {
+                    if (this.status === 413) {
+                        console.error('413 Payload Too Large error detected');
+                        if (window.client) {
+                            client.interface.trigger("showNotify", {
+                                type: "warning",
+                                message: "Your form submission exceeds the maximum allowed size. Please reduce the number of pasted screenshots and consider using file attachments instead."
+                            }).catch(console.error);
+                        }
+                    }
+                });
+
+                return originalXhrSend.apply(this, arguments);
+            };
+
+            // Also intercept fetch requests
+            const originalFetch = window.fetch;
+            window.fetch = function () {
+                return originalFetch.apply(this, arguments)
+                    .then(response => {
+                        if (response.status === 413) {
+                            console.error('413 Payload Too Large error detected in fetch');
+                            if (window.client) {
+                                client.interface.trigger("showNotify", {
+                                    type: "warning",
+                                    message: "Your form submission exceeds the maximum allowed size. Please reduce the number of pasted screenshots and consider using file attachments instead."
+                                }).catch(console.error);
+                            }
+                        }
+                        return response;
+                    });
+            };
+        });
     </script>
 </body>
 

@@ -42,7 +42,7 @@ const TRACKER_CONFIGS = {
                 title: "SUMMARY",
                 icon: "fa-file-alt",
                 fields: [
-                    { id: "summaryContent", type: "richtext", label: "", required: false }
+                    { id: "summaryContent", type: "richtext", label: "", required: true }
                 ]
             },
             {
@@ -211,7 +211,7 @@ const TRACKER_CONFIGS = {
                 title: "SUMMARY",
                 icon: "fa-file-alt",
                 fields: [
-                    { id: "summary", type: "richtext", label: "", required: false, hint: "Short descriptor of the issue being reported. EX: The text \"Symbols Of Our Country\" does not appear within BA 2022 > Grade 2 > Unit 3 > Knowledge Building Topic Library." }
+                    { id: "summary", type: "richtext", label: "", required: true }
                 ]
             },
             {
@@ -221,17 +221,17 @@ const TRACKER_CONFIGS = {
                 fields: [
                     { id: "issue", type: "richtext", label: "Issue", required: true, hint: "Explain the issue the user has reported in detail." },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "schoolName", type: "text", label: "School Name", required: false, hint: "Provide the customer account and name of the user that the issue is affecting, as well as the role they have within Benchmark Universe (district admin, school admin, teacher). EX: Echo Lake Elementary School" },
-                    { id: "districtState", type: "text", label: "District State", required: false },
+                    { id: "schoolName", type: "text", label: "School Name", required: true, hint: "Provide the customer account and name of the user that the issue is affecting, as well as the role they have within Benchmark Universe (district admin, school admin, teacher). EX: Echo Lake Elementary School" },
+                    { id: "districtState", type: "text", label: "District State", required: true },
                     { id: "program", type: "text", label: "Program/Product Impacted", required: true, hint: "Provide the name of the product where the issue is prevalent. Include the assembly code (ie: subscription code pulled from TA Subs). Make sure you include the state if it a state specific assembly. EX: Benchmark Advance - c2022 VA:  X101055" },
-                    { id: "programVariation", type: "text", label: "Program Variation (if known)", required: false, hint: "Provide the program variation if known. This includes state variation and / or numerical variation such as 2.75 or 2.5. EX: Benchmark Advance -c2022 or Benchmark Advance 2.75" },
-                    { id: "dateReported", type: "date", label: "Date issue reported by user", required: false, hint: "Provide the date the user reported the issue. EX: 5/18/23" },
-                    { id: "subscriptionCodes", type: "richtext", label: "Subscription codes customer is onboarded with", required: false, hint: "Provide the subscription code of the product the user has the issue in. EX: X71647 <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to find an Xcode</a>" },
+                    { id: "programVariation", type: "text", label: "Program Variation (if known)", required: true, hint: "Provide the program variation if known. This includes state variation and / or numerical variation such as 2.75 or 2.5. EX: Benchmark Advance -c2022 or Benchmark Advance 2.75" },
+                    { id: "dateReported", type: "date", label: "Date issue reported by user", required: true, hint: "Provide the date the user reported the issue. EX: 5/18/23" },
+                    { id: "subscriptionCodes", type: "richtext", label: "Subscription codes customer is onboarded with", required: true, hint: "Provide the subscription code of the product the user has the issue in. EX: X71647 <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to find an Xcode</a>" },
                     {
                         id: "impactScope",
                         type: "select",
                         label: "Teacher vs Student impact",
-                        required: false,
+                        required: true,
                         options: ["", "Teacher Only", "Student Only", "Both Teacher and Student"],
                         hint: "Identify if the teacher or the student is impacted by the issue. EX: Teacher and Student"
                     },
@@ -479,7 +479,7 @@ const TRACKER_CONFIGS = {
                 title: "ADDITIONAL DETAILS",
                 icon: "fa-info-circle",
                 fields: [
-                    { id: "additionalDetails", type: "richtext", label: "", required: false }
+                    { id: "additionalDetails", type: "richtext", label: "", required: true }
                 ]
             },
             {
@@ -487,11 +487,11 @@ const TRACKER_CONFIGS = {
                 title: "USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false, hint: "Provide the username of the customer submitting the request. EX: mitizishepard." },
-                    { id: "role", type: "text", label: "Role", required: false, hint: "Provide the role of the customer submitting the request. EX: District Admin, School Admin, Teacher, or Student." },
-                    { id: "name", type: "text", label: "Name", required: false, hint: "Provide the name of the customer submitting the request. EX: Mitizi Shepard" },
-                    { id: "customer_email", type: "email", label: "Email", required: false, hint: "Provide the email of the customer submitting the request." },
-                    { id: "dateRequested", type: "date", label: "Date Requested", required: false }
+                    { id: "username", type: "text", label: "Username", required: true, hint: "Provide the username of the customer submitting the request. EX: mitizishepard." },
+                    { id: "role", type: "text", label: "Role", required: true, hint: "Provide the role of the customer submitting the request. EX: District Admin, School Admin, Teacher, or Student." },
+                    { id: "name", type: "text", label: "Name", required: true, hint: "Provide the name of the customer submitting the request. EX: Mitizi Shepard" },
+                    { id: "customer_email", type: "email", label: "Email", required: true, hint: "Provide the email of the customer submitting the request." },
+                    { id: "dateRequested", type: "date", label: "Date Requested", required: true }
                 ]
             }
         ],
@@ -736,7 +736,7 @@ const TRACKER_CONFIGS = {
                 icon: "fa-file-alt",
                 fields: [
                     {
-                        id: "issueSummary", type: "richtext", label: "", required: false,
+                        id: "issueSummary", type: "richtext", label: "", required: true,
                         hint: "Short descriptor of the issue being reported. EX: User reports that in BAdvance -c2022 > TRS > G5 > U1> W2 > L12 the title is missing for the lesson."
                     }
                 ]
@@ -747,7 +747,7 @@ const TRACKER_CONFIGS = {
                 icon: "fa-clipboard-list",
                 fields: [
                     {
-                        id: "issueDetails", type: "richtext", label: "", required: false,
+                        id: "issueDetails", type: "richtext", label: "", required: true,
                         hint: "Describe in detail the issue reported by the user. You can insert exactly what the user reports in their submitted ticket. EX: User reports \"On the Benchmark Advance platform, unit 1 of grade 5, please filter to week 2 lesson 12. The title is missing from the lesson plan. Please add the title.\""
                     }
                 ]
@@ -758,44 +758,44 @@ const TRACKER_CONFIGS = {
                 icon: "fa-user",
                 fields: [
                     {
-                        id: "isVIP", type: "select", label: "VIP Customer", required: false, options: ["No", "Yes"],
+                        id: "isVIP", type: "select", label: "VIP Customer", required: true, options: ["No", "Yes"],
                         hint: "If the district is VIP, select yes. If the district is not, select no. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
                     },
                     {
-                        id: "username", type: "text", label: "Username", required: false,
+                        id: "username", type: "text", label: "Username", required: true,
                         hint: "Provide the username of the user that the issue is affecting. Note: the username and email is often the same for many users. EX: amiller3"
                     },
                     {
-                        id: "userEmail", type: "email", label: "Email", required: false,
+                        id: "userEmail", type: "email", label: "Email", required: true,
                         hint: "Provide the email of the user that the issue is affecting. Note: the username and email are often the same for many users. EX: adam.miller@palmbeachschools.org"
                     },
                     {
-                        id: "userRole", type: "text", label: "Role", required: false,
+                        id: "userRole", type: "text", label: "Role", required: true,
                         hint: "Provide the role of the user that the issue is affecting. EX: District Admin, School Admin, Teacher or Student"
                     },
                     {
-                        id: "productImpacted", type: "text", label: "Application/Program Impacted", required: false,
+                        id: "productImpacted", type: "text", label: "Application/Program Impacted", required: true,
                         hint: "Provide the name of the product where the issue is prevalent. Ex: Benchmark Advance Florida"
                     },
                     {
-                        id: "xcodeInfo", type: "text", label: "Xcode", required: false,
+                        id: "xcodeInfo", type: "text", label: "Xcode", required: true,
                         hint: "Provide the Xcode of component where the issue is prevalent. EX: X72525. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to find an Xcode</a>"
                     },
                     {
-                        id: "districtState", type: "text", label: "District state", required: false,
+                        id: "districtState", type: "text", label: "District state", required: true,
                         hint: "Provide the state where the district is located. EX: Florida or FL. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>Verify district realm/state</a>"
                     },
                     {
-                        id: "impactType", type: "select", label: "Digital and/or Print Impact", required: false,
+                        id: "impactType", type: "select", label: "Digital and/or Print Impact", required: true,
                         options: ["", "Digital Only", "Print Only", "Both Digital and Print"],
                         hint: "Identify if the issue only occurs on the digital platform or if it occurs in both digital and print. EX: Digital"
                     },
                     {
-                        id: "dateReported", type: "date", label: "Date Issue reported by user", required: false,
+                        id: "dateReported", type: "date", label: "Date Issue reported by user", required: true,
                         hint: "Provide the date the user reported the issue. EX: 5/18/23"
                     },
                     {
-                        id: "impactScope", type: "select", label: "Teacher and/or Student impact", required: false,
+                        id: "impactScope", type: "select", label: "Teacher and/or Student impact", required: true,
                         options: ["", "Teacher Only", "Student Only", "Both Teacher and Student"],
                         hint: "Identify if the teacher or the student is impacted by the issue. EX: Teacher"
                     }
@@ -807,7 +807,7 @@ const TRACKER_CONFIGS = {
                 icon: "fa-puzzle-piece",
                 fields: [
                     {
-                        id: "components", type: "richtext", label: "", required: false,
+                        id: "components", type: "richtext", label: "", required: true,
                         hint: "Specific application or component affected e.g., Assessment, Assignments, ePlanner, TRS. EX: TRS (teacher resource system)"
                     }
                 ]
@@ -818,15 +818,15 @@ const TRACKER_CONFIGS = {
                 icon: "fa-list-ol",
                 fields: [
                     {
-                        id: "pathField", type: "text", label: "Path", required: false,
+                        id: "pathField", type: "text", label: "Path", required: true,
                         hint: "Path taken to recreate issue and screenshots if necessary. EX: BAdvance -c2022 > TRS > G5 > U1 > W2 > L12"
                     },
                     {
-                        id: "actualResults", type: "richtext", label: "Actual results", required: false,
+                        id: "actualResults", type: "richtext", label: "Actual results", required: true,
                         hint: "Provide Screenshots and any other information that would be helpful to replicate the reported issue."
                     },
                     {
-                        id: "expectedResults", type: "richtext", label: "Expected results", required: false,
+                        id: "expectedResults", type: "richtext", label: "Expected results", required: true,
                         hint: "Explain/show how the system should be functioning if working correctly. Our role is to convey what the user is requesting. Ie. the user feels a certain standard is missing from a lesson. Request that rationale be provided. Example of expected results: Provide title for lesson, Fix hyperlink, Provide rationale, Fix grammatical errors."
                     }
                 ]
@@ -935,11 +935,11 @@ const TRACKER_CONFIGS = {
                         hint: "EX: Teacher is receiving a server error upon clicking \"Grade View\" for the Unit 3 Assessment (Gr. 2)"
                     },
                     {
-                        id: "resourceXcode", type: "text", label: "Resource Xcode", required: false,
+                        id: "resourceXcode", type: "text", label: "Resource Xcode", required: true,
                         hint: "Provide the resource xcode. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>"
                     },
                     {
-                        id: "resourceTitle", type: "text", label: "Resource Title", required: false,
+                        id: "resourceTitle", type: "text", label: "Resource Title", required: true,
                         hint: "Provide the title of the Resource"
                     }
                 ]
@@ -963,28 +963,28 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    { id: "username", type: "text", label: "Username", required: true, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
                     {
-                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: false,
+                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: true,
                         hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
-                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
-                        id: "realm", type: "text", label: "Realm", required: false,
+                        id: "realm", type: "text", label: "Realm", required: true,
                         hint: "Provide the districts realm."
                     },
                     {
-                        id: "assignmentId", type: "text", label: "Assignment ID", required: false,
+                        id: "assignmentId", type: "text", label: "Assignment ID", required: true,
                         placeholder: "EX: https://bec-micro.benchmarkuniverse.com/?#assignments/6727303",
                         hint: "Provide the assignment ID where the issue is prevalent. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
                         label: "HAR file attached",
-                        required: false,
+                        required: true,
                         options: ["No", "Yes"],
                         hint: "HAR files help identify browser network issues"
                     },
@@ -1085,7 +1085,7 @@ const TRACKER_CONFIGS = {
                             { id: "allUsers", label: "All Users" }
                         ]
                     },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: true, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
             {
@@ -1135,36 +1135,36 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "teacherName", type: "text", label: "Teacher/Admin Name", required: false },
-                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    { id: "teacherName", type: "text", label: "Teacher/Admin Name", required: true },
+                    { id: "username", type: "text", label: "Username", required: true, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
                     {
                         id: "userRole",
                         type: "text",
                         label: "Role",
-                        required: false,
+                        required: true,
                         hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
                     {
-                        id: "realm", type: "text", label: "Realm", required: false,
+                        id: "realm", type: "text", label: "Realm", required: true,
                         hint: "Provide the districts realm."
                     },
-                    { id: "browser", type: "text", label: "Browser", required: false },
+                    { id: "browser", type: "text", label: "Browser", required: true },
                     {
-                        id: "assessmentId", type: "text", label: "Assessment Assignment ID", required: false,
+                        id: "assessmentId", type: "text", label: "Assessment Assignment ID", required: true,
                         placeholder: "EX: https://bec-micro.benchmarkuniverse.com/?#assignments/6727303",
                         hint: "Provide the assignment ID where the issue is prevalent. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
                     },
-                    { id: "assessmentUrl", type: "text", label: "Assessment Assignment URL", required: false },
-                    { id: "dateTaken", type: "date", label: "Date test was taken", required: false },
-                    { id: "dateGraded", type: "date", label: "Date test was graded", required: false },
-                    { id: "className", type: "text", label: "Impacted Class Name", required: false },
-                    { id: "classLink", type: "text", label: "Impacted Class BURC Link", required: false },
+                    { id: "assessmentUrl", type: "text", label: "Assessment Assignment URL", required: true },
+                    { id: "dateTaken", type: "date", label: "Date test was taken", required: true },
+                    { id: "dateGraded", type: "date", label: "Date test was graded", required: true },
+                    { id: "className", type: "text", label: "Impacted Class Name", required: true },
+                    { id: "classLink", type: "text", label: "Impacted Class BURC Link", required: true },
                     {
-                        id: "studentIds", type: "text", label: "Impacted Student(s) Internal ID(s)", required: false,
+                        id: "studentIds", type: "text", label: "Impacted Student(s) Internal ID(s)", required: true,
                         hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -1331,7 +1331,7 @@ const TRACKER_CONFIGS = {
                         hint: "Provide the name of the district"
                     },
                     {
-                        id: "districtState", type: "text", label: "District State", required: false,
+                        id: "districtState", type: "text", label: "District State", required: true,
                         hint: "State where the district is located"
                     },
                     {
@@ -1417,7 +1417,7 @@ const TRACKER_CONFIGS = {
                             { id: "allUsers", label: "All Users" }
                         ]
                     },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: true, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
             {
@@ -1434,8 +1434,8 @@ const TRACKER_CONFIGS = {
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "districtBURCLink", type: "text", label: "District BURC link", required: true, hint: "Provide BURC Link to the district" },
-                    { id: "schoolName", type: "text", label: "School Name", required: false },
-                    { id: "schoolBURCLink", type: "text", label: "School BURC link", required: false, hint: "Provide BURC Link to the school" }
+                    { id: "schoolName", type: "text", label: "School Name", required: true },
+                    { id: "schoolBURCLink", type: "text", label: "School BURC link", required: true, hint: "Provide BURC Link to the school" }
                 ]
             },
             {
@@ -1470,16 +1470,16 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED TEACHER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
-                    { id: "name", type: "text", label: "Name", required: false },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
-                    { id: "administrationUrl", type: "text", label: "Administration URL", required: false },
-                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
+                    { id: "username", type: "text", label: "Username", required: true, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    { id: "name", type: "text", label: "Name", required: true },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "administrationUrl", type: "text", label: "Administration URL", required: true },
+                    { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
-                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: false,
+                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: true,
                         hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -1617,7 +1617,7 @@ const TRACKER_CONFIGS = {
                             { id: "allUsers", label: "All Users" }
                         ]
                     },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: true, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
             {
@@ -1626,11 +1626,11 @@ const TRACKER_CONFIGS = {
                 icon: "fa-exclamation-circle",
                 fields: [
                     {
-                        id: "resourceXcode", type: "text", label: "Resource xcode", required: false,
+                        id: "resourceXcode", type: "text", label: "Resource xcode", required: true,
                         hint: "Provide the resource xcode. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>"
                     },
-                    { id: "resourceTitle", type: "text", label: "Resource title", required: false, hint: "Provide the title of the Resource" },
-                    { id: "pathFilters", type: "text", label: "Path/Filters", required: false },
+                    { id: "resourceTitle", type: "text", label: "Resource title", required: true, hint: "Provide the title of the Resource" },
+                    { id: "pathFilters", type: "text", label: "Path/Filters", required: true, hint: "EX: Teacher dashboard > Assignments > Unit 3 Assessment (Gr. 2)" },
                     {
                         id: "issueDetails",
                         type: "richtext",
@@ -1665,27 +1665,27 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    { id: "username", type: "text", label: "Username", required: true, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
                     {
-                        id: "role", type: "text", label: "Role", required: false,
+                        id: "role", type: "text", label: "Role", required: true,
                         hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
                     },
                     {
-                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: false,
+                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: true,
                         hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
-                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
-                        id: "realm", type: "text", label: "Realm", required: false,
+                        id: "realm", type: "text", label: "Realm", required: true,
                         hint: "Provide the districts realm."
                     },
                     {
-                        id: "assignmentId", type: "text", label: "Assignment ID", required: false,
+                        id: "assignmentId", type: "text", label: "Assignment ID", required: true,
                         placeholder: "EX: https://bec-micro.benchmarkuniverse.com/?#assignments/6727303",
                         hint: "Provide the assignment ID where the issue is prevalent. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -1816,7 +1816,7 @@ const TRACKER_CONFIGS = {
                             { id: "allUsers", label: "All Users" }
                         ]
                     },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: true, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
             {
@@ -1858,27 +1858,27 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    { id: "username", type: "text", label: "Username", required: true, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
                     {
-                        id: "role", type: "text", label: "Role", required: false,
+                        id: "role", type: "text", label: "Role", required: true,
                         hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
                     },
                     {
-                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: false,
+                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: true,
                         hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
-                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
-                        id: "realm", type: "text", label: "Realm", required: false,
+                        id: "realm", type: "text", label: "Realm", required: true,
                         hint: "Provide the districts realm."
                     },
                     {
-                        id: "assignmentId", type: "text", label: "Assignment ID", required: false,
+                        id: "assignmentId", type: "text", label: "Assignment ID", required: true,
                         placeholder: "EX: https://bec-micro.benchmarkuniverse.com/?#assignments/6727303",
                         hint: "Provide the assignment ID where the issue is prevalent. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -2148,7 +2148,7 @@ const TRACKER_CONFIGS = {
                         id: "stepsToReproduce",
                         type: "richtext",
                         label: "Steps to Reproduce",
-                        required: false,
+                        required: true,
                         placeholder: "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR",
                         hint: "The exact path taken by the user and yourself to get to the reported issue"
                     }
@@ -2165,23 +2165,23 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    { id: "username", type: "text", label: "Username", required: true, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
                     {
-                        id: "role", type: "text", label: "Role", required: false,
+                        id: "role", type: "text", label: "Role", required: true,
                         hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
                     },
                     {
-                        id: "studentInternalID", type: "text", label: "Student Internal ID", required: false,
+                        id: "studentInternalID", type: "text", label: "Student Internal ID", required: true,
                         hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
-                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
-                        id: "realm", type: "text", label: "Realm", required: false,
+                        id: "realm", type: "text", label: "Realm", required: true,
                         hint: "Provide the districts realm."
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
-                    { id: "subscriptions", type: "text", label: "List of District Subscriptions", required: false },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
+                    { id: "subscriptions", type: "text", label: "List of District Subscriptions", required: true },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -2403,7 +2403,7 @@ const TRACKER_CONFIGS = {
                         id: "stepsToReproduce",
                         type: "richtext",
                         label: "Steps to Reproduce",
-                        required: false,
+                        required: true,
                         placeholder: "EX: Teacher dashboard > Assignments > Unit 3 Assessment (Gr. 2)",
                         hint: "The exact path taken by the user and yourself to get to the reported issue"
                     }
@@ -2420,29 +2420,29 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: false, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    { id: "username", type: "text", label: "Username", required: true, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
                     {
-                        id: "role", type: "text", label: "Role", required: false,
+                        id: "role", type: "text", label: "Role", required: true,
                         hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: false, hint: "Provide BURC Link to the affected teacher/administrator" },
-                    { id: "className", type: "text", label: "Class Name", required: false },
-                    { id: "classBURCLink", type: "text", label: "Class BURC Link", required: false, hint: "Provide BURC Link to the class" },
+                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "className", type: "text", label: "Class Name", required: true },
+                    { id: "classBURCLink", type: "text", label: "Class BURC Link", required: true, hint: "Provide BURC Link to the class" },
                     {
-                        id: "studentInternalID", type: "text", label: "Student Internal ID", required: false,
+                        id: "studentInternalID", type: "text", label: "Student Internal ID", required: true,
                         hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "device", type: "text", label: "Device", required: false, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
+                    { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
-                        id: "realm", type: "text", label: "Realm", required: false,
+                        id: "realm", type: "text", label: "Realm", required: true,
                         hint: "Provide the districts realm."
                     },
                     {
-                        id: "assignmentID", type: "text", label: "Assignment ID", required: false,
+                        id: "assignmentID", type: "text", label: "Assignment ID", required: true,
                         placeholder: "EX: https://bec-micro.benchmarkuniverse.com/?#assignments/6727303",
                         hint: "Provide the assignment ID where the issue is prevalent. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: false, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
                     {
                         id: "harFileAttached",
                         type: "select",
@@ -3072,7 +3072,7 @@ const TRACKER_CONFIGS = {
                 title: "SUMMARY",
                 icon: "fa-file-alt",
                 fields: [
-                    { id: "summary", type: "richtext", label: "", required: false }
+                    { id: "summary", type: "richtext", label: "", required: true }
                 ]
             },
             {
@@ -3088,9 +3088,9 @@ const TRACKER_CONFIGS = {
                 title: "STEPS TO REPRODUCE",
                 icon: "fa-list-ol",
                 fields: [
-                    { id: "path", type: "text", label: "Path", required: false },
-                    { id: "actualResults", type: "richtext", label: "Actual results", required: false },
-                    { id: "expectedResults", type: "richtext", label: "Expected results", required: false }
+                    { id: "path", type: "text", label: "Path", required: true },
+                    { id: "actualResults", type: "richtext", label: "Actual results", required: true },
+                    { id: "expectedResults", type: "richtext", label: "Expected results", required: true }
                 ]
             },
             {
@@ -3160,7 +3160,7 @@ const TRACKER_CONFIGS = {
                 title: "SUMMARY",
                 icon: "fa-file-alt",
                 fields: [
-                    { id: "summaryContent", type: "richtext", label: "", required: false, hint: "Provide a brief summary of the request" }
+                    { id: "summaryContent", type: "richtext", label: "", required: true, hint: "Provide a brief summary of the request" }
                 ]
             },
             {
