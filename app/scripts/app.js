@@ -468,7 +468,8 @@ async function getPrimeAssociation(ticketId) {
 function displayRelatedTicketInfo(trackerTicket) {
   // Show container
   document.getElementById("companyIds").textContent = "1 tracker found";
-  document.getElementById("districtsCount").textContent = "1";
+  // Remove setting the districts count since the element is hidden
+  // document.getElementById("districtsCount").textContent = "1";
 
   // Create a styled tracker link message
   const infoDiv = document.createElement("div");
@@ -739,6 +740,8 @@ function loadAssociatedTickets() {
 
         if (trackerTicket && trackerTicket.id) {
           document.getElementById("companyIds").textContent = "Related to Tracker #" + trackerTicket.id;
+          // Hide districts count for related tickets
+          document.querySelector(".districts-count").style.display = "none";
           displayRelatedTicketInfo(trackerTicket);
         } else {
           document.getElementById("companyIds").textContent = "No tracker ticket found";
