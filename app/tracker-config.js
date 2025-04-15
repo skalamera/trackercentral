@@ -885,6 +885,66 @@ const TRACKER_CONFIGS = {
             }
 
             return description;
+        },
+        // Add new onLoad function for SEDCUST to sync fields
+        onLoad: function () {
+            console.log("SEDCUST onLoad function executing");
+
+            // Function to sync XCODE and Resource Path fields
+            function syncFields() {
+                // Get the source fields from Subject section
+                const xcodeField = document.getElementById('xcode');
+                const resourcePathField = document.getElementById('resourcePath');
+                const applicationField = document.getElementById('application');
+
+                // Get the target fields
+                const pathField = document.getElementById('pathField');
+                const xcodeInfoField = document.getElementById('xcodeInfo');
+                const productImpactedField = document.getElementById('productImpacted');
+
+                // Sync XCODE to xcodeInfo if both fields exist
+                if (xcodeField && xcodeInfoField) {
+                    xcodeInfoField.value = xcodeField.value;
+                    console.log("Synced XCODE to Xcode field in user info section");
+                }
+
+                // Sync resourcePath to pathField if both fields exist
+                if (resourcePathField && pathField) {
+                    pathField.value = resourcePathField.value;
+                    console.log("Synced Resource Path to Path field in steps to reproduce section");
+                }
+
+                // Sync application to productImpacted if both fields exist
+                if (applicationField && productImpactedField) {
+                    productImpactedField.value = applicationField.value;
+                    console.log("Synced Application Name to Application/Program Impacted field in user info section");
+                }
+            }
+
+            // Set up event listeners for the source fields
+            const xcodeField = document.getElementById('xcode');
+            if (xcodeField) {
+                xcodeField.addEventListener('input', syncFields);
+                console.log("Added event listener to XCODE field");
+            }
+
+            const resourcePathField = document.getElementById('resourcePath');
+            if (resourcePathField) {
+                resourcePathField.addEventListener('input', syncFields);
+                console.log("Added event listener to Resource Path field");
+            }
+
+            const applicationField = document.getElementById('application');
+            if (applicationField) {
+                applicationField.addEventListener('input', syncFields);
+                console.log("Added event listener to Application Name field");
+            }
+
+            // Initial sync attempt
+            syncFields();
+
+            // Schedule another sync after a small delay to ensure fields are loaded
+            setTimeout(syncFields, 500);
         }
     },
 
