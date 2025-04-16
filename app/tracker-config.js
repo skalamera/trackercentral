@@ -449,7 +449,16 @@ const TRACKER_CONFIGS = {
                 icon: "fa-users",
                 fields: [
                     {
-                        id: "team", type: "text", label: "Team", required: true
+                        id: "team",
+                        type: "select",
+                        label: "Team",
+                        required: true,
+                        options: [
+                            "Assessments (Marty O'Kane)",
+                            "Editorial English (Max Prinz)",
+                            "SIM (Colleen Baker)",
+                            "TRS (Edgar Fernandez)"
+                        ]
                     }
                 ]
             },
@@ -460,14 +469,14 @@ const TRACKER_CONFIGS = {
                 fields: [
                     {
                         id: "applicationDetails",
-                        type: "richtext",
+                        type: "text",
                         label: "Application",
                         required: true,
                         hint: "Provide the application in which the user is referring to. EX: Assessments."
                     },
                     {
                         id: "shortDescriptionDetails",
-                        type: "richtext",
+                        type: "text",
                         label: "Short description",
                         required: true,
                         hint: "Explain what the user is requesting. EX: Allow students to enable text to speech for the writing portion of assessments."
@@ -515,8 +524,8 @@ const TRACKER_CONFIGS = {
             }
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">USER INFO</span></div>';
-            description += `VIP: (${fields.isVIP || 'No'})<br>`;
-            description += `District Name: ${fields.districtName || ''}<br>`;
+            description += `VIP Status: ${fields.isVIP === 'Yes' ? 'VIP' : 'Core'}<br>`;
+            description += `District: ${fields.districtName || ''}<br>`;
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.role) description += `Role: ${fields.role}<br>`;
             if (fields.name) description += `Name: ${fields.name}<br>`;
@@ -694,9 +703,80 @@ const TRACKER_CONFIGS = {
                 updateSubjectLine();
                 syncUserInfoFields();
             });
-            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('application')?.addEventListener('input', function () {
+                updateSubjectLine();
+                syncFeatureRequestFields();
+            });
             document.getElementById('resourceName')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('shortDescription')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('shortDescription')?.addEventListener('input', function () {
+                updateSubjectLine();
+                syncFeatureRequestFields();
+            });
+
+            // Function to sync fields from Subject to Feature Request Summary
+            function syncFeatureRequestFields() {
+                const applicationField = document.getElementById('application');
+                const shortDescriptionField = document.getElementById('shortDescription');
+                const applicationDetailsField = document.getElementById('applicationDetails');
+                const shortDescriptionDetailsField = document.getElementById('shortDescriptionDetails');
+
+                // Simple direct field-to-field population for text fields
+                if (applicationField && applicationDetailsField) {
+                    applicationDetailsField.value = applicationField.value;
+                    console.log("Updated Application in Feature Request Summary:", applicationField.value);
+                } else {
+                    console.log("Application fields not found for syncing");
+                }
+
+                if (shortDescriptionField && shortDescriptionDetailsField) {
+                    shortDescriptionDetailsField.value = shortDescriptionField.value;
+                    console.log("Updated Short Description in Feature Request Summary:", shortDescriptionField.value);
+                } else {
+                    console.log("Short Description fields not found for syncing");
+                }
+            }
+
+            // Try to synchronize after DOM is fully loaded
+            setTimeout(syncFeatureRequestFields, 500);
+            setTimeout(syncFeatureRequestFields, 1000);
+
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', function () {
+                updateSubjectLine();
+                syncUserInfoFields();
+            });
+            document.getElementById('districtName')?.addEventListener('input', function () {
+                updateSubjectLine();
+                syncUserInfoFields();
+            });
+            document.getElementById('application')?.addEventListener('input', function () {
+                updateSubjectLine();
+                syncFeatureRequestFields();
+            });
+            document.getElementById('resourceName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('shortDescription')?.addEventListener('input', function () {
+                updateSubjectLine();
+                syncFeatureRequestFields();
+            });
+
+            // When the feature details section becomes visible, try to sync again
+            const featureDetailsObserver = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                        const featureDetailsSection = document.getElementById('featureDetails');
+                        if (featureDetailsSection && window.getComputedStyle(featureDetailsSection).display !== 'none') {
+                            console.log("Feature details section is now visible, syncing fields");
+                            syncFeatureRequestFields();
+                        }
+                    }
+                });
+            });
+
+            // Start observing the feature details section
+            const featureDetailsSection = document.getElementById('featureDetails');
+            if (featureDetailsSection) {
+                featureDetailsObserver.observe(featureDetailsSection, { attributes: true });
+            }
 
             // Add listeners to all checkboxes
             const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
@@ -706,6 +786,9 @@ const TRACKER_CONFIGS = {
 
             // Initial update attempt
             updateSubjectLine();
+
+            // Initial sync of feature request fields
+            syncFeatureRequestFields();
 
             // Schedule another update after a small delay to ensure fields are populated
             setTimeout(updateSubjectLine, 500);

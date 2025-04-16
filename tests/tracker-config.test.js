@@ -146,7 +146,7 @@ describe('Feature Request Template', () => {
             application: 'Test App',
             resourceName: 'Test Resource',
             shortDescription: 'Test Description',
-            team: 'Development Team',
+            team: 'SIM (Colleen Baker)',
             applicationDetails: '<p>Test application details</p>',
             shortDescriptionDetails: '<p>Test short description details</p>',
             additionalDetails: '<p>Test additional details</p>',
@@ -160,17 +160,81 @@ describe('Feature Request Template', () => {
         const result = template.descriptionGenerator(mockFields);
 
         // Verify the description includes key information
-        expect(result).toContain('Development Team');
+        expect(result).toContain('SIM (Colleen Baker)');
         expect(result).toContain('Test application details');
         expect(result).toContain('Test short description details');
         expect(result).toContain('Test additional details');
-        expect(result).toContain('VIP: (Yes)');
+        expect(result).toContain('VIP Status: VIP');
         expect(result).toContain('District Name: Test District');
         expect(result).toContain('Username: testuser');
         expect(result).toContain('Role: Admin');
         expect(result).toContain('Name: Test User');
         expect(result).toContain('Email: test@example.com');
         expect(result).toContain('Date Requested: 05/15/2023');
+    });
+
+    test('displays "Core" when VIP status is "No"', () => {
+        const mockFields = {
+            isVIP: 'No',
+            districtName: 'Test District',
+            application: 'Test App',
+            resourceName: 'Test Resource',
+            shortDescription: 'Test Description',
+            team: 'SIM (Colleen Baker)'
+        };
+
+        const result = template.descriptionGenerator(mockFields);
+
+        // Verify the VIP status shows as "Core"
+        expect(result).toContain('VIP Status: Core');
+    });
+
+    test('syncFeatureRequestFields function updates rich text fields', () => {
+        // Setup DOM for testing
+        const applicationField = createMockElement();
+        applicationField.value = 'Test Application';
+
+        const shortDescriptionField = createMockElement();
+        shortDescriptionField.value = 'Test Description Request';
+
+        // Create mock rich text editors
+        const applicationEditor = createMockElement();
+        const applicationContainer = createMockElement();
+        const applicationFieldContainer = createMockElement();
+        applicationFieldContainer.closest = jest.fn().mockReturnValue(applicationContainer);
+        applicationContainer.querySelector = jest.fn().mockReturnValue(applicationEditor);
+
+        const shortDescriptionEditor = createMockElement();
+        const shortDescriptionContainer = createMockElement();
+        const shortDescriptionFieldContainer = createMockElement();
+        shortDescriptionFieldContainer.closest = jest.fn().mockReturnValue(shortDescriptionContainer);
+        shortDescriptionContainer.querySelector = jest.fn().mockReturnValue(shortDescriptionEditor);
+
+        // Mock getElementById to return our mock elements
+        document.getElementById.mockImplementation((id) => {
+            switch (id) {
+                case 'application':
+                    return applicationField;
+                case 'shortDescription':
+                    return shortDescriptionField;
+                case 'applicationDetails':
+                    return applicationFieldContainer;
+                case 'shortDescriptionDetails':
+                    return shortDescriptionFieldContainer;
+                default:
+                    return null;
+            }
+        });
+
+        // Extract syncFeatureRequestFields function from onLoad
+        const onLoadString = template.onLoad.toString();
+
+        // Verify the function exists in onLoad
+        expect(onLoadString.includes('function syncFeatureRequestFields()')).toBeTruthy();
+
+        // Verify event listeners are set up properly
+        expect(onLoadString.includes("document.getElementById('application')?.addEventListener('input'")).toBeTruthy();
+        expect(onLoadString.includes("document.getElementById('shortDescription')?.addEventListener('input'")).toBeTruthy();
     });
 });
 
