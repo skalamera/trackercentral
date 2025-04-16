@@ -1111,7 +1111,7 @@ const TRACKER_CONFIGS = {
                         id: "studentInternalId", type: "text", label: "Student Internal ID", required: true,
                         hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
                     { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
                         id: "realm", type: "text", label: "Realm", required: true,
@@ -1287,7 +1287,7 @@ const TRACKER_CONFIGS = {
                         required: true,
                         hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
                     {
                         id: "realm", type: "text", label: "Realm", required: true,
                         hint: "Provide the districts realm."
@@ -1370,13 +1370,13 @@ const TRACKER_CONFIGS = {
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.userRole) description += `Role: ${fields.userRole}<br>`;
 
-            // Process BURC link as hyperlink
+            // Process BURC Link as hyperlink
             if (fields.BURCLink) {
                 let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `BURC link: <a href="${techLink}" target=\"_blank\">${fields.BURCLink}</a><br>`;
+                description += `BURC Link: <a href="${techLink}" target=\"_blank\">${fields.BURCLink}</a><br>`;
             }
 
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
@@ -1576,9 +1576,9 @@ const TRACKER_CONFIGS = {
                         hint: "EX: Teacher is receiving a server error upon clicking \"Grade View\" for the Unit 3 Assessment (Gr. 2)"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "districtBURCLink", type: "text", label: "District BURC link", required: true, hint: "Provide BURC Link to the district" },
+                    { id: "districtBURCLink", type: "text", label: "District BURC Link", required: true, hint: "Provide BURC Link to the district" },
                     { id: "schoolName", type: "text", label: "School Name", required: true },
-                    { id: "schoolBURCLink", type: "text", label: "School BURC link", required: true, hint: "Provide BURC Link to the school" }
+                    { id: "schoolBURCLink", type: "text", label: "School BURC Link", required: true, hint: "Provide BURC Link to the school" }
                 ]
             },
             {
@@ -1615,7 +1615,7 @@ const TRACKER_CONFIGS = {
                 fields: [
                     { id: "username", type: "text", label: "Username", required: true, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
                     { id: "name", type: "text", label: "Name", required: true },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
                     { id: "administrationUrl", type: "text", label: "Administration URL", required: true },
                     { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
@@ -1667,9 +1667,9 @@ const TRACKER_CONFIGS = {
                 description += '<div style="margin-bottom: 10px;"></div>';
             }
             description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `District BURC link: ${fields.districtBURCLink || ''}<br>`;
+            description += `District BURC Link: ${fields.districtBURCLink || ''}<br>`;
             if (fields.schoolName) description += `School Name: ${fields.schoolName}<br>`;
-            if (fields.schoolBURCLink) description += `School BURC link: ${fields.schoolBURCLink}<br>`;
+            if (fields.schoolBURCLink) description += `School BURC Link: ${fields.schoolBURCLink}<br>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
             // Steps to Reproduce
@@ -1695,7 +1695,7 @@ const TRACKER_CONFIGS = {
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
+                description += `BURC Link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
             if (fields.administrationUrl) {
                 let adminUrl = fields.administrationUrl.trim();
@@ -1817,7 +1817,7 @@ const TRACKER_CONFIGS = {
                         id: "studentInternalId", type: "text", label: "Student Internal ID", required: true,
                         hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
                     { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
                         id: "realm", type: "text", label: "Realm", required: true,
@@ -1900,7 +1900,7 @@ const TRACKER_CONFIGS = {
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
+                description += `BURC Link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
             if (fields.device) description += `Device: ${fields.device}<br>`;
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
@@ -2010,7 +2010,7 @@ const TRACKER_CONFIGS = {
                         id: "studentInternalId", type: "text", label: "Student Internal ID", required: true,
                         hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
                     { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
                         id: "realm", type: "text", label: "Realm", required: true,
@@ -2084,13 +2084,13 @@ const TRACKER_CONFIGS = {
             if (fields.role) description += `Role: ${fields.role}<br>`;
             if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
 
-            // Handle BURC link as a hyperlink
+            // Handle BURC Link as a hyperlink
             if (fields.BURCLink) {
                 let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
+                description += `BURC Link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
 
             // Handle Tech Admin Link as a hyperlink
@@ -2317,7 +2317,7 @@ const TRACKER_CONFIGS = {
                         id: "studentInternalID", type: "text", label: "Student Internal ID", required: true,
                         hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
                     { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
                     {
                         id: "realm", type: "text", label: "Realm", required: true,
@@ -2390,13 +2390,13 @@ const TRACKER_CONFIGS = {
             if (fields.role) description += `Role: ${fields.role}<br>`;
             if (fields.studentInternalID) description += `Student Internal ID: ${fields.studentInternalID}<br>`;
 
-            // Handle BURC link as a hyperlink
+            // Handle BURC Link as a hyperlink
             if (fields.BURCLink) {
                 let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
+                description += `BURC Link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
 
             if (fields.device) description += `Device: ${fields.device}<br>`;
@@ -2568,7 +2568,7 @@ const TRACKER_CONFIGS = {
                         id: "role", type: "text", label: "Role", required: true,
                         hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
                     { id: "className", type: "text", label: "Class Name", required: true },
                     { id: "classBURCLink", type: "text", label: "Class BURC Link", required: true, hint: "Provide BURC Link to the class" },
                     {
@@ -2650,18 +2650,18 @@ const TRACKER_CONFIGS = {
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.role) description += `Role: ${fields.role}<br>`;
 
-            // Handle BURC link as a hyperlink
+            // Handle BURC Link as a hyperlink
             if (fields.BURCLink) {
                 let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `BURC link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
+                description += `BURC Link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
 
             if (fields.className) description += `Class Name: ${fields.className}<br>`;
 
-            // Handle Class BURC link as a hyperlink
+            // Handle Class BURC Link as a hyperlink
             if (fields.classBURCLink) {
                 let classTechLink = fields.classBURCLink.trim();
                 if (!classTechLink.startsWith('http://') && !classTechLink.startsWith('https://')) {
@@ -3100,7 +3100,7 @@ const TRACKER_CONFIGS = {
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.role) description += `Role: ${fields.role}<br>`;
 
-            // Handle BURC link as a hyperlink
+            // Handle BURC Link as a hyperlink
             if (fields.BURCLink) {
                 let techLink = fields.BURCLink.trim();
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
