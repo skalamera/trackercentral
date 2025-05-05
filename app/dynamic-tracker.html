@@ -56,6 +56,15 @@
         .invalid-har {
             border-color: #ffc107;
         }
+
+        /* Style for read-only and disabled formattedSubject fields */
+        input[id="formattedSubject"][readonly][disabled] {
+            background-color: #f5f5f5;
+            color: #666;
+            border: 1px solid #ddd;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
     </style>
 </head>
 
@@ -2335,10 +2344,26 @@
                 console.log("Screenshots description:", formData.screenshotsDescription);
                 console.log("Steps to reproduce:", formData.stepsToReproduce);
 
+                // Make sure we have all necessary fields for assemblyTracker
+                if (this.trackerType === 'assembly') {
+                    // Ensure pathField, actualResults, and expectedResults are available
+                    console.log("Assembly tracker - ensuring all fields are available for description generation:");
+                    console.log("  pathField:", formData.pathField);
+                    console.log("  actualResults:", formData.actualResults);
+                    console.log("  expectedResults:", formData.expectedResults);
+                }
+
                 // Use the description generator from the config
                 let description = '';
-                if (this.config.descriptionGenerator) {
-                    description = this.config.descriptionGenerator(formData);
+                if (this.config.descriptionGenerator && typeof this.config.descriptionGenerator === 'function') {
+                    try {
+                        description = this.config.descriptionGenerator(formData);
+                        console.log("Successfully generated description using template's descriptionGenerator function");
+                    } catch (error) {
+                        console.error("Error using template's descriptionGenerator:", error);
+                        // Fallback to default description
+                        description = `<div>${formData.subject || 'No subject'}</div>`;
+                    }
                 } else {
                     // Default description generator for blank template
                     description = `<div>${formData.subject || 'No subject'}</div>`;
@@ -2368,6 +2393,33 @@
                     const element = formElements[i];
                     if (element.name && element.name !== '') {
                         formData[element.name] = element.value;
+                    }
+                }
+
+                // Special handling for assembly tracker - explicitly check for the required fields
+                if (this.trackerType === 'assembly') {
+                    // Check for pathField
+                    const pathField = document.getElementById('pathField');
+                    if (pathField) {
+                        formData.pathField = pathField.value;
+                        console.log("Explicitly adding pathField to formData:", pathField.value);
+                    }
+
+                    // Double-check that the Quill editors for actualResults and expectedResults got added
+                    if (!formData.actualResults) {
+                        const actualResultsEditor = this.quillEditors['actualResults'];
+                        if (actualResultsEditor) {
+                            formData.actualResults = actualResultsEditor.root.innerHTML;
+                            console.log("Explicitly adding actualResults to formData:", formData.actualResults);
+                        }
+                    }
+
+                    if (!formData.expectedResults) {
+                        const expectedResultsEditor = this.quillEditors['expectedResults'];
+                        if (expectedResultsEditor) {
+                            formData.expectedResults = expectedResultsEditor.root.innerHTML;
+                            console.log("Explicitly adding expectedResults to formData:", formData.expectedResults);
+                        }
                     }
                 }
 
@@ -2879,7 +2931,8 @@
                     const description = this.generateDescription();
                     document.getElementById('description').value = description;
 
-                    // Create the ticket data object
+                    // Instead of cleaning by excluding fields, let's only include fields that are valid for the API
+                    // Create the ticket data object with only valid Freshdesk API fields
                     let ticketData = {
                         email: formData.email,
                         subject: subject,
@@ -2895,9 +2948,6 @@
 
                     // Store related tickets to create associations after ticket creation
                     this.relatedTicketIds = relatedTicketIds;
-
-                    // Initialize custom_fields if not already done
-                    ticketData.custom_fields = ticketData.custom_fields || {};
 
                     // Use source ticket priority if available
                     if (sourceTicketData && sourceTicketData.priority) {
@@ -2982,6 +3032,10 @@
                     // Debug log the final ticket data
                     console.log('Final ticket data to be sent:', JSON.stringify(ticketData, null, 2));
 
+                    // NEW: Log the exact JSON string that will be sent to the API
+                    const jsonBody = JSON.stringify(ticketData);
+                    console.log('Raw JSON body being sent to API:', jsonBody);
+
                     // Store tracker type explicitly in the tags for easier identification
                     if (!ticketData.tags.includes(`tracker-${this.trackerType}`)) {
                         ticketData.tags.push(`tracker-${this.trackerType}`);
@@ -2999,9 +3053,79 @@
                         }
                     }
 
-                    // Create the ticket
+                    // Create a very basic ticket data object with only core fields
+                    const basicTicketData = {
+                        email: formData.email,
+                        subject: subject,
+                        description: description,
+                        status: parseInt(formData.status || 2),
+                        priority: parseInt(formData.priority || 2),
+                        source: 101,
+                        type: "Incident"
+                    };
+
+                    // Add related tickets if available
+                    if (relatedTicketIds.length > 0) {
+                        basicTicketData.related_ticket_ids = relatedTicketIds;
+                    }
+
+                    // Add group ID if available
+                    if (formData.groupField) {
+                        let groupId = parseInt(formData.groupField);
+                        if (!isNaN(groupId)) {
+                            basicTicketData.group_id = groupId;
+                        }
+                    }
+
+                    // Add agent ID if available
+                    if (formData.agentField) {
+                        let agentId = parseInt(formData.agentField);
+                        if (!isNaN(agentId)) {
+                            basicTicketData.responder_id = agentId;
+                        }
+                    }
+
+                    // Add tags
+                    basicTicketData.tags = [`tracker-${this.trackerType}`];
+
+                    // Add custom fields if we have them in the source ticket
+                    if (sourceTicketData && sourceTicketData.custom_fields) {
+                        basicTicketData.custom_fields = {};
+
+                        // Copy specific custom fields from source ticket
+                        const customFieldsToPreserve = [
+                            'cf_account_manager',
+                            'cf_rvp',
+                            'cf_categorization',
+                            'cf_subcategory',
+                            'cf_issue_detail',
+                            'cf_product_type',
+                            'cf_product',
+                            'cf_product_subsection',
+                            'cf_vip'
+                        ];
+
+                        customFieldsToPreserve.forEach(field => {
+                            if (sourceTicketData.custom_fields[field] !== undefined) {
+                                basicTicketData.custom_fields[field] = sourceTicketData.custom_fields[field];
+                            }
+                        });
+
+                        // Add district field if available
+                        if (formData.districtField) {
+                            basicTicketData.custom_fields.cf_district509811 = String(formData.districtField);
+                        }
+                        else if (formData.districtName) {
+                            basicTicketData.custom_fields.cf_district509811 = String(formData.districtName);
+                        }
+                    }
+
+                    // Log the basic ticket data
+                    console.log('Basic ticket data to send:', JSON.stringify(basicTicketData, null, 2));
+
+                    // Create the ticket with basic data
                     const response = await this.client.request.invokeTemplate("createfdTicket", {
-                        body: JSON.stringify(ticketData)
+                        body: JSON.stringify(basicTicketData)
                     });
 
                     console.log('Ticket created successfully, raw response:', response.response);
@@ -3039,10 +3163,34 @@
                     this.handleTicketCreationSuccess(responseData);
                 } catch (error) {
                     console.error('Error creating ticket:', error);
+                    // Try to extract the specific field causing the error
+                    let errorMessage = 'Unknown error';
+                    try {
+                        if (error.response) {
+                            const errorResponse = JSON.parse(error.response);
+                            console.error('Detailed API error response:', errorResponse);
+                            if (errorResponse.errors && errorResponse.errors.length > 0) {
+                                // Log each error in the response
+                                errorResponse.errors.forEach((err, index) => {
+                                    console.error(`API Error ${index + 1}:`, err);
+                                });
+                                // Try to extract the invalid field name
+                                const invalidFieldError = errorResponse.errors.find(err => err.code === 'invalid_field');
+                                if (invalidFieldError && invalidFieldError.field) {
+                                    errorMessage = `Invalid field: ${invalidFieldError.field}`;
+                                } else if (errorResponse.description) {
+                                    errorMessage = errorResponse.description;
+                                }
+                            }
+                        }
+                    } catch (parseError) {
+                        console.error('Error parsing error response:', parseError);
+                    }
+
                     if (loadingOverlay) {
                         loadingOverlay.style.display = 'none';
                     }
-                    this.showError('Failed to create ticket: ' + (error.message || 'Unknown error'));
+                    this.showError('Failed to create ticket: ' + errorMessage);
                 }
             }
 

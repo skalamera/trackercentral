@@ -246,6 +246,34 @@ const TRACKER_CONFIGS = {
                 ]
             },
             {
+                id: "stepsToReproduce",
+                title: "STEPS TO REPRODUCE",
+                icon: "fa-list-ol",
+                fields: [
+                    {
+                        id: "pathField",
+                        type: "text",
+                        label: "Path",
+                        required: true,
+                        hint: "Path taken to recreate issue and screenshots if necessary. EX: BAdvance -c2022 > TRS > G5 > U1 > W2 > L12"
+                    },
+                    {
+                        id: "actualResults",
+                        type: "richtext",
+                        label: "Actual results",
+                        required: true,
+                        hint: "Provide Screenshots and any other information that would be helpful to replicate the reported issue."
+                    },
+                    {
+                        id: "expectedResults",
+                        type: "richtext",
+                        label: "Expected results",
+                        required: true,
+                        hint: "Explain/show how the system should be functioning if working correctly. Our role is to convey what the user is requesting. Ie. the user feels a certain standard is missing from a lesson. Request that rationale be provided. Example of expected results: Provide title for lesson, Fix hyperlink, Provide rationale, Fix grammatical errors."
+                    }
+                ]
+            },
+            {
                 id: "screenshots",
                 title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
                 icon: "fa-images",
@@ -268,6 +296,11 @@ const TRACKER_CONFIGS = {
                 description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
                 description += `<div>${fields.summary || ''}</div>`;
                 description += '<div style="margin-bottom: 20px;"></div>';
+            } else {
+                // Add empty summary section if not provided to ensure it's always in the ticket
+                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+                description += '<div><em>No summary provided.</em></div>';
+                description += '<div style="margin-bottom: 20px;"></div>';
             }
 
             // Add description with all fields
@@ -287,9 +320,43 @@ const TRACKER_CONFIGS = {
             if (fields.impactScope) description += `Teacher vs Student impact: ${fields.impactScope}<br>`;
             description += `VIP Customer: ${fields.isVIP || 'No'}<br>`;
 
+            // Add steps to reproduce section
+            description += '<div style="margin-bottom: 20px;"></div>';
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
+
+            // Add path field
+            if (fields.pathField) {
+                description += `Path: ${fields.pathField}<br>`;
+                description += '<div style="margin-bottom: 10px;"></div>';
+            } else {
+                description += '<div><em>No path provided.</em></div>';
+                description += '<div style="margin-bottom: 10px;"></div>';
+            }
+
+            // Add actual results
+            if (fields.actualResults && fields.actualResults.trim() !== '<p><br></p>') {
+                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Actual results</span></div>`;
+                description += `<div>${fields.actualResults}</div>`;
+                description += '<div style="margin-bottom: 10px;"></div>';
+            } else {
+                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Actual results</span></div>`;
+                description += '<div><em>No actual results provided.</em></div>';
+                description += '<div style="margin-bottom: 10px;"></div>';
+            }
+
+            // Add expected results
+            if (fields.expectedResults && fields.expectedResults.trim() !== '<p><br></p>') {
+                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Expected results</span></div>`;
+                description += `<div>${fields.expectedResults}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            } else {
+                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Expected results</span></div>`;
+                description += '<div><em>No expected results provided.</em></div>';
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
             // Add screenshots section if provided
             if (fields.screenshotsDescription && fields.screenshotsDescription.trim() !== '<p><br></p>') {
-                description += '<div style="margin-bottom: 20px;"></div>';
                 description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
                 description += `<div>${fields.screenshotsDescription}</div>`;
             }
@@ -440,7 +507,7 @@ const TRACKER_CONFIGS = {
                             { id: "allUsers", label: "All Users" }
                         ]
                     },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true, disabled: true }
                 ]
             },
             {
@@ -2734,7 +2801,7 @@ const TRACKER_CONFIGS = {
                     subject = `${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
                 }
 
-                formattedSubjectField.value = subject;
+                formattedSubjectField.value = subject; V
                 console.log("Updated subject line:", subject);
             }
 
