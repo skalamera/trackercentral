@@ -3417,8 +3417,353 @@ const TRACKER_CONFIGS = {
 
             return description;
         }
+    },
+
+    // DPT Customized eAssessment Tracker
+    "dpt": {
+        title: "DPT(Customized eAssessment) Tracker",
+        icon: "fa-file-alt",
+        description: "For requests to add districts to the District Preference Table for customized eAssessments",
+        sections: [
+            {
+                id: "subject",
+                title: "SUBJECT",
+                icon: "fa-pencil-alt",
+                fields: [
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/freshdesk/a/solutions/articles/67000631346' target='_blank'>Learn more about VIP status</a>"
+                    },
+                    {
+                        id: "districtName",
+                        type: "text",
+                        label: "District Name",
+                        required: true,
+                        hint: "The name of the district to be added to the DPT table."
+                    },
+                    {
+                        id: "specificUserRole",
+                        type: "text",
+                        label: "User Role",
+                        required: false,
+                        hint: "Specify the user role for the subject line if needed."
+                    },
+                    {
+                        id: "formattedSubject",
+                        type: "text",
+                        label: "Formatted Subject",
+                        required: false,
+                        readOnly: true,
+                        disabled: true
+                    }
+                ]
+            },
+            {
+                id: "summary",
+                title: "SUMMARY",
+                icon: "fa-file-alt",
+                fields: [
+                    {
+                        id: "summaryContent",
+                        type: "richtext",
+                        label: "",
+                        required: true,
+                        hint: "Include details about the district requesting to be added to the District Preference Table for customized eAssessments."
+                    },
+                    {
+                        id: "districtStateName",
+                        type: "text",
+                        label: "District State",
+                        required: true,
+                        hint: "The state where the district is located."
+                    },
+                    {
+                        id: "districtBuId",
+                        type: "text",
+                        label: "District BU ID",
+                        required: true,
+                        hint: "Provide the BU ID"
+                    }
+                ]
+            },
+            {
+                id: "scenario",
+                title: "SCENARIO",
+                icon: "fa-clipboard-list",
+                fields: [
+                    {
+                        id: "scenarioDetails",
+                        type: "richtext",
+                        label: "",
+                        required: true,
+                        value: "District has multiple eAssessments that have already been taken by students but they still want access to update those eAssessments.",
+                        readOnly: true,
+                        hint: "This has been provided. However, if there is anything that is unique to this request you feel the developers need to be made aware of include it here."
+                    }
+                ]
+            },
+            {
+                id: "userInfo",
+                title: "IMPACTED USER INFO",
+                icon: "fa-user",
+                fields: [
+                    {
+                        id: "impactedRole",
+                        type: "text",
+                        label: "Role",
+                        required: true,
+                        readOnly: true,
+                        hint: "Provide the role of the user requesting. Only a district admin can make this request. If the user is a teacher or school admin direct them to their district admin to request changes to customized eAssessments."
+                    },
+                    { id: "username", type: "text", label: "Username", required: true, hint: "Provide the username of the district admin. EX: mitzisheppard" },
+                    { id: "techAdminLink", type: "text", label: "BURC Link", required: true },
+                    { id: "dateRequested", type: "date", label: "Date Requested", required: true, hint: "Provide the date the customer requested this. EX: 12/5/2024" }
+                ]
+            },
+            {
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [
+                    {
+                        id: "screenshotsDescription",
+                        type: "richtext",
+                        label: "",
+                        required: false
+                    }
+                ]
+            }
+        ],
+        descriptionGenerator: function (fields) {
+            console.log("DPT Customized eAssessment description generator running with fields:", fields);
+            let description = '';
+
+            // Removed formatted subject section as requested
+
+            // Add summary section
+            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+
+            // Add the summary content
+            if (fields.summaryContent && fields.summaryContent.trim() !== '<p><br></p>') {
+                description += `<div>${fields.summaryContent || ''}</div>`;
+            } else {
+                description += `<div>${fields.districtName || ''} wants to be added to the District Preference Table for customized eAssessments</div>`;
+            }
+
+            description += `<div>District name: ${fields.districtName || ''}</div>`;
+            description += `<div>District State: ${fields.districtStateName || ''}</div>`;
+            description += `<div>District BU ID: ${fields.districtBuId || ''}</div>`;
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Add scenario section
+            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SCENARIO</span></div>';
+
+            // Add scenario details - use the stored value if available, otherwise use default
+            if (fields.scenarioDetails && fields.scenarioDetails.trim() !== '<p><br></p>') {
+                description += `<div>${fields.scenarioDetails}</div>`;
+            } else {
+                description += `<div>District has multiple eAssessments that have already been taken by students but they still want access to update those eAssessments.</div>`;
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Add impacted user info
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
+
+            // Use impactedRole with a fallback to the default value
+            const userRole = fields.impactedRole || 'District Admin Only';
+            description += `<div>Role: ${userRole}</div>`;
+
+            // Add username with proper formatting
+            if (fields.username) {
+                description += `<div>Username: ${fields.username}</div>`;
+            }
+
+            // Add BURC Link (renamed from techAdminLink)
+            if (fields.techAdminLink) {
+                let adminLink = fields.techAdminLink.trim();
+                // Add https:// prefix if missing
+                if (!adminLink.startsWith('http://') && !adminLink.startsWith('https://')) {
+                    adminLink = 'https://' + adminLink;
+                }
+                description += `<div>BURC Link: <a href="${adminLink}" target="_blank">${fields.techAdminLink}</a></div>`;
+            }
+
+            // Add Date Requested
+            if (fields.dateRequested) {
+                const formattedDate = formatDate(fields.dateRequested);
+                description += `<div>Date Requested: ${formattedDate}</div>`;
+            }
+
+            // Add screenshots section if provided
+            if (fields.screenshotsDescription && fields.screenshotsDescription.trim() !== '<p><br></p>') {
+                description += '<div style="margin-bottom: 20px;"></div>';
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS & SUPPORTING MATERIALS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+            }
+
+            return description;
+        },
+        // Add onLoad function for dynamic subject line formatting
+        onLoad: function () {
+            console.log("DPT Customized eAssessment Tracker onLoad function executing");
+
+            // Get district state from source ticket's company data
+            async function populateDistrictState() {
+                try {
+                    // Access client through the global trackerApp instance
+                    if (!window.trackerApp || !window.trackerApp.client) {
+                        console.error("TrackerApp or client not available");
+                        return;
+                    }
+
+                    // Try to get ticket data
+                    const ticketData = await window.trackerApp.client.data.get("ticket");
+                    if (ticketData && ticketData.ticket && ticketData.ticket.company_id) {
+                        const companyId = ticketData.ticket.company_id;
+                        console.log("Found company ID:", companyId);
+
+                        // Fetch company data to get state
+                        try {
+                            const response = await window.trackerApp.client.request.invokeTemplate("getCompanyDetails", {
+                                context: { companyId: companyId }
+                            });
+
+                            const companyData = JSON.parse(response.response);
+                            console.log("Company data:", companyData);
+
+                            // Extract state from custom fields
+                            if (companyData && companyData.custom_fields && companyData.custom_fields.state) {
+                                const stateValue = companyData.custom_fields.state;
+                                console.log(`Found company state: ${stateValue}`);
+
+                                // Set the district state field with the retrieved state
+                                const districtStateField = document.getElementById('districtStateName');
+                                if (districtStateField) {
+                                    districtStateField.value = stateValue;
+                                    // Keep the field editable - don't make it read-only
+                                    console.log(`Set district state field to: ${stateValue} (editable)`);
+                                } else {
+                                    console.warn("District state field not found");
+                                }
+                            } else {
+                                console.log("Company data doesn't contain state custom field");
+                            }
+                        } catch (error) {
+                            console.error("Error fetching company data:", error);
+                        }
+                    } else {
+                        console.log("No company ID found in ticket data");
+                    }
+                } catch (error) {
+                    console.error("Error getting ticket data:", error);
+                }
+            }
+
+            function updateSubjectLine() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const specificUserRoleField = document.getElementById('specificUserRole');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+                const impactedRoleField = document.getElementById('impactedRole');
+
+                if (!isVipField || !districtNameField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const userRole = specificUserRoleField ? specificUserRoleField.value || '' : '';
+
+                // Format: "VIP* District Name | DPT (Customized eAssessments) - User Role"
+                let subject = '';
+                const roleSuffix = userRole ? ` - ${userRole}` : '';
+
+                if (isVip) {
+                    subject = `VIP* ${districtName} | DPT (Customized eAssessments)${roleSuffix}`;
+                } else {
+                    subject = `${districtName} | DPT (Customized eAssessments)${roleSuffix}`;
+                }
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+
+                // Sync to impactedRole field
+                if (impactedRoleField && specificUserRoleField) {
+                    impactedRoleField.value = specificUserRoleField.value;
+                    console.log("Synced user role to impacted role field:", specificUserRoleField.value);
+                }
+            }
+
+            // Load district state from company data
+            // Use a short delay to ensure trackerApp is ready and fully initialized
+            setTimeout(() => {
+                if (window.trackerApp && window.trackerApp.client) {
+                    console.log("TrackerApp client is available, attempting to fetch district state");
+                    populateDistrictState();
+                } else {
+                    console.error("TrackerApp client object not available for district state lookup");
+
+                    // Attempt to get the client through another approach
+                    if (typeof client !== 'undefined') {
+                        console.log("Found global client object, trying alternative approach");
+                        try {
+                            // Create a temporary function using the available client
+                            const tempFetchState = async () => {
+                                try {
+                                    const ticketData = await client.data.get("ticket");
+                                    if (ticketData && ticketData.ticket && ticketData.ticket.company_id) {
+                                        const companyId = ticketData.ticket.company_id;
+                                        console.log("Alt: Found company ID:", companyId);
+
+                                        const response = await client.request.invokeTemplate("getCompanyDetails", {
+                                            context: { companyId: companyId }
+                                        });
+
+                                        const companyData = JSON.parse(response.response);
+                                        if (companyData && companyData.custom_fields && companyData.custom_fields.state) {
+                                            const stateValue = companyData.custom_fields.state;
+                                            console.log(`Alt: Found company state: ${stateValue}`);
+
+                                            const districtStateField = document.getElementById('districtStateName');
+                                            if (districtStateField) {
+                                                districtStateField.value = stateValue;
+                                                console.log(`Alt: Set district state field to: ${stateValue}`);
+                                            }
+                                        }
+                                    }
+                                } catch (error) {
+                                    console.error("Error in alternative state fetch:", error);
+                                }
+                            };
+
+                            tempFetchState();
+                        } catch (error) {
+                            console.error("Alternative approach failed:", error);
+                        }
+                    }
+                }
+            }, 1500);
+
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('specificUserRole')?.addEventListener('input', updateSubjectLine);
+
+            // Initial update
+            updateSubjectLine();
+
+            // Schedule another update after a delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
+        }
     }
 };
 
 // Export the tracker configurations for use in tests
-module.exports = { TRACKER_CONFIGS };
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { TRACKER_CONFIGS };
+}

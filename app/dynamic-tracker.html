@@ -2946,6 +2946,14 @@
                         type: "Incident" // Set ticket type to Incident by default
                     };
 
+                    // Add VIP tag if applicable, but DO NOT add district name as tag
+                    // (Freshdesk has a 32-character limit for tags, and district names can exceed this)
+                    // VIP tag is no longer added to prevent confusion with VIP custom field
+
+                    // IMPORTANT: District name is NOT added as a tag to prevent validation errors
+                    // Freshdesk has a 32-character limit for tags, and district names can exceed this
+                    console.log("Tags set (without district name):", ticketData.tags);
+
                     // Store related tickets to create associations after ticket creation
                     this.relatedTicketIds = relatedTicketIds;
 
@@ -3036,11 +3044,6 @@
                     const jsonBody = JSON.stringify(ticketData);
                     console.log('Raw JSON body being sent to API:', jsonBody);
 
-                    // Store tracker type explicitly in the tags for easier identification
-                    if (!ticketData.tags.includes(`tracker-${this.trackerType}`)) {
-                        ticketData.tags.push(`tracker-${this.trackerType}`);
-                    }
-
                     // For assembly trackers, ensure we have the right tag format
                     if (this.trackerType === 'assembly') {
                         // Make sure we have the right tag 
@@ -3087,6 +3090,8 @@
 
                     // Add tags
                     basicTicketData.tags = [`tracker-${this.trackerType}`];
+
+                    // VIP tag handling removed as per requirements
 
                     // Add custom fields if we have them in the source ticket
                     if (sourceTicketData && sourceTicketData.custom_fields) {
