@@ -3770,6 +3770,459 @@ const TRACKER_CONFIGS = {
             // Schedule another update after a small delay to ensure fields are populated
             setTimeout(updateSubjectLine, 500);
         }
+    },
+
+    // 9. SIM Dashboard
+    "sim-dashboard": {
+        title: "SIM Dashboard Tracker",
+        icon: "fa-tachometer-alt",
+        description: "For issues regarding functionality of the dashboard",
+        sections: [
+            {
+                id: "subject",
+                title: "SUBJECT",
+                icon: "fa-pencil-alt",
+                fields: [
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                    },
+                    { id: "districtName", type: "text", label: "District Name", required: true },
+                    {
+                        id: "districtState", type: "text", label: "District State", required: true,
+                        hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
+                    },
+                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+                    {
+                        id: "userRole",
+                        type: "checkboxes",
+                        label: "User Role",
+                        required: true,
+                        options: [
+                            { id: "students", label: "Students" },
+                            { id: "teachers", label: "Teachers" },
+                            { id: "admin", label: "Admin" },
+                            { id: "allUsers", label: "All Users" }
+                        ]
+                    },
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                ]
+            },
+            {
+                id: "issueDetails",
+                title: "ISSUE DESCRIPTION",
+                icon: "fa-exclamation-circle",
+                fields: [
+                    {
+                        id: "issueDescription",
+                        type: "richtext",
+                        label: "Issue Description: Specific details outlining user impact.",
+                        hint: "EX: Teacher is unable to view student progress on the dashboard",
+                        required: true
+                    }
+                ]
+            },
+            {
+                id: "reproduction",
+                title: "STEPS TO REPRODUCE",
+                icon: "fa-list-ol",
+                fields: [
+                    {
+                        id: "stepsToReproduce",
+                        type: "richtext",
+                        label: "Steps to Reproduce",
+                        required: true,
+                        placeholder: "EX:\n1. Log in as Teacher\n2. Navigate to Dashboard",
+                        hint: "The exact path taken by the user and yourself to get to the reported issue"
+                    }
+                ]
+            },
+            {
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [] // Empty array since we handle this in setupCustomFileUploaders
+            },
+            {
+                id: "userInfo",
+                title: "IMPACTED USER INFO",
+                icon: "fa-user",
+                fields: [
+                    { id: "username", type: "text", label: "Username", required: true, placeholder: "EX: mitzisheppard", hint: "Provide the user's username at the district." },
+                    {
+                        id: "role", type: "text", label: "Role", required: true,
+                        hint: "Provide the user's role at the district. EX: District Admin, School Admin, Teacher, Student"
+                    },
+                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
+                    {
+                        id: "studentInternalId",
+                        type: "text",
+                        label: "Student Internal ID",
+                        required: true,
+                        hint: "Remove if Teacher or Admin are experiencing issue."
+                    },
+                    { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
+                    {
+                        id: "realm", type: "text", label: "Realm", required: true,
+                        hint: "Provide the district's realm."
+                    },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
+                    {
+                        id: "harFileAttached",
+                        type: "select",
+                        label: "HAR file attached",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "HAR files help identify browser network issues"
+                    },
+                    {
+                        id: "harFileReason",
+                        type: "text",
+                        label: "Reason if HAR file not attached",
+                        required: false,
+                        condition: {
+                            field: "harFileAttached",
+                            value: "No"
+                        }
+                    }
+                ]
+            },
+            {
+                id: "expectedResults",
+                title: "EXPECTED RESULTS",
+                icon: "fa-check-circle",
+                fields: [
+                    {
+                        id: "expectedResults",
+                        type: "richtext",
+                        label: "Explain/Show how the system should be functioning if working correctly",
+                        required: true
+                    }
+                ]
+            }
+        ],
+        descriptionGenerator: function (fields) {
+            let description = '';
+
+            // Issue Description
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
+            description += 'Specific details outlining user impact:<br>';
+            if (fields.issueDescription) {
+                description += `<div>${fields.issueDescription}</div>`;
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Steps to Reproduce
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
+            if (fields.stepsToReproduce) {
+                description += `<div>${fields.stepsToReproduce}</div>`;
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Screenshots and Videos
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS and/or VIDEOS</span></div>';
+            description += '<div>(please include URL in screen capture)</div>';
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Impacted User Info
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
+            if (fields.username) description += `Username: ${fields.username}<br>`;
+            if (fields.role) description += `Role: ${fields.role}<br>`;
+            if (fields.BURCLink) description += `BURC Link: ${fields.BURCLink}<br>`;
+            if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
+            if (fields.device) description += `Device: ${fields.device}<br>`;
+            if (fields.realm) description += `Realm: ${fields.realm}<br>`;
+            if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported)}<br>`;
+            if (fields.harFileAttached) {
+                description += `HAR file attached: ${fields.harFileAttached}`;
+                if (fields.harFileAttached === "No" && fields.harFileReason) {
+                    description += ` (${fields.harFileReason})`;
+                }
+                description += '<br>';
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Expected Results
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
+            if (fields.expectedResults) {
+                description += `<div>${fields.expectedResults}</div>`;
+            } else {
+                description += '<div><em>No expected results provided.</em></div>';
+            }
+
+            return description;
+        },
+        // Add onLoad function to populate Application Name and District State
+        onLoad: function () {
+            console.log("SIM Dashboard Tracker onLoad function executing");
+
+            // Call the helper functions to populate fields
+            populateApplicationName();
+            populateDistrictState();
+
+            // Add or update subject line formatter
+            function updateSubjectLine() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const districtStateField = document.getElementById('districtState');
+                const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
+                const specificIssueField = document.getElementById('specificIssue');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
+                    !versionField || !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
+                    }
+                });
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const districtState = districtStateField.value || '';
+                const application = applicationField.value || '';
+                const version = versionField.value || '';
+                const specificIssue = specificIssueField.value || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
+
+                // Format per requirements: "VIP or Standard District Name • District State (Abv) | Application Name • Version | Specific issue for user role"
+                let subject = '';
+                if (isVip) {
+                    subject = `VIP * ${districtName} • ${districtState} | ${application}`;
+                } else {
+                    subject = `${districtName} • ${districtState} | ${application}`;
+                }
+
+                // Add version if provided
+                if (version) {
+                    subject += ` • ${version}`;
+                }
+
+                // Add specific issue and user role
+                subject += ` | ${specificIssue}`;
+                if (userRoleText) {
+                    subject += ` for ${userRoleText}`;
+                }
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+            }
+
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
+
+            // Add listeners to all checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSubjectLine);
+            });
+
+            // Initial update attempt
+            updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
+        }
+    },
+
+    // DPT (Customized eAssessment)
+    "dpt": {
+        title: "DPT (Customized eAssessment) Tracker",
+        icon: "fa-file-alt",
+        description: "For requests to add districts to the District Preference Table for customized eAssessments",
+        sections: [
+            {
+                id: "subject",
+                title: "SUBJECT",
+                icon: "fa-pencil-alt",
+                fields: [
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                    },
+                    { id: "districtName", type: "text", label: "District Name", required: true },
+                    {
+                        id: "userRole",
+                        type: "text",
+                        label: "Role",
+                        required: true,
+                        hint: "District Admin Only"
+                    },
+                    { id: "formattedSubject", type: "text", label: "Subject", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                ]
+            },
+            {
+                id: "summary",
+                title: "SUMMARY",
+                icon: "fa-file-alt",
+                fields: [
+                    {
+                        id: "summaryContent",
+                        type: "richtext",
+                        label: "Summary of request",
+                        required: true,
+                        hint: "Explain that the district would like to be added to the District Preference Table for customized eAssessments."
+                    },
+                    { id: "districtNameField", type: "text", label: "District name", required: true },
+                    { id: "districtState", type: "text", label: "District State", required: true },
+                    { id: "districtBUID", type: "text", label: "District BU ID", required: true, hint: "Provide the District's BU ID" }
+                ]
+            },
+            {
+                id: "scenario",
+                title: "SCENARIO",
+                icon: "fa-sitemap",
+                fields: [
+                    {
+                        id: "scenarioDescription",
+                        type: "richtext",
+                        label: "Describe the scenario",
+                        required: true,
+                        hint: "Explain if the district has multiple eAssessments that have already been taken by students but they still want access to update those eAssessments."
+                    }
+                ]
+            },
+            {
+                id: "userInfo",
+                title: "IMPACTED USER INFO",
+                icon: "fa-user",
+                fields: [
+                    { id: "username", type: "text", label: "Username", required: true },
+                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, hint: "Provide BURC Link to the user" },
+                    { id: "dateRequested", type: "date", label: "Date Requested", required: true, hint: "Provide the date the user requested this change" }
+                ]
+            }
+        ],
+        descriptionGenerator: function (fields) {
+            let description = '';
+
+            // SUMMARY
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+            if (fields.summaryContent) {
+                description += `<div>${fields.summaryContent}</div>`;
+            } else {
+                description += `${fields.districtNameField || fields.districtName} wants to be added to the District Preference Table for customized eAssessments<br>`;
+            }
+            description += `District name: ${fields.districtNameField || fields.districtName}<br>`;
+            description += `District State: ${fields.districtState || ''}<br>`;
+            description += `District BU ID ${fields.districtBUID || ''}<br>`;
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // SCENARIO
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCENARIO</span></div>';
+            if (fields.scenarioDescription) {
+                description += `<div>${fields.scenarioDescription}</div>`;
+            } else {
+                description += 'District has multiple eAssessments that have already been taken by students but they still want access to update those eAssessments.';
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // IMPACTED USER INFO
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
+            if (fields.userRole) description += `Role: ${fields.userRole}<br>`;
+            if (fields.username) description += `Username: ${fields.username}<br>`;
+            if (fields.BURCLink) description += `BURC Link: ${fields.BURCLink}<br>`;
+            if (fields.dateRequested) description += `Date Requested: ${formatDate(fields.dateRequested)}<br>`;
+
+            return description;
+        },
+        onLoad: function () {
+            console.log("DPT Tracker onLoad function executing");
+
+            // Call helper function to populate district state
+            populateDistrictState();
+
+            // Set default value for Role field
+            const roleField = document.getElementById('userRole');
+            if (roleField && !roleField.value) {
+                roleField.value = "District Admin Only";
+            }
+
+            // Function to update the subject line based on district name and VIP status
+            function updateSubjectLine() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const userRoleField = document.getElementById('userRole');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!isVipField || !districtNameField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const userRole = userRoleField ? userRoleField.value || 'District Admin' : 'District Admin';
+
+                // Format: "VIP* Status District Name | DPT (Customized eAssessments) - User Role"
+                let subject = '';
+                if (isVip) {
+                    subject = `VIP * ${districtName} | DPT (Customized eAssessments) - ${userRole}`;
+                } else {
+                    subject = `${districtName} | DPT (Customized eAssessments) - ${userRole}`;
+                }
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+
+                // Also update the district name in the summary section
+                const districtNameSummaryField = document.getElementById('districtNameField');
+                if (districtNameSummaryField) {
+                    districtNameSummaryField.value = districtName;
+                }
+
+                // Also update the district state in the summary section if it's not already set
+                const districtStateSummaryField = document.getElementById('districtState');
+                const districtStateField = document.getElementById('districtState');
+                if (districtStateSummaryField && districtStateField && districtStateField.value) {
+                    districtStateSummaryField.value = districtStateField.value;
+                }
+            }
+
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('userRole')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
+
+            // Initial update attempt
+            updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
+        }
     }
 };
 
