@@ -201,6 +201,13 @@ const TRACKER_CONFIGS = {
                 fields: [
                     { id: "xcode", type: "text", label: "XCODE", required: true, hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>", placeholder: "e.g. X56723" },
                     { id: "application", type: "text", label: "Application Name", required: true, placeholder: "e.g. BAdvance c2022" },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Symbols Of Our Country Missing" },
                     { id: "gradesImpacted", type: "text", label: "Grades Impacted", required: true, placeholder: "e.g. Grade 2" },
                     { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject" }
@@ -875,6 +882,13 @@ const TRACKER_CONFIGS = {
                 fields: [
                     { id: "xcode", type: "text", label: "XCODE", required: true, placeholder: "e.g. X56723" },
                     { id: "application", type: "text", label: "Application Name", required: true, placeholder: "e.g. BAdvance -c2022" },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    },
                     { id: "resourcePath", type: "text", label: "Resource Path", required: true, placeholder: "e.g. TRS: G5>U1>W2>L12" },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Title Missing" },
                     { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
@@ -1119,6 +1133,13 @@ const TRACKER_CONFIGS = {
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
@@ -1282,6 +1303,13 @@ const TRACKER_CONFIGS = {
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "application", type: "text", label: "Application Name", required: true, placeholder: "EX: Grade View" },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
@@ -1614,6 +1642,13 @@ const TRACKER_CONFIGS = {
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
@@ -1814,6 +1849,13 @@ const TRACKER_CONFIGS = {
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
@@ -1827,7 +1869,7 @@ const TRACKER_CONFIGS = {
                             { id: "allUsers", label: "All Users" }
                         ]
                     },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: true, hint: "This will be submitted as your ticket subject", readOnly: true }
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
             {
@@ -2013,6 +2055,13 @@ const TRACKER_CONFIGS = {
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
@@ -2319,6 +2368,13 @@ const TRACKER_CONFIGS = {
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
@@ -2574,6 +2630,13 @@ const TRACKER_CONFIGS = {
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
@@ -2997,6 +3060,13 @@ const TRACKER_CONFIGS = {
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
@@ -3274,7 +3344,14 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pencil-alt",
                 fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true }
+                    { id: "subject", type: "text", label: "Subject", required: true },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Version",
+                        required: true,
+                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                    }
                 ]
             },
             {
