@@ -210,7 +210,22 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Version",
                         required: true,
-                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                        options: [
+                            "",
+                            ".0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ]
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Symbols Of Our Country Missing" },
                     { id: "gradesImpacted", type: "text", label: "Grades Impacted", required: true, placeholder: "e.g. Grade 2" },
@@ -381,6 +396,9 @@ const TRACKER_CONFIGS = {
             // First populate Application Name from product info
             populateApplicationName();
 
+            // Handle custom version input when "Other" is selected
+            setupCustomVersionInput();
+
             // Function to sync fields from Subject to other sections
             function syncFields() {
                 // Get the source fields from Subject section
@@ -444,7 +462,7 @@ const TRACKER_CONFIGS = {
                 const xcode = xcodeField.value || '';
                 const hasMultipleXcodes = hasMultipleXcodesField.value === 'Yes';
                 const application = applicationField.value || '';
-                const version = versionField.value || '';
+                const version = getVersionValue(versionField) || '';
                 const specificIssue = specificIssueField.value || '';
                 const gradesImpacted = gradesImpactedField.value || '';
 
@@ -1007,7 +1025,22 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Version",
                         required: true,
-                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                        options: [
+                            "",
+                            ".0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ]
                     },
                     { id: "resourcePath", type: "text", label: "Resource Path", required: true, placeholder: "e.g. TRS: G5>U1>W2>L12" },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Title Missing" },
@@ -1177,6 +1210,9 @@ const TRACKER_CONFIGS = {
             // First populate Application Name from product info
             populateApplicationName();
 
+            // Handle custom version input when "Other" is selected
+            setupCustomVersionInput();
+
             // Function to sync XCODE and Resource Path fields
             function syncFields() {
                 // Get the source fields from Subject section
@@ -1260,7 +1296,7 @@ const TRACKER_CONFIGS = {
 
                 const xcode = xcodeField.value || '';
                 const application = applicationField.value || '';
-                const version = versionField.value || '';
+                const version = getVersionValue(versionField) || '';
                 const resourcePath = resourcePathField.value || '';
                 const specificIssue = specificIssueField.value || '';
 
@@ -1441,7 +1477,22 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Version",
                         required: true,
-                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                        options: [
+                            "",
+                            ".0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ]
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -1611,6 +1662,9 @@ const TRACKER_CONFIGS = {
             populateApplicationName();
             populateDistrictState();
 
+            // Handle custom version input when "Other" is selected
+            setupCustomVersionInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -1643,7 +1697,7 @@ const TRACKER_CONFIGS = {
                 const districtName = districtNameField.value || '';
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
-                const version = versionField.value || '';
+                const version = getVersionValue(versionField) || '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -1722,7 +1776,22 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Version",
                         required: true,
-                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                        options: [
+                            "",
+                            ".0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ]
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -1941,6 +2010,9 @@ const TRACKER_CONFIGS = {
             populateApplicationName();
             populateDistrictState();
 
+            // Handle custom version input when "Other" is selected
+            setupCustomVersionInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -1973,7 +2045,7 @@ const TRACKER_CONFIGS = {
                 const districtName = districtNameField.value || '';
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
-                const version = versionField.value || '';
+                const version = getVersionValue(versionField) || '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -2152,7 +2224,22 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Version",
                         required: true,
-                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                        options: [
+                            "",
+                            ".0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ]
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -2339,6 +2426,9 @@ const TRACKER_CONFIGS = {
             populateApplicationName();
             populateDistrictState();
 
+            // Handle custom version input when "Other" is selected
+            setupCustomVersionInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -2371,7 +2461,7 @@ const TRACKER_CONFIGS = {
                 const districtName = districtNameField.value || '';
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
-                const version = versionField.value || '';
+                const version = getVersionValue(versionField) || '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -2450,7 +2540,22 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Version",
                         required: true,
-                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                        options: [
+                            "",
+                            ".0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ]
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -2636,6 +2741,9 @@ const TRACKER_CONFIGS = {
             populateApplicationName();
             populateDistrictState();
 
+            // Handle custom version input when "Other" is selected
+            setupCustomVersionInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -2668,7 +2776,7 @@ const TRACKER_CONFIGS = {
                 const districtName = districtNameField.value || '';
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
-                const version = versionField.value || '';
+                const version = getVersionValue(versionField) || '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -2747,7 +2855,22 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Version",
                         required: true,
-                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                        options: [
+                            "",
+                            ".0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ]
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -2934,6 +3057,9 @@ const TRACKER_CONFIGS = {
             populateApplicationName();
             populateDistrictState();
 
+            // Handle custom version input when "Other" is selected
+            setupCustomVersionInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -2966,7 +3092,7 @@ const TRACKER_CONFIGS = {
                 const districtName = districtNameField.value || '';
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
-                const version = versionField.value || '';
+                const version = getVersionValue(versionField) || '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -3047,7 +3173,22 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Version",
                         required: true,
-                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                        options: [
+                            "",
+                            ".0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ]
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -3295,6 +3436,9 @@ const TRACKER_CONFIGS = {
             populateApplicationName();
             populateDistrictState();
 
+            // Handle custom version input when "Other" is selected
+            setupCustomVersionInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -3327,7 +3471,7 @@ const TRACKER_CONFIGS = {
                 const districtName = districtNameField.value || '';
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
-                const version = versionField.value || '';
+                const version = getVersionValue(versionField) || '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -3406,7 +3550,22 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Version",
                         required: true,
-                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                        options: [
+                            "",
+                            ".0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ]
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -3587,6 +3746,9 @@ const TRACKER_CONFIGS = {
             populateApplicationName();
             populateDistrictState();
 
+            // Handle custom version input when "Other" is selected
+            setupCustomVersionInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -3619,7 +3781,7 @@ const TRACKER_CONFIGS = {
                 const districtName = districtNameField.value || '';
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
-                const version = versionField.value || '';
+                const version = getVersionValue(versionField) || '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -3698,7 +3860,22 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Version",
                         required: true,
-                        options: ["", "2.0", "2.5", "2.75", "3.0", "3.5", "Other"]
+                        options: [
+                            "",
+                            ".0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ]
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -3868,6 +4045,9 @@ const TRACKER_CONFIGS = {
             populateApplicationName();
             populateDistrictState();
 
+            // Handle custom version input when "Other" is selected
+            setupCustomVersionInput();
+
             // Add or update subject line formatter
             // Add or update subject line formatter
             function updateSubjectLine() {
@@ -3901,7 +4081,7 @@ const TRACKER_CONFIGS = {
                 const districtName = districtNameField.value || '';
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
-                const version = versionField.value || '';
+                const version = getVersionValue(versionField) || '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -4295,11 +4475,6 @@ const TRACKER_CONFIGS = {
     }
 };
 
-// Export the tracker configurations for use in tests
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { TRACKER_CONFIGS };
-}
-
 // Helper function to populate Application Name from product info
 function populateApplicationName() {
     console.log("Attempting to populate Application Name field");
@@ -4448,4 +4623,101 @@ async function populateDistrictState() {
     } catch (error) {
         console.error("Error in populateDistrictState:", error);
     }
+}
+
+// Helper function to set up custom version input when "Other" is selected
+function setupCustomVersionInput() {
+    console.log("Setting up custom version input handler");
+
+    // Find the version dropdown
+    const versionSelect = document.getElementById('version');
+    if (!versionSelect) {
+        console.warn("Version dropdown not found");
+        return;
+    }
+
+    // Function to handle change in version dropdown
+    const handleVersionChange = function () {
+        // Check if current container already has a custom input field
+        let customInputContainer = document.getElementById('customVersionContainer');
+
+        // If "Other" is selected, create a custom input field if it doesn't exist
+        if (versionSelect.value === "Other") {
+            console.log("Other selected, handling custom input field");
+
+            // If the container doesn't exist yet, create it
+            if (!customInputContainer) {
+                console.log("Creating new custom input field");
+
+                // Create container for custom input
+                customInputContainer = document.createElement('div');
+                customInputContainer.id = 'customVersionContainer';
+                customInputContainer.className = 'form-group';
+                customInputContainer.style.marginTop = '10px';
+
+                // Create label for custom input
+                const label = document.createElement('label');
+                label.textContent = 'Custom Version';
+                label.className = 'control-label';
+
+                // Create input field
+                const customInput = document.createElement('input');
+                customInput.type = 'text';
+                customInput.id = 'customVersion';
+                customInput.className = 'form-control';
+                customInput.placeholder = 'Enter custom version';
+
+                // Retrieve any previous custom value if available
+                if (versionSelect.hasAttribute('data-custom-value')) {
+                    customInput.value = versionSelect.getAttribute('data-custom-value');
+                }
+
+                // Add event listener to update version value
+                customInput.addEventListener('input', function () {
+                    // Always store the current value, even if empty
+                    versionSelect.setAttribute('data-custom-value', customInput.value);
+
+                    // Trigger change event for subject line update
+                    const event = new Event('change', { bubbles: true });
+                    versionSelect.dispatchEvent(event);
+                });
+
+                // Append elements to container
+                customInputContainer.appendChild(label);
+                customInputContainer.appendChild(customInput);
+
+                // Insert container after version select
+                versionSelect.parentNode.insertBefore(customInputContainer, versionSelect.nextSibling);
+
+                // Focus the input field to make it immediately usable
+                setTimeout(() => {
+                    customInput.focus();
+                }, 50);
+            }
+        } else {
+            // If not "Other", remove the custom input container if it exists
+            if (customInputContainer) {
+                customInputContainer.remove();
+            }
+        }
+    };
+
+    // Add event listener to version dropdown
+    versionSelect.addEventListener('change', handleVersionChange);
+
+    // Run once on load in case "Other" is already selected
+    handleVersionChange();
+}
+
+// Helper to get version value (custom or selected)
+function getVersionValue(versionField) {
+    if (versionField.value === "Other" && versionField.hasAttribute('data-custom-value')) {
+        return versionField.getAttribute('data-custom-value');
+    }
+    return versionField.value;
+}
+
+// Export the tracker configurations for use in tests
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { TRACKER_CONFIGS };
 }
