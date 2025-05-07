@@ -384,7 +384,6 @@ const TRACKER_CONFIGS = {
             // Function to sync fields from Subject to other sections
             function syncFields() {
                 // Get the source fields from Subject section
-                const xcodeField = document.getElementById('xcode');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
 
@@ -426,6 +425,7 @@ const TRACKER_CONFIGS = {
 
             // Function to update subject line according to new format
             function updateSubjectLine() {
+                // Define all required field variables properly
                 const xcodeField = document.getElementById('xcode');
                 const hasMultipleXcodesField = document.getElementById('hasMultipleXcodes');
                 const applicationField = document.getElementById('application');
@@ -1217,6 +1217,7 @@ const TRACKER_CONFIGS = {
             }
 
             // Set up event listeners for the source fields
+            // Define xcode field first
             const xcodeField = document.getElementById('xcode');
             if (xcodeField) {
                 xcodeField.addEventListener('input', syncFields);
@@ -1243,6 +1244,7 @@ const TRACKER_CONFIGS = {
 
             // Add function to update subject line according to new format
             function updateSubjectLine() {
+                // Define all field variables properly
                 const xcodeField = document.getElementById('xcode');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
@@ -2923,113 +2925,7 @@ const TRACKER_CONFIGS = {
             return description;
         },
 
-        // Simplified onLoad function for SIM ORR
-        onLoad: function () {
-            console.log("SIM ORR onLoad function executing");
 
-            function updateSubjectLine() {
-                const isVipField = document.getElementById('isVIP');
-                const districtNameField = document.getElementById('districtName');
-                const applicationField = document.getElementById('application');
-                const specificIssueField = document.getElementById('specificIssue');
-                const formattedSubjectField = document.getElementById('formattedSubject');
-
-                if (!isVipField || !districtNameField || !applicationField ||
-                    !specificIssueField || !formattedSubjectField) {
-                    console.log("Missing required fields for subject formatting");
-                    return;
-                }
-
-                // Get user roles
-                const userRoles = [];
-                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
-                roleCheckboxes.forEach(cb => {
-                    if (cb.id === 'allUsers') {
-                        userRoles.push('All Users');
-                    } else {
-                        const label = cb.parentElement.textContent.trim();
-                        if (label) userRoles.push(label);
-                    }
-                });
-
-                const isVip = isVipField.value === 'Yes';
-                const districtName = districtNameField.value || '';
-                const application = applicationField.value || '';
-                const specificIssue = specificIssueField.value || '';
-                const userRoleText = userRoles.length > 0 ? userRoles.join(', ') : '';
-
-                // Format: "VIP * District Name | Application - Specific Issue for User Role"
-                let subject = '';
-                if (isVip) {
-                    subject = `VIP * ${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
-                } else {
-                    subject = `${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
-                }
-
-                formattedSubjectField.value = subject;
-                console.log("Updated subject line:", subject);
-            }
-
-            // Set up the HAR file condition
-            function setupHarFileCondition() {
-                const harFileAttachedField = document.getElementById('harFileAttached');
-                if (!harFileAttachedField) return;
-
-                // Get related elements
-                const harFileReasonContainer = document.getElementById('harFileReason')?.closest('.form-group');
-                const harFileUploaderContainer = document.getElementById('harFileUploader')?.closest('.form-group');
-                const harPlaceholderContainer = document.getElementById('harPlaceholder')?.closest('.form-group');
-
-                // Function to toggle HAR-related fields
-                function toggleHarFileFields() {
-                    const isYes = harFileAttachedField.value === 'Yes';
-
-                    // Toggle reason field (show when "No" is selected)
-                    if (harFileReasonContainer) {
-                        harFileReasonContainer.style.display = isYes ? 'none' : 'block';
-                    }
-
-                    // Toggle uploader fields (show when "Yes" is selected)
-                    if (harFileUploaderContainer) {
-                        harFileUploaderContainer.style.display = isYes ? 'block' : 'none';
-                    }
-
-                    if (harPlaceholderContainer) {
-                        harPlaceholderContainer.style.display = isYes ? 'block' : 'none';
-                    }
-                }
-
-                // Add event listener to the select field
-                harFileAttachedField.addEventListener('change', toggleHarFileFields);
-
-                // Initial setup
-                toggleHarFileFields();
-            }
-
-            // Set up event listeners
-            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
-
-            // Add listeners to all checkboxes
-            const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateSubjectLine);
-            });
-
-            // Initial update attempt
-            updateSubjectLine();
-
-            // Set up HAR file upload conditional display
-            setupHarFileCondition();
-
-            // Schedule another update after a small delay to ensure fields are populated
-            setTimeout(() => {
-                updateSubjectLine();
-                setupHarFileCondition();
-            }, 500);
-        },
         // Add onLoad function to populate Application Name
         onLoad: function () {
             console.log("SIM ORR Tracker onLoad function executing");
@@ -3353,9 +3249,9 @@ const TRACKER_CONFIGS = {
 
                 const isVip = isVipField.value === 'Yes';
                 const districtName = districtNameField.value || '';
-                const districtState = districtStateField.value || '';
+                // districtState variable removed (unused)
                 const application = applicationField.value || '';
-                const version = versionField.value || '';
+                // version variable removed (unused)
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(', ') : '';
 
@@ -3973,6 +3869,7 @@ const TRACKER_CONFIGS = {
             populateDistrictState();
 
             // Add or update subject line formatter
+            // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
                 const districtNameField = document.getElementById('districtName');
@@ -4036,7 +3933,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
             document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('version')?.addEventListener('change', updateSubjectLine); // This line was missing
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -4216,6 +4113,105 @@ const TRACKER_CONFIGS = {
             document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
             document.getElementById('userRole')?.addEventListener('input', updateSubjectLine);
             document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
+
+            // Initial update attempt
+            updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
+        }
+    },
+
+    // Timeout Extension
+    "timeout-extension": {
+        title: "Timeout Extension Tracker",
+        icon: "fa-clock",
+        description: "For requests regarding time out extensions in BU",
+        sections: [
+            {
+                id: "subject",
+                title: "SUBJECT",
+                icon: "fa-pencil-alt",
+                fields: [
+                    { id: "formattedSubject", type: "text", label: "Subject", required: true, hint: "This will be submitted as your ticket subject" }
+                ]
+            },
+            {
+                id: "details",
+                title: "DESCRIPTION",
+                icon: "fa-clipboard-list",
+                fields: [
+                    { id: "requestedLength", type: "text", label: "REQUESTED TIME OUT LENGTH (max 12 hours)", required: true },
+                    { id: "isVIP", type: "select", label: "VIP (yes or no)", required: true, options: ["No", "Yes"] },
+                    { id: "username", type: "text", label: "Username", required: true },
+                    { id: "role", type: "text", label: "Role (Must be district or tech admin)", required: true },
+                    { id: "adminLink", type: "text", label: "BURC Link", required: true },
+                    { id: "realm", type: "text", label: "Realm", required: true },
+                    { id: "districtName", type: "text", label: "District Name", required: true },
+                    { id: "districtState", type: "text", label: "District State", required: true },
+                    { id: "dateRequested", type: "date", label: "Date requested by customer", required: true }
+                ]
+            }
+        ],
+        descriptionGenerator: function (fields) {
+            let description = '';
+
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
+            description += `REQUESTED TIME OUT LENGTH (max 12 hours): ${fields.requestedLength || ''}<br>`;
+            description += `VIP: ${fields.isVIP || 'No'}<br>`;
+            description += `Username: ${fields.username || ''}<br>`;
+            description += `Role (Must be district or tech admin): ${fields.role || ''}<br>`;
+            description += `BURC Link: ${fields.adminLink || ''}<br>`;
+            description += `Realm: ${fields.realm || ''}<br>`;
+            description += `District Name: ${fields.districtName || ''}<br>`;
+            description += `District State: ${fields.districtState || ''}<br>`;
+            description += `Date requested by customer: ${formatDate(fields.dateRequested) || ''}<br>`;
+
+            return description;
+        },
+        onLoad: function () {
+            console.log("Timeout Extension Tracker onLoad function executing");
+
+            // Call the helper functions to populate fields
+            populateDistrictState();
+
+            // Format subject line based on district name and VIP status
+            function updateSubjectLine() {
+                const districtNameField = document.getElementById('districtName');
+                const isVIPField = document.getElementById('isVIP');
+                const requestedLengthField = document.getElementById('requestedLength');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!districtNameField || !isVIPField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                const districtName = districtNameField.value || '';
+                const isVip = isVIPField.value === 'Yes';
+                const timeOutLength = requestedLengthField ? requestedLengthField.value : '';
+
+                // Format: "VIP * District Name | Time Out Extension - Time Out Length" or "District Name | Time Out Extension - Time Out Length"
+                let subject = '';
+                if (isVip) {
+                    subject = `VIP * ${districtName} | Time Out Extension`;
+                } else {
+                    subject = `${districtName} | Time Out Extension`;
+                }
+
+                // Add the time out length if provided
+                if (timeOutLength) {
+                    subject += ` - ${timeOutLength}`;
+                }
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+            }
+
+            // Set up event listeners
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('requestedLength')?.addEventListener('input', updateSubjectLine);
 
             // Initial update attempt
             updateSubjectLine();
