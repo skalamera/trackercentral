@@ -1550,34 +1550,54 @@ const TRACKER_CONFIGS = {
             let description = '';
 
             // Issue Description
-            description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">ISSUE DESCRIPTION</span></div>';
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
             if (fields.issueDetails) {
                 description += `<div>${fields.issueDetails}</div>`;
             }
-            if (fields.resourceXcode) description += `Resource Xcode: ${fields.resourceXcode}<br>`;
-            if (fields.resourceTitle) description += `Resource Title: ${fields.resourceTitle}<br>`;
-            description += '<div style=\"margin-bottom: 20px;\"></div>';
+            description += `Resource xcode: ${fields.resourceXcode || ''}<br>`;
+            description += `Resource title: ${fields.resourceTitle || ''}<br>`;
+            description += '<div style="margin-bottom: 20px;"></div>';
 
             // Steps to Reproduce
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS TO REPRODUCE</span></div>';
             if (fields.stepsToReproduce) {
-                description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">STEPS TO REPRODUCE</span></div>';
                 description += `<div>${fields.stepsToReproduce}</div>`;
-                description += '<div style=\"margin-bottom: 20px;\"></div>';
+            } else {
+                description += '<div><em>No steps to reproduce provided.</em></div>';
             }
+            description += '<div style="margin-bottom: 20px;"></div>';
 
-            // Technical
-            description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">TECHNICAL</span></div>';
+            // Screenshots and Videos
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS and/or VIDEOS</span></div>';
+            description += '<div>(please include URL in screen capture)</div>';
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Impacted User Info
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
+            if (fields.username) description += `Username: ${fields.username}<br>`;
+            if (fields.role) description += `Role: ${fields.role || ''}<br>`;
+            if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
+            if (fields.BURCLink) description += `BURC Link: ${fields.BURCLink}<br>`;
             if (fields.device) description += `Device: ${fields.device}<br>`;
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
-            if (fields.techAdminLink) {
-                let adminLink = fields.techAdminLink.trim();
-                if (!adminLink.startsWith('http://') && !adminLink.startsWith('https://')) {
-                    adminLink = 'https://' + adminLink;
-                }
-                description += `Tech Admin: <a href="${adminLink}" target=\"_blank\">${fields.techAdminLink}</a><br>`;
-            }
             if (fields.assignmentId) description += `Assignment ID: ${fields.assignmentId}<br>`;
-            if (fields.pageNum) description += `Page Number: ${fields.pageNum}<br>`;
+            if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported)}<br>`;
+            if (fields.harFileAttached) {
+                description += `HAR file attached: ${fields.harFileAttached}`;
+                if (fields.harFileAttached === "No" && fields.harFileReason) {
+                    description += ` (${fields.harFileReason})`;
+                }
+                description += '<br>';
+            }
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Expected Results
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
+            if (fields.expectedResults) {
+                description += `<div>${fields.expectedResults}</div>`;
+            } else {
+                description += '<div><em>No expected results provided.</em></div>';
+            }
 
             return description;
         },
@@ -1829,30 +1849,30 @@ const TRACKER_CONFIGS = {
             let description = '';
 
             // Issue Description
-            description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">ISSUE DESCRIPTION</span></div>';
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ISSUE DESCRIPTION</span></div>';
             description += `Name of impacted report: ${fields.reportName || ''}<br>`;
             if (fields.issueDetails) {
                 description += `<div>Specific details outlining user impact:</div>`;
                 description += `<div>${fields.issueDetails}</div>`;
             }
-            description += '<div style=\"margin-bottom: 20px;\"></div>';
+            description += '<div style="margin-bottom: 20px;"></div>';
 
             // Steps to Reproduce
             if (fields.stepsToReproduce) {
-                description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">STEPS / FILTERS TO REPRODUCE</span></div>';
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS / FILTERS TO REPRODUCE</span></div>';
                 description += `<div>${fields.stepsToReproduce}</div>`;
-                description += '<div style=\"margin-bottom: 20px;\"></div>';
+                description += '<div style="margin-bottom: 20px;"></div>';
             }
 
             // Screenshots and Videos
             if (fields.screenshotsDescription) {
-                description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">SCREENSHOTS and/or VIDEOS</span></div>';
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS and/or VIDEOS</span></div>';
                 description += `<div>${fields.screenshotsDescription}</div>`;
-                description += '<div style=\"margin-bottom: 20px;\"></div>';
+                description += '<div style="margin-bottom: 20px;"></div>';
             }
 
             // Impacted User Info
-            description += '<div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">IMPACTED USER INFO</span></div>';
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
             if (fields.teacherName) description += `Teacher/Admin Name: ${fields.teacherName}<br>`;
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.userRole) description += `Role: ${fields.userRole}<br>`;
@@ -1863,7 +1883,7 @@ const TRACKER_CONFIGS = {
                 if (!techLink.startsWith('http://') && !techLink.startsWith('https://')) {
                     techLink = 'https://' + techLink;
                 }
-                description += `BURC Link: <a href="${techLink}" target=\"_blank\">${fields.BURCLink}</a><br>`;
+                description += `BURC Link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
             }
 
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
@@ -1876,7 +1896,7 @@ const TRACKER_CONFIGS = {
                 if (!assessmentLink.startsWith('http://') && !assessmentLink.startsWith('https://')) {
                     assessmentLink = 'https://' + assessmentLink;
                 }
-                description += `Assessment Assignment URL: <a href="${assessmentLink}" target=\"_blank\">${fields.assessmentUrl}</a><br>`;
+                description += `Assessment Assignment URL: <a href="${assessmentLink}" target="_blank">${fields.assessmentUrl}</a><br>`;
             }
 
             if (fields.dateTaken) description += `Date test was taken: ${formatDate(fields.dateTaken)}<br>`;
