@@ -82,6 +82,9 @@ const TRACKER_CONFIGS = {
         onLoad: function () {
             console.log("Assembly Rollover onLoad function executing");
 
+            // First populate Application Name from product info
+            populateApplicationName();
+
             // Try to get the source ticket ID from localStorage
             let sourceTicketId = null;
             try {
@@ -373,6 +376,9 @@ const TRACKER_CONFIGS = {
         // Add onLoad function to tag the source ticket with "ESCALATED TO ASSEMBLY"
         onLoad: function () {
             console.log("Assembly Tracker onLoad function executing");
+
+            // First populate Application Name from product info
+            populateApplicationName();
 
             // Try to get the source ticket ID from localStorage
             let sourceTicketId = null;
@@ -1054,6 +1060,9 @@ const TRACKER_CONFIGS = {
         onLoad: function () {
             console.log("SEDCUST onLoad function executing");
 
+            // First populate Application Name from product info
+            populateApplicationName();
+
             // Function to sync XCODE and Resource Path fields
             function syncFields() {
                 // Get the source fields from Subject section
@@ -1116,7 +1125,7 @@ const TRACKER_CONFIGS = {
     "sim-assignment": {
         title: "SIM Assignment Tracker",
         icon: "fa-tasks",
-        description: "For issues regarding assignment and eAssessment functionality",
+        description: "For issues regarding assignment and/or eAssessment functionality",
         sections: [
             {
                 id: "subject",
@@ -1279,6 +1288,12 @@ const TRACKER_CONFIGS = {
             if (fields.pageNum) description += `Page Number: ${fields.pageNum}<br>`;
 
             return description;
+        },
+        // Add onLoad function to populate Application Name
+        onLoad: function () {
+            console.log("SIM Assignment Tracker onLoad function executing");
+            // Call the helper function to populate Application Name
+            populateApplicationName();
         }
     },
 
@@ -1286,7 +1301,7 @@ const TRACKER_CONFIGS = {
     "sim-assessment-reports": {
         title: "SIM Assessment Reports Tracker",
         icon: "fa-chart-bar",
-        description: "For issues regarding SIM assessment reports and data",
+        description: "For issues regarding functionality of assessment reports",
         sections: [
             {
                 id: "subject",
@@ -1302,7 +1317,7 @@ const TRACKER_CONFIGS = {
                         hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "application", type: "text", label: "Application Name", required: true, placeholder: "EX: Grade View" },
+                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
                         type: "select",
@@ -1518,6 +1533,12 @@ const TRACKER_CONFIGS = {
             }
 
             return description;
+        },
+        // Add onLoad function to populate Application Name
+        onLoad: function () {
+            console.log("SIM Assessment Reports Tracker onLoad function executing");
+            // Call the helper function to populate Application Name
+            populateApplicationName();
         }
     },
 
@@ -1825,6 +1846,12 @@ const TRACKER_CONFIGS = {
             }
 
             return description;
+        },
+        // Add onLoad function to populate Application Name
+        onLoad: function () {
+            console.log("SIM FSA Tracker onLoad function executing");
+            // Call the helper function to populate Application Name
+            populateApplicationName();
         }
     },
 
@@ -1832,7 +1859,7 @@ const TRACKER_CONFIGS = {
     "sim-library-view": {
         title: "SIM Library View Tracker",
         icon: "fa-book-open",
-        description: "For issues with the SIM library view",
+        description: "For issues regarding functionality in the resource library",
         sections: [
             {
                 id: "subject",
@@ -2031,14 +2058,20 @@ const TRACKER_CONFIGS = {
             }
 
             return description;
+        },
+        // Add onLoad function to populate Application Name
+        onLoad: function () {
+            console.log("SIM Library View Tracker onLoad function executing");
+            // Call the helper function to populate Application Name
+            populateApplicationName();
         }
     },
 
     // 6. SIM ORR
     "sim-orr": {
-        title: "SIM ORR",
-        icon: "fa-book-open",
-        description: "For issues with the SIM ORR",
+        title: "SIM ORR Tracker",
+        icon: "fa-file-signature",
+        description: "For issues regarding functionality of oral reading records (ORR)",
         sections: [
             {
                 id: "subject",
@@ -2344,6 +2377,12 @@ const TRACKER_CONFIGS = {
                 updateSubjectLine();
                 setupHarFileCondition();
             }, 500);
+        },
+        // Add onLoad function to populate Application Name
+        onLoad: function () {
+            console.log("SIM ORR Tracker onLoad function executing");
+            // Call the helper function to populate Application Name
+            populateApplicationName();
         }
     },
 
@@ -2351,7 +2390,7 @@ const TRACKER_CONFIGS = {
     "sim-plan-teach": {
         title: "SIM Plan & Teach Tracker",
         icon: "fa-chalkboard-teacher",
-        description: "For issues regarding Plan & Teach functionality",
+        description: "For issues regarding the functionality of the Plan & Teach Tool",
         sections: [
             {
                 id: "subject",
@@ -2606,6 +2645,12 @@ const TRACKER_CONFIGS = {
 
             // Schedule another update after a small delay to ensure fields are populated
             setTimeout(updateSubjectLine, 500);
+        },
+        // Add onLoad function to populate Application Name
+        onLoad: function () {
+            console.log("SIM Plan & Teach Tracker onLoad function executing");
+            // Call the helper function to populate Application Name
+            populateApplicationName();
         }
     },
 
@@ -2885,6 +2930,15 @@ const TRACKER_CONFIGS = {
 
             // Schedule another update after a small delay to ensure fields are populated
             setTimeout(updateSubjectLine, 500);
+        },
+        // Update onLoad function to also populate Application Name
+        onLoad: function () {
+            console.log("SIM Reading Log Tracker onLoad function executing");
+
+            // Call the helper function to populate Application Name
+            populateApplicationName();
+
+            // Any existing onLoad functionality preserved here
         }
     },
 
@@ -3843,4 +3897,89 @@ const TRACKER_CONFIGS = {
 // Export the tracker configurations for use in tests
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { TRACKER_CONFIGS };
+}
+
+// Helper function to populate Application Name from product info
+function populateApplicationName() {
+    console.log("Attempting to populate Application Name field");
+
+    // Check if we have access to the window.trackerApp
+    if (!window.trackerApp || !window.trackerApp.ticketData) {
+        console.warn("Cannot populate Application Name: trackerApp not available");
+        return;
+    }
+
+    const { productType, product } = window.trackerApp.ticketData;
+    console.log("Source ticket product data:", { productType, product });
+
+    // Find the application field
+    const applicationField = document.getElementById('application');
+    if (!applicationField) {
+        console.warn("Cannot populate Application Name: application field not found");
+        return;
+    }
+
+    // Only populate if the field is empty
+    if (applicationField.value) {
+        console.log("Application field already has a value, not overwriting");
+        return;
+    }
+
+    let applicationName = "";
+
+    // Apply the rules
+    if (!productType || productType === "Not Product Specific") {
+        // Leave the Application Name blank
+        applicationName = "";
+    } else if (productType === "Assess 360") {
+        applicationName = "Assess 360";
+    } else if (productType === "Benchmark Workshop") {
+        applicationName = "Benchmark Workshop";
+    } else if (productType === "Benchmark Taller") {
+        applicationName = "Benchmark Taller";
+    } else if (productType === "Ready To Advance") {
+        applicationName = "Ready To Advance";
+    } else if (productType === "Benchmark Advance") {
+        // Rule: If Product type = "Benchmark Advance" AND Product = "Benchmark Advance", then Application Name = "B. Advance"
+        if (product === "Benchmark Advance") {
+            applicationName = "B. Advance";
+        } else {
+            // Combine with product value and use "B. Advance" shortening
+            applicationName = "B. Advance";
+            if (product) {
+                applicationName += ` ${product}`;
+            }
+        }
+    } else if (productType === "Benchmark Adelante") {
+        // Rule: If Product type = "Benchmark Adelante" AND Product = "Adelante", then Application Name = "B. Adelante"
+        if (product === "Adelante") {
+            applicationName = "B. Adelante";
+        } else {
+            // Combine with product value and use "B. Adelante" shortening
+            applicationName = "B. Adelante";
+            if (product) {
+                applicationName += ` ${product}`;
+            }
+        }
+    } else if (productType === "Listos Y Adelante") {
+        applicationName = "Listos Y Adelante";
+        if (product) {
+            applicationName += ` ${product}`;
+        }
+    } else if (productType === "Supplemental") {
+        // Just use the product value
+        applicationName = product || "";
+    }
+
+    // Set the application field value
+    if (applicationName) {
+        applicationField.value = applicationName;
+        console.log(`Application Name field populated with: "${applicationName}"`);
+
+        // Trigger any listeners on the application field (like subject line formatters)
+        const event = new Event('input', { bubbles: true });
+        applicationField.dispatchEvent(event);
+    } else {
+        console.log("No Application Name to populate based on the rules");
+    }
 }
