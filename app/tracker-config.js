@@ -203,6 +203,7 @@ const TRACKER_CONFIGS = {
                 icon: "fa-pencil-alt",
                 fields: [
                     { id: "xcode", type: "text", label: "XCODE", required: true, hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>", placeholder: "e.g. X56723" },
+                    { id: "hasMultipleXcodes", type: "select", label: "Multiple Xcodes?", required: true, options: ["No", "Yes"], hint: "Select 'Yes' if this issue affects multiple Xcodes" },
                     { id: "application", type: "text", label: "Application Name", required: true, placeholder: "e.g. BAdvance c2022" },
                     {
                         id: "version",
@@ -380,6 +381,113 @@ const TRACKER_CONFIGS = {
             // First populate Application Name from product info
             populateApplicationName();
 
+            // Function to sync fields from Subject to other sections
+            function syncFields() {
+                // Get the source fields from Subject section
+                const xcodeField = document.getElementById('xcode');
+                const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
+
+                // Get the target fields
+                const programField = document.getElementById('program');
+                const programVariationField = document.getElementById('programVariation');
+
+                // Sync application to program field if both fields exist
+                if (applicationField && programField) {
+                    programField.value = applicationField.value || '';
+                    console.log(`Synced Application Name to Program/Product Impacted field: ${applicationField.value}`);
+                }
+
+                // Sync version to program variation field if both fields exist
+                if (versionField && programVariationField) {
+                    programVariationField.value = versionField.value || '';
+                    console.log(`Synced Version to Program Variation field: ${versionField.value}`);
+                }
+            }
+
+            // Set up event listeners for the source fields
+            const applicationField = document.getElementById('application');
+            if (applicationField) {
+                applicationField.addEventListener('input', syncFields);
+                console.log("Added event listener to Application Name field");
+            }
+
+            const versionField = document.getElementById('version');
+            if (versionField) {
+                versionField.addEventListener('change', syncFields);
+                console.log("Added event listener to Version field");
+            }
+
+            // Initial sync attempt
+            syncFields();
+
+            // Schedule another sync after a small delay to ensure fields are loaded
+            setTimeout(syncFields, 500);
+
+            // Function to update subject line according to new format
+            function updateSubjectLine() {
+                const xcodeField = document.getElementById('xcode');
+                const hasMultipleXcodesField = document.getElementById('hasMultipleXcodes');
+                const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
+                const specificIssueField = document.getElementById('specificIssue');
+                const gradesImpactedField = document.getElementById('gradesImpacted');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+                const isVIPField = document.getElementById('isVIP');
+
+                if (!xcodeField || !hasMultipleXcodesField || !applicationField || !versionField ||
+                    !specificIssueField || !gradesImpactedField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                const xcode = xcodeField.value || '';
+                const hasMultipleXcodes = hasMultipleXcodesField.value === 'Yes';
+                const application = applicationField.value || '';
+                const version = versionField.value || '';
+                const specificIssue = specificIssueField.value || '';
+                const gradesImpacted = gradesImpactedField.value || '';
+
+                // Check if this is a VIP customer
+                let isVIP = false;
+                if (isVIPField) {
+                    isVIP = isVIPField.value === 'Yes';
+                }
+
+                // Format: "Xcode (indicate if more than one) | VIP or Standard | Application Name • Version | Specific issue: grades impacted"
+                let subject = xcode;
+                if (hasMultipleXcodes) {
+                    subject += ' (multiple)';
+                }
+                subject += ' | ';
+
+                // Add VIP status if applicable
+                if (isVIP) {
+                    subject += 'VIP | ';
+                }
+
+                // Add application and version
+                subject += application;
+                if (version) {
+                    subject += ` • ${version}`;
+                }
+
+                // Add specific issue and grades impacted
+                subject += ` | ${specificIssue}: ${gradesImpacted}`;
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+            }
+
+            // Set up event listeners for subject line formatting
+            document.getElementById('xcode')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('hasMultipleXcodes')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('gradesImpacted')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+
             // Try to get the source ticket ID from localStorage
             let sourceTicketId = null;
             try {
@@ -394,6 +502,12 @@ const TRACKER_CONFIGS = {
             } catch (error) {
                 console.error("Error getting source ticket ID from localStorage:", error);
             }
+
+            // Initial attempt to update subject line
+            updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
 
             // If we have a source ticket ID, add the tag
             if (sourceTicketId) {
@@ -1069,6 +1183,7 @@ const TRACKER_CONFIGS = {
                 const xcodeField = document.getElementById('xcode');
                 const resourcePathField = document.getElementById('resourcePath');
                 const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
 
                 // Get the target fields
                 const pathField = document.getElementById('pathField');
@@ -1087,10 +1202,17 @@ const TRACKER_CONFIGS = {
                     console.log("Synced Resource Path to Path field in steps to reproduce section");
                 }
 
-                // Sync application to productImpacted if both fields exist
+                // Sync application and version to productImpacted if the fields exist
                 if (applicationField && productImpactedField) {
-                    productImpactedField.value = applicationField.value;
-                    console.log("Synced Application Name to Application/Program Impacted field in user info section");
+                    let productImpacted = applicationField.value || '';
+
+                    // Add version if it exists
+                    if (versionField && versionField.value) {
+                        productImpacted += ` • ${versionField.value}`;
+                    }
+
+                    productImpactedField.value = productImpacted;
+                    console.log(`Synced Application Name + Version to Application/Program Impacted field: ${productImpacted}`);
                 }
             }
 
@@ -1111,6 +1233,12 @@ const TRACKER_CONFIGS = {
             if (applicationField) {
                 applicationField.addEventListener('input', syncFields);
                 console.log("Added event listener to Application Name field");
+            }
+
+            const versionField = document.getElementById('version');
+            if (versionField) {
+                versionField.addEventListener('change', syncFields);
+                console.log("Added event listener to Version field");
             }
 
             // Add function to update subject line according to new format
@@ -1169,17 +1297,115 @@ const TRACKER_CONFIGS = {
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
             document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
 
-            // Initial sync attempt
-            syncFields();
+            // Try to get the source ticket ID from localStorage
+            let sourceTicketId = null;
+            try {
+                const ticketData = localStorage.getItem('ticketData');
+                if (ticketData) {
+                    const parsedData = JSON.parse(ticketData);
+                    if (parsedData && parsedData.id) {
+                        sourceTicketId = parsedData.id;
+                        console.log(`Found source ticket ID: ${sourceTicketId}`);
+                    }
+                }
+            } catch (error) {
+                console.error("Error getting source ticket ID from localStorage:", error);
+            }
 
-            // Initial subject line update
+            // Initial attempt to update subject line
             updateSubjectLine();
 
-            // Schedule another sync and update after a small delay to ensure fields are loaded
-            setTimeout(() => {
-                syncFields();
-                updateSubjectLine();
-            }, 500);
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
+
+            // If we have a source ticket ID, add the tag
+            if (sourceTicketId) {
+                console.log(`Adding "ESCALATED TO ASSEMBLY" tag to source ticket ${sourceTicketId}`);
+
+                // Function to update source ticket tags
+                const updateSourceTicketTags = async () => {
+                    try {
+                        // First get the current ticket details to retrieve existing tags
+                        const response = await client.request.invokeTemplate("getTicketDetails", {
+                            context: { ticketId: sourceTicketId }
+                        });
+
+                        if (response && response.response) {
+                            const ticketDetails = JSON.parse(response.response);
+
+                            // Get existing tags and add the new one if it doesn't exist
+                            let tags = ticketDetails.tags || [];
+
+                            // Convert to array if it's not already
+                            if (!Array.isArray(tags)) {
+                                tags = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+                            }
+
+                            // Check if tag already exists
+                            if (!tags.includes("ESCALATED TO ASSEMBLY")) {
+                                tags.push("ESCALATED TO ASSEMBLY");
+
+                                // Prepare data for update
+                                const updateData = {
+                                    tags: tags
+                                };
+
+                                try {
+                                    // Use the updateTicket template instead of direct API call
+                                    console.log(`Updating source ticket ${sourceTicketId} tags using updateTicket template`);
+                                    await client.request.invokeTemplate("updateTicket", {
+                                        context: {
+                                            ticketId: sourceTicketId
+                                        },
+                                        body: JSON.stringify(updateData)
+                                    });
+
+                                    console.log("Source ticket successfully tagged with ESCALATED TO ASSEMBLY");
+
+                                    // Add a private note about the escalation
+                                    await client.request.invokeTemplate("addNoteToTicket", {
+                                        context: {
+                                            ticketId: sourceTicketId
+                                        },
+                                        body: JSON.stringify({
+                                            body: "This ticket has been escalated to Assembly. An Assembly tracker ticket has been created.",
+                                            private: true
+                                        })
+                                    });
+
+                                    console.log("Private note added to source ticket");
+                                } catch (error) {
+                                    console.error("Error updating source ticket:", error);
+
+                                    // Try to add at least a private note as fallback
+                                    try {
+                                        console.log("Attempting to add private note as fallback");
+                                        await client.request.invokeTemplate("addNoteToTicket", {
+                                            context: {
+                                                ticketId: sourceTicketId
+                                            },
+                                            body: JSON.stringify({
+                                                body: "This ticket has been escalated to Assembly. An Assembly tracker ticket has been created. (Note: Unable to add ESCALATED TO ASSEMBLY tag automatically)",
+                                                private: true
+                                            })
+                                        });
+                                        console.log("Private note added to source ticket as fallback");
+                                    } catch (noteError) {
+                                        console.error("Error adding private note:", noteError);
+                                    }
+                                }
+                            } else {
+                                console.log("Source ticket already has ESCALATED TO ASSEMBLY tag");
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Error updating source ticket tags:", error);
+                    }
+                };
+
+                // Execute the update
+                updateSourceTicketTags();
+            }
         }
     },
 
@@ -2514,7 +2740,7 @@ const TRACKER_CONFIGS = {
                             { id: "allUsers", label: "All Users" }
                         ]
                     },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: true, hint: "This will be submitted as your ticket subject", readOnly: true }
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
             {
