@@ -4219,6 +4219,79 @@ const TRACKER_CONFIGS = {
             // Schedule another update after a small delay to ensure fields are populated
             setTimeout(updateSubjectLine, 500);
         }
+    },
+
+    // Help Article
+    "help-article": {
+        title: "Help Article Tracker",
+        icon: "fa-question-circle",
+        description: "For requests to create or update a BU Help article",
+        sections: [
+            {
+                id: "subject",
+                title: "SUBJECT",
+                icon: "fa-pencil-alt",
+                fields: [
+                    { id: "subject", type: "text", label: "Subject", required: true, hint: "Name of the help article" }
+                ]
+            },
+            {
+                id: "summary",
+                title: "SUMMARY",
+                icon: "fa-file-alt",
+                fields: [
+                    { id: "summaryContent", type: "richtext", label: "", required: true, hint: "Include information of what needs to be updated or changed.\nEx: The dropdown menu options no longer reflect the listed items in the article." }
+                ]
+            },
+            {
+                id: "details",
+                title: "DESCRIPTION",
+                icon: "fa-clipboard-list",
+                fields: [
+                    { id: "requester", type: "text", label: "Requester", required: true, hint: "Provide the name of the requestor.\nEX: Jen Boyle" },
+                    { id: "dateRequested", type: "date", label: "Date requested", required: true, hint: "Provide date requested.\nEX: 4/1/2024" },
+                    { id: "articleName", type: "text", label: "Name of BU Help Article", required: true, hint: "Provide the name of the help article.\nEX: About Grading eAssessments" },
+                    { id: "articleUrl", type: "text", label: "URL of BU Help Article", required: false, hint: "Provide the URL of the article.\nEX: https://help.benchmarkuniverse.com/bubateacher/Content/eAssessments/Grading/About%20Grading%20eAssessments.htm" },
+                    { id: "referenceImages", type: "richtext", label: "Images for reference", required: false, hint: "Include any images reference needed changes." }
+                ]
+            }
+        ],
+        descriptionGenerator: function (fields) {
+            let description = '';
+
+            // Add summary section if provided
+            if (fields.summaryContent && fields.summaryContent.trim() !== '<p><br></p>') {
+                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
+                description += `<div>${fields.summaryContent || ''}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Add description with all fields
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
+            description += `Requester: ${fields.requester || ''}<br>`;
+            if (fields.dateRequested) description += `Date requested: ${formatDate(fields.dateRequested)}<br>`;
+            description += `Name of BU Help Article: ${fields.articleName || ''}<br>`;
+            if (fields.articleUrl) description += `URL of BU Help Article: ${fields.articleUrl}<br>`;
+
+            // Add reference images if provided
+            if (fields.referenceImages && fields.referenceImages.trim() !== '<p><br></p>') {
+                description += `<div>Images for reference:</div>`;
+                description += `<div>${fields.referenceImages}</div>`;
+            }
+
+            return description;
+        },
+        onLoad: function () {
+            console.log("Help Article Tracker onLoad function executing");
+
+            // Set default date for Date Requested field to today
+            const dateRequestedField = document.getElementById('dateRequested');
+            if (dateRequestedField) {
+                const today = new Date().toISOString().split('T')[0];
+                dateRequestedField.value = today;
+                console.log("Set default date for Date Requested:", today);
+            }
+        }
     }
 };
 
