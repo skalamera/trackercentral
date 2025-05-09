@@ -1244,7 +1244,9 @@ const TRACKER_CONFIGS = {
 
                     // Add version if it exists
                     if (versionField && versionField.value) {
-                        productImpacted += ` • ${versionField.value}`;
+                        // Use getVersionValue instead of directly using versionField.value
+                        const version = getVersionValue(versionField);
+                        productImpacted += ` • ${version}`;
                     }
 
                     productImpactedField.value = productImpacted;
