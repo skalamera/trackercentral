@@ -4157,7 +4157,7 @@ const TRACKER_CONFIGS = {
                         type: "text",
                         label: "Role",
                         required: true,
-                        hint: "District Admin Only"
+                        hint: "District Admin"
                     },
                     { id: "formattedSubject", type: "text", label: "Subject", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
@@ -4246,7 +4246,7 @@ const TRACKER_CONFIGS = {
             // Set default value for Role field
             const roleField = document.getElementById('userRole');
             if (roleField && !roleField.value) {
-                roleField.value = "District Admin Only";
+                roleField.value = "District Admin";
             }
 
             // Function to update the subject line based on district name and VIP status
