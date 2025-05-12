@@ -686,7 +686,7 @@
                                                     ['bold', 'italic'],                        // Bold and italic
                                                     [{ 'color': [] }, { 'background': [] }],   // Color and highlight
                                                     [{ 'align': [] }],                         // Alignment
-                                                    ['link', 'image']                          // Link and image
+                                                    ['link', 'image', 'clean']                 // Link, image, and clean formatting
                                                 ],
                                                 handlers: {
                                                     'image': customImageHandler.bind(this)
@@ -767,7 +767,7 @@
                                         ['bold', 'italic'],                      // Bold and italic
                                         [{ 'color': [] }, { 'background': [] }], // Color and highlight
                                         [{ 'align': [] }],                       // Alignment
-                                        ['link', 'image']                        // Link and image
+                                        ['link', 'image', 'clean']               // Link, image, and clean formatting
                                     ]
                                 }
                             }
@@ -3625,7 +3625,7 @@
                                     ['bold', 'italic'],
                                     [{ 'color': [] }, { 'background': [] }],
                                     [{ 'align': [] }],
-                                    ['link', 'image']
+                                    ['link', 'image', 'clean'] // Added 'clean' format button
                                 ]
                             }
                         }
@@ -5327,7 +5327,7 @@
                                     ['bold', 'italic'],                      // Bold and italic
                                     [{ 'color': [] }, { 'background': [] }], // Color and highlight
                                     [{ 'align': [] }],                       // Alignment
-                                    ['link', 'image']                        // Link and image
+                                    ['link', 'image', 'clean']               // Link, image, and clean formatting
                                 ],
                                 handlers: {
                                     'image': customImageHandler.bind(this)

@@ -4719,6 +4719,542 @@ function getVersionValue(versionField) {
     return versionField.value;
 }
 
+// Setup clear formatting button for Quill editors
+function setupClearFormattingButton() {
+    // Check if Quill is available
+    if (typeof Quill === 'undefined') {
+        console.warn("Quill not found for setting up clear formatting button");
+        // Retry after a delay in case Quill is still loading
+        setTimeout(setupClearFormattingButton, 1000);
+        return;
+    }
+
+    // Add custom format button to Quill toolbar if possible
+    addFormatButtonToQuillDefaults();
+
+    // First check for toolbars directly - this is more reliable
+    const toolbars = document.querySelectorAll('.ql-toolbar');
+    if (toolbars.length > 0) {
+        console.log(`Found ${toolbars.length} Quill toolbars`);
+
+        toolbars.forEach((toolbar, index) => {
+            // Skip if toolbar already has a clean button
+            if (toolbar.querySelector('.ql-clean')) return;
+
+            // Create clean formatting button
+            const cleanButton = document.createElement('button');
+            cleanButton.className = 'ql-clean';
+            cleanButton.type = 'button';
+            cleanButton.innerHTML = '<svg viewBox="0 0 18 18"><line class="ql-stroke" x1="5" x2="13" y1="3" y2="3"></line><line class="ql-stroke" x1="6" x2="9.35" y1="12" y2="3"></line><line class="ql-stroke" x1="11" x2="15" y1="11" y2="15"></line><line class="ql-stroke" x1="15" x2="11" y1="11" y2="15"></line><rect class="ql-fill" height="1" rx="0.5" ry="0.5" width="7" x="2" y="14"></rect></svg>';
+            cleanButton.title = 'Clear formatting';
+
+            // Add button to toolbar
+            toolbar.appendChild(cleanButton);
+
+            // Find the associated editor container and editor
+            const editorContainer = toolbar.closest('.quill-editor-container, .quill-editor, .richtext-container');
+            let editor = null;
+
+            if (editorContainer) {
+                editor = editorContainer.querySelector('.ql-editor');
+            } else {
+                // Look for an editor that follows this toolbar
+                const parentContainer = toolbar.parentElement;
+                if (parentContainer) {
+                    editor = parentContainer.querySelector('.ql-editor');
+                }
+            }
+
+            // Add click handler
+            cleanButton.addEventListener('click', () => {
+                // Try to find the Quill instance
+                let quill = null;
+
+                try {
+                    // Method 1: Look for Quill instance in the editor's parent
+                    if (editor) {
+                        const editorParent = editor.parentElement;
+                        if (editorParent && editorParent.__quill) {
+                            quill = editorParent.__quill;
+                        }
+                    }
+
+                    // Method 2: Use Quill.find if available
+                    if (!quill && editor && Quill.find) {
+                        quill = Quill.find(editor);
+                    }
+
+                    // Method 3: Check for Quill instance in container
+                    if (!quill && editorContainer && editorContainer.__quill) {
+                        quill = editorContainer.__quill;
+                    }
+
+                    if (!quill) {
+                        console.log("Could not find Quill instance for toolbar");
+                        return;
+                    }
+
+                    // Get current selection
+                    const range = quill.getSelection();
+                    if (range && range.length > 0) {
+                        // Remove all formatting from the selected text
+                        quill.removeFormat(range.index, range.length);
+                    } else if (range) {
+                        // If cursor is just placed, use the current word
+                        const text = quill.getText();
+                        const currentPos = range.index;
+
+                        // Find word boundaries
+                        let startPos = currentPos;
+                        while (startPos > 0 && !/\s/.test(text[startPos - 1])) {
+                            startPos--;
+                        }
+
+                        let endPos = currentPos;
+                        while (endPos < text.length && !/\s/.test(text[endPos])) {
+                            endPos++;
+                        }
+
+                        if (endPos > startPos) {
+                            quill.removeFormat(startPos, endPos - startPos);
+                        }
+                    } else {
+                        console.log('Select text to clear formatting');
+                    }
+                } catch (error) {
+                    console.error("Error while applying clear formatting:", error);
+                }
+            });
+
+            console.log(`Added clear formatting button to toolbar ${index + 1}`);
+        });
+
+        // Skip editor search if we already processed all toolbars
+        return;
+    }
+
+    // Fallback: find all Quill editor instances using element classes
+    // This is less reliable but provides backward compatibility
+    const quillElements = document.querySelectorAll('.ql-container, .ql-editor, [data-quill="true"], .quill-editor');
+
+    // Filter elements to only include likely editor containers
+    const likelyEditors = Array.from(quillElements).filter(el => {
+        // Skip elements that are children of .ql-container (they're already covered by their parent)
+        if (el.closest('.ql-container') && !el.classList.contains('ql-container')) {
+            return false;
+        }
+
+        // Skip elements that don't have or contain an editor
+        if (!el.classList.contains('ql-editor') && !el.querySelector('.ql-editor')) {
+            return false;
+        }
+
+        return true;
+    });
+
+    if (likelyEditors.length > 0) {
+        console.log(`Found ${likelyEditors.length} likely Quill editors`);
+    } else {
+        // No editors found, no need to continue
+        return;
+    }
+
+    // Process each likely editor
+    likelyEditors.forEach((element, index) => {
+        // Find the actual editor - might be the element itself or a child
+        const editorElement = element.classList.contains('ql-editor') ? element : element.querySelector('.ql-editor');
+        if (!editorElement) return;
+
+        // Find the toolbar - might be a sibling or ancestor's child
+        let toolbar = null;
+
+        // Method 1: Look for a direct toolbar in the editor's container
+        const container = editorElement.closest('.quill-editor, .rich-text-editor, .richtext-container, .ql-container');
+        if (container) {
+            toolbar = container.querySelector('.ql-toolbar');
+            // Also check previous sibling
+            if (!toolbar && container.previousElementSibling && container.previousElementSibling.classList.contains('ql-toolbar')) {
+                toolbar = container.previousElementSibling;
+            }
+        }
+
+        // Method 2: Look for a toolbar as previous sibling of the container
+        if (!toolbar && container && container.previousElementSibling) {
+            if (container.previousElementSibling.classList.contains('ql-toolbar')) {
+                toolbar = container.previousElementSibling;
+            }
+        }
+
+        // Method 3: Look for a toolbar in a common parent
+        if (!toolbar) {
+            const parent = editorElement.parentElement;
+            if (parent) {
+                toolbar = parent.querySelector('.ql-toolbar');
+                // Look at parent's siblings
+                if (!toolbar && parent.previousElementSibling) {
+                    if (parent.previousElementSibling.classList.contains('ql-toolbar')) {
+                        toolbar = parent.previousElementSibling;
+                    }
+                }
+            }
+        }
+
+        if (!toolbar) {
+            // Only log if debug is enabled or first occurrence
+            if (index === 0) {
+                console.log(`Could not find toolbar for editor ${index + 1}`);
+            }
+            return;
+        }
+
+        // Check if toolbar already has a clear button
+        if (toolbar.querySelector('.ql-clean')) {
+            return;
+        }
+
+        // Create clean formatting button
+        const cleanButton = document.createElement('button');
+        cleanButton.className = 'ql-clean';
+        cleanButton.type = 'button';
+        cleanButton.innerHTML = '<svg viewBox="0 0 18 18"><line class="ql-stroke" x1="5" x2="13" y1="3" y2="3"></line><line class="ql-stroke" x1="6" x2="9.35" y1="12" y2="3"></line><line class="ql-stroke" x1="11" x2="15" y1="11" y2="15"></line><line class="ql-stroke" x1="15" x2="11" y1="11" y2="15"></line><rect class="ql-fill" height="1" rx="0.5" ry="0.5" width="7" x="2" y="14"></rect></svg>';
+        cleanButton.title = 'Clear formatting';
+
+        // Add button to toolbar
+        toolbar.appendChild(cleanButton);
+
+        // Add click handler
+        cleanButton.addEventListener('click', () => {
+            // Try to find the Quill instance
+            let quill = null;
+
+            try {
+                // Method 1: Use Quill.find if available
+                if (Quill.find && editorElement) {
+                    quill = Quill.find(editorElement);
+                }
+
+                // Method 2: Check for Quill instance in data attribute
+                if (!quill && container && container.__quill) {
+                    quill = container.__quill;
+                }
+
+                // Method 3: Find the editor's container and look for quill instance
+                if (!quill) {
+                    const editorContainer = editorElement.closest('[data-quill]');
+                    if (editorContainer && editorContainer.__quill) {
+                        quill = editorContainer.__quill;
+                    }
+                }
+
+                // Method 4: Look for Quill instance in the editor's parent
+                if (!quill && editorElement.parentElement && editorElement.parentElement.__quill) {
+                    quill = editorElement.parentElement.__quill;
+                }
+
+                if (!quill) {
+                    console.warn("Could not find Quill instance for editor");
+                    return;
+                }
+
+                // Get current selection
+                const range = quill.getSelection();
+                if (range && range.length > 0) {
+                    // Remove all formatting from the selected text
+                    quill.removeFormat(range.index, range.length);
+                } else if (range) {
+                    // If cursor is just placed, use the current word
+                    const text = quill.getText();
+                    const currentPos = range.index;
+
+                    // Find word boundaries
+                    let startPos = currentPos;
+                    while (startPos > 0 && !/\s/.test(text[startPos - 1])) {
+                        startPos--;
+                    }
+
+                    let endPos = currentPos;
+                    while (endPos < text.length && !/\s/.test(text[endPos])) {
+                        endPos++;
+                    }
+
+                    if (endPos > startPos) {
+                        quill.removeFormat(startPos, endPos - startPos);
+                    }
+                } else {
+                    console.log('Select text to clear formatting');
+                }
+            } catch (error) {
+                console.error("Error while applying clear formatting:", error);
+            }
+        });
+
+        console.log(`Added clear formatting button to Quill editor ${index + 1}`);
+    });
+}
+
+// Function to add clear formatting to Quill defaults if possible
+function addFormatButtonToQuillDefaults() {
+    try {
+        // Try to add the clean button to default Quill configuration
+        if (typeof Quill !== 'undefined' && Quill.import) {
+            // Import Toolbar module
+            const Toolbar = Quill.import('modules/toolbar');
+            if (!Toolbar) return;
+
+            // Get default modules
+            const defaultModules = Quill.imports && Quill.imports.modules;
+            if (!defaultModules) return;
+
+            // Add to all toolbar instances on page
+            const toolbars = document.querySelectorAll('.ql-toolbar');
+            toolbars.forEach(toolbar => {
+                // Skip if it already has a clean button
+                if (toolbar.querySelector('.ql-clean')) return;
+
+                // Create clean formatting button
+                const cleanButton = document.createElement('button');
+                cleanButton.className = 'ql-clean';
+                cleanButton.type = 'button';
+                cleanButton.innerHTML = '<svg viewBox="0 0 18 18"><line class="ql-stroke" x1="5" x2="13" y1="3" y2="3"></line><line class="ql-stroke" x1="6" x2="9.35" y1="12" y2="3"></line><line class="ql-stroke" x1="11" x2="15" y1="11" y2="15"></line><line class="ql-stroke" x1="15" x2="11" y1="11" y2="15"></line><rect class="ql-fill" height="1" rx="0.5" ry="0.5" width="7" x="2" y="14"></rect></svg>';
+                cleanButton.title = 'Clear formatting';
+
+                // Add button to toolbar
+                toolbar.appendChild(cleanButton);
+
+                // Try to associate with a Quill instance
+                const editorContainer = toolbar.closest('.quill-editor');
+                const editor = editorContainer ? editorContainer.querySelector('.ql-editor') : null;
+
+                // Add click handler
+                cleanButton.addEventListener('click', () => {
+                    // Try different methods to find the Quill instance
+                    let quill = null;
+
+                    // Method 1: Use cached instance if available
+                    if (editorContainer && editorContainer.__quill) {
+                        quill = editorContainer.__quill;
+                    }
+                    // Method 2: Find via Quill.find
+                    else if (editor && Quill.find) {
+                        quill = Quill.find(editor);
+                    }
+
+                    if (quill) {
+                        const range = quill.getSelection();
+                        if (range && range.length > 0) {
+                            quill.removeFormat(range.index, range.length);
+                        } else if (range) {
+                            // If cursor is just placed, use the current word
+                            const text = quill.getText();
+                            const currentPos = range.index;
+
+                            // Find word boundaries
+                            let startPos = currentPos;
+                            while (startPos > 0 && !/\s/.test(text[startPos - 1])) {
+                                startPos--;
+                            }
+
+                            let endPos = currentPos;
+                            while (endPos < text.length && !/\s/.test(text[endPos])) {
+                                endPos++;
+                            }
+
+                            if (endPos > startPos) {
+                                quill.removeFormat(startPos, endPos - startPos);
+                            }
+                        }
+                    }
+                });
+            });
+
+            console.log("Added clear formatting to Quill defaults");
+        }
+    } catch (error) {
+        console.error("Error adding format button to Quill defaults:", error);
+    }
+}
+
+// Set up clear formatting button when editors are loaded
+document.addEventListener('DOMContentLoaded', function () {
+    // Initial setup
+    setTimeout(setupClearFormattingButton, 1000);
+
+    // Try again after a delay to catch any editors loaded later
+    setTimeout(setupClearFormattingButton, 2500);
+
+    // Add mutation observer to watch for dynamically added editors
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.addedNodes.length) {
+                // Check if any added nodes contain Quill editors or toolbars
+                let hasEditor = false;
+                let hasToolbar = false;
+
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1) { // Element node
+                        // Check for editor elements
+                        if (node.classList &&
+                            (node.classList.contains('ql-editor') ||
+                                node.classList.contains('quill-editor') ||
+                                node.querySelector('.ql-editor'))) {
+                            hasEditor = true;
+                        }
+
+                        // Check for toolbar elements
+                        if (node.classList &&
+                            (node.classList.contains('ql-toolbar') ||
+                                node.querySelector('.ql-toolbar'))) {
+                            hasToolbar = true;
+                        }
+                    }
+                });
+
+                if (hasEditor || hasToolbar) {
+                    console.log("Detected new Quill editor or toolbar, updating formatting buttons");
+                    setTimeout(setupClearFormattingButton, 100);
+                }
+            }
+        });
+    });
+
+    // Start observing the document with the configured parameters
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Listen for events that might indicate a new editor has been created
+    document.addEventListener('quill-editor-created', function () {
+        console.log("Quill editor created event detected");
+        setTimeout(setupClearFormattingButton, 100);
+    });
+
+    // Also check when tab visibility changes (user might have switched back to the tab)
+    document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') {
+            setTimeout(setupClearFormattingButton, 500);
+        }
+    });
+});
+
+// Add setupClearFormattingButton to each tracker's onLoad function
+
+// Modify the assembly-rollover onLoad function
+const originalAssemblyRolloverOnLoad = TRACKER_CONFIGS["assembly-rollover"].onLoad;
+TRACKER_CONFIGS["assembly-rollover"].onLoad = function () {
+    originalAssemblyRolloverOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// Modify the assembly onLoad function
+const originalAssemblyOnLoad = TRACKER_CONFIGS["assembly"].onLoad;
+TRACKER_CONFIGS["assembly"].onLoad = function () {
+    originalAssemblyOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// Modify the feature-request onLoad function
+const originalFeatureRequestOnLoad = TRACKER_CONFIGS["feature-request"].onLoad;
+TRACKER_CONFIGS["feature-request"].onLoad = function () {
+    originalFeatureRequestOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// Modify the sedcust onLoad function
+const originalSedcustOnLoad = TRACKER_CONFIGS["sedcust"].onLoad;
+TRACKER_CONFIGS["sedcust"].onLoad = function () {
+    originalSedcustOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// Modify the sim-assignment onLoad function
+const originalSimAssignmentOnLoad = TRACKER_CONFIGS["sim-assignment"].onLoad;
+TRACKER_CONFIGS["sim-assignment"].onLoad = function () {
+    originalSimAssignmentOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// Modify the sim-assessment-reports onLoad function
+const originalSimAssessmentReportsOnLoad = TRACKER_CONFIGS["sim-assessment-reports"].onLoad;
+TRACKER_CONFIGS["sim-assessment-reports"].onLoad = function () {
+    originalSimAssessmentReportsOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// sim-fsa
+const originalSimFsaOnLoad = TRACKER_CONFIGS["sim-fsa"].onLoad;
+TRACKER_CONFIGS["sim-fsa"].onLoad = function () {
+    originalSimFsaOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// sim-library-view
+const originalSimLibraryViewOnLoad = TRACKER_CONFIGS["sim-library-view"].onLoad;
+TRACKER_CONFIGS["sim-library-view"].onLoad = function () {
+    originalSimLibraryViewOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// sim-orr
+const originalSimOrrOnLoad = TRACKER_CONFIGS["sim-orr"].onLoad;
+TRACKER_CONFIGS["sim-orr"].onLoad = function () {
+    originalSimOrrOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// sim-plan-teach
+const originalSimPlanTeachOnLoad = TRACKER_CONFIGS["sim-plan-teach"].onLoad;
+TRACKER_CONFIGS["sim-plan-teach"].onLoad = function () {
+    originalSimPlanTeachOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// sim-reading-log
+const originalSimReadingLogOnLoad = TRACKER_CONFIGS["sim-reading-log"].onLoad;
+TRACKER_CONFIGS["sim-reading-log"].onLoad = function () {
+    originalSimReadingLogOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// sim-dashboard
+const originalSimDashboardOnLoad = TRACKER_CONFIGS["sim-dashboard"].onLoad;
+TRACKER_CONFIGS["sim-dashboard"].onLoad = function () {
+    originalSimDashboardOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// Add function to sim-achievement-levels which doesn't have an onLoad function yet
+TRACKER_CONFIGS["sim-achievement-levels"].onLoad = function () {
+    console.log("SIM Achievement Levels Tracker onLoad function executing");
+    setTimeout(setupClearFormattingButton, 500);
+
+    // If the trackerApp is available, call its setupSmartsheetUploader method
+    if (window.trackerApp && typeof window.trackerApp.setupSmartsheetUploader === 'function') {
+        console.log("Setting up smartsheet uploader through trackerApp");
+        window.trackerApp.setupSmartsheetUploader();
+    } else {
+        console.warn("TrackerApp or setupSmartsheetUploader not available");
+    }
+};
+
+// dpt
+const originalDptOnLoad = TRACKER_CONFIGS["dpt"].onLoad;
+TRACKER_CONFIGS["dpt"].onLoad = function () {
+    originalDptOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// timeout-extension
+const originalTimeoutExtensionOnLoad = TRACKER_CONFIGS["timeout-extension"].onLoad;
+TRACKER_CONFIGS["timeout-extension"].onLoad = function () {
+    originalTimeoutExtensionOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
+// help-article
+const originalHelpArticleOnLoad = TRACKER_CONFIGS["help-article"].onLoad;
+TRACKER_CONFIGS["help-article"].onLoad = function () {
+    originalHelpArticleOnLoad.apply(this, arguments);
+    setTimeout(setupClearFormattingButton, 500);
+};
+
 // Export the tracker configurations for use in tests
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { TRACKER_CONFIGS };

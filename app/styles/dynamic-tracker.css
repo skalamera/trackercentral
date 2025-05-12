@@ -302,6 +302,41 @@ fw-button[color="secondary"]::part(button):hover {
     background-color: white;
 }
 
+/* Style for the clean formatting button */
+.ql-clean {
+    position: relative;
+    width: 28px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ql-clean svg {
+    width: 16px;
+    height: 16px;
+}
+
+.ql-clean:hover {
+    background-color: #f0f0f0;
+    border-radius: 3px;
+}
+
+.ql-snow .ql-toolbar button.ql-clean:hover,
+.ql-snow.ql-toolbar button.ql-clean:hover {
+    color: #06c;
+}
+
+.ql-snow .ql-toolbar button.ql-clean:hover .ql-stroke,
+.ql-snow.ql-toolbar button.ql-clean:hover .ql-stroke {
+    stroke: #06c;
+}
+
+.ql-snow .ql-toolbar button.ql-clean:hover .ql-fill,
+.ql-snow.ql-toolbar button.ql-clean:hover .ql-fill {
+    fill: #06c;
+}
+
 .ql-toolbar .ql-picker-options {
     z-index: 100;
 }
@@ -406,16 +441,16 @@ fw-button#createTracker {
     border-radius: 10px !important;
     padding: 10px 15px !important;
     width: 175px !important;
-            text-align: center;
+    text-align: center;
 }
 
 fw-button#cancelTracker {
     background-color: #2C3E50 !important;
     color: white !important;
-        border-radius: 10px !important;
-        padding: 10px 15px !important;
-        width: 175px !important;
-        text-align: center;
+    border-radius: 10px !important;
+    padding: 10px 15px !important;
+    width: 175px !important;
+    text-align: center;
 }
 
 /* Responsive styles */
