@@ -209,7 +209,7 @@ const TRACKER_CONFIGS = {
                         id: "version",
                         type: "select",
                         label: "Version",
-                        required: true,
+                        required: false,
                         options: [
                             "",
                             "2.0",
@@ -1025,7 +1025,7 @@ const TRACKER_CONFIGS = {
                         id: "version",
                         type: "select",
                         label: "Version",
-                        required: true,
+                        required: false,
                         options: [
                             "",
                             "2.0",
@@ -1480,7 +1480,7 @@ const TRACKER_CONFIGS = {
                         id: "version",
                         type: "select",
                         label: "Version",
-                        required: true,
+                        required: false,
                         options: [
                             "",
                             "2.0",
@@ -1780,7 +1780,7 @@ const TRACKER_CONFIGS = {
                         id: "version",
                         type: "select",
                         label: "Version",
-                        required: true,
+                        required: false,
                         options: [
                             "",
                             "2.0",
@@ -2229,7 +2229,7 @@ const TRACKER_CONFIGS = {
                         id: "version",
                         type: "select",
                         label: "Version",
-                        required: true,
+                        required: false,
                         options: [
                             "",
                             "2.0",
@@ -2546,7 +2546,7 @@ const TRACKER_CONFIGS = {
                         id: "version",
                         type: "select",
                         label: "Version",
-                        required: true,
+                        required: false,
                         options: [
                             "",
                             "2.0",
@@ -2862,7 +2862,7 @@ const TRACKER_CONFIGS = {
                         id: "version",
                         type: "select",
                         label: "Version",
-                        required: true,
+                        required: false,
                         options: [
                             "",
                             "2.0",
@@ -3181,7 +3181,7 @@ const TRACKER_CONFIGS = {
                         id: "version",
                         type: "select",
                         label: "Version",
-                        required: true,
+                        required: false,
                         options: [
                             "",
                             "2.0",
@@ -3559,7 +3559,7 @@ const TRACKER_CONFIGS = {
                         id: "version",
                         type: "select",
                         label: "Version",
-                        required: true,
+                        required: false,
                         options: [
                             "",
                             "2.0",
@@ -3870,7 +3870,7 @@ const TRACKER_CONFIGS = {
                         id: "version",
                         type: "select",
                         label: "Version",
-                        required: true,
+                        required: false,
                         options: [
                             "",
                             "2.0",
@@ -4557,6 +4557,8 @@ function populateApplicationName() {
     } else if (productType === "Supplemental") {
         // Just use the product value
         applicationName = product || "";
+    } else if (productType === "Plan & Teach") {
+        applicationName = "Plan & Teach";
     }
 
     // Set the application field value
