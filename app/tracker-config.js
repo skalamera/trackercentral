@@ -212,7 +212,7 @@ const TRACKER_CONFIGS = {
                         required: true,
                         options: [
                             "",
-                            ".0",
+                            "2.0",
                             "2.5",
                             "2.5 Mod / 2.6",
                             "2.5 Mod / 2.6 National",
@@ -225,7 +225,8 @@ const TRACKER_CONFIGS = {
                             "Florida",
                             "National",
                             "Other"
-                        ]
+                        ],
+                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Symbols Of Our Country Missing" },
                     { id: "gradesImpacted", type: "text", label: "Grades Impacted", required: true, placeholder: "e.g. Grade 2" },
@@ -1027,7 +1028,7 @@ const TRACKER_CONFIGS = {
                         required: true,
                         options: [
                             "",
-                            ".0",
+                            "2.0",
                             "2.5",
                             "2.5 Mod / 2.6",
                             "2.5 Mod / 2.6 National",
@@ -1040,7 +1041,8 @@ const TRACKER_CONFIGS = {
                             "Florida",
                             "National",
                             "Other"
-                        ]
+                        ],
+                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
                     { id: "resourcePath", type: "text", label: "Resource Path", required: true, placeholder: "e.g. TRS: G5>U1>W2>L12" },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Title Missing" },
@@ -1481,7 +1483,7 @@ const TRACKER_CONFIGS = {
                         required: true,
                         options: [
                             "",
-                            ".0",
+                            "2.0",
                             "2.5",
                             "2.5 Mod / 2.6",
                             "2.5 Mod / 2.6 National",
@@ -1494,7 +1496,8 @@ const TRACKER_CONFIGS = {
                             "Florida",
                             "National",
                             "Other"
-                        ]
+                        ],
+                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -1780,7 +1783,7 @@ const TRACKER_CONFIGS = {
                         required: true,
                         options: [
                             "",
-                            ".0",
+                            "2.0",
                             "2.5",
                             "2.5 Mod / 2.6",
                             "2.5 Mod / 2.6 National",
@@ -1793,7 +1796,8 @@ const TRACKER_CONFIGS = {
                             "Florida",
                             "National",
                             "Other"
-                        ]
+                        ],
+                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -2228,7 +2232,7 @@ const TRACKER_CONFIGS = {
                         required: true,
                         options: [
                             "",
-                            ".0",
+                            "2.0",
                             "2.5",
                             "2.5 Mod / 2.6",
                             "2.5 Mod / 2.6 National",
@@ -2241,7 +2245,8 @@ const TRACKER_CONFIGS = {
                             "Florida",
                             "National",
                             "Other"
-                        ]
+                        ],
+                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -2544,7 +2549,7 @@ const TRACKER_CONFIGS = {
                         required: true,
                         options: [
                             "",
-                            ".0",
+                            "2.0",
                             "2.5",
                             "2.5 Mod / 2.6",
                             "2.5 Mod / 2.6 National",
@@ -2557,7 +2562,8 @@ const TRACKER_CONFIGS = {
                             "Florida",
                             "National",
                             "Other"
-                        ]
+                        ],
+                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -2859,7 +2865,7 @@ const TRACKER_CONFIGS = {
                         required: true,
                         options: [
                             "",
-                            ".0",
+                            "2.0",
                             "2.5",
                             "2.5 Mod / 2.6",
                             "2.5 Mod / 2.6 National",
@@ -2872,7 +2878,8 @@ const TRACKER_CONFIGS = {
                             "Florida",
                             "National",
                             "Other"
-                        ]
+                        ],
+                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -3177,7 +3184,7 @@ const TRACKER_CONFIGS = {
                         required: true,
                         options: [
                             "",
-                            ".0",
+                            "2.0",
                             "2.5",
                             "2.5 Mod / 2.6",
                             "2.5 Mod / 2.6 National",
@@ -3190,7 +3197,8 @@ const TRACKER_CONFIGS = {
                             "Florida",
                             "National",
                             "Other"
-                        ]
+                        ],
+                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -3554,7 +3562,7 @@ const TRACKER_CONFIGS = {
                         required: true,
                         options: [
                             "",
-                            ".0",
+                            "2.0",
                             "2.5",
                             "2.5 Mod / 2.6",
                             "2.5 Mod / 2.6 National",
@@ -3567,7 +3575,8 @@ const TRACKER_CONFIGS = {
                             "Florida",
                             "National",
                             "Other"
-                        ]
+                        ],
+                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -3864,7 +3873,7 @@ const TRACKER_CONFIGS = {
                         required: true,
                         options: [
                             "",
-                            ".0",
+                            "2.0",
                             "2.5",
                             "2.5 Mod / 2.6",
                             "2.5 Mod / 2.6 National",
@@ -3877,7 +3886,8 @@ const TRACKER_CONFIGS = {
                             "Florida",
                             "National",
                             "Other"
-                        ]
+                        ],
+                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
