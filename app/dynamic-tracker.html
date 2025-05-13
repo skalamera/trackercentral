@@ -3823,6 +3823,7 @@
                                         <div class="har-analysis">
                                             <div class="har-summary"><strong>HAR File Summary:</strong> ${harContent.log.entries.length} requests, ${harAnalysis.errorCount} errors</div>
                                             ${harAnalysis.errorCount > 0 ? `<div class="har-errors"><strong>Error requests:</strong> ${harAnalysis.errorCount}</div>` : ''}
+                                            ${harAnalysis.browserErrors && harAnalysis.browserErrors.count > 0 ? `<div class="har-errors"><strong>Browser-level errors:</strong> ${harAnalysis.browserErrors.count}</div>` : ''}
                                             ${harAnalysis.redirectCount > 0 ? `<div class="har-redirects"><strong>Redirects:</strong> ${harAnalysis.redirectCount}</div>` : ''}
                                             ${harAnalysis.slowRequests.length > 0 ? `<div class="har-slow"><strong>Slow requests:</strong> ${harAnalysis.slowRequests.length}</div>` : ''}
                                             <div class="har-browser"><strong>Browser:</strong> ${harAnalysis.browser}</div>
@@ -3889,6 +3890,13 @@
                                             <div style="font-size: 18px; font-weight: bold; color: ${harAnalysis.slowRequests && harAnalysis.slowRequests.length > 0 ? '#fd7e14' : '#333'};">${harAnalysis.slowRequests ? harAnalysis.slowRequests.length : 0}</div>
                                             <div style="font-size: 11px; color: #666;">Slow Requests</div>
                                         </div>
+                                        
+                                        ${harAnalysis.browserErrors && harAnalysis.browserErrors.count > 0 ? `
+                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                            <div style="font-size: 18px; font-weight: bold; color: #dc3545;">${harAnalysis.browserErrors.count}</div>
+                                            <div style="font-size: 11px; color: #666;">Browser Errors</div>
+                                        </div>
+                                        ` : ''}
                                     </div>
                                     
                                     <div style="display: flex; flex-wrap: wrap; gap: 10px;">
@@ -4071,7 +4079,9 @@
                             serverError: { count: 0, items: [] }  // 5xx
                         },
                         contentTypes: {},
-                        largeResponses: []
+                        largeResponses: [],
+                        // Add new field for browser level errors
+                        browserErrors: { count: 0, items: [] }
                     };
 
                     // Extract file name and date if available
@@ -4102,8 +4112,49 @@
                             const response = entry.response;
                             const request = entry.request;
 
-                            // Skip if no response or request
-                            if (!response || !request) return;
+                            // Skip if no request
+                            if (!request) return;
+
+                            // Check for browser-level errors (like net::ERR_FAILED)
+                            if (response && response._error) {
+                                analysis.errorCount++;
+                                analysis.browserErrors.count++;
+
+                                // Add to browser errors list (up to 5)
+                                if (analysis.browserErrors.items.length < 5) {
+                                    try {
+                                        const urlObj = new URL(request.url);
+                                        analysis.browserErrors.items.push({
+                                            url: urlObj.pathname + urlObj.search,
+                                            error: response._error,
+                                            method: request.method
+                                        });
+                                    } catch (e) {
+                                        analysis.browserErrors.items.push({
+                                            url: request.url,
+                                            error: response._error,
+                                            method: request.method
+                                        });
+                                    }
+                                }
+
+                                // Also add to errorUrls for compatibility with existing code
+                                if (analysis.errorUrls.length < 5) {
+                                    try {
+                                        const urlParts = new URL(request.url);
+                                        const shortUrl = urlParts.pathname;
+                                        analysis.errorUrls.push(`${request.method} ${shortUrl} (${response._error})`);
+                                    } catch (e) {
+                                        analysis.errorUrls.push(`${request.method} ${request.url} (${response._error})`);
+                                    }
+                                }
+
+                                // Skip further processing for this entry if there's no valid response
+                                if (!response.status) return;
+                            }
+
+                            // Skip if no response
+                            if (!response) return;
 
                             // Calculate response time and update metrics
                             if (entry.time) {
@@ -4310,7 +4361,8 @@
                             serverError: { count: 0, items: [] }
                         },
                         contentTypes: {},
-                        largeResponses: []
+                        largeResponses: [],
+                        browserErrors: { count: 0, items: [] }
                     };
                 }
             }
@@ -4451,8 +4503,10 @@
                         const analysis = this.harFileAnalysis;
                         const fileName = files[0].name;
 
-                        // Get total errors (client + server errors)
-                        const totalErrors = (analysis.statusCodes.clientError.count || 0) + (analysis.statusCodes.serverError.count || 0);
+                        // Get total errors (client + server errors + browser errors)
+                        const totalErrors = (analysis.statusCodes.clientError.count || 0) +
+                            (analysis.statusCodes.serverError.count || 0) +
+                            (analysis.browserErrors && analysis.browserErrors.count || 0);
 
                         // Create a styled HAR analysis note with title, red error count, and note about PDF
                         noteBody = `
@@ -5981,7 +6035,11 @@
                         ['Redirects', analysis.statusCodes.redirect.count || 0],
                         ['Client Errors', analysis.statusCodes.clientError.count || 0],
                         ['Server Errors', analysis.statusCodes.serverError.count || 0],
-                        ['Total Issues', (analysis.statusCodes.clientError.count || 0) + (analysis.statusCodes.serverError.count || 0) + (analysis.statusCodes.redirect.count || 0)],
+                        ['Browser-Level Errors', analysis.browserErrors ? analysis.browserErrors.count : 0],
+                        ['Total Issues', (analysis.statusCodes.clientError.count || 0) +
+                            (analysis.statusCodes.serverError.count || 0) +
+                            (analysis.statusCodes.redirect.count || 0) +
+                            (analysis.browserErrors ? analysis.browserErrors.count : 0)],
                         ['Average Response Time (ms)', Math.round(analysis.avgResponseTime || 0)],
                         ['Slow Requests', analysis.slowRequests ? analysis.slowRequests.length : 0],
                         ['Total Size', this.formatFileSize(analysis.totalSize || 0)],
@@ -5993,7 +6051,7 @@
 
                     // Add all requests sheet
                     let allRequests = [];
-                    allRequests.push(['URL', 'Method', 'Status', 'Time (ms)', 'Size']);
+                    allRequests.push(['URL', 'Method', 'Status', 'Time (ms)', 'Size', 'Error']);
 
                     // Combine all items from different status code categories
                     let allItems = [];
@@ -6019,12 +6077,27 @@
                             item.method,
                             item.status,
                             item.time || 0,
-                            item.size ? this.formatFileSize(item.size) : '0 B'
+                            item.size ? this.formatFileSize(item.size) : '0 B',
+                            '' // No error for these standard requests
                         ]);
                     });
 
                     const requestsWs = window.XLSX.utils.aoa_to_sheet(allRequests);
                     window.XLSX.utils.book_append_sheet(wb, requestsWs, 'All Requests');
+
+                    // Add browser errors sheet if any
+                    if (analysis.browserErrors && analysis.browserErrors.count > 0 && analysis.browserErrors.items.length > 0) {
+                        const browserErrorsData = [['URL', 'Method', 'Error Type']];
+                        analysis.browserErrors.items.forEach(item => {
+                            browserErrorsData.push([
+                                item.url,
+                                item.method || 'GET',
+                                item.error || 'Unknown Error'
+                            ]);
+                        });
+                        const browserErrorsWs = window.XLSX.utils.aoa_to_sheet(browserErrorsData);
+                        window.XLSX.utils.book_append_sheet(wb, browserErrorsWs, 'Browser Errors');
+                    }
 
                     // Add client errors sheet if any
                     const clientErrors = analysis.statusCodes.clientError.count || 0;
