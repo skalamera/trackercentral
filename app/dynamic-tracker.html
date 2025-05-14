@@ -3891,6 +3891,13 @@
                                             <div style="font-size: 11px; color: #666;">Slow Requests</div>
                                         </div>
                                         
+                                        ${harAnalysis.whitelistIssues && harAnalysis.whitelistIssues.count > 0 ? `
+                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                            <div style="font-size: 18px; font-weight: bold; color: #dc3545;">${harAnalysis.whitelistIssues.count}</div>
+                                            <div style="font-size: 11px; color: #666;">Possible Whitelist Issues</div>
+                                        </div>
+                                        ` : ''}
+                                        
                                         ${harAnalysis.browserErrors && harAnalysis.browserErrors.count > 0 ? `
                                         <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                                             <div style="font-size: 18px; font-weight: bold; color: #dc3545;">${harAnalysis.browserErrors.count}</div>
@@ -4081,7 +4088,69 @@
                         contentTypes: {},
                         largeResponses: [],
                         // Add new field for browser level errors
-                        browserErrors: { count: 0, items: [] }
+                        browserErrors: { count: 0, items: [] },
+                        // Add new field for whitelist issues
+                        whitelistIssues: { count: 0, items: [] }
+                    };
+
+                    // Define the whitelist patterns
+                    const whitelistPatterns = [
+                        // Benchmark Universe
+                        '*.benchmarkuniverse.com',
+                        // Benchmark Education Assessment
+                        'bec-assessment-resources.s3.us-west-2.amazonaws.com',
+                        // Benchmark Education CDN
+                        'd1u7vijijbxikz.cloudfront.net',
+                        'bec-rsrc-private-prod.s3.amazonaws.com',
+                        // Benchmark Universe Video Hosting
+                        'benchmark.wistia.com',
+                        'embedwistia-a.akamaihd.net',
+                        'distillery.wistia.com',
+                        'pipedream.wistia.com',
+                        '*.litix.io',
+                        // Google Fonts
+                        'fonts.googleapis.com',
+                        'fonts.gstatic.com',
+                        // Additional URLs
+                        'bubba-production.benchmarkuniverse.com',
+                        'appserver-production.benchmarkuniverse.com',
+                        'resources.benchmarkuniverse.com',
+                        'supervisor-production.benchmarkuniverse.com',
+                        'maple-production.benchmarkuniverse.com',
+                        's3.amazonaws.com',
+                        's3.amazonaws.com/bec-rsrc-private-prod/*',
+                        's3.amazonaws.com/bec-rsrc-public-prod/*'
+                    ];
+
+                    // Helper function to check if a URL matches a whitelist pattern
+                    const isWhitelisted = (url) => {
+                        try {
+                            if (!url) return false;
+
+                            const urlObj = new URL(url);
+                            const hostname = urlObj.hostname;
+                            const fullPath = urlObj.hostname + urlObj.pathname;
+
+                            return whitelistPatterns.some(pattern => {
+                                // Handle wildcards at start of domain (*.example.com)
+                                if (pattern.startsWith('*.')) {
+                                    const domain = pattern.substring(2);
+                                    return hostname.endsWith(domain);
+                                }
+                                // Handle path wildcards (example.com/path/*)
+                                else if (pattern.endsWith('/*')) {
+                                    const prefix = pattern.substring(0, pattern.length - 1);
+                                    return fullPath.startsWith(prefix);
+                                }
+                                // Exact match
+                                else {
+                                    return hostname === pattern || fullPath.includes(pattern);
+                                }
+                            });
+                        } catch (e) {
+                            console.error('Error checking whitelist for URL:', url, e);
+                            return false;
+                        }
                     };
 
                     // Extract file name and date if available
@@ -4119,6 +4188,29 @@
                             if (response && response._error) {
                                 analysis.errorCount++;
                                 analysis.browserErrors.count++;
+
+                                // Check if this is a whitelisted URL with an error
+                                if (isWhitelisted(request.url)) {
+                                    analysis.whitelistIssues.count++;
+                                    if (analysis.whitelistIssues.items.length < 20) {
+                                        try {
+                                            const urlObj = new URL(request.url);
+                                            analysis.whitelistIssues.items.push({
+                                                url: urlObj.hostname + urlObj.pathname,
+                                                method: request.method,
+                                                error: response._error || 'Browser Error',
+                                                status: 0
+                                            });
+                                        } catch (e) {
+                                            analysis.whitelistIssues.items.push({
+                                                url: request.url,
+                                                method: request.method,
+                                                error: response._error || 'Browser Error',
+                                                status: 0
+                                            });
+                                        }
+                                    }
+                                }
 
                                 // Add to browser errors list (up to 5)
                                 if (analysis.browserErrors.items.length < 5) {
@@ -4265,6 +4357,29 @@
                                 analysis.errorCount++;
                                 analysis.statusCodes.clientError.count++;
 
+                                // Check if this is a whitelisted URL with a client error
+                                if (isWhitelisted(request.url)) {
+                                    analysis.whitelistIssues.count++;
+                                    if (analysis.whitelistIssues.items.length < 20) {
+                                        try {
+                                            const urlObj = new URL(request.url);
+                                            analysis.whitelistIssues.items.push({
+                                                url: urlObj.hostname + urlObj.pathname,
+                                                method: request.method,
+                                                error: 'Client Error',
+                                                status: status
+                                            });
+                                        } catch (e) {
+                                            analysis.whitelistIssues.items.push({
+                                                url: request.url,
+                                                method: request.method,
+                                                error: 'Client Error',
+                                                status: status
+                                            });
+                                        }
+                                    }
+                                }
+
                                 // Add to client issues
                                 if (analysis.clientIssues.length < 5) {
                                     try {
@@ -4285,6 +4400,29 @@
                                 // Server Error (5xx)
                                 analysis.errorCount++;
                                 analysis.statusCodes.serverError.count++;
+
+                                // Check if this is a whitelisted URL with a server error
+                                if (isWhitelisted(request.url)) {
+                                    analysis.whitelistIssues.count++;
+                                    if (analysis.whitelistIssues.items.length < 20) {
+                                        try {
+                                            const urlObj = new URL(request.url);
+                                            analysis.whitelistIssues.items.push({
+                                                url: urlObj.hostname + urlObj.pathname,
+                                                method: request.method,
+                                                error: 'Server Error',
+                                                status: status
+                                            });
+                                        } catch (e) {
+                                            analysis.whitelistIssues.items.push({
+                                                url: request.url,
+                                                method: request.method,
+                                                error: 'Server Error',
+                                                status: status
+                                            });
+                                        }
+                                    }
+                                }
 
                                 // Add to server issues
                                 if (analysis.serverIssues.length < 5) {
@@ -4362,7 +4500,8 @@
                         },
                         contentTypes: {},
                         largeResponses: [],
-                        browserErrors: { count: 0, items: [] }
+                        browserErrors: { count: 0, items: [] },
+                        whitelistIssues: { count: 0, items: [] }
                     };
                 }
             }
@@ -6036,6 +6175,7 @@
                         ['Client Errors', analysis.statusCodes.clientError.count || 0],
                         ['Server Errors', analysis.statusCodes.serverError.count || 0],
                         ['Browser-Level Errors', analysis.browserErrors ? analysis.browserErrors.count : 0],
+                        ['Possible Whitelist Issues', analysis.whitelistIssues ? analysis.whitelistIssues.count : 0],
                         ['Total Issues', (analysis.statusCodes.clientError.count || 0) +
                             (analysis.statusCodes.serverError.count || 0) +
                             (analysis.statusCodes.redirect.count || 0) +
@@ -6166,6 +6306,21 @@
                         });
                         const slowRequestsWs = window.XLSX.utils.aoa_to_sheet(slowRequestsData);
                         window.XLSX.utils.book_append_sheet(wb, slowRequestsWs, 'Slow Requests');
+                    }
+
+                    // Add whitelist issues sheet if any
+                    if (analysis.whitelistIssues && analysis.whitelistIssues.count > 0 && analysis.whitelistIssues.items.length > 0) {
+                        const whitelistIssuesData = [['URL', 'Method', 'Status', 'Error Type']];
+                        analysis.whitelistIssues.items.forEach(item => {
+                            whitelistIssuesData.push([
+                                item.url,
+                                item.method || 'GET',
+                                item.status || '-',
+                                item.error || 'Unknown Error'
+                            ]);
+                        });
+                        const whitelistIssuesWs = window.XLSX.utils.aoa_to_sheet(whitelistIssuesData);
+                        window.XLSX.utils.book_append_sheet(wb, whitelistIssuesWs, 'Possible Whitelist Issues');
                     }
 
                     // Generate Excel file
