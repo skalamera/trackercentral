@@ -1234,10 +1234,18 @@ const TRACKER_CONFIGS = {
                     console.log("Synced XCODE to Xcode field in user info section");
                 }
 
-                // Sync resourcePath to pathField if both fields exist
-                if (resourcePathField && pathField) {
-                    pathField.value = resourcePathField.value;
-                    console.log("Synced Resource Path to Path field in steps to reproduce section");
+                // Sync applicationName and resourcePath to pathField if the fields exist
+                if (pathField) {
+                    // Only populate the Path field if both Application Name and Resource Path fields have values
+                    if (applicationField && applicationField.value && resourcePathField && resourcePathField.value) {
+                        const pathValue = applicationField.value + ' > ' + resourcePathField.value;
+                        pathField.value = pathValue;
+                        console.log("Synced Application Name + Resource Path to Path field: " + pathValue);
+                    } else {
+                        // Clear the path field if either input is missing
+                        pathField.value = '';
+                        console.log("Path field cleared - both Application Name and Resource Path are required");
+                    }
                 }
 
                 // Sync application and version to productImpacted if the fields exist
