@@ -566,6 +566,17 @@ fw-button#cancelTracker {
   /* Blue secondary accent */
   --placeholder-color: #555555;
   /* Darker placeholder text */
+  --primary-color: #2C3E50;
+  --secondary-color: #4095c6;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --light-gray: #e0e0e0;
+  --gray-color: #6c757d;
+  --white-color: #ffffff;
+  --border-radius: 8px;
+  --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --transition-speed: 0.3s;
 }
 
 [data-theme="dark"] {

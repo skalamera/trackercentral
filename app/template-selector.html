@@ -40,6 +40,16 @@
             <input type="text" id="templateSearch" class="search-input" placeholder="Search templates...">
         </div>
 
+        <!-- MY DRAFTS SECTION -->
+        <div id="myDraftsSection" class="my-drafts-section" style="display: none;">
+            <div class="drafts-header">
+                <h2><i class="fas fa-save"></i> My Drafts</h2>
+            </div>
+            <div id="draftsList" class="drafts-list">
+                <!-- Drafts will be populated dynamically -->
+            </div>
+        </div>
+
         <!-- Status area for displaying messages -->
         <div id="statusArea" style="display: none;"></div>
 
@@ -277,12 +287,14 @@
                             checkAdminPermissions();
 
                             setupTemplateHandlers();
+                            initializeDrafts();
 
                         }).catch(function (error) {
                             console.error("Error getting ticket data:", error);
                             // Still set up click handlers even if ticket data fails
                             checkAdminPermissions();
                             setupTemplateHandlers();
+                            initializeDrafts();
                         });
                     }).catch(function (error) {
                         console.error("Error initializing app:", error);
@@ -381,9 +393,223 @@
                 });
             }
 
+            // Draft Management Functions
+            function initializeDrafts() {
+                console.log("Initializing drafts system");
+                loadAndDisplayDrafts();
+                setupDraftEventHandlers();
+            }
+
+            function loadAndDisplayDrafts() {
+                const myDraftsSection = document.getElementById('myDraftsSection');
+                const draftsList = document.getElementById('draftsList');
+
+                if (!myDraftsSection || !draftsList) {
+                    console.warn("Draft elements not found");
+                    return;
+                }
+
+                try {
+                    // Load tracker config first
+                    const script = document.createElement('script');
+                    script.src = 'tracker-config.js';
+                    script.onload = () => {
+                        // Now we can access the DraftManager
+                        if (window.draftManager) {
+                            const drafts = window.draftManager.getDraftsArray();
+                            console.log(`Found ${drafts.length} drafts`);
+
+                            if (drafts.length === 0) {
+                                myDraftsSection.style.display = 'none';
+                                return;
+                            }
+
+                            // Show drafts section
+                            myDraftsSection.style.display = 'block';
+
+                            // Populate drafts list
+                            draftsList.innerHTML = '';
+                            drafts.forEach(draft => {
+                                const draftElement = createDraftElement(draft);
+                                draftsList.appendChild(draftElement);
+                            });
+                        }
+                    };
+                    document.head.appendChild(script);
+                } catch (error) {
+                    console.error('Error loading drafts:', error);
+                }
+            }
+
+            function createDraftElement(draft) {
+                const draftDiv = document.createElement('div');
+                draftDiv.className = 'draft-item';
+                draftDiv.setAttribute('data-draft-id', draft.id);
+
+                // Get template config for display name
+                const templateTitle = getTemplateDisplayName(draft.templateType);
+                const formattedDate = new Date(draft.updatedAt).toLocaleDateString();
+                const formattedTime = new Date(draft.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                draftDiv.innerHTML = `
+                    <div class="draft-header">
+                        <div class="draft-info">
+                            <div class="draft-name">${draft.name}</div>
+                            <div class="draft-meta">
+                                <span class="draft-template">${templateTitle}</span>
+                                <span class="draft-date">Saved: ${formattedDate} at ${formattedTime}</span>
+                            </div>
+                        </div>
+                        <div class="draft-actions">
+                            <button class="draft-continue-btn" onclick="loadDraft('${draft.id}')" title="Continue editing">
+                                <i class="fas fa-edit"></i> Continue
+                            </button>
+                            <button class="draft-delete-btn" onclick="deleteDraft('${draft.id}')" title="Delete draft">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                return draftDiv;
+            }
+
+            function getTemplateDisplayName(templateType) {
+                const templateNames = {
+                    'assembly': 'Assembly Tracker',
+                    'assembly-rollover': 'Assembly Rollover',
+                    'sedcust': 'SEDCUST (Content/Editorial)',
+                    'feature-request': 'Feature Request',
+                    'sim-assignment': 'SIM Assignment',
+                    'sim-assessment-reports': 'SIM Assessment Reports',
+                    'sim-achievement-levels': 'SIM Achievement Levels',
+                    'sim-fsa': 'SIM FSA',
+                    'sim-library-view': 'SIM Library View',
+                    'sim-orr': 'SIM ORR',
+                    'sim-plan-teach': 'SIM Plan & Teach',
+                    'sim-reading-log': 'SIM Reading Log',
+                    'sim-dashboard': 'SIM Dashboard',
+                    'dpt': 'DPT (Customized eAssessment)',
+                    'timeout-extension': 'Timeout Extension',
+                    'help-article': 'Help Article'
+                };
+                return templateNames[templateType] || templateType;
+            }
+
+            function setupDraftEventHandlers() {
+                // No additional event handlers needed currently
+            }
+
+            function loadDraft(draftId) {
+                console.log(`Loading draft: ${draftId}`);
+                try {
+                    if (window.draftManager) {
+                        const draft = window.draftManager.getDraft(draftId);
+                        if (!draft) {
+                            console.error('Draft not found');
+                            if (window.client) {
+                                client.interface.trigger("showNotify", {
+                                    type: "danger",
+                                    message: "Draft not found"
+                                });
+                            }
+                            return;
+                        }
+
+                        // Store the draft info for later use
+                        localStorage.setItem('loadingDraft', JSON.stringify({
+                            draftId: draftId,
+                            formData: draft.formData
+                        }));
+
+                        // Navigate to the tracker form with the correct template type
+                        localStorage.setItem('selectedTemplate', draft.templateType);
+                        window.location.href = `dynamic-tracker.html?type=${draft.templateType}`;
+                    } else {
+                        console.error('Draft system not available');
+                        if (window.client) {
+                            client.interface.trigger("showNotify", {
+                                type: "danger",
+                                message: "Draft system not available"
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading draft:', error);
+                    if (window.client) {
+                        client.interface.trigger("showNotify", {
+                            type: "danger",
+                            message: "Failed to load draft. Please try again."
+                        });
+                    }
+                }
+            }
+
+            function deleteDraft(draftId) {
+                console.log(`Deleting draft: ${draftId}`);
+                if (!confirm('Are you sure you want to delete this draft?')) {
+                    return;
+                }
+
+                try {
+                    if (window.draftManager) {
+                        const success = window.draftManager.deleteDraft(draftId);
+                        if (success) {
+                            // Remove the draft element from DOM
+                            const draftElement = document.querySelector(`[data-draft-id="${draftId}"]`);
+                            if (draftElement) {
+                                draftElement.remove();
+                            }
+
+                            // Check if we need to hide the drafts section
+                            const remainingDrafts = document.querySelectorAll('.draft-item');
+                            if (remainingDrafts.length === 0) {
+                                const myDraftsSection = document.getElementById('myDraftsSection');
+                                if (myDraftsSection) {
+                                    myDraftsSection.style.display = 'none';
+                                }
+                            }
+
+                            console.log('Draft deleted successfully');
+                        } else {
+                            console.error('Failed to delete draft');
+                            if (window.client) {
+                                client.interface.trigger("showNotify", {
+                                    type: "danger",
+                                    message: "Failed to delete draft"
+                                });
+                            }
+                        }
+                    } else {
+                        console.error('Draft system not available');
+                        if (window.client) {
+                            client.interface.trigger("showNotify", {
+                                type: "danger",
+                                message: "Draft system not available"
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error deleting draft:', error);
+                    if (window.client) {
+                        client.interface.trigger("showNotify", {
+                            type: "danger",
+                            message: "Failed to delete draft. Please try again."
+                        });
+                    }
+                }
+            }
+
+            // Make functions globally accessible
+            window.loadDraft = loadDraft;
+            window.deleteDraft = deleteDraft;
+
             // Function to select a template and navigate to the dynamic template
             function selectTemplate(templateType) {
                 console.log(`Selected template: ${templateType}`);
+
+                // Clear any loading draft data since this is a fresh template selection
+                localStorage.removeItem('loadingDraft');
 
                 // First get current agent information
                 client.data.get("loggedInUser").then(function (userData) {

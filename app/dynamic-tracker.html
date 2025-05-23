@@ -91,6 +91,31 @@
         .theme-toggle-btn:hover {
             background-color: var(--hover-bg, #f8f9fa);
         }
+
+        /* Notification animations */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 
@@ -234,6 +259,10 @@
         <div class="form-actions">
             <fw-button id="cancelTracker" color="secondary" size="small">
                 <i class="fas fa-times" style="margin-right: 8px;"></i>Cancel
+            </fw-button>
+
+            <fw-button id="saveAsDraft" color="warning" size="small" style="margin-left: 10px;">
+                <i class="fas fa-save" style="margin-right: 8px;"></i>Save as Draft
             </fw-button>
 
             <fw-button id="createTracker" color="primary" type="submit" size="small" style="margin-left: 10px;">
@@ -577,6 +606,7 @@
         class TrackerApp {
             constructor(trackerType, config) {
                 this.trackerType = trackerType;
+                this.selectedTemplate = trackerType; // Add this for draft saving
                 this.config = config;
                 this.client = null;
                 this.quillEditors = {};
@@ -611,6 +641,9 @@
 
                     // Load data from localStorage based on tracker type
                     this.loadDataFromStorage();
+
+                    // Check if we're loading a draft
+                    this.loadDraftIfAvailable();
 
                     // Hide specified ticket property fields
                     this.hideTicketPropertyFields();
@@ -1026,6 +1059,16 @@
                         e.preventDefault();
                         console.log('Create Tracker button clicked');
                         this.handleFormSubmit();
+                    });
+                }
+
+                // Save as Draft button
+                const saveAsDraftButton = document.getElementById('saveAsDraft');
+                if (saveAsDraftButton) {
+                    saveAsDraftButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        console.log('Save as Draft button clicked');
+                        this.handleSaveAsDraft();
                     });
                 }
 
@@ -6580,6 +6623,213 @@
                     default:
                         return `Redirect (${statusCode})`;
                 }
+            }
+
+            // ... existing code ...
+
+            // Add save as draft handler
+            handleSaveAsDraft() {
+                console.log("handleSaveAsDraft called");
+
+                // Show a dialog to get draft name
+                const draftName = prompt('Enter a name for your draft:', `Draft - ${new Date().toLocaleDateString()}`);
+
+                if (!draftName || draftName.trim() === '') {
+                    return;
+                }
+
+                try {
+                    // Collect all form data
+                    const formData = this.collectFormData();
+
+                    // Check if draftManager is available
+                    if (!window.draftManager) {
+                        console.warn("Draft manager not available, loading it now");
+                        // Try to load it
+                        const script = document.createElement('script');
+                        script.src = 'tracker-config.js';
+                        script.onload = () => {
+                            if (window.draftManager) {
+                                this.saveDraftWithManager(draftName.trim(), formData);
+                            } else {
+                                alert('Draft system not available. Please refresh the page and try again.');
+                            }
+                        };
+                        document.head.appendChild(script);
+                    } else {
+                        this.saveDraftWithManager(draftName.trim(), formData);
+                    }
+                } catch (error) {
+                    console.error('Error saving draft:', error);
+                    alert('Failed to save draft. Please try again.');
+                }
+            }
+
+            // Helper method to save draft using the manager
+            saveDraftWithManager(draftName, formData) {
+                try {
+                    const draftId = window.draftManager.saveDraft(
+                        draftName,
+                        this.selectedTemplate,
+                        formData
+                    );
+
+                    // Store current draft ID for auto-save
+                    this.currentDraftId = draftId;
+                    this.currentDraftName = draftName;
+
+                    alert(`Draft "${draftName}" saved successfully!`);
+                    console.log(`Draft saved with ID: ${draftId}`);
+
+                    // Automatically redirect to the template selector page
+                    setTimeout(() => {
+                        window.location.href = 'template-selector.html';
+                    }, 1000); // Small delay to allow the alert to be seen
+                } catch (error) {
+                    console.error('Error in saveDraftWithManager:', error);
+                    alert('Failed to save draft. Please try again.');
+                }
+            }
+
+            // Method to collect all form data including rich text editors
+            collectFormData() {
+                const formData = {};
+
+                // Get all form inputs
+                const form = document.getElementById('trackerForm');
+                if (!form) return formData;
+
+                // Regular form fields
+                const inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    if (input.type === 'checkbox') {
+                        if (input.name && input.name.includes('userRole')) {
+                            // Handle checkbox groups
+                            if (!formData[input.name]) {
+                                formData[input.name] = [];
+                            }
+                            if (input.checked) {
+                                formData[input.name].push(input.value || input.id);
+                            }
+                        } else {
+                            formData[input.id] = input.checked;
+                        }
+                    } else if (input.type !== 'file') { // Skip file inputs
+                        formData[input.id] = input.value;
+                    }
+                });
+
+                // Collect Quill editor content
+                if (this.quillEditors) {
+                    Object.keys(this.quillEditors).forEach(fieldId => {
+                        const editor = this.quillEditors[fieldId];
+                        if (editor && editor.root) {
+                            formData[fieldId] = editor.root.innerHTML;
+                        }
+                    });
+                }
+
+                return formData;
+            }
+
+            // Method to load draft data when returning from template selector
+            loadDraftIfAvailable() {
+                try {
+                    const loadingDraft = localStorage.getItem('loadingDraft');
+                    if (loadingDraft) {
+                        const { draftId, formData } = JSON.parse(loadingDraft);
+                        console.log(`Loading draft ${draftId}`);
+
+                        this.currentDraftId = draftId;
+
+                        // Populate form with draft data
+                        this.populateFormWithDraftData(formData);
+
+                        // Clear the loading draft data
+                        localStorage.removeItem('loadingDraft');
+
+                        // Show notification
+                        this.showNotification('Draft loaded successfully', 'success');
+                    }
+                } catch (error) {
+                    console.error('Error loading draft:', error);
+                    localStorage.removeItem('loadingDraft');
+                }
+            }
+
+            // Method to populate form with draft data
+            populateFormWithDraftData(formData) {
+                if (!formData) return;
+
+                // Set a flag to prevent triggering change events during population
+                this.isLoadingDraft = true;
+
+                // Populate regular form fields
+                Object.keys(formData).forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (!field) return;
+
+                    if (field.type === 'checkbox') {
+                        field.checked = formData[fieldId];
+                    } else if (field.name && field.name.includes('userRole') && Array.isArray(formData[fieldId])) {
+                        // Handle checkbox groups
+                        formData[fieldId].forEach(value => {
+                            const checkbox = document.getElementById(value) ||
+                                document.querySelector(`input[name="${field.name}"][value="${value}"]`);
+                            if (checkbox) {
+                                checkbox.checked = true;
+                            }
+                        });
+                    } else {
+                        field.value = formData[fieldId];
+
+                        // Trigger change event for select fields to update dependent fields
+                        if (field.tagName === 'SELECT') {
+                            field.dispatchEvent(new Event('change'));
+                        }
+                    }
+                });
+
+                // Populate Quill editors
+                setTimeout(() => {
+                    if (this.quillEditors) {
+                        Object.keys(this.quillEditors).forEach(fieldId => {
+                            const editor = this.quillEditors[fieldId];
+                            if (editor && formData[fieldId] && typeof formData[fieldId] === 'string' && formData[fieldId].includes('<')) {
+                                editor.root.innerHTML = formData[fieldId];
+                            }
+                        });
+                    }
+
+                    // Clear the loading flag
+                    this.isLoadingDraft = false;
+                }, 500);
+            }
+
+            // Helper method to show notifications
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 12px 20px;
+                    background-color: ${type === 'success' ? '#4caf50' : '#2196f3'};
+                    color: white;
+                    border-radius: 4px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease-out;
+                `;
+                notification.textContent = message;
+
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease-out';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
             }
         }
 

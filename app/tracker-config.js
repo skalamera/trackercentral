@@ -250,7 +250,7 @@ const TRACKER_CONFIGS = {
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "schoolName", type: "text", label: "School Name", required: true, hint: "Provide the customer account and name of the user that the issue is affecting, as well as the role they have within Benchmark Universe (district admin, school admin, teacher). EX: Echo Lake Elementary School" },
                     { id: "districtState", type: "text", label: "District State", required: true },
-                    { id: "program", type: "text", label: "Program/Product Impacted", required: true, hint: "Provide the name of the product where the issue is prevalent. Include the assembly code (ie: subscription code pulled from TA Subs). Make sure you include the state if it a state specific assembly. EX: Benchmark Advance - c2022 VA:  X101055" },
+                    { id: "program", type: "text", label: "Program/Product Impacted", required: true, hint: "Provide the Program Name for which the issue is prevalent. Ex: Advance Florida the issue is prevalent. Include the assembly code (ie: subscription code pulled from TA Subs). Make sure you include the state if it a state specific assembly. EX: Benchmark Advance - c2022 VA:  X101055" },
                     { id: "programVariation", type: "text", label: "Program Variation (if known)", required: true, hint: "Provide the program variation if known. This includes state variation and / or numerical variation such as 2.75 or 2.5. EX: Benchmark Advance -c2022 or Benchmark Advance 2.75" },
                     { id: "dateReported", type: "date", label: "Date issue reported by user", required: true, hint: "Provide the date the user reported the issue. EX: 5/18/23" },
                     { id: "subscriptionCodes", type: "richtext", label: "Subscription codes customer is onboarded with", required: true, hint: "Provide the subscription code of the product the user has the issue in. EX: X71647 <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to find an Xcode</a>" },
@@ -1087,7 +1087,7 @@ const TRACKER_CONFIGS = {
                     },
                     {
                         id: "productImpacted", type: "text", label: "Program Impacted", required: true,
-                        hint: "Provide the name of the product where the issue is prevalent. Ex: Benchmark Advance Florida"
+                        hint: "Provide the Program Name for which the issue is prevalent. Ex: Advance Florida the issue is prevalent. Ex: Benchmark Advance Florida"
                     },
                     {
                         id: "xcodeInfo", type: "text", label: "Xcode", required: true,
@@ -5388,3 +5388,263 @@ TRACKER_CONFIGS["help-article"].onLoad = function () {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { TRACKER_CONFIGS };
 }
+
+// Draft Management System
+class DraftManager {
+    constructor() {
+        this.storageKey = 'trackerDrafts';
+    }
+
+    // Generate a unique draft ID
+    generateDraftId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    }
+
+    // Save a draft
+    saveDraft(draftName, templateType, formData, options = {}) {
+        try {
+            const drafts = this.getAllDrafts();
+            const draftId = options.draftId || this.generateDraftId();
+
+            const draft = {
+                id: draftId,
+                name: draftName,
+                templateType: templateType,
+                formData: formData,
+                createdAt: options.createdAt || new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                version: '1.0'
+            };
+
+            drafts[draftId] = draft;
+            localStorage.setItem(this.storageKey, JSON.stringify(drafts));
+
+            console.log(`Draft "${draftName}" saved successfully`);
+            return draftId;
+        } catch (error) {
+            console.error('Error saving draft:', error);
+            throw new Error('Failed to save draft');
+        }
+    }
+
+    // Get all drafts
+    getAllDrafts() {
+        try {
+            const drafts = localStorage.getItem(this.storageKey);
+            return drafts ? JSON.parse(drafts) : {};
+        } catch (error) {
+            console.error('Error loading drafts:', error);
+            return {};
+        }
+    }
+
+    // Get a specific draft
+    getDraft(draftId) {
+        const drafts = this.getAllDrafts();
+        return drafts[draftId] || null;
+    }
+
+    // Delete a draft
+    deleteDraft(draftId) {
+        try {
+            const drafts = this.getAllDrafts();
+            if (drafts[draftId]) {
+                delete drafts[draftId];
+                localStorage.setItem(this.storageKey, JSON.stringify(drafts));
+                console.log(`Draft ${draftId} deleted successfully`);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error deleting draft:', error);
+            throw new Error('Failed to delete draft');
+        }
+    }
+
+    // Get drafts as an array sorted by last updated
+    getDraftsArray() {
+        const drafts = this.getAllDrafts();
+        return Object.values(drafts).sort((a, b) =>
+            new Date(b.updatedAt) - new Date(a.updatedAt)
+        );
+    }
+
+    // Update an existing draft
+    updateDraft(draftId, draftName, formData) {
+        const draft = this.getDraft(draftId);
+        if (!draft) {
+            throw new Error('Draft not found');
+        }
+
+        return this.saveDraft(draftName, draft.templateType, formData, {
+            draftId: draftId,
+            createdAt: draft.createdAt
+        });
+    }
+
+    // Clean up old drafts (optional - keep last 20 drafts)
+    cleanupOldDrafts(maxDrafts = 20) {
+        try {
+            const draftsArray = this.getDraftsArray();
+            if (draftsArray.length > maxDrafts) {
+                const drafts = this.getAllDrafts();
+                const toDelete = draftsArray.slice(maxDrafts);
+
+                toDelete.forEach(draft => {
+                    delete drafts[draft.id];
+                });
+
+                localStorage.setItem(this.storageKey, JSON.stringify(drafts));
+                console.log(`Cleaned up ${toDelete.length} old drafts`);
+            }
+        } catch (error) {
+            console.error('Error cleaning up old drafts:', error);
+        }
+    }
+
+    // Get template configuration for a draft
+    getTemplateConfig(templateType) {
+        return TRACKER_CONFIGS[templateType] || null;
+    }
+
+    // Extract form data from the current form
+    extractFormData() {
+        const formData = {};
+
+        // Get all form inputs
+        const form = document.getElementById('tracker-form');
+        if (!form) return formData;
+
+        // Regular form fields
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            if (input.type === 'checkbox') {
+                if (input.name && input.name.startsWith('userRole')) {
+                    // Handle checkbox groups
+                    if (!formData[input.name]) {
+                        formData[input.name] = [];
+                    }
+                    if (input.checked) {
+                        formData[input.name].push(input.value || input.id);
+                    }
+                } else {
+                    formData[input.id] = input.checked;
+                }
+            } else {
+                formData[input.id] = input.value;
+            }
+        });
+
+        // Quill editors (rich text)
+        const quillEditors = document.querySelectorAll('.ql-editor');
+        quillEditors.forEach(editor => {
+            const container = editor.closest('[id]');
+            if (container) {
+                formData[container.id] = editor.innerHTML;
+            }
+        });
+
+        return formData;
+    }
+
+    // Populate form with draft data
+    populateForm(formData) {
+        if (!formData) return;
+
+        // Populate regular form fields
+        Object.keys(formData).forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (!field) return;
+
+            if (field.type === 'checkbox') {
+                field.checked = formData[fieldId];
+            } else if (field.name && field.name.startsWith('userRole') && Array.isArray(formData[fieldId])) {
+                // Handle checkbox groups
+                formData[fieldId].forEach(value => {
+                    const checkbox = document.getElementById(value) ||
+                        document.querySelector(`input[value="${value}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                });
+            } else {
+                field.value = formData[fieldId];
+            }
+        });
+
+        // Populate Quill editors
+        setTimeout(() => {
+            Object.keys(formData).forEach(fieldId => {
+                const container = document.getElementById(fieldId);
+                if (container && container.classList.contains('ql-container')) {
+                    const editor = container.querySelector('.ql-editor');
+                    if (editor && typeof formData[fieldId] === 'string' && formData[fieldId].includes('<')) {
+                        editor.innerHTML = formData[fieldId];
+                    }
+                }
+            });
+        }, 500);
+    }
+}
+
+// Global draft manager instance
+window.draftManager = new DraftManager();
+
+// Helper functions for form integration
+window.saveDraftFromForm = function (draftName) {
+    if (!window.trackerApp || !window.trackerApp.selectedTemplate) {
+        console.error('No template selected');
+        if (window.trackerApp && typeof window.trackerApp.showNotification === 'function') {
+            window.trackerApp.showNotification('No template selected', 'error');
+        }
+        return;
+    }
+
+    try {
+        const formData = window.draftManager.extractFormData();
+        const draftId = window.draftManager.saveDraft(
+            draftName,
+            window.trackerApp.selectedTemplate,
+            formData
+        );
+
+        console.log(`Draft "${draftName}" saved successfully!`);
+        if (window.trackerApp && typeof window.trackerApp.showNotification === 'function') {
+            window.trackerApp.showNotification(`Draft "${draftName}" saved successfully!`, 'success');
+        }
+        return draftId;
+    } catch (error) {
+        console.error('Error saving draft from form:', error);
+        if (window.trackerApp && typeof window.trackerApp.showNotification === 'function') {
+            window.trackerApp.showNotification('Failed to save draft. Please try again.', 'error');
+        }
+    }
+};
+
+window.loadDraftToForm = function (draftId) {
+    try {
+        const draft = window.draftManager.getDraft(draftId);
+        if (!draft) {
+            console.error('Draft not found');
+            if (window.trackerApp && typeof window.trackerApp.showNotification === 'function') {
+                window.trackerApp.showNotification('Draft not found', 'error');
+            }
+            return;
+        }
+
+        // Store the draft info for later use
+        localStorage.setItem('loadingDraft', JSON.stringify({
+            draftId: draftId,
+            formData: draft.formData
+        }));
+
+        // Navigate to the tracker form
+        localStorage.setItem('selectedTemplate', draft.templateType);
+        window.location.href = 'dynamic-tracker.html';
+    } catch (error) {
+        console.error('Error loading draft:', error);
+        if (window.trackerApp && typeof window.trackerApp.showNotification === 'function') {
+            window.trackerApp.showNotification('Failed to load draft. Please try again.', 'error');
+        }
+    }
+};
