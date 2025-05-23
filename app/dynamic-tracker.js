@@ -358,6 +358,18 @@ class TrackerApp {
         const form = document.getElementById('trackerForm');
         form.insertBefore(successMessage, form.firstChild);
 
+        // Increment the daily tracker count
+        try {
+            if (window.incrementTrackerCount && typeof window.incrementTrackerCount === 'function') {
+                window.incrementTrackerCount(this.trackerType);
+                console.log(`Incremented tracker count for template: ${this.trackerType}`);
+            } else {
+                console.warn('incrementTrackerCount function not available');
+            }
+        } catch (error) {
+            console.error('Error incrementing tracker count:', error);
+        }
+
         // We'll use Promise.all to make sure we process all async operations
         const processingTasks = [];
 

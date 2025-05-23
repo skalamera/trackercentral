@@ -597,6 +597,100 @@
             }
         }
 
+        // Tracker count utility functions
+        function getTodayDateString() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Function to increment tracker count (called from TrackerApp)
+        function incrementTrackerCount(templateType) {
+            console.log(`[TRACKER COUNT] Incrementing tracker count for template: ${templateType}`);
+
+            // Try to get client from multiple sources
+            let client = null;
+
+            if (window.trackerApp && window.trackerApp.client) {
+                client = window.trackerApp.client;
+                console.log(`[TRACKER COUNT] Using client from window.trackerApp`);
+            } else if (typeof window.client !== 'undefined') {
+                client = window.client;
+                console.log(`[TRACKER COUNT] Using global window.client`);
+            } else if (typeof app !== 'undefined') {
+                console.log(`[TRACKER COUNT] Client not immediately available, will try with app.initialized()`);
+                // Use app.initialized() as fallback
+                app.initialized().then(function (appClient) {
+                    console.log(`[TRACKER COUNT] Got client from app.initialized(), calling recursively`);
+                    window.client = appClient;
+                    incrementTrackerCount(templateType); // Recursive call with client now available
+                }).catch(function (error) {
+                    console.error(`[TRACKER COUNT] Failed to get client from app.initialized():`, error);
+                });
+                return; // Return early, recursive call will handle the actual work
+            } else {
+                console.warn(`[TRACKER COUNT] No client available for incrementing tracker count`);
+                return;
+            }
+
+            if (!client) {
+                console.warn(`[TRACKER COUNT] Client is null, cannot increment tracker count`);
+                return;
+            }
+
+            const today = getTodayDateString();
+            const storageKey = `tracker-counts-${today}`;
+            console.log(`[TRACKER COUNT] Using storage key: ${storageKey}`);
+
+            // Get current counts - handle case where no record exists yet
+            client.db.get(storageKey)
+                .then(function (counts) {
+                    const currentCounts = counts || {};
+                    console.log(`[TRACKER COUNT] Current counts before increment:`, currentCounts);
+
+                    // Increment the count for this template
+                    currentCounts[templateType] = (currentCounts[templateType] || 0) + 1;
+
+                    console.log(`[TRACKER COUNT] Updated counts for ${today}:`, currentCounts);
+
+                    // Save back to storage
+                    return client.db.set(storageKey, currentCounts);
+                })
+                .catch(function (error) {
+                    // Handle 404 error when no record exists yet (first tracker of the day)
+                    if (error.status === 404) {
+                        console.log(`[TRACKER COUNT] No existing record for ${today}, creating new one`);
+                        const newCounts = {};
+                        newCounts[templateType] = 1;
+                        
+                        console.log(`[TRACKER COUNT] Creating new counts record:`, newCounts);
+                        
+                        // Create new record
+                        return client.db.set(storageKey, newCounts);
+                    } else {
+                        // Re-throw other errors
+                        throw error;
+                    }
+                })
+                .then(function () {
+                    console.log(`[TRACKER COUNT] Successfully incremented ${templateType} count for ${today}`);
+
+                    // Trigger a refresh of the dashboard if we're on the template selector page
+                    if (window.loadAndDisplayTrackerCounts && typeof window.loadAndDisplayTrackerCounts === 'function') {
+                        console.log(`[TRACKER COUNT] Refreshing dashboard`);
+                        window.loadAndDisplayTrackerCounts();
+                    }
+                })
+                .catch(function (error) {
+                    console.error(`[TRACKER COUNT] Error incrementing tracker count for ${templateType}:`, error);
+                });
+        }
+
+        // Make increment function globally accessible
+        window.incrementTrackerCount = incrementTrackerCount;
+
         function initializeTrackerApp(trackerType, config) {
             const trackerApp = new TrackerApp(trackerType, config);
             window.trackerApp = trackerApp;
@@ -3018,6 +3112,20 @@
                 // Insert at the top of the form
                 const form = document.getElementById('trackerForm');
                 form.insertBefore(successMessage, form.firstChild);
+
+                // Increment the daily tracker count
+                try {
+                    console.log(`[TRACKER COUNT] Attempting to increment count for tracker type: ${this.trackerType}`);
+                    if (window.incrementTrackerCount && typeof window.incrementTrackerCount === 'function') {
+                        window.incrementTrackerCount(this.trackerType);
+                        console.log(`[TRACKER COUNT] Successfully called incrementTrackerCount for template: ${this.trackerType}`);
+                    } else {
+                        console.warn('[TRACKER COUNT] incrementTrackerCount function not available on window object');
+                        console.log('[TRACKER COUNT] Available functions on window:', Object.keys(window).filter(key => key.includes('tracker') || key.includes('Count')));
+                    }
+                } catch (error) {
+                    console.error('[TRACKER COUNT] Error incrementing tracker count:', error);
+                }
 
                 // We'll use Promise.all to make sure we process all async operations
                 const processingTasks = [];

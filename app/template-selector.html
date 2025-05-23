@@ -27,17 +27,20 @@
             </button>
         </div>
 
-        <div class="page-title">
-            <h1>Tracker Templates <a
-                    href="https://techsupport.benchmarkeducation.com/support/solutions/articles/67000720484"
-                    target="_blank" title="View Tracker Documentation"><i class="fas fa-info-circle"
-                        style="font-size: 0.7em; color: #4095c6; vertical-align: super;"></i></a></h1>
-            <p>Select a template to create a standardized tracker ticket for your issue category</p>
-        </div>
-
         <div class="search-container">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="templateSearch" class="search-input" placeholder="Search templates...">
+        </div>
+
+        <!-- DAILY TRACKER COUNTS DASHBOARD -->
+        <div id="trackerCountsDashboard" class="tracker-counts-dashboard" style="display: none;">
+            <div class="dashboard-header">
+                <h3><i class="fas fa-chart-bar"></i> Today's Trackers</h3>
+                <span id="dashboardDate" class="dashboard-date"></span>
+            </div>
+            <div id="countsContainer" class="counts-container">
+                <!-- Dynamic counts will be populated here -->
+            </div>
         </div>
 
         <!-- MY DRAFTS SECTION -->
@@ -288,6 +291,7 @@
 
                             setupTemplateHandlers();
                             initializeDrafts();
+                            loadAndDisplayTrackerCounts();
 
                         }).catch(function (error) {
                             console.error("Error getting ticket data:", error);
@@ -603,6 +607,186 @@
             // Make functions globally accessible
             window.loadDraft = loadDraft;
             window.deleteDraft = deleteDraft;
+
+            // Daily Tracker Counts Functions
+            function loadAndDisplayTrackerCounts() {
+                console.log("Loading daily tracker counts");
+
+                if (!window.client) {
+                    console.warn("Client not available for loading tracker counts");
+                    return;
+                }
+
+                const today = getTodayDateString();
+                const storageKey = `tracker-counts-${today}`;
+
+                // Load today's counts from Freshdesk storage
+                client.db.get(storageKey)
+                    .then(function (counts) {
+                        console.log(`Loaded tracker counts for ${today}:`, counts);
+                        displayTrackerCounts(counts || {}, today);
+                    })
+                    .catch(function (error) {
+                        console.log(`No tracker counts found for ${today} (this is normal if no trackers created today):`, error);
+                        displayTrackerCounts({}, today);
+                    });
+            }
+
+            function displayTrackerCounts(counts, date) {
+                const dashboard = document.getElementById('trackerCountsDashboard');
+                const dateElement = document.getElementById('dashboardDate');
+                const countsContainer = document.getElementById('countsContainer');
+
+                if (!dashboard || !dateElement || !countsContainer) {
+                    console.warn("Dashboard elements not found");
+                    return;
+                }
+
+                // Set the date
+                const formattedDate = new Date(date).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                dateElement.textContent = formattedDate;
+
+                // Clear existing counts
+                countsContainer.innerHTML = '';
+
+                // Get template display names and icons
+                const templateInfo = getTemplateInfo();
+
+                // Check if we have any counts to display
+                const hasAnyCounts = Object.keys(counts).length > 0 && Object.values(counts).some(count => count > 0);
+
+                if (!hasAnyCounts) {
+                    // Show empty state
+                    countsContainer.innerHTML = '<div class="counts-empty">No trackers created today yet.</div>';
+                    dashboard.style.display = 'block';
+                    return;
+                }
+
+                // Create count items for templates with counts > 0
+                Object.entries(counts).forEach(([templateType, count]) => {
+                    if (count > 0) {
+                        const info = templateInfo[templateType];
+                        if (info) {
+                            const countItem = createCountItem(info.icon, info.name, count);
+                            countsContainer.appendChild(countItem);
+                        }
+                    }
+                });
+
+                // Show the dashboard
+                dashboard.style.display = 'block';
+            }
+
+            function createCountItem(icon, name, count) {
+                const countItem = document.createElement('div');
+                countItem.className = 'count-item';
+
+                countItem.innerHTML = `
+                    <i class="${icon} count-icon"></i>
+                    <span class="count-label">${name}</span>
+                    <span class="count-number">${count}</span>
+                `;
+
+                return countItem;
+            }
+
+            function getTemplateInfo() {
+                return {
+                    'assembly': { name: 'Assembly', icon: 'fas fa-puzzle-piece' },
+                    'assembly-rollover': { name: 'Rollover', icon: 'fas fa-sync-alt' },
+                    'sedcust': { name: 'SEDCUST', icon: 'fas fa-book' },
+                    'sim-assignment': { name: 'SIM Assignment', icon: 'fas fa-tasks' },
+                    'sim-assessment-reports': { name: 'SIM Reports', icon: 'fas fa-chart-bar' },
+                    'sim-achievement-levels': { name: 'SIM Achievement', icon: 'fas fa-trophy' },
+                    'sim-fsa': { name: 'SIM FSA', icon: 'fas fa-check-circle' },
+                    'sim-library-view': { name: 'SIM Library', icon: 'fas fa-book-open' },
+                    'sim-orr': { name: 'SIM ORR', icon: 'fas fa-file-signature' },
+                    'sim-plan-teach': { name: 'SIM Plan & Teach', icon: 'fas fa-chalkboard-teacher' },
+                    'sim-reading-log': { name: 'SIM Reading Log', icon: 'fas fa-book-reader' },
+                    'sim-dashboard': { name: 'SIM Dashboard', icon: 'fas fa-tachometer-alt' },
+                    'dpt': { name: 'DPT', icon: 'fas fa-file-alt' },
+                    'feature-request': { name: 'Feature Request', icon: 'fas fa-lightbulb' },
+                    'help-article': { name: 'Help Article', icon: 'fas fa-question-circle' },
+                    'timeout-extension': { name: 'Timeout Extension', icon: 'fas fa-hourglass-half' }
+                };
+            }
+
+            function getTodayDateString() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            // Function to increment tracker count (called from dynamic tracker)
+            function incrementTrackerCount(templateType) {
+                console.log(`Incrementing tracker count for template: ${templateType}`);
+
+                if (!window.client) {
+                    console.warn("Client not available for incrementing tracker count");
+                    return;
+                }
+
+                const today = getTodayDateString();
+                const storageKey = `tracker-counts-${today}`;
+
+                // Get current counts - handle case where no record exists yet
+                client.db.get(storageKey)
+                    .then(function (counts) {
+                        const currentCounts = counts || {};
+
+                        // Increment the count for this template
+                        currentCounts[templateType] = (currentCounts[templateType] || 0) + 1;
+
+                        console.log(`Updated counts for ${today}:`, currentCounts);
+
+                        // Save back to storage
+                        return client.db.set(storageKey, currentCounts);
+                    })
+                    .catch(function (error) {
+                        // Handle 404 error when no record exists yet (first tracker of the day)
+                        if (error.status === 404) {
+                            console.log(`No existing record for ${today}, creating new one`);
+                            const newCounts = {};
+                            newCounts[templateType] = 1;
+
+                            console.log(`Creating new counts record:`, newCounts);
+
+                            // Create new record
+                            return client.db.set(storageKey, newCounts);
+                        } else {
+                            // Re-throw other errors
+                            throw error;
+                        }
+                    })
+                    .then(function () {
+                        console.log(`Successfully incremented ${templateType} count for ${today}`);
+                    })
+                    .catch(function (error) {
+                        console.error(`Error incrementing tracker count for ${templateType}:`, error);
+                    });
+            }
+
+            // Make increment function globally accessible
+            window.incrementTrackerCount = incrementTrackerCount;
+
+            // Manual test function for debugging
+            function testTrackerCount() {
+                console.log("[DEBUG] Testing tracker count functionality");
+                incrementTrackerCount('sedcust');
+                setTimeout(() => {
+                    loadAndDisplayTrackerCounts();
+                }, 1000);
+            }
+
+            // Make test function globally accessible
+            window.testTrackerCount = testTrackerCount;
 
             // Function to select a template and navigate to the dynamic template
             function selectTemplate(templateType) {

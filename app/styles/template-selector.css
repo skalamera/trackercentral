@@ -267,7 +267,7 @@ body {
 
 .search-container {
     max-width: 600px;
-    margin: 0 auto 30px;
+    margin: 80px auto 30px;
     position: relative;
     border: 1px solid var(--card-border, #c8e6c9);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -455,10 +455,10 @@ div.templates-container {
     background-color: var(--danger-color);
     color: white;
     border: none;
-    padding: 6px 12px;
+    padding: 4px 8px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     transition: background-color var(--transition-speed);
 }
 
@@ -616,5 +616,154 @@ div.templates-container {
 
     .clear-all-btn {
         align-self: stretch;
+    }
+}
+
+/* Daily Tracker Counts Dashboard Styles */
+.tracker-counts-dashboard {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    margin: 20px 0;
+    padding: 15px 20px;
+    border-left: 4px solid var(--accent-color, #4caf50);
+    border: 1px solid #dee2e6;
+}
+
+[data-theme="dark"] .tracker-counts-dashboard {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border: 1px solid #5a6c7d;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.dashboard-header h3 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+[data-theme="dark"] .dashboard-header h3 {
+    color: #e0e0e0;
+}
+
+.dashboard-header h3 i {
+    color: var(--accent-color, #4caf50);
+    font-size: 1.1rem;
+}
+
+.dashboard-date {
+    font-size: 0.9rem;
+    color: var(--gray-color);
+    font-weight: 500;
+}
+
+[data-theme="dark"] .dashboard-date {
+    color: #b0b0b0;
+}
+
+.counts-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.count-item {
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.count-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .count-item {
+    background-color: #34495e;
+    border: 1px solid #5a6c7d;
+    color: #e0e0e0;
+}
+
+.count-icon {
+    font-size: 1rem;
+    color: var(--accent-color, #4caf50);
+    min-width: 16px;
+}
+
+.count-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #555;
+    flex: 1;
+}
+
+[data-theme="dark"] .count-label {
+    color: #b0b0b0;
+}
+
+.count-number {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-color, #4caf50);
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Empty state for dashboard */
+.counts-empty {
+    text-align: center;
+    color: var(--gray-color);
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 10px 0;
+}
+
+[data-theme="dark"] .counts-empty {
+    color: #8a9ba8;
+}
+
+/* Responsive design for dashboard */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .counts-container {
+        justify-content: center;
+    }
+
+    .count-item {
+        min-width: 100px;
+        padding: 6px 10px;
+    }
+
+    .count-label {
+        font-size: 0.8rem;
+    }
+
+    .count-number {
+        font-size: 1rem;
     }
 }
