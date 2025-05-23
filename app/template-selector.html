@@ -14,6 +14,19 @@
 
 <body>
     <div class="container">
+        <!-- Header controls for dark mode and admin settings -->
+        <div class="header-left-controls">
+            <a href="admin-settings.html" id="adminSettingsBtn" class="theme-toggle-btn" title="Admin Settings"
+                style="display: none;">
+                <i class="fas fa-sliders-h"></i>
+            </a>
+        </div>
+        <div class="header-right-controls">
+            <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Dark Mode">
+                <i class="fas fa-sun"></i>
+            </button>
+        </div>
+
         <div class="page-title">
             <h1>Tracker Templates <a
                     href="https://techsupport.benchmarkeducation.com/support/solutions/articles/67000720484"
@@ -26,6 +39,9 @@
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="templateSearch" class="search-input" placeholder="Search templates...">
         </div>
+
+        <!-- Status area for displaying messages -->
+        <div id="statusArea" style="display: none;"></div>
 
         <div class="template-groups">
             <!-- SEDCUST (CONTENT/EDITORIAL) GROUP -->
@@ -245,6 +261,9 @@
                         window.client = _client;
                         console.log("Template selector initialized successfully");
 
+                        // Initialize dark mode
+                        initTheme();
+
                         // Get current ticket details
                         client.data.get("ticket").then(function (ticketData) {
                             console.log("Retrieved ticket data:", ticketData);
@@ -254,11 +273,15 @@
                                 localStorage.setItem('ticketData', JSON.stringify(ticketData.ticket));
                             }
 
+                            // Check if user is admin and show admin settings button if they are
+                            checkAdminPermissions();
+
                             setupTemplateHandlers();
 
                         }).catch(function (error) {
                             console.error("Error getting ticket data:", error);
                             // Still set up click handlers even if ticket data fails
+                            checkAdminPermissions();
                             setupTemplateHandlers();
                         });
                     }).catch(function (error) {
@@ -273,6 +296,45 @@
                     });
                 }
             };
+
+            // Initialize dark mode based on saved preference
+            function initTheme() {
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                updateThemeIcon(savedTheme);
+
+                // Add event listener for theme toggle
+                const themeToggleBtn = document.getElementById('themeToggleBtn');
+                if (themeToggleBtn) {
+                    themeToggleBtn.addEventListener('click', toggleTheme);
+                }
+            }
+
+            // Toggle between light and dark mode
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+
+                updateThemeIcon(newTheme);
+                console.log(`Theme switched to ${newTheme} mode`);
+            }
+
+            // Update the theme toggle icon based on current theme
+            function updateThemeIcon(theme) {
+                const themeToggleBtn = document.getElementById('themeToggleBtn');
+                if (themeToggleBtn) {
+                    if (theme === 'dark') {
+                        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                        themeToggleBtn.title = 'Switch to Light Mode';
+                    } else {
+                        themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                        themeToggleBtn.title = 'Switch to Dark Mode';
+                    }
+                }
+            }
 
             // Function to set up handlers without ticket data
             function setupTemplateHandlers() {
@@ -469,6 +531,103 @@
                     // Navigate to template with default data if agent data fails
                     window.location.href = `dynamic-tracker.html?type=${templateType}`;
                 });
+            }
+
+            // Function to check if the current user has admin permissions
+            function checkAdminPermissions() {
+                try {
+                    client.data.get("loggedInUser").then(function (userData) {
+                        console.log("Checking admin permissions:", userData);
+
+                        try {
+                            // Check if user is admin - modify these conditions based on your actual admin criteria
+                            let isAdmin = false;
+
+                            if (userData && userData.loggedInUser) {
+                                console.log("User data structure:", JSON.stringify(userData.loggedInUser));
+
+                                // Check if user has admin role (adjust this based on your actual data structure)
+                                if (userData.loggedInUser.role_type === "administrator" ||
+                                    (userData.loggedInUser.role && userData.loggedInUser.role.name === "Administrator")) {
+                                    isAdmin = true;
+                                    console.log("Admin detected by role_type or role.name");
+                                }
+
+                                // Check for additional admin roles that might exist in Freshdesk
+                                if (!isAdmin && userData.loggedInUser.roles) {
+                                    // Check if user has any role containing "admin" in the name
+                                    isAdmin = userData.loggedInUser.roles.some(role =>
+                                        (role.name && role.name.toLowerCase().includes('admin')) ||
+                                        (role.role_type && role.role_type.toLowerCase().includes('admin'))
+                                    );
+                                    if (isAdmin) console.log("Admin detected by roles array");
+                                }
+
+                                // If still not identified as admin, check for specific admin permissions
+                                if (!isAdmin && userData.loggedInUser.agent_type === "full_access") {
+                                    isAdmin = true;
+                                    console.log("Admin detected by agent_type full_access");
+                                }
+
+                                // Check for view_admin ability in user abilities
+                                if (!isAdmin && Array.isArray(userData.loggedInUser.abilities) &&
+                                    userData.loggedInUser.abilities.includes("view_admin")) {
+                                    isAdmin = true;
+                                    console.log("Admin detected by view_admin ability");
+                                }
+
+                                // Admin access based on proper permissions only
+                                console.log("Admin access based on proper user permissions");
+
+                                console.log("Final admin determination:", isAdmin);
+                            } else {
+                                console.warn("loggedInUser data structure is not as expected:", userData);
+                            }
+
+                            // Show admin button if user is admin
+                            if (isAdmin) {
+                                const adminButton = document.getElementById('adminSettingsBtn');
+                                if (adminButton) {
+                                    adminButton.style.display = 'inline-block';
+                                    console.log("Admin button display set to inline-block");
+                                } else {
+                                    console.warn("Admin button element not found");
+                                }
+                            }
+                        } catch (innerError) {
+                            console.error("Error processing user data:", innerError);
+                            // Enable admin button as fallback in case of error
+                            showAdminButtonAsFallback();
+                        }
+                    }).catch(function (error) {
+                        console.error("Error getting loggedInUser data:", error);
+                        // Enable admin button as fallback in case of error
+                        showAdminButtonAsFallback();
+                    });
+                } catch (outerError) {
+                    console.error("Critical error in checkAdminPermissions:", outerError);
+                    // Enable admin button as fallback in case of error
+                    showAdminButtonAsFallback();
+                }
+            }
+
+            // Helper function to show admin button as fallback during errors
+            function showAdminButtonAsFallback() {
+                console.log("Error occurred during admin permission check");
+                // Don't automatically show admin button on errors
+                // This prevents unauthorized access due to errors
+                console.log("Admin button remains hidden due to permission check failure");
+
+                // Display a message about the error
+                const statusArea = document.getElementById('statusArea');
+                if (statusArea) {
+                    statusArea.innerHTML = `
+                        <div style="padding: 10px; background-color: #fff3e0; color: #e65100; border-radius: 4px; margin: 10px 0;">
+                            <p>There was an error checking admin permissions. Please refresh the page or contact support if the issue persists.</p>
+                        </div>
+                    `;
+                    statusArea.style.display = 'block';
+                }
             }
 
             // Handle collapsible sections

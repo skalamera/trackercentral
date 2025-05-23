@@ -1020,29 +1020,22 @@ const TRACKER_CONFIGS = {
                 icon: "fa-pencil-alt",
                 fields: [
                     { id: "xcode", type: "text", label: "XCODE", required: true, placeholder: "e.g. X56723" },
-                    { id: "application", type: "text", label: "Application Name", required: true, placeholder: "e.g. BAdvance -c2022" },
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "e.g. BAdvance -c2022" },
                     {
                         id: "version",
                         type: "select",
                         label: "Version",
                         required: false,
-                        options: [
-                            "",
-                            "2.0",
-                            "2.5",
-                            "2.5 Mod / 2.6",
-                            "2.5 Mod / 2.6 National",
-                            "2.5 National",
-                            "2.75",
-                            "2.75 National",
-                            "2.8",
-                            "2.8 National",
-                            "2.8 Florida",
-                            "Florida",
-                            "National",
-                            "Other"
-                        ],
+                        options: [],
                         hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
+                    },
+                    {
+                        id: "versionState",
+                        type: "select",
+                        label: "State/National",
+                        required: false,
+                        options: [],
+                        hint: "Select the state or location variation for this version"
                     },
                     { id: "resourcePath", type: "text", label: "Resource Path", required: true, placeholder: "e.g. TRS: G5>U1>W2>L12" },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Title Missing" },
@@ -1067,7 +1060,7 @@ const TRACKER_CONFIGS = {
                 fields: [
                     {
                         id: "issueDetails", type: "richtext", label: "", required: true,
-                        hint: "Describe in detail the issue reported by the user. You can insert exactly what the user reports in their submitted ticket. EX: User reports \"On the Benchmark Advance platform, unit 1 of grade 5, please filter to week 2 lesson 12. The title is missing from the lesson plan. Please add the title.\""
+                        hint: "Describe in detail the issue reported by the user. EX: User reports \"On the Benchmark Advance platform, unit 1 of grade 5, please filter to week 2 lesson 12. The title is missing from the lesson plan. Please add the title.\""
                     }
                 ]
             },
@@ -1093,7 +1086,7 @@ const TRACKER_CONFIGS = {
                         hint: "Provide the role of the user that the issue is affecting. EX: District Admin, School Admin, Teacher or Student"
                     },
                     {
-                        id: "productImpacted", type: "text", label: "Application/Program Impacted", required: true,
+                        id: "productImpacted", type: "text", label: "Program Impacted", required: true,
                         hint: "Provide the name of the product where the issue is prevalent. Ex: Benchmark Advance Florida"
                     },
                     {
@@ -1215,6 +1208,9 @@ const TRACKER_CONFIGS = {
             // Handle custom version input when "Other" is selected
             setupCustomVersionInput();
 
+            // Also setup custom version state input when "Other" is selected
+            setupCustomVersionStateInput();
+
             // Function to sync XCODE and Resource Path fields
             function syncFields() {
                 // Get the source fields from Subject section
@@ -1222,6 +1218,7 @@ const TRACKER_CONFIGS = {
                 const resourcePathField = document.getElementById('resourcePath');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                // const versionStateField = document.getElementById('versionState'); // Currently unused
 
                 // Get the target fields
                 const pathField = document.getElementById('pathField');
@@ -1252,15 +1249,20 @@ const TRACKER_CONFIGS = {
                 if (applicationField && productImpactedField) {
                     let productImpacted = applicationField.value || '';
 
-                    // Add version if it exists
+                    // Add version if available
                     if (versionField && versionField.value) {
-                        // Use getVersionValue instead of directly using versionField.value
                         const version = getVersionValue(versionField);
                         productImpacted += ` • ${version}`;
+
+                        // Add state/national if available
+                        if (versionStateField && versionStateField.value) {
+                            const versionState = getVersionStateValue(versionStateField);
+                            productImpacted += ` ${versionState}`;
+                        }
                     }
 
                     productImpactedField.value = productImpacted;
-                    console.log(`Synced Application Name + Version to Application/Program Impacted field: ${productImpacted}`);
+                    console.log(`Synced Application Name + Version + State/National to Program Impacted field: ${productImpacted}`);
                 }
             }
 
@@ -1290,25 +1292,39 @@ const TRACKER_CONFIGS = {
                 console.log("Added event listener to Version field");
             }
 
+            // Version State field event listener (not using the value currently, but keeping the listener for future use)
+            const versionStateField = document.getElementById('versionState');
+            if (versionStateField) {
+                versionStateField.addEventListener('change', syncFields);
+                console.log("Added event listener to Version State field");
+            }
+
             // Add function to update subject line according to new format
             function updateSubjectLine() {
                 // Define all field variables properly
                 const xcodeField = document.getElementById('xcode');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                // const versionStateField = document.getElementById('versionState'); // Currently unused
                 const resourcePathField = document.getElementById('resourcePath');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
                 const isVIPField = document.getElementById('isVIP');
 
-                if (!xcodeField || !applicationField || !versionField || !resourcePathField || !specificIssueField || !formattedSubjectField) {
+                if (!xcodeField || !applicationField || !resourcePathField || !specificIssueField || !formattedSubjectField) {
                     console.log("Missing required fields for subject formatting");
                     return;
                 }
 
                 const xcode = xcodeField.value || '';
                 const application = applicationField.value || '';
-                const version = getVersionValue(versionField) || '';
+
+                // Only use version, not version state for now
+                const version = versionField ? getVersionValue(versionField) : '';
+
+                // Just use version as the combinedVersion (ignoring versionState for now)
+                let combinedVersion = version;
+
                 const resourcePath = resourcePathField.value || '';
                 const specificIssue = specificIssueField.value || '';
 
@@ -1328,8 +1344,8 @@ const TRACKER_CONFIGS = {
 
                 // Add application and version
                 subject += application;
-                if (version) {
-                    subject += ` • ${version}`;
+                if (combinedVersion) {
+                    subject += ` • ${combinedVersion}`;
                 }
 
                 // Add resource path and specific issue
@@ -1343,6 +1359,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('xcode')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
             document.getElementById('resourcePath')?.addEventListener('input', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
             document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
@@ -4530,29 +4547,29 @@ function populateApplicationName() {
     } else if (productType === "Assess 360") {
         applicationName = "Assess 360";
     } else if (productType === "Benchmark Workshop") {
-        applicationName = "Benchmark Workshop";
+        applicationName = "Workshop";
     } else if (productType === "Benchmark Taller") {
-        applicationName = "Benchmark Taller";
+        applicationName = "Taller";
     } else if (productType === "Ready To Advance") {
         applicationName = "Ready To Advance";
     } else if (productType === "Benchmark Advance") {
-        // Rule: If Product type = "Benchmark Advance" AND Product = "Benchmark Advance", then Application Name = "B. Advance"
+        // Rule: If Product type = "Benchmark Advance" AND Product = "Benchmark Advance", then Application Name = "Advance"
         if (product === "Benchmark Advance") {
-            applicationName = "B. Advance";
+            applicationName = "Advance";
         } else {
-            // Combine with product value and use "B. Advance" shortening
-            applicationName = "B. Advance";
+            // Combine with product value and use "Advance" shortening
+            applicationName = "Advance";
             if (product) {
                 applicationName += ` ${product}`;
             }
         }
     } else if (productType === "Benchmark Adelante") {
-        // Rule: If Product type = "Benchmark Adelante" AND Product = "Adelante", then Application Name = "B. Adelante"
+        // Rule: If Product type = "Benchmark Adelante" AND Product = "Adelante", then Application Name = "Adelante"
         if (product === "Adelante") {
-            applicationName = "B. Adelante";
+            applicationName = "Adelante";
         } else {
-            // Combine with product value and use "B. Adelante" shortening
-            applicationName = "B. Adelante";
+            // Combine with product value and use "Adelante" shortening
+            applicationName = "Adelante";
             if (product) {
                 applicationName += ` ${product}`;
             }
@@ -4731,12 +4748,104 @@ function setupCustomVersionInput() {
     handleVersionChange();
 }
 
+// Helper function to set up custom version state input when "Other" is selected
+function setupCustomVersionStateInput() {
+    console.log("Setting up custom version state input handler");
+
+    // Find the version state dropdown
+    const versionStateSelect = document.getElementById('versionState');
+    if (!versionStateSelect) {
+        console.warn("Version state dropdown not found");
+        return;
+    }
+
+    // Function to handle change in version state dropdown
+    const handleVersionStateChange = function () {
+        // Check if current container already has a custom input field
+        let customInputContainer = document.getElementById('customVersionStateContainer');
+
+        // If "Other" is selected, create a custom input field if it doesn't exist
+        if (versionStateSelect.value === "Other") {
+            console.log("Other selected for version state, handling custom input field");
+
+            // If the container doesn't exist yet, create it
+            if (!customInputContainer) {
+                console.log("Creating new custom version state input field");
+
+                // Create container for custom input
+                customInputContainer = document.createElement('div');
+                customInputContainer.id = 'customVersionStateContainer';
+                customInputContainer.className = 'form-group';
+                customInputContainer.style.marginTop = '10px';
+
+                // Create label for custom input
+                const label = document.createElement('label');
+                label.textContent = 'Custom State/Location';
+                label.className = 'control-label';
+
+                // Create input field
+                const customInput = document.createElement('input');
+                customInput.type = 'text';
+                customInput.id = 'customVersionState';
+                customInput.className = 'form-control';
+                customInput.placeholder = 'Enter custom state/location';
+
+                // Retrieve any previous custom value if available
+                if (versionStateSelect.hasAttribute('data-custom-value')) {
+                    customInput.value = versionStateSelect.getAttribute('data-custom-value');
+                }
+
+                // Add event listener to update version state value
+                customInput.addEventListener('input', function () {
+                    // Always store the current value, even if empty
+                    versionStateSelect.setAttribute('data-custom-value', customInput.value);
+
+                    // Trigger change event for subject line update
+                    const event = new Event('change', { bubbles: true });
+                    versionStateSelect.dispatchEvent(event);
+                });
+
+                // Append elements to container
+                customInputContainer.appendChild(label);
+                customInputContainer.appendChild(customInput);
+
+                // Insert container after version state select
+                versionStateSelect.parentNode.insertBefore(customInputContainer, versionStateSelect.nextSibling);
+
+                // Focus the input field to make it immediately usable
+                setTimeout(() => {
+                    customInput.focus();
+                }, 50);
+            }
+        } else {
+            // If not "Other", remove the custom input container if it exists
+            if (customInputContainer) {
+                customInputContainer.remove();
+            }
+        }
+    };
+
+    // Add event listener to version state dropdown
+    versionStateSelect.addEventListener('change', handleVersionStateChange);
+
+    // Run once on load in case "Other" is already selected
+    handleVersionStateChange();
+}
+
 // Helper to get version value (custom or selected)
 function getVersionValue(versionField) {
     if (versionField.value === "Other" && versionField.hasAttribute('data-custom-value')) {
         return versionField.getAttribute('data-custom-value');
     }
     return versionField.value;
+}
+
+// Helper to get version state value (custom or selected)
+function getVersionStateValue(versionStateField) {
+    if (versionStateField.value === "Other" && versionStateField.hasAttribute('data-custom-value')) {
+        return versionStateField.getAttribute('data-custom-value');
+    }
+    return versionStateField.value;
 }
 
 // Setup clear formatting button for Quill editors

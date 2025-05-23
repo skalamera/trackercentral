@@ -13,6 +13,8 @@ body {
   margin: 0;
   padding: 0;
   color: #333;
+  background-color: var(--bg-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .fw-widget-wrapper {
@@ -544,3 +546,163 @@ fw-button#cancelTracker {
   color: #333;
 }
 
+/* Dark Mode Styles */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --card-bg: #ffffff;
+  --card-border: #e9e9e9;
+  --heading-color: #2C3E50;
+  --btn-primary-bg: #3498DB;
+  --btn-primary-text: #ffffff;
+  --input-bg: #ffffff;
+  --input-border: #ced4da;
+  --input-text: #333333;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --hover-bg: #f8f9fa;
+  --accent-color: #4caf50;
+  /* Green accent color */
+  --secondary-accent: #3498DB;
+  /* Blue secondary accent */
+  --placeholder-color: #555555;
+  /* Darker placeholder text */
+}
+
+[data-theme="dark"] {
+  --bg-color: #222831;
+  --text-color: #eeeeee;
+  --card-bg: #2d333b;
+  --card-border: #444444;
+  --heading-color: #4caf50;
+  /* Green heading in dark mode */
+  --btn-primary-bg: #4caf50;
+  /* Green button in dark mode */
+  --btn-primary-text: #ffffff;
+  --input-bg: #393e46;
+  --input-border: #555555;
+  --input-text: #eeeeee;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --hover-bg: #383f47;
+  --accent-color: #4caf50;
+  /* Green accent color */
+  --secondary-accent: #61dafb;
+  /* Light blue as secondary accent in dark mode */
+  --placeholder-color: #cccccc;
+  /* Lighter placeholder text for dark mode */
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  background-color: var(--bg-color);
+}
+
+.template-group,
+.settings-section {
+  background-color: var(--card-bg);
+  border-color: var(--card-border);
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--heading-color);
+}
+
+input,
+select,
+textarea {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--input-text);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--placeholder-color);
+}
+
+.hint,
+.form-group .hint {
+  color: var(--placeholder-color);
+}
+
+.template-item:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Header Controls - For dark mode toggle and admin button */
+.header-left-controls {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.header-right-controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.theme-toggle-btn {
+  background-color: transparent;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.2em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  transition: background-color 0.3s;
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--hover-bg);
+  color: var(--accent-color);
+}
+
+/* Make icons white in dark mode for better visibility */
+[data-theme="dark"] .theme-toggle-btn i {
+  color: white !important;
+}
+
+.admin-button {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.admin-button:hover {
+  opacity: 0.9;
+  background-color: var(--accent-color);
+}
+
+.admin-button i {
+  margin-right: 6px;
+}

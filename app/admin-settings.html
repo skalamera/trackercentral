@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script async src="{{{appclient}}}"></script>
+    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+    <link rel="stylesheet" type="text/css" href="styles/template-selector.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Admin Settings - Tracker Templates</title>
+    <style>
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            padding: 20px;
+        }
+
+        .settings-section h2 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--heading-color);
+        }
+
+        .values-container {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            padding: 10px;
+            background-color: var(--bg-color);
+        }
+
+        .value-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid var(--card-border);
+            background-color: var(--card-bg);
+        }
+
+        .value-item:last-child {
+            border-bottom: none;
+        }
+
+        .value-text {
+            flex-grow: 1;
+            padding: 5px;
+            color: var(--text-color);
+        }
+
+        .value-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+
+        .add-value-form {
+            display: flex;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        .add-value-form input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+        }
+
+        .btn-add {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+
+        .btn-add:hover {
+            background-color: #27ae60;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background-color: #34495e;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #2c3e50;
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        .btn-save {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+
+        .btn-save:hover {
+            background-color: #2980b9;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .drag-handle {
+            margin-right: 10px;
+            cursor: grab;
+            color: var(--text-color);
+            opacity: 0.6;
+        }
+
+        .dragging {
+            opacity: 0.5;
+            background-color: var(--hover-bg);
+        }
+
+        .storage-info {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--hover-bg);
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        /* Header controls for dark mode */
+        .header-left-controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .header-right-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header controls for dark mode -->
+    <div class="header-left-controls">
+        <a href="template-selector.html" class="theme-toggle-btn" title="Back to Templates">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+    <div class="header-right-controls">
+        <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Dark Mode">
+            <i class="fas fa-sun"></i>
+        </button>
+    </div>
+
+    <div class="admin-container">
+        <div class="page-title">
+            <h1>Admin Settings</h1>
+            <p>Manage dropdown values for tracker templates</p>
+        </div>
+
+        <div class="storage-info">
+            <i class="fas fa-info-circle"></i> Changes you make here will be stored in Freshdesk's App Storage and will
+            be visible to all users.
+        </div>
+
+        <!-- Version Settings Section -->
+        <div class="settings-section">
+            <h2><i class="fas fa-tags"></i> Version Dropdown Values</h2>
+            <p>Manage the options available in the Version dropdown across all templates</p>
+
+            <div class="values-container" id="versionValuesContainer">
+                <!-- Values will be loaded here dynamically -->
+                <div class="value-item">
+                    <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+                    <div class="value-text">Loading values...</div>
+                </div>
+            </div>
+
+            <div class="add-value-form">
+                <input type="text" id="newVersionValue" placeholder="Add new version value...">
+                <button class="btn-add" id="addVersionBtn">
+                    <i class="fas fa-plus"></i> Add
+                </button>
+            </div>
+        </div>
+
+        <!-- State/National Settings Section -->
+        <div class="settings-section">
+            <h2><i class="fas fa-map-marker-alt"></i> State/National Dropdown Values</h2>
+            <p>Manage the options available in the State/National dropdown across all templates</p>
+
+            <div class="values-container" id="locationValuesContainer">
+                <!-- Values will be loaded here dynamically -->
+                <div class="value-item">
+                    <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+                    <div class="value-text">Loading values...</div>
+                </div>
+            </div>
+
+            <div class="add-value-form">
+                <input type="text" id="newLocationValue" placeholder="Add new State/National value...">
+                <button class="btn-add" id="addLocationBtn">
+                    <i class="fas fa-plus"></i> Add
+                </button>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <button class="btn-save" id="saveChangesBtn">
+            <i class="fas fa-save"></i> Save All Changes
+        </button>
+
+        <!-- Status Message -->
+        <div class="status-message" id="statusMessage"></div>
+    </div>
+
+    <script>
+        // Wait for the app to initialize
+        document.onreadystatechange = function () {
+            if (document.readyState === 'complete') renderApp();
+
+            function renderApp() {
+                const onInit = app.initialized();
+
+                onInit.then(function (_client) {
+                    window.client = _client;
+                    console.log("Admin settings initialized successfully");
+
+                    // Initialize dark mode
+                    initTheme();
+
+                    // Check if user has admin privileges
+                    checkAdminPermissions();
+
+                    // Load dropdown values from Freshdesk's app storage
+                    loadDropdownValues();
+
+                    // Set up event listeners
+                    setupEventListeners();
+
+                }).catch(function (error) {
+                    console.error("Error initializing app:", error);
+                    document.body.innerHTML = `
+                        <div style="padding: 20px; background-color: #ffebee; color: #c62828; border-radius: 4px; margin: 10px;">
+                            <h3>Initialization Error</h3>
+                            <p>Failed to initialize admin settings.</p>
+                            <p>Error: ${error.message || "Unknown error"}</p>
+                        </div>
+                    `;
+                });
+            }
+        };
+
+        // Initialize dark mode based on saved preference
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            // Add event listener for theme toggle
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', toggleTheme);
+            }
+        }
+
+        // Toggle between light and dark mode
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+
+            updateThemeIcon(newTheme);
+            console.log(`Theme switched to ${newTheme} mode`);
+        }
+
+        // Update the theme toggle icon based on current theme
+        function updateThemeIcon(theme) {
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            if (themeToggleBtn) {
+                if (theme === 'dark') {
+                    themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                    themeToggleBtn.title = 'Switch to Light Mode';
+                } else {
+                    themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                    themeToggleBtn.title = 'Switch to Dark Mode';
+                }
+            }
+        }
+
+        // Function to check if user has admin permissions
+        function checkAdminPermissions() {
+            client.data.get("loggedInUser").then(function (userData) {
+                console.log("Checking admin permissions:", userData);
+
+                // Check if user is admin - modify these conditions based on your actual admin criteria
+                let isAdmin = false;
+
+                if (userData && userData.loggedInUser) {
+                    // Check if user has admin role (adjust based on your actual data structure)
+                    if (userData.loggedInUser.role_type === "administrator" ||
+                        (userData.loggedInUser.role && userData.loggedInUser.role.name === "Administrator")) {
+                        isAdmin = true;
+                    }
+
+                    // Check for additional admin roles that might exist in Freshdesk
+                    if (!isAdmin && userData.loggedInUser.roles) {
+                        // Check if user has any role containing "admin" in the name
+                        isAdmin = userData.loggedInUser.roles.some(role =>
+                            (role.name && role.name.toLowerCase().includes('admin')) ||
+                            (role.role_type && role.role_type.toLowerCase().includes('admin'))
+                        );
+                    }
+
+                    // If still not identified as admin, check for specific admin permissions
+                    if (!isAdmin && userData.loggedInUser.agent_type === "full_access") {
+                        isAdmin = true;
+                    }
+
+                    // Check for view_admin ability in user abilities
+                    if (!isAdmin && Array.isArray(userData.loggedInUser.abilities) &&
+                        userData.loggedInUser.abilities.includes("view_admin")) {
+                        isAdmin = true;
+                        console.log("Admin detected by view_admin ability");
+                    }
+
+                    console.log("User is admin:", isAdmin);
+                }
+
+                // If not admin, redirect back to templates page
+                if (!isAdmin) {
+                    console.log("User does not have admin permissions, redirecting");
+                    window.location.href = "template-selector.html";
+
+                    // Add a message before redirecting
+                    document.body.innerHTML = `
+                        <div style="padding: 20px; background-color: #ffebee; color: #c62828; border-radius: 4px; margin: 10px;">
+                            <h3>Access Denied</h3>
+                            <p>You do not have administrator permissions to access this page.</p>
+                            <p>Redirecting back to templates page...</p>
+                        </div>
+                    `;
+                }
+            }).catch(function (error) {
+                console.error("Error checking admin permissions:", error);
+                showStatus("Failed to verify admin permissions. Please try again.", false);
+            });
+        }
+
+        // Function to load dropdown values
+        function loadDropdownValues() {
+            // Try to get values from Freshdesk's Data Storage
+            Promise.all([
+                client.db.get('customVersionValues').catch(error => {
+                    console.error("Error loading version values from Freshdesk DB:", error);
+                    // Only fall back to localStorage if it's a connectivity issue
+                    const localValues = localStorage.getItem('customVersionValues');
+                    if (localValues) {
+                        showStatus("Using cached values due to connection issue. Changes may not be saved.", false);
+                        return JSON.parse(localValues);
+                    }
+                    return null;
+                }),
+                client.db.get('customLocationValues').catch(error => {
+                    console.error("Error loading location values from Freshdesk DB:", error);
+                    // Only fall back to localStorage if it's a connectivity issue
+                    const localValues = localStorage.getItem('customLocationValues');
+                    if (localValues) {
+                        showStatus("Using cached values due to connection issue. Changes may not be saved.", false);
+                        return JSON.parse(localValues);
+                    }
+                    return null;
+                })
+            ]).then(function (results) {
+                const storedVersionValues = results[0];
+                const storedLocationValues = results[1];
+
+                let versionValues = [];
+                let locationValues = [];
+
+                if (storedVersionValues) {
+                    // Convert to array if it's an object with numeric keys
+                    if (typeof storedVersionValues === 'object' && !Array.isArray(storedVersionValues)) {
+                        console.log("Converting version values from object to array:", storedVersionValues);
+                        versionValues = Object.values(storedVersionValues);
+                    } else {
+                        versionValues = storedVersionValues;
+                    }
+                    console.log("Loaded version values from Freshdesk storage:", versionValues);
+                } else {
+                    // Default version values
+                    versionValues = [
+                        "",
+                        "2.0",
+                        "2.5",
+                        "2.5 Mod / 2.6",
+                        "2.5 Mod / 2.6 National",
+                        "2.5 National",
+                        "2.75",
+                        "2.75 National",
+                        "2.8",
+                        "2.8 National",
+                        "2.8 Florida",
+                        "Florida",
+                        "National",
+                        "Other"
+                    ];
+
+                    // Save default values to Freshdesk storage
+                    saveValues('customVersionValues', versionValues);
+                }
+
+                if (storedLocationValues) {
+                    // Convert to array if it's an object with numeric keys
+                    if (typeof storedLocationValues === 'object' && !Array.isArray(storedLocationValues)) {
+                        console.log("Converting location values from object to array:", storedLocationValues);
+                        locationValues = Object.values(storedLocationValues);
+                    } else {
+                        locationValues = storedLocationValues;
+                    }
+                    console.log("Loaded location values from Freshdesk storage:", locationValues);
+                } else {
+                    // Default location values
+                    locationValues = [
+                        "",
+                        "Arkansas",
+                        "California Advance",
+                        "California Adelante",
+                        "Florida",
+                        "Georgia",
+                        "Illinois",
+                        "Iowa",
+                        "Minnesota",
+                        "Missouri",
+                        "New Jersey",
+                        "New York",
+                        "North Carolina",
+                        "Ohio",
+                        "Pennsylvania",
+                        "Virginia",
+                        "Wisconsin",
+                        "Tucson",
+                        "Other"
+                    ];
+
+                    // Save default values to Freshdesk storage
+                    saveValues('customLocationValues', locationValues);
+                }
+
+                // Render the dropdown values to the UI
+                renderVersionValues(versionValues);
+                renderLocationValues(locationValues);
+
+            }).catch(function (error) {
+                console.error("Error loading dropdown values:", error);
+                showStatus("Failed to load dropdown values. Using defaults instead.", false);
+
+                // Use default values as fallback
+                const versionValues = [
+                    "",
+                    "2.0",
+                    "2.5",
+                    "2.5 Mod / 2.6",
+                    "2.5 Mod / 2.6 National",
+                    "2.5 National",
+                    "2.75",
+                    "2.75 National",
+                    "2.8",
+                    "2.8 National",
+                    "2.8 Florida",
+                    "Florida",
+                    "National",
+                    "Other"
+                ];
+
+                const locationValues = [
+                    "",
+                    "Arkansas",
+                    "California Advance",
+                    "California Adelante",
+                    "Florida",
+                    "Georgia",
+                    "Illinois",
+                    "Iowa",
+                    "Minnesota",
+                    "Missouri",
+                    "New Jersey",
+                    "New York",
+                    "North Carolina",
+                    "Ohio",
+                    "Pennsylvania",
+                    "Virginia",
+                    "Wisconsin",
+                    "Tucson",
+                    "Other"
+                ];
+
+                renderVersionValues(versionValues);
+                renderLocationValues(locationValues);
+            });
+        }
+
+        // Function to save values to Freshdesk storage and update localStorage as a backup
+        function saveValues(key, values) {
+            // Ensure values is an array
+            if (!Array.isArray(values)) {
+                console.warn(`Values for ${key} is not an array, converting:`, values);
+                values = Object.values(values);
+            }
+
+            // First save to Freshdesk DB
+            client.db.set(key, values)
+                .then(() => {
+                    console.log(`Saved ${key} to Freshdesk App storage successfully:`, values);
+                    // Also update localStorage as a backup only after successful DB save
+                    try {
+                        localStorage.setItem(key, JSON.stringify(values));
+                    } catch (error) {
+                        console.warn(`Could not update localStorage backup for ${key}:`, error);
+                    }
+                    showStatus("Changes saved to Freshdesk App storage", true);
+                })
+                .catch(error => {
+                    console.error(`Error saving ${key} to Freshdesk App storage:`, error);
+                    showStatus("Unable to save to Freshdesk App storage. Please try again later.", false);
+                });
+        }
+
+        // Function to render version values to the UI
+        function renderVersionValues(values) {
+            const container = document.getElementById('versionValuesContainer');
+            container.innerHTML = '';
+
+            values.forEach((value, index) => {
+                if (value !== undefined) {
+                    const valueItem = document.createElement('div');
+                    valueItem.className = 'value-item';
+                    valueItem.dataset.value = value;
+                    valueItem.draggable = true;
+
+                    // Add drag event listeners
+                    valueItem.addEventListener('dragstart', handleDragStart);
+                    valueItem.addEventListener('dragover', handleDragOver);
+                    valueItem.addEventListener('drop', handleDrop);
+                    valueItem.addEventListener('dragend', handleDragEnd);
+
+                    valueItem.innerHTML = `
+                        <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+                        <div class="value-text">${value || "(Empty value)"}</div>
+                        <div class="value-actions">
+                            <button class="btn-delete" data-index="${index}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(valueItem);
+                }
+            });
+
+            // Add click handlers for delete buttons
+            const deleteButtons = container.querySelectorAll('.btn-delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const index = parseInt(this.dataset.index);
+                    deleteVersionValue(index);
+                });
+            });
+        }
+
+        // Function to render location values to the UI
+        function renderLocationValues(values) {
+            const container = document.getElementById('locationValuesContainer');
+            container.innerHTML = '';
+
+            values.forEach((value, index) => {
+                if (value !== undefined) {
+                    const valueItem = document.createElement('div');
+                    valueItem.className = 'value-item';
+                    valueItem.dataset.value = value;
+                    valueItem.draggable = true;
+
+                    // Add drag event listeners
+                    valueItem.addEventListener('dragstart', handleDragStart);
+                    valueItem.addEventListener('dragover', handleDragOver);
+                    valueItem.addEventListener('drop', handleDrop);
+                    valueItem.addEventListener('dragend', handleDragEnd);
+
+                    valueItem.innerHTML = `
+                        <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+                        <div class="value-text">${value || "(Empty value)"}</div>
+                        <div class="value-actions">
+                            <button class="btn-delete" data-index="${index}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(valueItem);
+                }
+            });
+
+            // Add click handlers for delete buttons
+            const deleteButtons = container.querySelectorAll('.btn-delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const index = parseInt(this.dataset.index);
+                    deleteLocationValue(index);
+                });
+            });
+        }
+
+        // Function to delete a version value
+        function deleteVersionValue(index) {
+            client.db.get('customVersionValues')
+                .then(function (values) {
+                    // Convert to array if necessary
+                    if (values && typeof values === 'object' && !Array.isArray(values)) {
+                        values = Object.values(values);
+                    }
+
+                    if (!values || !Array.isArray(values)) {
+                        showStatus("No values found to delete", false);
+                        return;
+                    }
+
+                    values.splice(index, 1);
+
+                    // Save changes to Freshdesk DB
+                    saveValues('customVersionValues', values);
+
+                    // Update UI
+                    renderVersionValues(values);
+                })
+                .catch(function (error) {
+                    console.error("Error deleting version value:", error);
+                    showStatus("Failed to delete version value: " + error.message, false);
+                });
+        }
+
+        // Function to delete a location value
+        function deleteLocationValue(index) {
+            client.db.get('customLocationValues')
+                .then(function (values) {
+                    // Convert to array if necessary
+                    if (values && typeof values === 'object' && !Array.isArray(values)) {
+                        values = Object.values(values);
+                    }
+
+                    if (!values || !Array.isArray(values)) {
+                        showStatus("No values found to delete", false);
+                        return;
+                    }
+
+                    values.splice(index, 1);
+
+                    // Save changes to Freshdesk DB
+                    saveValues('customLocationValues', values);
+
+                    // Update UI
+                    renderLocationValues(values);
+                })
+                .catch(function (error) {
+                    console.error("Error deleting location value:", error);
+                    showStatus("Failed to delete location value: " + error.message, false);
+                });
+        }
+
+        // Function to add a new version value
+        function addVersionValue(value) {
+            if (!value || value.trim() === '') {
+                showStatus("Please enter a value to add", false);
+                return;
+            }
+
+            client.db.get('customVersionValues')
+                .catch(error => {
+                    console.error("Error getting version values:", error);
+                    return [];
+                })
+                .then(function (values) {
+                    // Convert to array if necessary
+                    if (values && typeof values === 'object' && !Array.isArray(values)) {
+                        values = Object.values(values);
+                    }
+
+                    if (!values || !Array.isArray(values)) {
+                        values = [];
+                    }
+
+                    // Check if value already exists
+                    if (values.includes(value)) {
+                        showStatus("This value already exists in the list", false);
+                        return;
+                    }
+
+                    values.push(value);
+
+                    // Save changes to Freshdesk DB
+                    saveValues('customVersionValues', values);
+
+                    // Update UI
+                    renderVersionValues(values);
+                    document.getElementById('newVersionValue').value = '';
+                })
+                .catch(function (error) {
+                    console.error("Error adding version value:", error);
+                    showStatus("Failed to add version value: " + error.message, false);
+                });
+        }
+
+        // Function to add a new location value
+        function addLocationValue(value) {
+            if (!value || value.trim() === '') {
+                showStatus("Please enter a value to add", false);
+                return;
+            }
+
+            client.db.get('customLocationValues')
+                .catch(error => {
+                    console.error("Error getting location values:", error);
+                    return [];
+                })
+                .then(function (values) {
+                    // Convert to array if necessary
+                    if (values && typeof values === 'object' && !Array.isArray(values)) {
+                        values = Object.values(values);
+                    }
+
+                    if (!values || !Array.isArray(values)) {
+                        values = [];
+                    }
+
+                    // Check if value already exists
+                    if (values.includes(value)) {
+                        showStatus("This value already exists in the list", false);
+                        return;
+                    }
+
+                    values.push(value);
+
+                    // Save changes to Freshdesk DB
+                    saveValues('customLocationValues', values);
+
+                    // Update UI
+                    renderLocationValues(values);
+                    document.getElementById('newLocationValue').value = '';
+                })
+                .catch(function (error) {
+                    console.error("Error adding location value:", error);
+                    showStatus("Failed to add location value: " + error.message, false);
+                });
+        }
+
+        // Function to save all changes
+        function saveChanges() {
+            showStatus("All changes have been saved to Freshdesk App storage and will be reflected for all users", true);
+        }
+
+        // Function to show status message
+        function showStatus(message, isSuccess) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = isSuccess ? 'status-message status-success' : 'status-message status-error';
+            statusElement.style.display = 'block';
+
+            // Hide the message after a few seconds
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 3000);
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Add version value button
+            document.getElementById('addVersionBtn').addEventListener('click', function () {
+                const newValue = document.getElementById('newVersionValue').value;
+                addVersionValue(newValue);
+            });
+
+            // Add location value button
+            document.getElementById('addLocationBtn').addEventListener('click', function () {
+                const newValue = document.getElementById('newLocationValue').value;
+                addLocationValue(newValue);
+            });
+
+            // Save all changes button
+            document.getElementById('saveChangesBtn').addEventListener('click', saveChanges);
+
+            // Add event listener for Enter key on input fields
+            document.getElementById('newVersionValue').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    const newValue = this.value;
+                    addVersionValue(newValue);
+                }
+            });
+
+            document.getElementById('newLocationValue').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    const newValue = this.value;
+                    addLocationValue(newValue);
+                }
+            });
+        }
+
+        // Drag and drop functionality
+        let draggedItem = null;
+
+        function handleDragStart(e) {
+            draggedItem = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.dataset.value);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            if (draggedItem !== this) {
+                // Get the container and all items
+                const container = this.parentNode;
+                const items = Array.from(container.querySelectorAll('.value-item'));
+
+                // Get positions
+                const fromIndex = items.indexOf(draggedItem);
+                const toIndex = items.indexOf(this);
+
+                // Determine if we're in the version or location container
+                const isVersionContainer = container.id === 'versionValuesContainer';
+
+                // Get the values from Freshdesk storage
+                const storageKey = isVersionContainer ? 'customVersionValues' : 'customLocationValues';
+
+                client.db.get(storageKey)
+                    .catch(error => {
+                        console.error(`Error getting ${storageKey} for reordering:`, error);
+                        return [];
+                    })
+                    .then(function (values) {
+                        // Convert to array if necessary
+                        if (values && typeof values === 'object' && !Array.isArray(values)) {
+                            values = Object.values(values);
+                        }
+
+                        if (!values || !Array.isArray(values)) {
+                            showStatus("No values found to reorder", false);
+                            return;
+                        }
+
+                        // Move the item in the array
+                        const [removed] = values.splice(fromIndex, 1);
+                        values.splice(toIndex, 0, removed);
+
+                        // Save changes to Freshdesk DB
+                        saveValues(storageKey, values);
+
+                        // Re-render the list
+                        if (isVersionContainer) {
+                            renderVersionValues(values);
+                        } else {
+                            renderLocationValues(values);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error("Error reordering values:", error);
+                        showStatus("Failed to update order: " + error.message, false);
+                    });
+            }
+            return false;
+        }
+
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+            draggedItem = null;
+        }
+    </script>
+</body>
+
+</html>
