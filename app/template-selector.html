@@ -14,48 +14,83 @@
 
 <body>
     <div class="container">
-        <!-- Header controls for dark mode and admin settings -->
-        <div class="header-left-controls">
-            <a href="admin-settings.html" id="adminSettingsBtn" class="theme-toggle-btn" title="Admin Settings"
-                style="display: none;">
-                <i class="fas fa-sliders-h"></i>
-            </a>
-        </div>
-        <div class="header-right-controls">
-            <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Dark Mode">
-                <i class="fas fa-sun"></i>
-            </button>
-        </div>
-
-        <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="templateSearch" class="search-input" placeholder="Search templates...">
-        </div>
-
-        <!-- DAILY TRACKER COUNTS DASHBOARD -->
+        <!-- New Navbar -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <h1 class="navbar-title">Tracker Central</h1>
+                </div>
+                <button class="navbar-toggle" id="navbarToggle">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+                <div class="navbar-menu" id="navbarMenu">
+                    <a href="admin-settings.html" id="adminSettingsBtn" class="navbar-item" title="Admin Settings"
+                        style="display: none;">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Admin Settings</span>
+                    </a>
+                    <button id="themeToggleBtn" class="navbar-item theme-toggle" title="Toggle Dark Mode">
+                        <i class="fas fa-sun"></i>
+                        <span>Light Mode</span>
+                    </button>
+                </div>
+            </div>
+        </nav> <!-- DAILY TRACKER COUNTS DASHBOARD -->
         <div id="trackerCountsDashboard" class="tracker-counts-dashboard" style="display: none;">
             <div class="dashboard-header">
-                <h3><i class="fas fa-chart-bar"></i> Today's Trackers</h3>
+                <div class="dashboard-title-row">
+                    <h3><i class="fas fa-chart-bar"></i> Today's Trackers <span id="trackerTotalCount"
+                            class="dashboard-count"></span></h3>
+                    <div class="dashboard-actions">
+                        <button class="view-all-btn" id="viewAllTrackersBtn" title="View all trackers">
+                            <i class="fas fa-list"></i> View All
+                        </button>
+                    </div>
+                </div>
                 <span id="dashboardDate" class="dashboard-date"></span>
             </div>
-            <div id="countsContainer" class="counts-container">
-                <!-- Dynamic counts will be populated here -->
+        </div>
+
+        <!-- TRACKER DETAILS MODAL -->
+        <div id="trackerDetailsModal" class="tracker-modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-list"></i> Today's Trackers</h3>
+                    <button class="modal-close" id="closeTrackerModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="trackerDetailsList" class="tracker-details-list">
+                        <!-- Tracker details will be populated here -->
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- MY DRAFTS SECTION -->
         <div id="myDraftsSection" class="my-drafts-section" style="display: none;">
             <div class="drafts-header">
-                <h2><i class="fas fa-save"></i> My Drafts</h2>
+                <div class="drafts-title-row">
+                    <h2><i class="fas fa-save"></i> My Drafts <span id="draftsTotalCount"
+                            class="dashboard-count"></span></h2>
+                    <button class="drafts-toggle" id="draftsToggle" title="Collapse/Expand">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
             </div>
-            <div id="draftsList" class="drafts-list">
-                <!-- Drafts will be populated dynamically -->
+            <div id="draftsContent" class="drafts-content">
+                <div id="draftsList" class="drafts-list">
+                    <!-- Drafts will be populated dynamically -->
+                </div>
             </div>
         </div>
 
+        <!-- Search Container -->
+        <div class="search-container"> <i class="fas fa-search search-icon"></i> <input type="text" id="templateSearch"
+                class="search-input" placeholder="Search templates..."> </div>
         <!-- Status area for displaying messages -->
         <div id="statusArea" style="display: none;"></div>
-
         <div class="template-groups">
             <!-- SEDCUST (CONTENT/EDITORIAL) GROUP -->
             <div class="template-group">
@@ -277,6 +312,12 @@
                         // Initialize dark mode
                         initTheme();
 
+                        // Initialize navbar
+                        initNavbar();
+
+                        // Initialize drafts toggle
+                        initDraftsToggle();
+
                         // Get current ticket details
                         client.data.get("ticket").then(function (ticketData) {
                             console.log("Retrieved ticket data:", ticketData);
@@ -313,6 +354,50 @@
                 }
             };
 
+            // Initialize navbar functionality
+            function initNavbar() {
+                const navbarToggle = document.getElementById('navbarToggle');
+                const navbarMenu = document.getElementById('navbarMenu');
+
+                if (navbarToggle && navbarMenu) {
+                    navbarToggle.addEventListener('click', function () {
+                        navbarMenu.classList.toggle('active');
+                        navbarToggle.classList.toggle('active');
+                    });
+
+                    // Close menu when clicking outside
+                    document.addEventListener('click', function (event) {
+                        if (!navbarToggle.contains(event.target) && !navbarMenu.contains(event.target)) {
+                            navbarMenu.classList.remove('active');
+                            navbarToggle.classList.remove('active');
+                        }
+                    });
+                }
+            }
+
+            // Initialize drafts toggle functionality
+            function initDraftsToggle() {
+                const draftsToggle = document.getElementById('draftsToggle');
+                const draftsContent = document.getElementById('draftsContent');
+                const draftsSection = document.getElementById('myDraftsSection');
+
+                if (draftsToggle && draftsContent && draftsSection) {
+                    draftsToggle.addEventListener('click', function () {
+                        const isCollapsed = draftsSection.classList.contains('collapsed');
+
+                        if (isCollapsed) {
+                            draftsSection.classList.remove('collapsed');
+                            draftsToggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                            draftsToggle.title = 'Collapse';
+                        } else {
+                            draftsSection.classList.add('collapsed');
+                            draftsToggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                            draftsToggle.title = 'Expand';
+                        }
+                    });
+                }
+            }
+
             // Initialize dark mode based on saved preference
             function initTheme() {
                 const savedTheme = localStorage.getItem('theme') || 'light';
@@ -342,11 +427,16 @@
             function updateThemeIcon(theme) {
                 const themeToggleBtn = document.getElementById('themeToggleBtn');
                 if (themeToggleBtn) {
+                    const icon = themeToggleBtn.querySelector('i');
+                    const text = themeToggleBtn.querySelector('span');
+
                     if (theme === 'dark') {
-                        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                        icon.className = 'fas fa-moon';
+                        text.textContent = 'Dark Mode';
                         themeToggleBtn.title = 'Switch to Light Mode';
                     } else {
-                        themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                        icon.className = 'fas fa-sun';
+                        text.textContent = 'Light Mode';
                         themeToggleBtn.title = 'Switch to Dark Mode';
                     }
                 }
@@ -407,6 +497,7 @@
             function loadAndDisplayDrafts() {
                 const myDraftsSection = document.getElementById('myDraftsSection');
                 const draftsList = document.getElementById('draftsList');
+                const draftsTotalCount = document.getElementById('draftsTotalCount');
 
                 if (!myDraftsSection || !draftsList) {
                     console.warn("Draft elements not found");
@@ -430,6 +521,17 @@
 
                             // Show drafts section
                             myDraftsSection.style.display = 'block';
+
+                            // Update the count badge
+                            if (draftsTotalCount) {
+                                draftsTotalCount.textContent = drafts.length;
+                            }
+
+                            // Default to collapsed if there are drafts (but you can change this)
+                            // Since there are drafts, we'll leave it expanded by default
+                            // If you want it collapsed by default even with drafts, uncomment the next lines:
+                            // myDraftsSection.classList.add('collapsed');
+                            // document.getElementById('draftsToggle').innerHTML = '<i class="fas fa-chevron-right"></i>';
 
                             // Populate drafts list
                             draftsList.innerHTML = '';
@@ -572,6 +674,12 @@
                                 if (myDraftsSection) {
                                     myDraftsSection.style.display = 'none';
                                 }
+                            } else {
+                                // Update the count badge
+                                const draftsTotalCount = document.getElementById('draftsTotalCount');
+                                if (draftsTotalCount) {
+                                    draftsTotalCount.textContent = remainingDrafts.length;
+                                }
                             }
 
                             console.log('Draft deleted successfully');
@@ -618,29 +726,34 @@
                 }
 
                 const today = getTodayDateString();
-                const storageKey = `tracker-counts-${today}`;
+                const storageKey = `tracker-details-${today}`;
 
-                // Load today's counts from Freshdesk storage
+                // Load today's tracker details from Freshdesk storage
                 client.db.get(storageKey)
-                    .then(function (counts) {
-                        console.log(`Loaded tracker counts for ${today}:`, counts);
-                        displayTrackerCounts(counts || {}, today);
+                    .then(function (data) {
+                        console.log(`Loaded tracker details for ${today}:`, data);
+                        const trackers = data?.trackers || [];
+                        displayTrackerCounts(trackers, today);
                     })
                     .catch(function (error) {
-                        console.log(`No tracker counts found for ${today} (this is normal if no trackers created today):`, error);
-                        displayTrackerCounts({}, today);
+                        console.log(`No tracker details found for ${today} (this is normal if no trackers created today):`, error);
+                        displayTrackerCounts([], today);
                     });
             }
 
-            function displayTrackerCounts(counts, date) {
+            function displayTrackerCounts(trackers, date) {
                 const dashboard = document.getElementById('trackerCountsDashboard');
                 const dateElement = document.getElementById('dashboardDate');
-                const countsContainer = document.getElementById('countsContainer');
+                const trackerTotalCount = document.getElementById('trackerTotalCount');
+                const viewAllBtn = document.getElementById('viewAllTrackersBtn');
 
-                if (!dashboard || !dateElement || !countsContainer) {
+                if (!dashboard || !dateElement) {
                     console.warn("Dashboard elements not found");
                     return;
                 }
+
+                // Store trackers globally for the View All functionality
+                window.todayTrackers = trackers;
 
                 // Set the date
                 const formattedDate = new Date(date).toLocaleDateString('en-US', {
@@ -651,48 +764,21 @@
                 });
                 dateElement.textContent = formattedDate;
 
-                // Clear existing counts
-                countsContainer.innerHTML = '';
+                // Calculate total count
+                const totalCount = trackers.length;
 
-                // Get template display names and icons
-                const templateInfo = getTemplateInfo();
-
-                // Check if we have any counts to display
-                const hasAnyCounts = Object.keys(counts).length > 0 && Object.values(counts).some(count => count > 0);
-
-                if (!hasAnyCounts) {
-                    // Show empty state
-                    countsContainer.innerHTML = '<div class="counts-empty">No trackers created today yet.</div>';
-                    dashboard.style.display = 'block';
-                    return;
+                // Update the count badge
+                if (trackerTotalCount) {
+                    trackerTotalCount.textContent = totalCount;
                 }
 
-                // Create count items for templates with counts > 0
-                Object.entries(counts).forEach(([templateType, count]) => {
-                    if (count > 0) {
-                        const info = templateInfo[templateType];
-                        if (info) {
-                            const countItem = createCountItem(info.icon, info.name, count);
-                            countsContainer.appendChild(countItem);
-                        }
-                    }
-                });
+                // Show/hide View All button based on whether there are trackers
+                if (viewAllBtn) {
+                    viewAllBtn.style.display = totalCount > 0 ? 'inline-flex' : 'none';
+                }
 
                 // Show the dashboard
                 dashboard.style.display = 'block';
-            }
-
-            function createCountItem(icon, name, count) {
-                const countItem = document.createElement('div');
-                countItem.className = 'count-item';
-
-                countItem.innerHTML = `
-                    <i class="${icon} count-icon"></i>
-                    <span class="count-label">${name}</span>
-                    <span class="count-number">${count}</span>
-                `;
-
-                return countItem;
             }
 
             function getTemplateInfo() {
@@ -725,51 +811,63 @@
             }
 
             // Function to increment tracker count (called from dynamic tracker)
-            function incrementTrackerCount(templateType) {
-                console.log(`Incrementing tracker count for template: ${templateType}`);
+            function incrementTrackerCount(templateType, trackerId, subject) {
+                console.log(`Adding tracker details for template: ${templateType}, ID: ${trackerId}, Subject: ${subject}`);
 
                 if (!window.client) {
-                    console.warn("Client not available for incrementing tracker count");
+                    console.warn("Client not available for storing tracker details");
                     return;
                 }
 
                 const today = getTodayDateString();
-                const storageKey = `tracker-counts-${today}`;
+                const storageKey = `tracker-details-${today}`;
 
-                // Get current counts - handle case where no record exists yet
+                // Get current tracker details
                 client.db.get(storageKey)
-                    .then(function (counts) {
-                        const currentCounts = counts || {};
+                    .then(function (data) {
+                        const currentData = data || { trackers: [] };
+                        const trackers = currentData.trackers || [];
 
-                        // Increment the count for this template
-                        currentCounts[templateType] = (currentCounts[templateType] || 0) + 1;
+                        // Add new tracker details
+                        trackers.push({
+                            id: trackerId,
+                            subject: subject,
+                            templateType: templateType,
+                            timestamp: new Date().toISOString()
+                        });
 
-                        console.log(`Updated counts for ${today}:`, currentCounts);
+                        console.log(`Updated tracker details for ${today}:`, trackers);
 
                         // Save back to storage
-                        return client.db.set(storageKey, currentCounts);
+                        return client.db.set(storageKey, { trackers: trackers });
                     })
                     .catch(function (error) {
                         // Handle 404 error when no record exists yet (first tracker of the day)
                         if (error.status === 404) {
                             console.log(`No existing record for ${today}, creating new one`);
-                            const newCounts = {};
-                            newCounts[templateType] = 1;
+                            const newData = {
+                                trackers: [{
+                                    id: trackerId,
+                                    subject: subject,
+                                    templateType: templateType,
+                                    timestamp: new Date().toISOString()
+                                }]
+                            };
 
-                            console.log(`Creating new counts record:`, newCounts);
+                            console.log(`Creating new tracker details record:`, newData);
 
                             // Create new record
-                            return client.db.set(storageKey, newCounts);
+                            return client.db.set(storageKey, newData);
                         } else {
                             // Re-throw other errors
                             throw error;
                         }
                     })
                     .then(function () {
-                        console.log(`Successfully incremented ${templateType} count for ${today}`);
+                        console.log(`Successfully stored tracker details for ${templateType}`);
                     })
                     .catch(function (error) {
-                        console.error(`Error incrementing tracker count for ${templateType}:`, error);
+                        console.error(`Error storing tracker details:`, error);
                     });
             }
 
@@ -779,7 +877,7 @@
             // Manual test function for debugging
             function testTrackerCount() {
                 console.log("[DEBUG] Testing tracker count functionality");
-                incrementTrackerCount('sedcust');
+                incrementTrackerCount('sedcust', '12345', 'Test District | SEDCUST Content Issue');
                 setTimeout(() => {
                     loadAndDisplayTrackerCounts();
                 }, 1000);
@@ -1090,6 +1188,118 @@
                         }
                     });
                 });
+            });
+
+            // Function to show tracker details modal
+            function showTrackerDetails() {
+                const modal = document.getElementById('trackerDetailsModal');
+                const detailsList = document.getElementById('trackerDetailsList');
+
+                if (!modal || !detailsList) {
+                    console.error('Modal elements not found');
+                    return;
+                }
+
+                // Clear existing content
+                detailsList.innerHTML = '';
+
+                // Get today's trackers
+                const trackers = window.todayTrackers || [];
+
+                if (trackers.length === 0) {
+                    detailsList.innerHTML = '<div class="no-trackers">No trackers created today.</div>';
+                } else {
+                    // Group trackers by template type
+                    const trackersByTemplate = {};
+                    trackers.forEach(tracker => {
+                        if (!trackersByTemplate[tracker.templateType]) {
+                            trackersByTemplate[tracker.templateType] = [];
+                        }
+                        trackersByTemplate[tracker.templateType].push(tracker);
+                    });
+
+                    // Get template info for display
+                    const templateInfo = getTemplateInfo();
+
+                    // Create sections for each template type
+                    Object.entries(trackersByTemplate).forEach(([templateType, templateTrackers]) => {
+                        const info = templateInfo[templateType];
+                        if (info) {
+                            const section = document.createElement('div');
+                            section.className = 'tracker-template-section';
+
+                            const sectionHeader = document.createElement('h4');
+                            sectionHeader.className = 'tracker-section-header';
+                            sectionHeader.innerHTML = `<i class="${info.icon}"></i> ${info.name}`;
+                            section.appendChild(sectionHeader);
+
+                            const trackerList = document.createElement('div');
+                            trackerList.className = 'tracker-list';
+
+                            templateTrackers.forEach(tracker => {
+                                const trackerItem = document.createElement('div');
+                                trackerItem.className = 'tracker-item';
+
+                                const timestamp = new Date(tracker.timestamp).toLocaleTimeString([], {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+
+                                trackerItem.innerHTML = `
+                                    <div class="tracker-id">
+                                        <a href="https://techsupport.benchmarkeducation.com/a/tickets/${tracker.id}" 
+                                           target="_blank" 
+                                           class="tracker-link">
+                                            #${tracker.id}
+                                        </a>
+                                        <span class="tracker-time">${timestamp}</span>
+                                    </div>
+                                    <div class="tracker-subject">${tracker.subject}</div>
+                                `;
+
+                                trackerList.appendChild(trackerItem);
+                            });
+
+                            section.appendChild(trackerList);
+                            detailsList.appendChild(section);
+                        }
+                    });
+                }
+
+                // Show the modal
+                modal.style.display = 'flex';
+            }
+
+            // Function to close tracker details modal
+            function closeTrackerDetails() {
+                const modal = document.getElementById('trackerDetailsModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
+
+            // Set up event listeners for View All and modal close
+            document.addEventListener('DOMContentLoaded', function () {
+                const viewAllBtn = document.getElementById('viewAllTrackersBtn');
+                const closeModalBtn = document.getElementById('closeTrackerModal');
+                const modal = document.getElementById('trackerDetailsModal');
+
+                if (viewAllBtn) {
+                    viewAllBtn.addEventListener('click', showTrackerDetails);
+                }
+
+                if (closeModalBtn) {
+                    closeModalBtn.addEventListener('click', closeTrackerDetails);
+                }
+
+                // Close modal when clicking outside
+                if (modal) {
+                    modal.addEventListener('click', function (e) {
+                        if (e.target === modal) {
+                            closeTrackerDetails();
+                        }
+                    });
+                }
             });
         </script>
     </div>

@@ -607,8 +607,8 @@
         }
 
         // Function to increment tracker count (called from TrackerApp)
-        function incrementTrackerCount(templateType) {
-            console.log(`[TRACKER COUNT] Incrementing tracker count for template: ${templateType}`);
+        function incrementTrackerCount(templateType, trackerId, subject) {
+            console.log(`[TRACKER COUNT] Incrementing tracker count for template: ${templateType}, ID: ${trackerId}, Subject: ${subject}`);
 
             // Try to get client from multiple sources
             let client = null;
@@ -625,7 +625,7 @@
                 app.initialized().then(function (appClient) {
                     console.log(`[TRACKER COUNT] Got client from app.initialized(), calling recursively`);
                     window.client = appClient;
-                    incrementTrackerCount(templateType); // Recursive call with client now available
+                    incrementTrackerCount(templateType, trackerId, subject); // Recursive call with client now available
                 }).catch(function (error) {
                     console.error(`[TRACKER COUNT] Failed to get client from app.initialized():`, error);
                 });
@@ -641,41 +641,53 @@
             }
 
             const today = getTodayDateString();
-            const storageKey = `tracker-counts-${today}`;
+            const storageKey = `tracker-details-${today}`;
             console.log(`[TRACKER COUNT] Using storage key: ${storageKey}`);
 
-            // Get current counts - handle case where no record exists yet
+            // Get current tracker details
             client.db.get(storageKey)
-                .then(function (counts) {
-                    const currentCounts = counts || {};
-                    console.log(`[TRACKER COUNT] Current counts before increment:`, currentCounts);
+                .then(function (data) {
+                    const currentData = data || { trackers: [] };
+                    const trackers = currentData.trackers || [];
+                    console.log(`[TRACKER COUNT] Current trackers before adding:`, trackers);
 
-                    // Increment the count for this template
-                    currentCounts[templateType] = (currentCounts[templateType] || 0) + 1;
+                    // Add new tracker details
+                    trackers.push({
+                        id: trackerId,
+                        subject: subject,
+                        templateType: templateType,
+                        timestamp: new Date().toISOString()
+                    });
 
-                    console.log(`[TRACKER COUNT] Updated counts for ${today}:`, currentCounts);
+                    console.log(`[TRACKER COUNT] Updated tracker details for ${today}:`, trackers);
 
                     // Save back to storage
-                    return client.db.set(storageKey, currentCounts);
+                    return client.db.set(storageKey, { trackers: trackers });
                 })
                 .catch(function (error) {
                     // Handle 404 error when no record exists yet (first tracker of the day)
                     if (error.status === 404) {
                         console.log(`[TRACKER COUNT] No existing record for ${today}, creating new one`);
-                        const newCounts = {};
-                        newCounts[templateType] = 1;
-                        
-                        console.log(`[TRACKER COUNT] Creating new counts record:`, newCounts);
-                        
+                        const newData = {
+                            trackers: [{
+                                id: trackerId,
+                                subject: subject,
+                                templateType: templateType,
+                                timestamp: new Date().toISOString()
+                            }]
+                        };
+
+                        console.log(`[TRACKER COUNT] Creating new tracker details record:`, newData);
+
                         // Create new record
-                        return client.db.set(storageKey, newCounts);
+                        return client.db.set(storageKey, newData);
                     } else {
                         // Re-throw other errors
                         throw error;
                     }
                 })
                 .then(function () {
-                    console.log(`[TRACKER COUNT] Successfully incremented ${templateType} count for ${today}`);
+                    console.log(`[TRACKER COUNT] Successfully stored tracker details for ${templateType}`);
 
                     // Trigger a refresh of the dashboard if we're on the template selector page
                     if (window.loadAndDisplayTrackerCounts && typeof window.loadAndDisplayTrackerCounts === 'function') {
@@ -684,7 +696,7 @@
                     }
                 })
                 .catch(function (error) {
-                    console.error(`[TRACKER COUNT] Error incrementing tracker count for ${templateType}:`, error);
+                    console.error(`[TRACKER COUNT] Error storing tracker details:`, error);
                 });
         }
 
@@ -3117,8 +3129,8 @@
                 try {
                     console.log(`[TRACKER COUNT] Attempting to increment count for tracker type: ${this.trackerType}`);
                     if (window.incrementTrackerCount && typeof window.incrementTrackerCount === 'function') {
-                        window.incrementTrackerCount(this.trackerType);
-                        console.log(`[TRACKER COUNT] Successfully called incrementTrackerCount for template: ${this.trackerType}`);
+                        window.incrementTrackerCount(this.trackerType, ticketData.id, ticketData.subject);
+                        console.log(`[TRACKER COUNT] Successfully called incrementTrackerCount for template: ${this.trackerType}, ID: ${ticketData.id}, Subject: ${ticketData.subject}`);
                     } else {
                         console.warn('[TRACKER COUNT] incrementTrackerCount function not available on window object');
                         console.log('[TRACKER COUNT] Available functions on window:', Object.keys(window).filter(key => key.includes('tracker') || key.includes('Count')));
