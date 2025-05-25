@@ -204,7 +204,7 @@ const TRACKER_CONFIGS = {
                 fields: [
                     { id: "xcode", type: "text", label: "XCODE", required: true, hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>", placeholder: "e.g. X56723" },
                     { id: "hasMultipleXcodes", type: "select", label: "Multiple Xcodes?", required: true, options: ["No", "Yes"], hint: "Select 'Yes' if this issue affects multiple Xcodes" },
-                    { id: "application", type: "text", label: "Application Name", required: true, placeholder: "e.g. BAdvance c2022" },
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "e.g. BAdvance c2022" },
                     {
                         id: "version",
                         type: "select",
@@ -228,6 +228,14 @@ const TRACKER_CONFIGS = {
                         ],
                         hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
+                    {
+                        id: "versionState",
+                        type: "select",
+                        label: "State/National",
+                        required: false,
+                        options: [],
+                        hint: "Select the state or location variation for this version"
+                    },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Symbols Of Our Country Missing" },
                     { id: "gradesImpacted", type: "text", label: "Grades Impacted", required: true, placeholder: "e.g. Grade 2" },
                     { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject" }
@@ -250,8 +258,7 @@ const TRACKER_CONFIGS = {
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "schoolName", type: "text", label: "School Name", required: true, hint: "Provide the customer account and name of the user that the issue is affecting, as well as the role they have within Benchmark Universe (district admin, school admin, teacher). EX: Echo Lake Elementary School" },
                     { id: "districtState", type: "text", label: "District State", required: true },
-                    { id: "program", type: "text", label: "Program/Product Impacted", required: true, hint: "Provide the Program Name for which the issue is prevalent. Ex: Advance Florida the issue is prevalent. Include the assembly code (ie: subscription code pulled from TA Subs). Make sure you include the state if it a state specific assembly. EX: Benchmark Advance - c2022 VA:  X101055" },
-                    { id: "programVariation", type: "text", label: "Program Variation (if known)", required: true, hint: "Provide the program variation if known. This includes state variation and / or numerical variation such as 2.75 or 2.5. EX: Benchmark Advance -c2022 or Benchmark Advance 2.75" },
+                    { id: "program", type: "text", label: "Program Impacted", required: true, hint: "This field will be automatically populated with Program Name • Version State/National" },
                     { id: "dateReported", type: "date", label: "Date issue reported by user", required: true, hint: "Provide the date the user reported the issue. EX: 5/18/23" },
                     { id: "subscriptionCodes", type: "richtext", label: "Subscription codes customer is onboarded with", required: true, hint: "Provide the subscription code of the product the user has the issue in. EX: X71647 <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to find an Xcode</a>" },
                     {
@@ -337,8 +344,7 @@ const TRACKER_CONFIGS = {
             description += `District Name: ${fields.districtName || ''}<br>`;
             if (fields.schoolName) description += `School Name: ${fields.schoolName}<br>`;
             if (fields.districtState) description += `District State: ${fields.districtState}<br>`;
-            description += `Program/Product Impacted: ${fields.program || ''}<br>`;
-            if (fields.programVariation) description += `Program Variation: ${fields.programVariation}<br>`;
+            description += `Program Impacted: ${fields.program || ''}<br>`;
             if (fields.dateReported) description += `Date issue reported by user: ${formatDate(fields.dateReported)}<br>`;
             if (fields.subscriptionCodes && fields.subscriptionCodes.trim() !== '<p><br></p>') {
                 description += `<div><strong>Subscription codes:</strong></div>`;
@@ -400,26 +406,37 @@ const TRACKER_CONFIGS = {
             // Handle custom version input when "Other" is selected
             setupCustomVersionInput();
 
+            // Also setup custom version state input when "Other" is selected
+            setupCustomVersionStateInput();
+
             // Function to sync fields from Subject to other sections
             function syncFields() {
                 // Get the source fields from Subject section
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
 
-                // Get the target fields
+                // Get the target field
                 const programField = document.getElementById('program');
-                const programVariationField = document.getElementById('programVariation');
 
-                // Sync application to program field if both fields exist
+                // Sync combined values to program field
                 if (applicationField && programField) {
-                    programField.value = applicationField.value || '';
-                    console.log(`Synced Application Name to Program/Product Impacted field: ${applicationField.value}`);
-                }
+                    let programValue = applicationField.value || '';
 
-                // Sync version to program variation field if both fields exist
-                if (versionField && programVariationField) {
-                    programVariationField.value = versionField.value || '';
-                    console.log(`Synced Version to Program Variation field: ${versionField.value}`);
+                    // Add version if available
+                    const version = getVersionValue(versionField);
+                    if (version) {
+                        programValue += ` • ${version}`;
+                    }
+
+                    // Add state/national if available
+                    const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
+                    if (versionState) {
+                        programValue += ` ${versionState}`;
+                    }
+
+                    programField.value = programValue;
+                    console.log(`Synced to Program Impacted field: ${programValue}`);
                 }
             }
 
@@ -436,6 +453,12 @@ const TRACKER_CONFIGS = {
                 console.log("Added event listener to Version field");
             }
 
+            const versionStateField = document.getElementById('versionState');
+            if (versionStateField) {
+                versionStateField.addEventListener('change', syncFields);
+                console.log("Added event listener to Version State field");
+            }
+
             // Initial sync attempt
             syncFields();
 
@@ -449,6 +472,7 @@ const TRACKER_CONFIGS = {
                 const hasMultipleXcodesField = document.getElementById('hasMultipleXcodes');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
                 const specificIssueField = document.getElementById('specificIssue');
                 const gradesImpactedField = document.getElementById('gradesImpacted');
                 const formattedSubjectField = document.getElementById('formattedSubject');
@@ -464,6 +488,7 @@ const TRACKER_CONFIGS = {
                 const hasMultipleXcodes = hasMultipleXcodesField.value === 'Yes';
                 const application = applicationField.value || '';
                 const version = getVersionValue(versionField) || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
                 const specificIssue = specificIssueField.value || '';
                 const gradesImpacted = gradesImpactedField.value || '';
 
@@ -473,26 +498,63 @@ const TRACKER_CONFIGS = {
                     isVIP = isVIPField.value === 'Yes';
                 }
 
-                // Format: "Xcode (indicate if more than one) | VIP or Standard | Application Name • Version | Specific issue: grades impacted"
-                let subject = xcode;
-                if (hasMultipleXcodes) {
-                    subject += ' (multiple)';
-                }
-                subject += ' | ';
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
 
-                // Add VIP status if applicable
+                // First part: Xcode (indicate if more than one)
+                let xcodePart = '';
+                if (xcode.trim()) {
+                    xcodePart = xcode.trim();
+                    if (hasMultipleXcodes) {
+                        xcodePart += ' (multiple)';
+                    }
+                }
+                if (xcodePart) {
+                    subjectParts.push(xcodePart);
+                }
+
+                // VIP status part (if applicable)
                 if (isVIP) {
-                    subject += 'VIP | ';
+                    subjectParts.push('VIP');
                 }
 
-                // Add application and version
-                subject += application;
-                if (version) {
-                    subject += ` • ${version}`;
+                // Application and version part
+                let applicationPart = '';
+                if (application.trim()) {
+                    applicationPart = application.trim();
+
+                    // Add version and state/national if they exist
+                    const versionParts = [];
+                    if (version.trim()) {
+                        versionParts.push(version.trim());
+                    }
+                    if (versionState.trim()) {
+                        versionParts.push(versionState.trim());
+                    }
+
+                    if (versionParts.length > 0) {
+                        applicationPart += ` • ${versionParts.join(' ')}`;
+                    }
+                }
+                if (applicationPart) {
+                    subjectParts.push(applicationPart);
                 }
 
-                // Add specific issue and grades impacted
-                subject += ` | ${specificIssue}: ${gradesImpacted}`;
+                // Specific issue and grades part
+                let issueGradesPart = '';
+                if (specificIssue.trim() && gradesImpacted.trim()) {
+                    issueGradesPart = `${specificIssue.trim()}: ${gradesImpacted.trim()}`;
+                } else if (specificIssue.trim()) {
+                    issueGradesPart = specificIssue.trim();
+                } else if (gradesImpacted.trim()) {
+                    issueGradesPart = gradesImpacted.trim();
+                }
+                if (issueGradesPart) {
+                    subjectParts.push(issueGradesPart);
+                }
+
+                // Join all parts with " | " separator
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -503,6 +565,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('hasMultipleXcodes')?.addEventListener('change', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
             document.getElementById('gradesImpacted')?.addEventListener('input', updateSubjectLine);
             document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
@@ -1305,7 +1368,7 @@ const TRACKER_CONFIGS = {
                 const xcodeField = document.getElementById('xcode');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
-                // const versionStateField = document.getElementById('versionState'); // Currently unused
+                const versionStateField = document.getElementById('versionState');
                 const resourcePathField = document.getElementById('resourcePath');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
@@ -1318,13 +1381,8 @@ const TRACKER_CONFIGS = {
 
                 const xcode = xcodeField.value || '';
                 const application = applicationField.value || '';
-
-                // Only use version, not version state for now
                 const version = versionField ? getVersionValue(versionField) : '';
-
-                // Just use version as the combinedVersion (ignoring versionState for now)
-                let combinedVersion = version;
-
+                const versionState = versionStateField ? versionStateField.value : '';
                 const resourcePath = resourcePathField.value || '';
                 const specificIssue = specificIssueField.value || '';
 
@@ -1334,22 +1392,56 @@ const TRACKER_CONFIGS = {
                     isVIP = isVIPField.value === 'Yes';
                 }
 
-                // Format: "Xcode | VIP or Standard | Application Name • Version | Resource Path - Specific Issue"
-                let subject = `${xcode} | `;
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
 
-                // Add VIP status
+                // First part: XCODE
+                if (xcode.trim()) {
+                    subjectParts.push(xcode.trim());
+                }
+
+                // VIP status part (if applicable)
                 if (isVIP) {
-                    subject += 'VIP | ';
+                    subjectParts.push('VIP');
                 }
 
-                // Add application and version
-                subject += application;
-                if (combinedVersion) {
-                    subject += ` • ${combinedVersion}`;
+                // Second part: Application • Version State/National
+                let applicationPart = '';
+                if (application.trim()) {
+                    applicationPart = application.trim();
+
+                    // Add version and state/national if they exist
+                    const versionParts = [];
+                    if (version.trim()) {
+                        versionParts.push(version.trim());
+                    }
+                    if (versionState.trim()) {
+                        versionParts.push(versionState.trim());
+                    }
+
+                    if (versionParts.length > 0) {
+                        applicationPart += ` • ${versionParts.join(' ')}`;
+                    }
+                }
+                if (applicationPart) {
+                    subjectParts.push(applicationPart);
                 }
 
-                // Add resource path and specific issue
-                subject += ` | ${resourcePath} - ${specificIssue}`;
+                // Third part: Resource Path - Specific Issue
+                let resourceIssuePart = '';
+                if (resourcePath.trim() && specificIssue.trim()) {
+                    resourceIssuePart = `${resourcePath.trim()} - ${specificIssue.trim()}`;
+                } else if (resourcePath.trim()) {
+                    resourceIssuePart = resourcePath.trim();
+                } else if (specificIssue.trim()) {
+                    resourceIssuePart = specificIssue.trim();
+                }
+                if (resourceIssuePart) {
+                    subjectParts.push(resourceIssuePart);
+                }
+
+                // Join all parts with " | " separator
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -1500,7 +1592,8 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
                         type: "select",
@@ -1524,7 +1617,15 @@ const TRACKER_CONFIGS = {
                         ],
                         hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+                    {
+                        id: "versionState",
+                        type: "select",
+                        label: "State/National",
+                        required: false,
+                        options: [],
+                        hint: "Select the state or location variation for this version"
+                    },
+
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -1695,6 +1796,9 @@ const TRACKER_CONFIGS = {
             // Handle custom version input when "Other" is selected
             setupCustomVersionInput();
 
+            // Also setup custom version state input when "Other" is selected
+            setupCustomVersionStateInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -1702,6 +1806,7 @@ const TRACKER_CONFIGS = {
                 const districtStateField = document.getElementById('districtState');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
@@ -1728,27 +1833,74 @@ const TRACKER_CONFIGS = {
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
                 const version = getVersionValue(versionField) || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
-                // Format per requirements: "VIP or Standard District Name • District State (Abv) | Application Name • Version | Specific issue for user role"
-                let subject = '';
-                if (isVip) {
-                    subject = `VIP * ${districtName} • ${districtState} | ${application}`;
-                } else {
-                    subject = `${districtName} • ${districtState} | ${application}`;
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP or Standard District Name • District State
+                let districtPart = '';
+                if (districtName.trim() && districtState.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtName.trim()} • ${districtState.trim()}`;
+                    } else {
+                        districtPart = `${districtName.trim()} • ${districtState.trim()}`;
+                    }
+                } else if (districtName.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtName.trim()}`;
+                    } else {
+                        districtPart = districtName.trim();
+                    }
+                } else if (districtState.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtState.trim()}`;
+                    } else {
+                        districtPart = districtState.trim();
+                    }
+                }
+                if (districtPart) {
+                    subjectParts.push(districtPart);
                 }
 
-                // Add version if provided
-                if (version) {
-                    subject += ` • ${version}`;
+                // Second part: Application Name • Version State/National
+                let applicationPart = '';
+                if (application.trim()) {
+                    applicationPart = application.trim();
+
+                    // Add version and state/national if they exist
+                    const versionParts = [];
+                    if (version.trim()) {
+                        versionParts.push(version.trim());
+                    }
+                    if (versionState.trim()) {
+                        versionParts.push(versionState.trim());
+                    }
+
+                    if (versionParts.length > 0) {
+                        applicationPart += ` • ${versionParts.join(' ')}`;
+                    }
+                }
+                if (applicationPart) {
+                    subjectParts.push(applicationPart);
                 }
 
-                // Add specific issue and user role
-                subject += ` | ${specificIssue}`;
-                if (userRoleText) {
-                    subject += ` for ${userRoleText}`;
+                // Third part: Specific issue for user role
+                let issuePart = '';
+                if (specificIssue.trim()) {
+                    issuePart = specificIssue.trim();
+                    if (userRoleText) {
+                        issuePart += ` for ${userRoleText}`;
+                    }
                 }
+                if (issuePart) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | " separator
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -1760,6 +1912,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -1800,7 +1953,9 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
                         type: "select",
@@ -1824,7 +1979,14 @@ const TRACKER_CONFIGS = {
                         ],
                         hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+                    {
+                        id: "versionState",
+                        type: "select",
+                        label: "State/National",
+                        required: false,
+                        options: [],
+                        hint: "Select the state or location variation for this version"
+                    },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -2044,6 +2206,9 @@ const TRACKER_CONFIGS = {
             // Handle custom version input when "Other" is selected
             setupCustomVersionInput();
 
+            // Also setup custom version state input when "Other" is selected
+            setupCustomVersionStateInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -2051,6 +2216,7 @@ const TRACKER_CONFIGS = {
                 const districtStateField = document.getElementById('districtState');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
@@ -2077,27 +2243,74 @@ const TRACKER_CONFIGS = {
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
                 const version = getVersionValue(versionField) || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
-                // Format per requirements: "VIP or Standard District Name • District State (Abv) | Application Name • Version | Specific issue for user role"
-                let subject = '';
-                if (isVip) {
-                    subject = `VIP * ${districtName} • ${districtState} | ${application}`;
-                } else {
-                    subject = `${districtName} • ${districtState} | ${application}`;
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP or Standard District Name • District State
+                let districtPart = '';
+                if (districtName.trim() && districtState.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtName.trim()} • ${districtState.trim()}`;
+                    } else {
+                        districtPart = `${districtName.trim()} • ${districtState.trim()}`;
+                    }
+                } else if (districtName.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtName.trim()}`;
+                    } else {
+                        districtPart = districtName.trim();
+                    }
+                } else if (districtState.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtState.trim()}`;
+                    } else {
+                        districtPart = districtState.trim();
+                    }
+                }
+                if (districtPart) {
+                    subjectParts.push(districtPart);
                 }
 
-                // Add version if provided
-                if (version) {
-                    subject += ` • ${version}`;
+                // Second part: Application Name • Version State/National
+                let applicationPart = '';
+                if (application.trim()) {
+                    applicationPart = application.trim();
+
+                    // Add version and state/national if they exist
+                    const versionParts = [];
+                    if (version.trim()) {
+                        versionParts.push(version.trim());
+                    }
+                    if (versionState.trim()) {
+                        versionParts.push(versionState.trim());
+                    }
+
+                    if (versionParts.length > 0) {
+                        applicationPart += ` • ${versionParts.join(' ')}`;
+                    }
+                }
+                if (applicationPart) {
+                    subjectParts.push(applicationPart);
                 }
 
-                // Add specific issue and user role
-                subject += ` | ${specificIssue}`;
-                if (userRoleText) {
-                    subject += ` for ${userRoleText}`;
+                // Third part: Specific issue for user role
+                let issuePart = '';
+                if (specificIssue.trim()) {
+                    issuePart = specificIssue.trim();
+                    if (userRoleText) {
+                        issuePart += ` for ${userRoleText}`;
+                    }
                 }
+                if (issuePart) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | " separator
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -2109,6 +2322,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -2249,7 +2463,9 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
                         type: "select",
@@ -2273,7 +2489,14 @@ const TRACKER_CONFIGS = {
                         ],
                         hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+                    {
+                        id: "versionState",
+                        type: "select",
+                        label: "State/National",
+                        required: false,
+                        options: [],
+                        hint: "Select the state or location variation for this version"
+                    },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -2461,6 +2684,9 @@ const TRACKER_CONFIGS = {
             // Handle custom version input when "Other" is selected
             setupCustomVersionInput();
 
+            // Also setup custom version state input when "Other" is selected
+            setupCustomVersionStateInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -2468,6 +2694,7 @@ const TRACKER_CONFIGS = {
                 const districtStateField = document.getElementById('districtState');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
@@ -2494,27 +2721,74 @@ const TRACKER_CONFIGS = {
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
                 const version = getVersionValue(versionField) || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
-                // Format per requirements: "VIP or Standard District Name • District State (Abv) | Application Name • Version | Specific issue for user role"
-                let subject = '';
-                if (isVip) {
-                    subject = `VIP * ${districtName} • ${districtState} | ${application}`;
-                } else {
-                    subject = `${districtName} • ${districtState} | ${application}`;
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP or Standard District Name • District State
+                let districtPart = '';
+                if (districtName.trim() && districtState.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtName.trim()} • ${districtState.trim()}`;
+                    } else {
+                        districtPart = `${districtName.trim()} • ${districtState.trim()}`;
+                    }
+                } else if (districtName.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtName.trim()}`;
+                    } else {
+                        districtPart = districtName.trim();
+                    }
+                } else if (districtState.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtState.trim()}`;
+                    } else {
+                        districtPart = districtState.trim();
+                    }
+                }
+                if (districtPart) {
+                    subjectParts.push(districtPart);
                 }
 
-                // Add version if provided
-                if (version) {
-                    subject += ` • ${version}`;
+                // Second part: Application Name • Version State/National
+                let applicationPart = '';
+                if (application.trim()) {
+                    applicationPart = application.trim();
+
+                    // Add version and state/national if they exist
+                    const versionParts = [];
+                    if (version.trim()) {
+                        versionParts.push(version.trim());
+                    }
+                    if (versionState.trim()) {
+                        versionParts.push(versionState.trim());
+                    }
+
+                    if (versionParts.length > 0) {
+                        applicationPart += ` • ${versionParts.join(' ')}`;
+                    }
+                }
+                if (applicationPart) {
+                    subjectParts.push(applicationPart);
                 }
 
-                // Add specific issue and user role
-                subject += ` | ${specificIssue}`;
-                if (userRoleText) {
-                    subject += ` for ${userRoleText}`;
+                // Third part: Specific issue for user role
+                let issuePart = '';
+                if (specificIssue.trim()) {
+                    issuePart = specificIssue.trim();
+                    if (userRoleText) {
+                        issuePart += ` for ${userRoleText}`;
+                    }
                 }
+                if (issuePart) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | " separator
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -2526,6 +2800,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -2566,7 +2841,9 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
                         type: "select",
@@ -2590,7 +2867,14 @@ const TRACKER_CONFIGS = {
                         ],
                         hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+                    {
+                        id: "versionState",
+                        type: "select",
+                        label: "State/National",
+                        required: false,
+                        options: [],
+                        hint: "Select the state or location variation for this version"
+                    },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -2777,6 +3061,9 @@ const TRACKER_CONFIGS = {
             // Handle custom version input when "Other" is selected
             setupCustomVersionInput();
 
+            // Also setup custom version state input when "Other" is selected
+            setupCustomVersionStateInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -2784,6 +3071,7 @@ const TRACKER_CONFIGS = {
                 const districtStateField = document.getElementById('districtState');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
@@ -2810,27 +3098,47 @@ const TRACKER_CONFIGS = {
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
                 const version = getVersionValue(versionField) || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
-                // Format per requirements: "VIP or Standard District Name • District State (Abv) | Application Name • Version | Specific issue for user role"
-                let subject = '';
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP status and district info
+                let districtPart = '';
                 if (isVip) {
-                    subject = `VIP * ${districtName} • ${districtState} | ${application}`;
+                    districtPart = `VIP * ${districtName} • ${districtState}`;
                 } else {
-                    subject = `${districtName} • ${districtState} | ${application}`;
+                    districtPart = `${districtName} • ${districtState}`;
+                }
+                if (districtPart.trim() && districtPart !== ' • ') {
+                    subjectParts.push(districtPart);
                 }
 
-                // Add version if provided
+                // Second part: Application, version, and version state
+                let appPart = application;
                 if (version) {
-                    subject += ` • ${version}`;
+                    appPart += ` • ${version}`;
+                }
+                if (versionState) {
+                    appPart += ` ${versionState}`;
+                }
+                if (appPart.trim()) {
+                    subjectParts.push(appPart);
                 }
 
-                // Add specific issue and user role
-                subject += ` | ${specificIssue}`;
+                // Third part: Specific issue and user role
+                let issuePart = specificIssue;
                 if (userRoleText) {
-                    subject += ` for ${userRoleText}`;
+                    issuePart += ` for ${userRoleText}`;
                 }
+                if (issuePart.trim()) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | "
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -2842,6 +3150,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -2882,7 +3191,9 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
                         type: "select",
@@ -2906,7 +3217,14 @@ const TRACKER_CONFIGS = {
                         ],
                         hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+                    {
+                        id: "versionState",
+                        type: "select",
+                        label: "State/National",
+                        required: false,
+                        options: [],
+                        hint: "Select the state or location variation for this version"
+                    },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -3094,6 +3412,9 @@ const TRACKER_CONFIGS = {
             // Handle custom version input when "Other" is selected
             setupCustomVersionInput();
 
+            // Also setup custom version state input when "Other" is selected
+            setupCustomVersionStateInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -3101,6 +3422,7 @@ const TRACKER_CONFIGS = {
                 const districtStateField = document.getElementById('districtState');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
@@ -3127,27 +3449,47 @@ const TRACKER_CONFIGS = {
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
                 const version = getVersionValue(versionField) || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
-                // Format per requirements: "VIP or Standard District Name • District State (Abv) | Application Name • Version | Specific issue for user role"
-                let subject = '';
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP status and district info
+                let districtPart = '';
                 if (isVip) {
-                    subject = `VIP * ${districtName} • ${districtState} | ${application}`;
+                    districtPart = `VIP * ${districtName} • ${districtState}`;
                 } else {
-                    subject = `${districtName} • ${districtState} | ${application}`;
+                    districtPart = `${districtName} • ${districtState}`;
+                }
+                if (districtPart.trim() && districtPart !== ' • ') {
+                    subjectParts.push(districtPart);
                 }
 
-                // Add version if provided
+                // Second part: Application, version, and version state
+                let appPart = application;
                 if (version) {
-                    subject += ` • ${version}`;
+                    appPart += ` • ${version}`;
+                }
+                if (versionState) {
+                    appPart += ` ${versionState}`;
+                }
+                if (appPart.trim()) {
+                    subjectParts.push(appPart);
                 }
 
-                // Add specific issue and user role
-                subject += ` | ${specificIssue}`;
+                // Third part: Specific issue and user role
+                let issuePart = specificIssue;
                 if (userRoleText) {
-                    subject += ` for ${userRoleText}`;
+                    issuePart += ` for ${userRoleText}`;
                 }
+                if (issuePart.trim()) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | "
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -3159,6 +3501,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -3201,7 +3544,9 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
                         type: "select",
@@ -3225,7 +3570,14 @@ const TRACKER_CONFIGS = {
                         ],
                         hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+                    {
+                        id: "versionState",
+                        type: "select",
+                        label: "State/National",
+                        required: false,
+                        options: [],
+                        hint: "Select the state or location variation for this version"
+                    },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -3392,77 +3744,7 @@ const TRACKER_CONFIGS = {
             return description;
         },
 
-        // Add onLoad function for dynamic subject line formatting
-        onLoad: function () {
-            console.log("SIM Plan & Teach onLoad function executing");
 
-            function updateSubjectLine() {
-                const isVipField = document.getElementById('isVIP');
-                const districtNameField = document.getElementById('districtName');
-                const districtStateField = document.getElementById('districtState');
-                const applicationField = document.getElementById('application');
-                const versionField = document.getElementById('version');
-                const specificIssueField = document.getElementById('specificIssue');
-                const formattedSubjectField = document.getElementById('formattedSubject');
-
-                if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
-                    !versionField || !specificIssueField || !formattedSubjectField) {
-                    console.log("Missing required fields for subject formatting");
-                    return;
-                }
-
-                // Get user roles
-                const userRoles = [];
-                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
-                roleCheckboxes.forEach(cb => {
-                    if (cb.id === 'allUsers') {
-                        userRoles.push('All Users');
-                    } else {
-                        const label = cb.parentElement.textContent.trim();
-                        if (label) userRoles.push(label);
-                    }
-                });
-
-                const isVip = isVipField.value === 'Yes';
-                const districtName = districtNameField.value || '';
-                // districtState variable removed (unused)
-                const application = applicationField.value || '';
-                // version variable removed (unused)
-                const specificIssue = specificIssueField.value || '';
-                const userRoleText = userRoles.length > 0 ? userRoles.join(', ') : '';
-
-                // Format: "VIP * District Name | Application - Specific Issue for User Role"
-                let subject = '';
-                if (isVip) {
-                    subject = `VIP * ${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
-                } else {
-                    subject = `${districtName} | ${application} - ${specificIssue} for ${userRoleText}`;
-                }
-
-                formattedSubjectField.value = subject;
-                console.log("Updated subject line:", subject);
-            }
-
-            // Set up event listeners
-            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('version')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
-
-            // Add listeners to all checkboxes
-            const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateSubjectLine);
-            });
-
-            // Initial update attempt
-            updateSubjectLine();
-
-            // Schedule another update after a small delay to ensure fields are populated
-            setTimeout(updateSubjectLine, 500);
-        },
         // Add onLoad function to populate Application Name
         onLoad: function () {
             console.log("SIM Plan & Teach Tracker onLoad function executing");
@@ -3474,6 +3756,9 @@ const TRACKER_CONFIGS = {
             // Handle custom version input when "Other" is selected
             setupCustomVersionInput();
 
+            // Also setup custom version state input when "Other" is selected
+            setupCustomVersionStateInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -3481,6 +3766,7 @@ const TRACKER_CONFIGS = {
                 const districtStateField = document.getElementById('districtState');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
@@ -3507,27 +3793,47 @@ const TRACKER_CONFIGS = {
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
                 const version = getVersionValue(versionField) || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
-                // Format per requirements: "VIP or Standard District Name • District State (Abv) | Application Name • Version | Specific issue for user role"
-                let subject = '';
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP status and district info
+                let districtPart = '';
                 if (isVip) {
-                    subject = `VIP * ${districtName} • ${districtState} | ${application}`;
+                    districtPart = `VIP * ${districtName} • ${districtState}`;
                 } else {
-                    subject = `${districtName} • ${districtState} | ${application}`;
+                    districtPart = `${districtName} • ${districtState}`;
+                }
+                if (districtPart.trim() && districtPart !== ' • ') {
+                    subjectParts.push(districtPart);
                 }
 
-                // Add version if provided
+                // Second part: Application, version, and version state
+                let appPart = application;
                 if (version) {
-                    subject += ` • ${version}`;
+                    appPart += ` • ${version}`;
+                }
+                if (versionState) {
+                    appPart += ` ${versionState}`;
+                }
+                if (appPart.trim()) {
+                    subjectParts.push(appPart);
                 }
 
-                // Add specific issue and user role
-                subject += ` | ${specificIssue}`;
+                // Third part: Specific issue and user role
+                let issuePart = specificIssue;
                 if (userRoleText) {
-                    subject += ` for ${userRoleText}`;
+                    issuePart += ` for ${userRoleText}`;
                 }
+                if (issuePart.trim()) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | "
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -3539,6 +3845,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -3579,7 +3886,9 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
                         type: "select",
@@ -3603,7 +3912,14 @@ const TRACKER_CONFIGS = {
                         ],
                         hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+                    {
+                        id: "versionState",
+                        type: "select",
+                        label: "State/National",
+                        required: false,
+                        options: [],
+                        hint: "Select the state or location variation for this version"
+                    },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -3785,6 +4101,9 @@ const TRACKER_CONFIGS = {
             // Handle custom version input when "Other" is selected
             setupCustomVersionInput();
 
+            // Also setup custom version state input when "Other" is selected
+            setupCustomVersionStateInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -3792,6 +4111,7 @@ const TRACKER_CONFIGS = {
                 const districtStateField = document.getElementById('districtState');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
@@ -3818,27 +4138,47 @@ const TRACKER_CONFIGS = {
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
                 const version = getVersionValue(versionField) || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
-                // Format per requirements: "VIP or Standard District Name • District State (Abv) | Application Name • Version | Specific issue for user role"
-                let subject = '';
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP status and district info
+                let districtPart = '';
                 if (isVip) {
-                    subject = `VIP * ${districtName} • ${districtState} | ${application}`;
+                    districtPart = `VIP * ${districtName} • ${districtState}`;
                 } else {
-                    subject = `${districtName} • ${districtState} | ${application}`;
+                    districtPart = `${districtName} • ${districtState}`;
+                }
+                if (districtPart.trim() && districtPart !== ' • ') {
+                    subjectParts.push(districtPart);
                 }
 
-                // Add version if provided
+                // Second part: Application, version, and version state
+                let appPart = application;
                 if (version) {
-                    subject += ` • ${version}`;
+                    appPart += ` • ${version}`;
+                }
+                if (versionState) {
+                    appPart += ` ${versionState}`;
+                }
+                if (appPart.trim()) {
+                    subjectParts.push(appPart);
                 }
 
-                // Add specific issue and user role
-                subject += ` | ${specificIssue}`;
+                // Third part: Specific issue and user role
+                let issuePart = specificIssue;
                 if (userRoleText) {
-                    subject += ` for ${userRoleText}`;
+                    issuePart += ` for ${userRoleText}`;
                 }
+                if (issuePart.trim()) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | "
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -3850,6 +4190,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -3890,7 +4231,9 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "application", type: "text", label: "Application", required: true, placeholder: "EX: Grade View" },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
                         type: "select",
@@ -3914,7 +4257,14 @@ const TRACKER_CONFIGS = {
                         ],
                         hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+                    {
+                        id: "versionState",
+                        type: "select",
+                        label: "State/National",
+                        required: false,
+                        options: [],
+                        hint: "Select the state or location variation for this version"
+                    },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -4085,7 +4435,9 @@ const TRACKER_CONFIGS = {
             // Handle custom version input when "Other" is selected
             setupCustomVersionInput();
 
-            // Add or update subject line formatter
+            // Also setup custom version state input when "Other" is selected
+            setupCustomVersionStateInput();
+
             // Add or update subject line formatter
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
@@ -4093,6 +4445,7 @@ const TRACKER_CONFIGS = {
                 const districtStateField = document.getElementById('districtState');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
@@ -4119,27 +4472,47 @@ const TRACKER_CONFIGS = {
                 const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
                 const version = getVersionValue(versionField) || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
-                // Format per requirements: "VIP or Standard District Name • District State (Abv) | Application Name • Version | Specific issue for user role"
-                let subject = '';
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP status and district info
+                let districtPart = '';
                 if (isVip) {
-                    subject = `VIP * ${districtName} • ${districtState} | ${application}`;
+                    districtPart = `VIP * ${districtName} • ${districtState}`;
                 } else {
-                    subject = `${districtName} • ${districtState} | ${application}`;
+                    districtPart = `${districtName} • ${districtState}`;
+                }
+                if (districtPart.trim() && districtPart !== ' • ') {
+                    subjectParts.push(districtPart);
                 }
 
-                // Add version if provided
+                // Second part: Application, version, and version state
+                let appPart = application;
                 if (version) {
-                    subject += ` • ${version}`;
+                    appPart += ` • ${version}`;
+                }
+                if (versionState) {
+                    appPart += ` ${versionState}`;
+                }
+                if (appPart.trim()) {
+                    subjectParts.push(appPart);
                 }
 
-                // Add specific issue and user role
-                subject += ` | ${specificIssue}`;
+                // Third part: Specific issue and user role
+                let issuePart = specificIssue;
                 if (userRoleText) {
-                    subject += ` for ${userRoleText}`;
+                    issuePart += ` for ${userRoleText}`;
                 }
+                if (issuePart.trim()) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | "
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -4150,7 +4523,8 @@ const TRACKER_CONFIGS = {
             document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
             document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('version')?.addEventListener('change', updateSubjectLine); // This line was missing
+            document.getElementById('version')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes

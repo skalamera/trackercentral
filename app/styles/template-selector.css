@@ -854,9 +854,7 @@ div.templates-container {
     border-color: #2c3e50;
 }
 
-.dashboard-header {
-    /* Removed additional styling, using parent container padding */
-}
+
 
 .dashboard-title-row {
     display: flex;
@@ -864,9 +862,7 @@ div.templates-container {
     align-items: center;
 }
 
-.dashboard-content {
-    /* No longer needed as we're not showing expanded content */
-}
+
 
 .dashboard-header h3 {
     margin: 0;

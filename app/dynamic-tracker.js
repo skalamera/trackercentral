@@ -484,15 +484,66 @@ class TrackerApp {
         const xcodeValue = document.getElementById('xcode')?.value || '';
         const applicationValue = document.getElementById('application')?.value || '';
         const versionValue = document.getElementById('version')?.value || '';
+        const stateNationalValue = document.getElementById('versionState')?.value || '';
         const resourcePathValue = document.getElementById('resourcePath')?.value || '';
         const specificIssueValue = document.getElementById('specificIssue')?.value || '';
 
-        // Include version if selected (not empty)
-        const versionPart = versionValue ? ` v${versionValue}` : '';
+        console.log('SEDCUST Subject Update - Field Values:', {
+            xcode: xcodeValue,
+            application: applicationValue,
+            version: versionValue,
+            stateNational: stateNationalValue,
+            resourcePath: resourcePathValue,
+            specificIssue: specificIssueValue
+        });
 
-        // Keep first two as pipes, only last one as dash
-        const formattedSubject =
-            `${xcodeValue} | ${applicationValue}${versionPart} | ${resourcePathValue} - ${specificIssueValue}`;
+        // Build the subject line dynamically, only including parts that have values
+        const subjectParts = [];
+
+        // First part: XCODE
+        if (xcodeValue.trim()) {
+            subjectParts.push(xcodeValue.trim());
+        }
+
+        // Second part: Application • Version State/National
+        let applicationPart = '';
+        if (applicationValue.trim()) {
+            applicationPart = applicationValue.trim();
+
+            // Add version and state/national if they exist
+            const versionParts = [];
+            if (versionValue.trim()) {
+                versionParts.push(versionValue.trim());
+            }
+            if (stateNationalValue.trim()) {
+                versionParts.push(stateNationalValue.trim());
+            }
+
+            if (versionParts.length > 0) {
+                applicationPart += ` • ${versionParts.join(' ')}`;
+            }
+        }
+        if (applicationPart) {
+            subjectParts.push(applicationPart);
+        }
+
+        // Third part: Resource Path - Specific Issue
+        let resourceIssuePart = '';
+        if (resourcePathValue.trim() && specificIssueValue.trim()) {
+            resourceIssuePart = `${resourcePathValue.trim()} - ${specificIssueValue.trim()}`;
+        } else if (resourcePathValue.trim()) {
+            resourceIssuePart = resourcePathValue.trim();
+        } else if (specificIssueValue.trim()) {
+            resourceIssuePart = specificIssueValue.trim();
+        }
+        if (resourceIssuePart) {
+            subjectParts.push(resourceIssuePart);
+        }
+
+        // Join all parts with " | " separator
+        const formattedSubject = subjectParts.join(' | ');
+
+        console.log('SEDCUST Subject Update - Generated Subject:', formattedSubject);
 
         const formattedSubjectField = document.getElementById('formattedSubject');
         if (formattedSubjectField) {
@@ -718,7 +769,7 @@ class TrackerApp {
 
         // Add dynamic subject line builder for SEDCUST template
         if (this.trackerType === 'sedcust') {
-            const subjectFields = ['xcode', 'application', 'version', 'resourcePath', 'specificIssue'];
+            const subjectFields = ['xcode', 'application', 'version', 'versionState', 'resourcePath', 'specificIssue'];
             const formattedSubjectField = document.getElementById('formattedSubject');
 
             if (formattedSubjectField) {
@@ -743,6 +794,11 @@ class TrackerApp {
 
                 // Initial update
                 this.updateSedcustSubject();
+
+                // Also schedule a delayed update to catch any draft data that might load later
+                setTimeout(() => {
+                    this.updateSedcustSubject();
+                }, 600);
             }
         }
 
