@@ -2432,29 +2432,87 @@
             async loadSpecificAgents() {
                 console.log('Loading specific agents');
 
-                // List of specific agent IDs to display - include all four agents
-                // We have confirmed IDs for Mohammad and Suriya
-                const specificAgentIds = [67025683491, 67031011668, 67040597168, 67051499418];
+                const agentField = document.getElementById('agentField');
+                if (!agentField) {
+                    console.error('Agent field not found');
+                    return;
+                }
 
                 try {
-                    // Set agents directly instead of trying to load from API
-                    const agentField = document.getElementById('agentField');
-                    if (!agentField) {
-                        console.error('Agent field not found');
-                        return;
+                    // Show loading state
+                    agentField.innerHTML = '<option value="">Loading agents...</option>';
+
+                    // Load selected agents from admin settings
+                    const selectedAgentIds = await this.client.db.get('selectedAgentIds').catch(error => {
+                        console.error("Error loading selected agent IDs from Freshdesk DB:", error);
+                        // Fall back to localStorage if needed
+                        const localAgents = localStorage.getItem('selectedAgentIds');
+                        if (localAgents) {
+                            return JSON.parse(localAgents);
+                        }
+                        return null;
+                    });
+
+                    if (selectedAgentIds) {
+                        // Define all available agents with their IDs and names (same as in admin-settings.html)
+                        const ALL_AGENTS = [
+                            { id: '67064466505', name: 'Brad Sheng' },
+                            { id: '67054610590', name: 'Dayna Clarke' },
+                            { id: '67051499418', name: 'Drita Lulgjuraj' },
+                            { id: '67046816271', name: 'Felicia Wold' },
+                            { id: '67030529218', name: 'Jordan Fields' },
+                            { id: '67025130684', name: 'Katrina Papaj' },
+                            { id: '67062102069', name: 'Kristi Garcia' },
+                            { id: '67063081184', name: 'Kristina Boga' },
+                            { id: '67062322271', name: 'Lisa Morgan' },
+                            { id: '67025683491', name: 'Mohammad Azeem' },
+                            { id: '67025131090', name: 'Shaima Mannino' },
+                            { id: '67029732378', name: 'Shanto Kapali' },
+                            { id: '67036373043', name: 'Steve Skalamera' },
+                            { id: '67031011668', name: 'Suriya Iqbal' }
+                        ];
+
+                        // Convert selectedAgentIds to array if it's an object
+                        let agentIdsArray = selectedAgentIds;
+                        if (typeof selectedAgentIds === 'object' && !Array.isArray(selectedAgentIds)) {
+                            agentIdsArray = Object.values(selectedAgentIds);
+                        }
+
+                        // Filter to only include selected agents
+                        const selectedAgents = ALL_AGENTS.filter(agent =>
+                            agentIdsArray.includes(agent.id)
+                        );
+
+                        // Build options
+                        let options = '<option value="">-- Select Agent --</option>';
+                        selectedAgents.forEach(agent => {
+                            options += `<option value="${agent.id}">${agent.name}</option>`;
+                        });
+
+                        // Set options
+                        agentField.innerHTML = options;
+                        console.log(`Loaded ${selectedAgents.length} agents from admin settings`);
+                    } else {
+                        // Default: show all agents if no selection has been made
+                        agentField.innerHTML = `
+                            <option value="">-- Select Agent --</option>
+                            <option value="67064466505">Brad Sheng</option>
+                            <option value="67054610590">Dayna Clarke</option>
+                            <option value="67051499418">Drita Lulgjuraj</option>
+                            <option value="67046816271">Felicia Wold</option>
+                            <option value="67030529218">Jordan Fields</option>
+                            <option value="67025130684">Katrina Papaj</option>
+                            <option value="67062102069">Kristi Garcia</option>
+                            <option value="67063081184">Kristina Boga</option>
+                            <option value="67062322271">Lisa Morgan</option>
+                            <option value="67025683491">Mohammad Azeem</option>
+                            <option value="67025131090">Shaima Mannino</option>
+                            <option value="67029732378">Shanto Kapali</option>
+                            <option value="67036373043">Steve Skalamera</option>
+                            <option value="67031011668">Suriya Iqbal</option>
+                        `;
+                        console.log('No agent selection found in settings, showing all agents');
                     }
-
-                    // Directly set the options to include all four agents
-                    agentField.innerHTML = `
-                        <option value="">-- Select Agent --</option>
-                        <option value="67025683491">Mohammad Azeem</option>
-                        <option value="67031011668">Suriya Iqbal</option>
-                        <option value="67025131090">Shaima Mannino</option>
-                        <option value="67051499418">Drita Lulgjuraj</option>
-                    `;
-                    console.log('Directly set agent options to Mohammad, Suriya, Anson, and Drita');
-
-                    // Skip API call since we're setting the options directly
                     return;
 
                     // The code below is kept for reference but will be skipped due to the return above
@@ -2502,13 +2560,13 @@
                 } catch (error) {
                     console.error('Error loading specific agents:', error);
 
-                    // Fallback hardcoded agents - include all four
-                    document.getElementById('agentField').innerHTML = `
+                    // Fallback hardcoded agents - show the four that were previously hardcoded
+                    agentField.innerHTML = `
                         <option value="">-- Select Agent --</option>
                         <option value="67025683491">Mohammad Azeem</option>
                         <option value="67031011668">Suriya Iqbal</option>
-                        <option value="67040597168">Anson Li</option>
-                        <option value="67051499418">Drita Luigjiraj</option>
+                        <option value="67025131090">Shaima Mannino</option>
+                        <option value="67051499418">Drita Lulgjuraj</option>
                     `;
                 }
             }
