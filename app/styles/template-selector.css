@@ -144,6 +144,17 @@ body {
     box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
 }
 
+/* Keep text dark in light mode for better contrast */
+[data-theme="light"] .navbar-item:hover,
+:root:not([data-theme="dark"]) .navbar-item:hover {
+    color: var(--primary-color);
+}
+
+/* Ensure white text in dark mode */
+[data-theme="dark"] .navbar-item:hover {
+    color: white;
+}
+
 .navbar-item.theme-toggle {
     background: none;
     border: 1px solid var(--card-border, #e0e0e0);
@@ -155,6 +166,34 @@ body {
 
 .navbar-item i {
     font-size: 1.1rem;
+}
+
+/* Status Widget Styling */
+.navbar-item.status-widget {
+    position: relative;
+}
+
+.navbar-item.status-widget::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    background-color: #28a745;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .navbar-item.status-widget::after {
+    border-color: #2c3e50;
+}
+
+/* Status widget hover effect */
+.navbar-item.status-widget:hover::after {
+    background-color: #34ce57;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
 }
 
 /* Mobile Navbar Styles */
@@ -854,15 +893,11 @@ div.templates-container {
     border-color: #2c3e50;
 }
 
-
-
 .dashboard-title-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
-
 
 .dashboard-header h3 {
     margin: 0;

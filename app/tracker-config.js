@@ -204,7 +204,7 @@ const TRACKER_CONFIGS = {
                 fields: [
                     { id: "xcode", type: "text", label: "XCODE", required: true, hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>", placeholder: "e.g. X56723" },
                     { id: "hasMultipleXcodes", type: "select", label: "Multiple Xcodes?", required: true, options: ["No", "Yes"], hint: "Select 'Yes' if this issue affects multiple Xcodes" },
-                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "e.g. BAdvance c2022" },
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "e.g. Advance c2022" },
                     {
                         id: "version",
                         type: "select",
@@ -289,7 +289,7 @@ const TRACKER_CONFIGS = {
                         type: "text",
                         label: "Path",
                         required: true,
-                        hint: "Path taken to recreate issue and screenshots if necessary. EX: BAdvance -c2022 > TRS > G5 > U1 > W2 > L12"
+                        hint: "Path taken to recreate issue and screenshots if necessary. EX: Advance -c2022 > TRS > G5 > U1 > W2 > L12"
                     },
                     {
                         id: "actualResults",
@@ -1083,7 +1083,7 @@ const TRACKER_CONFIGS = {
                 icon: "fa-pencil-alt",
                 fields: [
                     { id: "xcode", type: "text", label: "XCODE", required: true, placeholder: "e.g. X56723" },
-                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "e.g. BAdvance -c2022" },
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "e.g. Advance -c2022" },
                     {
                         id: "version",
                         type: "select",
@@ -1112,7 +1112,7 @@ const TRACKER_CONFIGS = {
                 fields: [
                     {
                         id: "issueSummary", type: "richtext", label: "", required: true,
-                        hint: "Short descriptor of the issue being reported. EX: User reports that in BAdvance -c2022 > TRS > G5 > U1> W2 > L12 the title is missing for the lesson."
+                        hint: "Short descriptor of the issue being reported. EX: User reports that in Advance -c2022 > TRS > G5 > U1> W2 > L12 the title is missing for the lesson."
                     }
                 ]
             },
@@ -1194,7 +1194,7 @@ const TRACKER_CONFIGS = {
                 fields: [
                     {
                         id: "pathField", type: "text", label: "Path", required: true,
-                        hint: "Path taken to recreate issue and screenshots if necessary. EX: BAdvance -c2022 > TRS > G5 > U1 > W2 > L12"
+                        hint: "Path taken to recreate issue and screenshots if necessary. EX: Advance -c2022 > TRS > G5 > U1 > W2 > L12"
                     },
                     {
                         id: "actualResults", type: "richtext", label: "Actual results", required: true,
