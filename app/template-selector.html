@@ -39,6 +39,18 @@
         [data-theme="light"] .navbar-item span {
             color: #000 !important;
         }
+
+        #themeToggleBtn .fa-sun {
+            color: #FFD600 !important;
+        }
+
+        #themeToggleBtn .fa-moon {
+            color: #12344D !important;
+        }
+
+        #themeToggleBtn .dark-mode-text {
+            color: #12344D !important;
+        }
     </style>
 </head>
 
@@ -463,10 +475,12 @@
                     if (theme === 'dark') {
                         icon.className = 'fas fa-sun';
                         text.textContent = 'Light Mode';
+                        text.classList.remove('dark-mode-text');
                         themeToggleBtn.title = 'Switch to Light Mode';
                     } else {
                         icon.className = 'fas fa-moon';
                         text.textContent = 'Dark Mode';
+                        text.classList.add('dark-mode-text');
                         themeToggleBtn.title = 'Switch to Dark Mode';
                     }
                 }
