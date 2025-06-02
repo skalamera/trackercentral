@@ -73,6 +73,34 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
+.navbar-menu {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.navbar-menu .navbar-item {
+    color: #61dafb;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.navbar-menu .navbar-item i {
+    color: #61dafb;
+}
+
+.navbar-menu .navbar-item span {
+    color: #61dafb;
+}
+
+[data-theme="dark"] .navbar-menu .navbar-item,
+[data-theme="dark"] .navbar-menu .navbar-item i,
+[data-theme="dark"] .navbar-menu .navbar-item span {
+    color: #61dafb;
+}
 
 .navbar-toggle {
     display: none;
@@ -184,6 +212,7 @@ body {
     border-radius: 50%;
     border: 2px solid white;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    display: none;
 }
 
 [data-theme="dark"] .navbar-item.status-widget::after {
@@ -192,7 +221,7 @@ body {
 
 /* Status widget hover effect */
 .navbar-item.status-widget:hover::after {
-    background-color: #34ce57;
+    background-color: #9b9b9b;
     box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
 }
 
@@ -1301,4 +1330,14 @@ div.templates-container {
         font-size: 0.85rem;
         padding: 5px 10px;
     }
+
+    i.fas.fa-sliders-h {
+        font-size: 1.2rem;
+    }
+
+
+
+
+
+
 }

@@ -10,6 +10,36 @@
     <link rel="stylesheet" type="text/css" href="styles/template-selector.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Freshdesk Tracker Templates</title>
+    <style>
+        /* Add these styles in the head section */
+        .navbar-item {
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            padding: 8px 12px;
+        }
+
+        .navbar-item i {
+            color: inherit;
+            margin-right: 8px;
+        }
+
+        .navbar-item:hover {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dark mode hover styles */
+        [data-theme="dark"] .navbar-item:hover {
+            background-color: #2d2d2d;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="light"] .navbar-item,
+        [data-theme="light"] .navbar-item i,
+        [data-theme="light"] .navbar-item span {
+            color: #000 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -30,12 +60,6 @@
                         style="display: none;">
                         <i class="fas fa-sliders-h"></i>
                         <span>Admin Settings</span>
-                    </a>
-                    <a href="https://benchmarkeducation.freshstatus.io" id="freshstatus-badge-root"
-                        class="navbar-item status-widget" title="System Status" target="_blank"
-                        data-banner-style="compact">
-                        <i class="fas fa-heartbeat"></i>
-                        <span>Status</span>
                     </a>
                     <button id="themeToggleBtn" class="navbar-item theme-toggle" title="Toggle Dark Mode">
                         <i class="fas fa-sun"></i>
@@ -437,12 +461,12 @@
                     const text = themeToggleBtn.querySelector('span');
 
                     if (theme === 'dark') {
-                        icon.className = 'fas fa-moon';
-                        text.textContent = 'Dark Mode';
-                        themeToggleBtn.title = 'Switch to Light Mode';
-                    } else {
                         icon.className = 'fas fa-sun';
                         text.textContent = 'Light Mode';
+                        themeToggleBtn.title = 'Switch to Light Mode';
+                    } else {
+                        icon.className = 'fas fa-moon';
+                        text.textContent = 'Dark Mode';
                         themeToggleBtn.title = 'Switch to Dark Mode';
                     }
                 }
@@ -1309,7 +1333,13 @@
             });
         </script>
     </div>
-
+    <div
+        style="display: flex; justify-content: center; margin: 20px 0; border-top: 1px solid #e0e0e0; padding-top: 20px;">
+        <a href="https://benchmarkeducation.freshstatus.io" id="freshstatus-badge-root" data-banner-style="highlighted">
+            <img
+                src="https://public-api.freshstatus.io/v1/public/badge.svg/?badge=12d6fa47-c8f2-4305-b002-9314f34695f8" />
+        </a>
+    </div>
     <!-- Freshdesk Status Widget Script -->
     <script type="module" src="https://cdn.freshstatus.io/widget/index.js"></script>
 </body>
