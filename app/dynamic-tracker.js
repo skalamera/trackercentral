@@ -487,6 +487,7 @@ class TrackerApp {
         const stateNationalValue = document.getElementById('versionState')?.value || '';
         const resourcePathValue = document.getElementById('resourcePath')?.value || '';
         const specificIssueValue = document.getElementById('specificIssue')?.value || '';
+        const isVIP = document.getElementById('isVIP')?.value || 'No';
 
         console.log('SEDCUST Subject Update - Field Values:', {
             xcode: xcodeValue,
@@ -494,7 +495,8 @@ class TrackerApp {
             version: versionValue,
             stateNational: stateNationalValue,
             resourcePath: resourcePathValue,
-            specificIssue: specificIssueValue
+            specificIssue: specificIssueValue,
+            isVIP: isVIP
         });
 
         // Build the subject line dynamically, only including parts that have values
@@ -505,7 +507,11 @@ class TrackerApp {
             subjectParts.push(xcodeValue.trim());
         }
 
-        // Second part: Application • Version State/National
+        // Second part: VIP or Standard
+        const vipStatus = isVIP === 'Yes' ? 'VIP' : 'Standard';
+        subjectParts.push(vipStatus);
+
+        // Third part: Application • Version State/National
         let applicationPart = '';
         if (applicationValue.trim()) {
             applicationPart = applicationValue.trim();
@@ -527,7 +533,7 @@ class TrackerApp {
             subjectParts.push(applicationPart);
         }
 
-        // Third part: Resource Path - Specific Issue
+        // Fourth part: Resource Path - Specific Issue
         let resourceIssuePart = '';
         if (resourcePathValue.trim() && specificIssueValue.trim()) {
             resourceIssuePart = `${resourcePathValue.trim()} - ${specificIssueValue.trim()}`;
@@ -769,7 +775,7 @@ class TrackerApp {
 
         // Add dynamic subject line builder for SEDCUST template
         if (this.trackerType === 'sedcust') {
-            const subjectFields = ['xcode', 'application', 'version', 'versionState', 'resourcePath', 'specificIssue'];
+            const subjectFields = ['xcode', 'isVIP', 'application', 'version', 'versionState', 'resourcePath', 'specificIssue'];
             const formattedSubjectField = document.getElementById('formattedSubject');
 
             if (formattedSubjectField) {

@@ -1082,15 +1082,15 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pencil-alt",
                 fields: [
-                    { id: "xcode", type: "text", label: "XCODE", required: true, placeholder: "e.g. X56723" },
-                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "e.g. Advance -c2022" },
+                    { id: "xcode", type: "text", label: "XCODE", required: true, placeholder: "e.g. X72525", hint: "Enter the XCODE of component where the issue is prevalent." },
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "e.g. Advance -c2022", hint: "Auto-populates from original ticket." },
                     {
                         id: "version",
                         type: "select",
-                        label: "Version",
+                        label: "Subscription Version",
                         required: false,
                         options: [],
-                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
+                        hint: "Select the appropriate subscription version number from the dropdown. Ex: 2.5"
                     },
                     {
                         id: "versionState",
@@ -1098,11 +1098,11 @@ const TRACKER_CONFIGS = {
                         label: "State/National",
                         required: false,
                         options: [],
-                        hint: "Select the state or location variation for this version"
+                        hint: "Select the corresponding state or national version from the dropdown. Ex: 2.5 Virginia. Note: Just because a district is in CA does not mean they will have the California version of the product. You must check their subscriptions to verify."
                     },
-                    { id: "resourcePath", type: "text", label: "Resource Path", required: true, placeholder: "e.g. TRS: G5>U1>W2>L12" },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Title Missing" },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
+                    { id: "resourcePath", type: "text", label: "Resource Path", required: true, placeholder: "e.g. TRS: G5>U1>W2>L12", hint: "Enter the path of clicks taken to recreate issue." },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Title Missing", hint: "Enter a succinct description of issue. Note: if the user is requesting a rationale use: Rationale" },
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will auto-populate based on your submissions. Be sure to review for accuracy. Naming convention: Xcode | VIP or Standard | Application Name • Variation National or State if SS | Resource name: Grade > Unit > Week > Day > Lesson - Short description of issue. EX: X11111 | VIP | Advance • 2.8 Florida | TRS: G5 > U1 > W2 > L12 - Title Missing", readOnly: true }
                 ]
             },
             {
@@ -1112,7 +1112,7 @@ const TRACKER_CONFIGS = {
                 fields: [
                     {
                         id: "issueSummary", type: "richtext", label: "", required: true,
-                        hint: "Short descriptor of the issue being reported. EX: User reports that in Advance -c2022 > TRS > G5 > U1> W2 > L12 the title is missing for the lesson."
+                        hint: "Enter a short summary of the issue reported by the user. EX: In Advance FL 2.8 TRS: G5 > U1 > W2 > L12. The title is missing from the lesson plan."
                     }
                 ]
             },
@@ -1123,7 +1123,7 @@ const TRACKER_CONFIGS = {
                 fields: [
                     {
                         id: "issueDetails", type: "richtext", label: "", required: true,
-                        hint: "Describe in detail the issue reported by the user. EX: User reports \"On the Benchmark Advance platform, unit 1 of grade 5, please filter to week 2 lesson 12. The title is missing from the lesson plan. Please add the title.\""
+                        hint: "Describe in detail the issue reported by the user. You can insert exactly what the user reports in their submitted ticket if needed for clarification. However only do so if it is clear and helpful. IE: request for rationale or similar. EX: User reports \"The kindergarten team at Bryant Elementary had questions about two different questions on the assessment. They both have to do with opposites, which has not been instructed in the curriculum at this point. It also has them read and identify the word in question one and then in question 15 they are supposed to know what each picture really shows, which to us were not that clear, especially the cane. See attachment below. Thank you!.\""
                     }
                 ]
             },
@@ -1134,45 +1134,45 @@ const TRACKER_CONFIGS = {
                 fields: [
                     {
                         id: "isVIP", type: "select", label: "VIP Customer", required: true, options: ["No", "Yes"],
-                        hint: "If the district is VIP, select yes. If the district is not, select no. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the VIP list if you are unsure but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     },
                     {
-                        id: "username", type: "text", label: "Username", required: true,
-                        hint: "Provide the username of the user that the issue is affecting. Note: the username and email is often the same for many users. EX: amiller3"
+                        id: "username", type: "text", label: "Username", required: true, placeholder: "e.g. amiller3",
+                        hint: "Enter the Username of the impacted user."
                     },
                     {
-                        id: "userEmail", type: "email", label: "Email", required: true,
-                        hint: "Provide the email of the user that the issue is affecting. Note: the username and email are often the same for many users. EX: adam.miller@palmbeachschools.org"
+                        id: "userEmail", type: "email", label: "Email", required: true, placeholder: "e.g. adam.miller@palmbeachschools.org",
+                        hint: "Enter the Email of the user that the issue is affecting. Note: the username and email can be the same, but supply both."
                     },
                     {
-                        id: "userRole", type: "text", label: "Role", required: true,
-                        hint: "Provide the role of the user that the issue is affecting. EX: District Admin, School Admin, Teacher or Student"
+                        id: "userRole", type: "text", label: "Role", required: true, placeholder: "e.g. District Admin, School Admin, Teacher or Student",
+                        hint: "Enter the role of the user that the issue is affecting."
                     },
                     {
-                        id: "productImpacted", type: "text", label: "Program Impacted", required: true,
-                        hint: "Provide the Program Name for which the issue is prevalent. Ex: Advance Florida the issue is prevalent. Ex: Benchmark Advance Florida"
+                        id: "productImpacted", type: "text", label: "Program Impacted", required: true, placeholder: "e.g. Advance • 2.8 Florida",
+                        hint: "Auto-populates from the subject details."
                     },
                     {
-                        id: "xcodeInfo", type: "text", label: "Xcode", required: true,
-                        hint: "Provide the Xcode of component where the issue is prevalent. EX: X72525. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to find an Xcode</a>"
+                        id: "xcodeInfo", type: "text", label: "Xcode", required: true, placeholder: "e.g. X72525",
+                        hint: "Auto-populates from the subject details."
                     },
                     {
-                        id: "districtState", type: "text", label: "District state", required: true,
-                        hint: "Provide the state where the district is located. EX: Florida or FL. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720295' target='_blank'>Verify district realm/state</a>"
+                        id: "districtState", type: "text", label: "District State", required: true, placeholder: "e.g. FL",
+                        hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate you should verify the company details of the district in FD."
                     },
                     {
                         id: "impactType", type: "select", label: "Digital and/or Print Impact", required: true,
                         options: ["", "Digital Only", "Print Only", "Both Digital and Print"],
-                        hint: "Identify if the issue only occurs on the digital platform or if it occurs in both digital and print. EX: Digital"
+                        hint: "Identify if the issue only occurs on the digital platform or if it occurs in both digital and print."
                     },
                     {
-                        id: "dateReported", type: "date", label: "Date Issue reported by user", required: true,
-                        hint: "Provide the date the user reported the issue. EX: 5/18/23"
+                        id: "dateReported", type: "date", label: "Date Issue reported by user", required: true, placeholder: "e.g. 05/01/2025",
+                        hint: "Select the date the user reported the issue."
                     },
                     {
-                        id: "impactScope", type: "select", label: "Teacher and/or Student impact", required: true,
+                        id: "impactScope", type: "select", label: "Staff and/or Student impact", required: true,
                         options: ["", "Teacher Only", "Student Only", "Both Teacher and Student"],
-                        hint: "Identify if the teacher or the student is impacted by the issue. EX: Teacher"
+                        hint: "Select the appropriate option based on the impacted user role. EX: Teacher"
                     }
                 ]
             },
@@ -1183,7 +1183,7 @@ const TRACKER_CONFIGS = {
                 fields: [
                     {
                         id: "components", type: "richtext", label: "", required: true,
-                        hint: "Specific application or component affected e.g., Assessment, Assignments, ePlanner, TRS. EX: TRS (teacher resource system)"
+                        hint: "Enter the specific component affected e.g., eAssessment, Assignments, TRS, Plan & Teach, eBook, ePocketchart, etc. EX: TRS (teacher resource system)"
                     }
                 ]
             },
@@ -1193,16 +1193,30 @@ const TRACKER_CONFIGS = {
                 icon: "fa-list-ol",
                 fields: [
                     {
-                        id: "pathField", type: "text", label: "Path", required: true,
-                        hint: "Path taken to recreate issue and screenshots if necessary. EX: Advance -c2022 > TRS > G5 > U1 > W2 > L12"
+                        id: "pathField", type: "text", label: "Path", required: true, placeholder: "e.g. Advance -c2022 > TRS: G5 > U1 > W2 > L12",
+                        hint: "Auto-populates from the subject details."
                     },
                     {
                         id: "actualResults", type: "richtext", label: "Actual results", required: true,
-                        hint: "Provide Screenshots and any other information that would be helpful to replicate the reported issue."
+                        hint: "Enter any information that would be helpful to replicate the reported issue. To add screen shots you can either click the image icon > select the image file > click Open or paste the screenshot in the box. Add as many as you see fit to explain the issue (if needed you can add additional screenshots or video see Step 9) To add links type the word or phrase indicating what you are linking to > clink the link icon and paste URL > click Save."
                     },
                     {
                         id: "expectedResults", type: "richtext", label: "Expected results", required: true,
-                        hint: "Explain/show how the system should be functioning if working correctly. Our role is to convey what the user is requesting. Ie. the user feels a certain standard is missing from a lesson. Request that rationale be provided. Example of expected results: Provide title for lesson, Fix hyperlink, Provide rationale, Fix grammatical errors."
+                        hint: "Enter details of what the user expects once the issue has been resolved. Note: our role is to convey what the user is requesting be done to fix the issue. Example of expected results: Provide rationale. Provide title for lesson. Fix hyperlink. Fix grammatical errors."
+                    }
+                ]
+            },
+            {
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [
+                    {
+                        id: "screenshotsDescription",
+                        type: "richtext",
+                        label: "Screenshots and Supporting Materials",
+                        required: false,
+                        hint: "Click Upload Files to add any additional information that will be helpful."
                     }
                 ]
             }
@@ -1400,12 +1414,14 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(xcode.trim());
                 }
 
-                // VIP status part (if applicable)
+                // Second part: VIP or Standard
                 if (isVIP) {
                     subjectParts.push('VIP');
+                } else {
+                    subjectParts.push('Standard');
                 }
 
-                // Second part: Application • Version State/National
+                // Third part: Application • Version State/National
                 let applicationPart = '';
                 if (application.trim()) {
                     applicationPart = application.trim();
@@ -1427,7 +1443,7 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(applicationPart);
                 }
 
-                // Third part: Resource Path - Specific Issue
+                // Fourth part: Resource Path - Specific Issue
                 let resourceIssuePart = '';
                 if (resourcePath.trim() && specificIssue.trim()) {
                     resourceIssuePart = `${resourcePath.trim()} - ${specificIssue.trim()}`;
@@ -2730,26 +2746,12 @@ const TRACKER_CONFIGS = {
 
                 // First part: VIP or Standard District Name • District State
                 let districtPart = '';
-                if (districtName.trim() && districtState.trim()) {
-                    if (isVip) {
-                        districtPart = `VIP * ${districtName.trim()} • ${districtState.trim()}`;
-                    } else {
-                        districtPart = `${districtName.trim()} • ${districtState.trim()}`;
-                    }
-                } else if (districtName.trim()) {
-                    if (isVip) {
-                        districtPart = `VIP * ${districtName.trim()}`;
-                    } else {
-                        districtPart = districtName.trim();
-                    }
-                } else if (districtState.trim()) {
-                    if (isVip) {
-                        districtPart = `VIP * ${districtState.trim()}`;
-                    } else {
-                        districtPart = districtState.trim();
-                    }
+                if (isVip) {
+                    districtPart = `VIP * ${districtName} • ${districtState}`;
+                } else {
+                    districtPart = `${districtName} • ${districtState}`;
                 }
-                if (districtPart) {
+                if (districtPart.trim() && districtPart !== ' • ') {
                     subjectParts.push(districtPart);
                 }
 
@@ -2776,18 +2778,15 @@ const TRACKER_CONFIGS = {
                 }
 
                 // Third part: Specific issue for user role
-                let issuePart = '';
-                if (specificIssue.trim()) {
-                    issuePart = specificIssue.trim();
-                    if (userRoleText) {
-                        issuePart += ` for ${userRoleText}`;
-                    }
+                let issuePart = specificIssue;
+                if (userRoleText) {
+                    issuePart += ` for ${userRoleText}`;
                 }
-                if (issuePart) {
+                if (issuePart.trim()) {
                     subjectParts.push(issuePart);
                 }
 
-                // Join all parts with " | " separator
+                // Join all parts with " | "
                 const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
