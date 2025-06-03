@@ -1082,7 +1082,7 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pencil-alt",
                 fields: [
-                    { id: "xcode", type: "text", label: "XCODE", required: true, placeholder: "e.g. X72525", hint: "Enter the XCODE of component where the issue is prevalent." },
+                    { id: "xcode", type: "text", label: "Xcode", required: true, placeholder: "e.g. X72525", hint: "Enter the XCODE of component where the issue is prevalent." },
                     { id: "application", type: "text", label: "Program Name", required: true, placeholder: "e.g. Advance -c2022", hint: "Auto-populates from original ticket." },
                     {
                         id: "version",
@@ -1107,7 +1107,7 @@ const TRACKER_CONFIGS = {
             },
             {
                 id: "summary",
-                title: "SUMMARY",
+                title: "Summary",
                 icon: "fa-file-alt",
                 fields: [
                     {
@@ -1118,7 +1118,7 @@ const TRACKER_CONFIGS = {
             },
             {
                 id: "issueDetails",
-                title: "ISSUE DETAILS",
+                title: "Issue Details",
                 icon: "fa-clipboard-list",
                 fields: [
                     {
@@ -1129,7 +1129,7 @@ const TRACKER_CONFIGS = {
             },
             {
                 id: "userInfo",
-                title: "IMPACTED USER INFO",
+                title: "Impacted User",
                 icon: "fa-user",
                 fields: [
                     {
@@ -1141,7 +1141,7 @@ const TRACKER_CONFIGS = {
                         hint: "Enter the Username of the impacted user."
                     },
                     {
-                        id: "userEmail", type: "email", label: "Email", required: true, placeholder: "e.g. adam.miller@palmbeachschools.org",
+                        id: "userEmail", type: "email", label: "E-mail", required: true, placeholder: "e.g. adam.miller@palmbeachschools.org",
                         hint: "Enter the Email of the user that the issue is affecting. Note: the username and email can be the same, but supply both."
                     },
                     {
