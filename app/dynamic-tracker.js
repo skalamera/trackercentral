@@ -627,34 +627,132 @@ class TrackerApp {
     }
 
     updateSIMAssessmentReportsSubject() {
-        // Same pattern as above with VIP * spacing and user role formatting
-        const isVIP = document.getElementById('isVIP')?.value || 'No';
-        const vipPrefix = isVIP === "Yes" ? "VIP * " : "";
-        const districtValue = document.getElementById('districtName')?.value || '';
-        const applicationValue = document.getElementById('application')?.value || '';
-        const versionValue = document.getElementById('version')?.value || '';
-        const specificIssueValue = document.getElementById('specificIssue')?.value || '';
-
-        // Include version if selected (not empty)
-        const versionPart = versionValue ? ` v${versionValue}` : '';
-
-        // Get all checked user role checkboxes
-        const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
-        const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
-        const formattedUserRole = this.formatUserRoles(selectedRoles);
-
-        const formattedSubject =
-            `${vipPrefix}${districtValue} | ${applicationValue}${versionPart} - ${specificIssueValue} for ${formattedUserRole}`;
-
+        const isVipField = document.getElementById('isVIP');
+        const districtNameField = document.getElementById('districtName');
+        const districtStateField = document.getElementById('districtState');
+        const applicationField = document.getElementById('application');
+        const versionField = document.getElementById('version');
+        const versionStateField = document.getElementById('versionState');
+        const specificIssueField = document.getElementById('specificIssue');
         const formattedSubjectField = document.getElementById('formattedSubject');
-        if (formattedSubjectField) {
-            formattedSubjectField.value = formattedSubject;
 
-            // Also update the hidden subject field
-            const subjectField = document.getElementById('subject');
-            if (subjectField) {
-                subjectField.value = formattedSubject;
+        if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
+            !versionField || !specificIssueField || !formattedSubjectField) {
+            console.log("Missing required fields for subject formatting");
+            return;
+        }
+
+        // Get user roles
+        const userRoles = [];
+        const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+        roleCheckboxes.forEach(cb => {
+            if (cb.id === 'allUsers') {
+                userRoles.push('All Users');
+            } else {
+                const label = cb.parentElement.textContent.trim();
+                if (label) userRoles.push(label);
             }
+        });
+
+        const isVip = isVipField.value === 'Yes';
+        const districtName = districtNameField.value || '';
+        const districtState = districtStateField.value || '';
+        const application = applicationField.value || '';
+
+        // Get version value (handle custom versions)
+        let version = '';
+        if (versionField.value === "Other" && versionField.hasAttribute('data-custom-value')) {
+            version = versionField.getAttribute('data-custom-value');
+        } else {
+            version = versionField.value || '';
+        }
+
+        // Get version state value (handle custom version states)
+        let versionState = '';
+        if (versionStateField) {
+            if (versionStateField.value === "Other" && versionStateField.hasAttribute('data-custom-value')) {
+                versionState = versionStateField.getAttribute('data-custom-value');
+            } else {
+                versionState = versionStateField.value || '';
+            }
+        }
+
+        const specificIssue = specificIssueField.value || '';
+        const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
+
+        // Build the subject line dynamically, only including parts that have values
+        const subjectParts = [];
+
+        // First part: VIP or Standard District Name • District State
+        let districtPart = '';
+        if (districtName.trim() && districtState.trim()) {
+            if (isVip) {
+                districtPart = `VIP * ${districtName.trim()} • ${districtState.trim()}`;
+            } else {
+                districtPart = `${districtName.trim()} • ${districtState.trim()}`;
+            }
+        } else if (districtName.trim()) {
+            if (isVip) {
+                districtPart = `VIP * ${districtName.trim()}`;
+            } else {
+                districtPart = districtName.trim();
+            }
+        } else if (districtState.trim()) {
+            if (isVip) {
+                districtPart = `VIP * ${districtState.trim()}`;
+            } else {
+                districtPart = districtState.trim();
+            }
+        }
+        if (districtPart) {
+            subjectParts.push(districtPart);
+        }
+
+        // Second part: Application Name • Version State/National
+        let applicationPart = '';
+        if (application.trim()) {
+            applicationPart = application.trim();
+
+            // Add version and state/national if they exist
+            const versionParts = [];
+            if (version.trim()) {
+                versionParts.push(version.trim());
+            }
+            if (versionState.trim()) {
+                versionParts.push(versionState.trim());
+            }
+
+            if (versionParts.length > 0) {
+                applicationPart += ` • ${versionParts.join(' ')}`;
+            }
+        }
+        if (applicationPart) {
+            subjectParts.push(applicationPart);
+        }
+
+        // Third part: Specific issue for user role
+        let issuePart = '';
+        if (specificIssue.trim()) {
+            issuePart = specificIssue.trim();
+            if (userRoleText) {
+                issuePart += ` for ${userRoleText}`;
+            }
+        }
+        if (issuePart) {
+            subjectParts.push(issuePart);
+        }
+
+        // Join all parts with " | " separator
+        const formattedSubject = subjectParts.join(' | ');
+
+        console.log("Updated SIM Assessment Reports subject line:", formattedSubject);
+
+        formattedSubjectField.value = formattedSubject;
+
+        // Also update the hidden subject field
+        const subjectField = document.getElementById('subject');
+        if (subjectField) {
+            subjectField.value = formattedSubject;
         }
     }
 
@@ -837,7 +935,7 @@ class TrackerApp {
 
         // Add dynamic subject line builder for SIM Assessment Reports template
         if (this.trackerType === 'sim-assessment-reports') {
-            const subjectFields = ['isVIP', 'districtName', 'application', 'version', 'specificIssue', 'userRole'];
+            const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'specificIssue', 'userRole'];
             const formattedSubjectField = document.getElementById('formattedSubject');
 
             if (formattedSubjectField) {

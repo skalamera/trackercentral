@@ -1789,131 +1789,428 @@
                 return selectedLabels[0] || '';
             }
 
+            // Helper to get version value (custom or selected)
+            getVersionValue(versionField) {
+                if (versionField && versionField.value === "Other" && versionField.hasAttribute('data-custom-value')) {
+                    return versionField.getAttribute('data-custom-value');
+                }
+                return versionField ? versionField.value : '';
+            }
+
+            // Helper to get version state value (custom or selected)
+            getVersionStateValue(versionStateField) {
+                if (versionStateField && versionStateField.value === "Other" && versionStateField.hasAttribute('data-custom-value')) {
+                    return versionStateField.getAttribute('data-custom-value');
+                }
+                return versionStateField ? versionStateField.value : '';
+            }
+
             // Update the subject line methods for each template
             updateSimAssignmentSubject() {
-                const isVIP = document.getElementById('isVIP')?.value || 'No';
-                const vipPrefix = isVIP === "Yes" ? "VIP * " : "";
-                const districtValue = document.getElementById('districtName')?.value || '';
-                const applicationValue = document.getElementById('application')?.value || '';
-                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
-
-                // Get all checked user role checkboxes
-                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
-                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
-                const formattedUserRole = this.formatUserRoles(selectedRoles);
-
-                const formattedSubject =
-                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue} for ${formattedUserRole}`;
-
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const districtStateField = document.getElementById('districtState');
+                const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
+                const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
-                if (formattedSubjectField) {
-                    formattedSubjectField.value = formattedSubject;
 
-                    // Also update the hidden subject field
-                    const subjectField = document.getElementById('subject');
-                    if (subjectField) {
-                        subjectField.value = formattedSubject;
+                if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
+                    !versionField || !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
                     }
+                });
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const districtState = districtStateField.value || '';
+                const application = applicationField.value || '';
+                const version = this.getVersionValue(versionField) || '';
+                const versionState = versionStateField ? this.getVersionStateValue(versionStateField) : '';
+                const specificIssue = specificIssueField.value || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
+
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP or Standard District Name • District State
+                let districtPart = '';
+                if (districtName.trim() && districtState.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtName.trim()} • ${districtState.trim()}`;
+                    } else {
+                        districtPart = `${districtName.trim()} • ${districtState.trim()}`;
+                    }
+                } else if (districtName.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtName.trim()}`;
+                    } else {
+                        districtPart = districtName.trim();
+                    }
+                } else if (districtState.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtState.trim()}`;
+                    } else {
+                        districtPart = districtState.trim();
+                    }
+                }
+                if (districtPart) {
+                    subjectParts.push(districtPart);
+                }
+
+                // Second part: Application Name • Version State/National
+                let applicationPart = '';
+                if (application.trim()) {
+                    applicationPart = application.trim();
+
+                    // Add version and state/national if they exist
+                    const versionParts = [];
+                    if (version.trim()) {
+                        versionParts.push(version.trim());
+                    }
+                    if (versionState.trim()) {
+                        versionParts.push(versionState.trim());
+                    }
+
+                    if (versionParts.length > 0) {
+                        applicationPart += ` • ${versionParts.join(' ')}`;
+                    }
+                }
+                if (applicationPart) {
+                    subjectParts.push(applicationPart);
+                }
+
+                // Third part: Specific issue for user role
+                let issuePart = '';
+                if (specificIssue.trim()) {
+                    issuePart = specificIssue.trim();
+                    if (userRoleText) {
+                        issuePart += ` for ${userRoleText}`;
+                    }
+                }
+                if (issuePart) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | " separator
+                const subject = subjectParts.join(' | ');
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+
+                // Also update the hidden subject field
+                const subjectField = document.getElementById('subject');
+                if (subjectField) {
+                    subjectField.value = subject;
                 }
             }
 
             // Update the other template methods similarly
             updateSIMAssessmentReportsSubject() {
-                // Same pattern as above with VIP * spacing and user role formatting
-                const isVIP = document.getElementById('isVIP')?.value || 'No';
-                const vipPrefix = isVIP === "Yes" ? "VIP * " : "";
-                const districtValue = document.getElementById('districtName')?.value || '';
-                const applicationValue = document.getElementById('application')?.value || '';
-                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
-
-                // Get all checked user role checkboxes
-                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
-                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
-                const formattedUserRole = this.formatUserRoles(selectedRoles);
-
-                const formattedSubject =
-                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue} for ${formattedUserRole}`;
-
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const districtStateField = document.getElementById('districtState');
+                const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
+                const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
-                if (formattedSubjectField) {
-                    formattedSubjectField.value = formattedSubject;
 
-                    // Also update the hidden subject field
-                    const subjectField = document.getElementById('subject');
-                    if (subjectField) {
-                        subjectField.value = formattedSubject;
+                if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
+                    !versionField || !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
                     }
+                });
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const districtState = districtStateField.value || '';
+                const application = applicationField.value || '';
+                const version = this.getVersionValue(versionField) || '';
+                const versionState = versionStateField ? this.getVersionStateValue(versionStateField) : '';
+                const specificIssue = specificIssueField.value || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
+
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP or Standard District Name • District State
+                let districtPart = '';
+                if (districtName.trim() && districtState.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtName.trim()} • ${districtState.trim()}`;
+                    } else {
+                        districtPart = `${districtName.trim()} • ${districtState.trim()}`;
+                    }
+                } else if (districtName.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtName.trim()}`;
+                    } else {
+                        districtPart = districtName.trim();
+                    }
+                } else if (districtState.trim()) {
+                    if (isVip) {
+                        districtPart = `VIP * ${districtState.trim()}`;
+                    } else {
+                        districtPart = districtState.trim();
+                    }
+                }
+                if (districtPart) {
+                    subjectParts.push(districtPart);
+                }
+
+                // Second part: Application Name • Version State/National
+                let applicationPart = '';
+                if (application.trim()) {
+                    applicationPart = application.trim();
+
+                    // Add version and state/national if they exist
+                    const versionParts = [];
+                    if (version.trim()) {
+                        versionParts.push(version.trim());
+                    }
+                    if (versionState.trim()) {
+                        versionParts.push(versionState.trim());
+                    }
+
+                    if (versionParts.length > 0) {
+                        applicationPart += ` • ${versionParts.join(' ')}`;
+                    }
+                }
+                if (applicationPart) {
+                    subjectParts.push(applicationPart);
+                }
+
+                // Third part: Specific issue for user role
+                let issuePart = '';
+                if (specificIssue.trim()) {
+                    issuePart = specificIssue.trim();
+                    if (userRoleText) {
+                        issuePart += ` for ${userRoleText}`;
+                    }
+                }
+                if (issuePart) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | " separator
+                const subject = subjectParts.join(' | ');
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+
+                // Also update the hidden subject field
+                const subjectField = document.getElementById('subject');
+                if (subjectField) {
+                    subjectField.value = subject;
                 }
             }
 
             updateSimLibraryViewSubject() {
-                const isVIP = document.getElementById('isVIP')?.value || 'No';
-                const vipPrefix = isVIP === "Yes" ? "VIP * " : "";
-                const districtValue = document.getElementById('districtName')?.value || '';
-                const applicationValue = document.getElementById('application')?.value || '';
-                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
-
-                // Get all checked user role checkboxes
-                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
-                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
-                const formattedUserRole = this.formatUserRoles(selectedRoles);
-
-                // Only add the "for" part if there are selected roles
-                const userRolePart = formattedUserRole ? ` for ${formattedUserRole}` : '';
-
-                const formattedSubject =
-                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue}${userRolePart}`;
-
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const districtStateField = document.getElementById('districtState');
+                const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
+                const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
-                if (formattedSubjectField) {
-                    formattedSubjectField.value = formattedSubject;
 
-                    // Also update the hidden subject field
-                    const subjectField = document.getElementById('subject');
-                    if (subjectField) {
-                        subjectField.value = formattedSubject;
+                if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
+                    !versionField || !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
+                }
+
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
                     }
+                });
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const districtState = districtStateField.value || '';
+                const application = applicationField.value || '';
+                const version = this.getVersionValue(versionField) || '';
+                const versionState = versionStateField ? this.getVersionStateValue(versionStateField) : '';
+                const specificIssue = specificIssueField.value || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
+
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP status and district info
+                let districtPart = '';
+                if (isVip) {
+                    districtPart = `VIP * ${districtName} • ${districtState}`;
+                } else {
+                    districtPart = `${districtName} • ${districtState}`;
+                }
+                if (districtPart.trim() && districtPart !== ' • ') {
+                    subjectParts.push(districtPart);
+                }
+
+                // Second part: Application, version, and version state
+                let appPart = application;
+                if (version) {
+                    appPart += ` • ${version}`;
+                }
+                if (versionState) {
+                    appPart += ` ${versionState}`;
+                }
+                if (appPart.trim()) {
+                    subjectParts.push(appPart);
+                }
+
+                // Third part: Specific issue and user role
+                let issuePart = specificIssue;
+                if (userRoleText) {
+                    issuePart += ` for ${userRoleText}`;
+                }
+                if (issuePart.trim()) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | "
+                const subject = subjectParts.join(' | ');
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+
+                // Also update the hidden subject field
+                const subjectField = document.getElementById('subject');
+                if (subjectField) {
+                    subjectField.value = subject;
                 }
             }
 
             updateSimFsaSubject() {
-                const isVIPField = document.querySelector('select[name="isVIP"]');
-                const districtNameField = document.querySelector('input[name="districtName"]');
-                const applicationField = document.querySelector('input[name="application"]');
-                const specificIssueField = document.querySelector('input[name="specificIssue"]');
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const districtStateField = document.getElementById('districtState');
+                const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
+                const specificIssueField = document.getElementById('specificIssue');
+                const formattedSubjectField = document.getElementById('formattedSubject');
 
-                // Get all checked user role checkboxes
-                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
-                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
-                const formattedUserRole = this.formatUserRoles(selectedRoles);
-
-                // Build the subject line
-                let subject = '';
-                if (isVIPField && isVIPField.value === 'Yes') {
-                    subject += 'VIP* ';
-                }
-                if (districtNameField && districtNameField.value) {
-                    subject += `${districtNameField.value} | `;
-                }
-                if (applicationField && applicationField.value) {
-                    subject += applicationField.value;
-                }
-                if (specificIssueField && specificIssueField.value) {
-                    subject += ` - ${specificIssueField.value}`;
-                }
-                if (formattedUserRole) {
-                    subject += ` for ${formattedUserRole}`;
+                if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
+                    !versionField || !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for subject formatting");
+                    return;
                 }
 
-                // Update both the formatted and hidden subject fields
-                const formattedSubjectField = document.querySelector('input[name="formattedSubject"]');
-                const hiddenSubjectField = document.querySelector('input[name="subject"]');
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
+                    }
+                });
 
-                if (formattedSubjectField) {
-                    formattedSubjectField.value = subject;
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const districtState = districtStateField.value || '';
+                const application = applicationField.value || '';
+                const version = this.getVersionValue(versionField) || '';
+                const versionState = versionStateField ? this.getVersionStateValue(versionStateField) : '';
+                const specificIssue = specificIssueField.value || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
+
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP or Standard District Name • District State
+                let districtPart = '';
+                if (isVip) {
+                    districtPart = `VIP * ${districtName} • ${districtState}`;
+                } else {
+                    districtPart = `${districtName} • ${districtState}`;
                 }
-                if (hiddenSubjectField) {
-                    hiddenSubjectField.value = subject;
+                if (districtPart.trim() && districtPart !== ' • ') {
+                    subjectParts.push(districtPart);
+                }
+
+                // Second part: Application Name • Version State/National
+                let applicationPart = '';
+                if (application.trim()) {
+                    applicationPart = application.trim();
+
+                    // Add version and state/national if they exist
+                    const versionParts = [];
+                    if (version.trim()) {
+                        versionParts.push(version.trim());
+                    }
+                    if (versionState.trim()) {
+                        versionParts.push(versionState.trim());
+                    }
+
+                    if (versionParts.length > 0) {
+                        applicationPart += ` • ${versionParts.join(' ')}`;
+                    }
+                }
+                if (applicationPart) {
+                    subjectParts.push(applicationPart);
+                }
+
+                // Third part: Specific issue for user role
+                let issuePart = '';
+                if (specificIssue.trim()) {
+                    issuePart = specificIssue.trim();
+                    if (userRoleText) {
+                        issuePart += ` for ${userRoleText}`;
+                    }
+                }
+                if (issuePart) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | " separator
+                const subject = subjectParts.join(' | ');
+
+                formattedSubjectField.value = subject;
+                console.log("Updated subject line:", subject);
+
+                // Also update the hidden subject field
+                const subjectField = document.getElementById('subject');
+                if (subjectField) {
+                    subjectField.value = subject;
                 }
             }
 
@@ -6287,76 +6584,8 @@
             }
 
             // Add this method to the TrackerApp class
-            updateSimFsaSubject() {
-                const isVIPField = document.querySelector('select[name="isVIP"]');
-                const districtNameField = document.querySelector('input[name="districtName"]');
-                const applicationField = document.querySelector('input[name="application"]');
-                const specificIssueField = document.querySelector('input[name="specificIssue"]');
-
-                // Get all checked user role checkboxes
-                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
-                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
-                const formattedUserRole = this.formatUserRoles(selectedRoles);
-
-                // Build the subject line
-                let subject = '';
-                if (isVIPField && isVIPField.value === 'Yes') {
-                    subject += 'VIP* ';
-                }
-                if (districtNameField && districtNameField.value) {
-                    subject += `${districtNameField.value} | `;
-                }
-                if (applicationField && applicationField.value) {
-                    subject += applicationField.value;
-                }
-                if (specificIssueField && specificIssueField.value) {
-                    subject += ` - ${specificIssueField.value}`;
-                }
-                if (formattedUserRole) {
-                    subject += ` for ${formattedUserRole}`;
-                }
-
-                // Update both the formatted and hidden subject fields
-                const formattedSubjectField = document.querySelector('input[name="formattedSubject"]');
-                const hiddenSubjectField = document.querySelector('input[name="subject"]');
-
-                if (formattedSubjectField) {
-                    formattedSubjectField.value = subject;
-                }
-                if (hiddenSubjectField) {
-                    hiddenSubjectField.value = subject;
-                }
-            }
-
-            updateSimLibraryViewSubject() {
-                const isVIP = document.getElementById('isVIP')?.value || 'No';
-                const vipPrefix = isVIP === "Yes" ? "VIP * " : "";
-                const districtValue = document.getElementById('districtName')?.value || '';
-                const applicationValue = document.getElementById('application')?.value || '';
-                const specificIssueValue = document.getElementById('specificIssue')?.value || '';
-
-                // Get all checked user role checkboxes
-                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
-                const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
-                const formattedUserRole = this.formatUserRoles(selectedRoles);
-
-                // Only add the "for" part if there are selected roles
-                const userRolePart = formattedUserRole ? ` for ${formattedUserRole}` : '';
-
-                const formattedSubject =
-                    `${vipPrefix}${districtValue} | ${applicationValue} - ${specificIssueValue}${userRolePart}`;
-
-                const formattedSubjectField = document.getElementById('formattedSubject');
-                if (formattedSubjectField) {
-                    formattedSubjectField.value = formattedSubject;
-
-                    // Also update the hidden subject field
-                    const subjectField = document.getElementById('subject');
-                    if (subjectField) {
-                        subjectField.value = formattedSubject;
-                    }
-                }
-            }
+            // Removed duplicate updateSimFsaSubject and updateSimLibraryViewSubject functions
+            // These are already defined in TrackerApp class with correct implementation
 
             // Add this helper method to format user roles
             formatUserRoles(selectedRoles) {
