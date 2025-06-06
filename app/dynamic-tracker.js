@@ -703,41 +703,22 @@ class TrackerApp {
             }
         }
 
-        // Third part: Resource
-        let resourcePart = '';
-        if (resource && resource.trim()) {
-            resourcePart = `Resource: ${resource.trim()}`;
-            if (formattedSubject) {
-                formattedSubject += ' | ' + resourcePart;
-            } else {
-                formattedSubject = resourcePart;
+        // Third part: Resource and specific issue with custom separator
+        let issuePart = '';
+        if (resource) {
+            issuePart = resource;
+            if (specificIssue) {
+                issuePart += ` • ${specificIssue}`;
             }
-            console.log("Added resource to subject:", resourcePart);
-        } else {
-            console.log("Resource not added to subject. Resource value:", resource);
+        } else if (specificIssue) {
+            issuePart = specificIssue;
         }
 
-        // Fourth part: Specific issue for user role (use • separator if resource exists)
-        let issuePart = '';
-        if (specificIssue.trim()) {
-            issuePart = specificIssue.trim();
-            if (formattedUserRole) {
-                issuePart += ` for ${formattedUserRole}`;
-            }
-
-            if (formattedSubject) {
-                // Use • separator if the previous part was a resource, otherwise use |
-                if (resourcePart) {
-                    formattedSubject += ' • ' + issuePart;
-                    console.log("Using • separator between resource and issue");
-                } else {
-                    formattedSubject += ' | ' + issuePart;
-                    console.log("Using | separator for issue (no resource present)");
-                }
-            } else {
-                formattedSubject = issuePart;
-            }
-            console.log("Added issue to subject:", issuePart);
+        if (formattedUserRole) {
+            issuePart += ` for ${formattedUserRole}`;
+        }
+        if (issuePart.trim()) {
+            formattedSubject += ' | ' + issuePart;
         }
 
         console.log("Updated SIM Assignment subject line:", formattedSubject);
@@ -875,15 +856,21 @@ class TrackerApp {
             console.log("Resource not added to SIM Assessment Reports subject. Resource value:", resource);
         }
 
-        // Fourth part: Specific issue for user role
+        // Fourth part: Resource and specific issue with custom separator
         let issuePart = '';
-        if (specificIssue.trim()) {
-            issuePart = specificIssue.trim();
-            if (userRoleText) {
-                issuePart += ` for ${userRoleText}`;
+        if (resource) {
+            issuePart = resource;
+            if (specificIssue) {
+                issuePart += ` • ${specificIssue}`;
             }
+        } else if (specificIssue) {
+            issuePart = specificIssue;
         }
-        if (issuePart) {
+
+        if (userRoleText) {
+            issuePart += ` for ${userRoleText}`;
+        }
+        if (issuePart.trim()) {
             subjectParts.push(issuePart);
         }
 
@@ -1034,7 +1021,7 @@ class TrackerApp {
         // Third part: Resource and specific issue with custom separator
         let issuePart = '';
         if (resource) {
-            issuePart = `Resource: ${resource}`;
+            issuePart = resource;
             if (specificIssue) {
                 issuePart += ` • ${specificIssue}`;
             }

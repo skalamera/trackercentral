@@ -1910,41 +1910,31 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(applicationPart);
                 }
 
-                // Third part: Resource
+                // Third part: Resource and specific issue combined with bullet separator
                 const resourceField = document.getElementById('resource');
                 const resource = resourceField ? resourceField.value || '' : '';
 
-                let resourcePart = '';
+                let resourceIssuePart = '';
                 if (resource && resource.trim()) {
-                    resourcePart = `Resource: ${resource.trim()}`;
-                    subjectParts.push(resourcePart);
-                }
-
-                // Fourth part: Specific issue for user role
-                let issuePart = specificIssue;
-                if (userRoleText) {
-                    issuePart += ` for ${userRoleText}`;
-                }
-                if (issuePart.trim()) {
-                    subjectParts.push(issuePart);
-                }
-
-                // Build subject with custom separators - use "•" between Resource and Specific Issue
-                let subject = '';
-                if (subjectParts.length > 0) {
-                    for (let i = 0; i < subjectParts.length; i++) {
-                        if (i === 0) {
-                            subject = subjectParts[i];
-                        } else {
-                            // Use "•" separator if this is the issue part and resource exists
-                            if (i === subjectParts.length - 1 && issuePart.trim() && resourcePart) {
-                                subject += ' • ' + subjectParts[i];
-                            } else {
-                                subject += ' | ' + subjectParts[i];
-                            }
-                        }
+                    resourceIssuePart = resource.trim();
+                    if (specificIssue) {
+                        resourceIssuePart += ` • ${specificIssue}`;
                     }
+                } else if (specificIssue) {
+                    resourceIssuePart = specificIssue;
                 }
+
+                // Add user role to the resource/issue part
+                if (userRoleText) {
+                    resourceIssuePart += ` for ${userRoleText}`;
+                }
+
+                if (resourceIssuePart.trim()) {
+                    subjectParts.push(resourceIssuePart);
+                }
+
+                // Join all parts with " | "
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -1957,6 +1947,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
             document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('resource')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -2355,7 +2346,7 @@ const TRACKER_CONFIGS = {
 
                 let resourcePart = '';
                 if (resource && resource.trim()) {
-                    resourcePart = `Resource: ${resource.trim()}`;
+                    resourcePart = resource.trim();
                     subjectParts.push(resourcePart);
                 }
 
@@ -2849,7 +2840,7 @@ const TRACKER_CONFIGS = {
 
                 let resourcePart = '';
                 if (resource && resource.trim()) {
-                    resourcePart = `Resource: ${resource.trim()}`;
+                    resourcePart = resource.trim();
                     subjectParts.push(resourcePart);
                 }
 
@@ -3232,7 +3223,7 @@ const TRACKER_CONFIGS = {
 
                 let resourcePart = '';
                 if (resource && resource.trim()) {
-                    resourcePart = `Resource: ${resource.trim()}`;
+                    resourcePart = resource.trim();
                     subjectParts.push(resourcePart);
                 }
 
@@ -3615,7 +3606,7 @@ const TRACKER_CONFIGS = {
                 // Third part: Resource and specific issue with custom separator
                 let issuePart = '';
                 if (resource) {
-                    issuePart = `Resource: ${resource}`;
+                    issuePart = resource;
                     if (specificIssue) {
                         issuePart += ` • ${specificIssue}`;
                     }
@@ -3977,7 +3968,7 @@ const TRACKER_CONFIGS = {
                 // Third part: Resource and specific issue with custom separator
                 let issuePart = '';
                 if (resource) {
-                    issuePart = `Resource: ${resource}`;
+                    issuePart = resource;
                     if (specificIssue) {
                         issuePart += ` • ${specificIssue}`;
                     }
@@ -4342,7 +4333,7 @@ const TRACKER_CONFIGS = {
                 // Third part: Resource and specific issue with custom separator
                 let issuePart = '';
                 if (resource) {
-                    issuePart = `Resource: ${resource}`;
+                    issuePart = resource;
                     if (specificIssue) {
                         issuePart += ` • ${specificIssue}`;
                     }

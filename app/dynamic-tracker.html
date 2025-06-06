@@ -2462,22 +2462,22 @@
                     subjectParts.push(appPart);
                 }
 
-                // Third part: Resource and specific issue with custom separator
-                let issuePart = '';
-                if (resource) {
-                    issuePart = `Resource: ${resource}`;
+                // Third part: Resource and specific issue combined with bullet separator
+                let resourceIssuePart = '';
+                if (resource && resource !== 'Placeholder') {
+                    resourceIssuePart = resource;
                     if (specificIssue) {
-                        issuePart += ` • ${specificIssue}`;
+                        resourceIssuePart += ` • ${specificIssue}`;
                     }
                 } else if (specificIssue) {
-                    issuePart = specificIssue;
+                    resourceIssuePart = specificIssue;
                 }
 
                 if (formattedUserRole) {
-                    issuePart += ` for ${formattedUserRole}`;
+                    resourceIssuePart += ` for ${formattedUserRole}`;
                 }
-                if (issuePart.trim()) {
-                    subjectParts.push(issuePart);
+                if (resourceIssuePart.trim()) {
+                    subjectParts.push(resourceIssuePart);
                 }
 
                 // Join all parts with " | "
@@ -2563,22 +2563,22 @@
                     subjectParts.push(appPart);
                 }
 
-                // Third part: Resource and specific issue with custom separator
-                let issuePart = '';
-                if (resource) {
-                    issuePart = `Resource: ${resource}`;
+                // Third part: Resource and specific issue combined with bullet separator
+                let resourceIssuePart = '';
+                if (resource && resource !== 'Placeholder') {
+                    resourceIssuePart = resource;
                     if (specificIssue) {
-                        issuePart += ` • ${specificIssue}`;
+                        resourceIssuePart += ` • ${specificIssue}`;
                     }
                 } else if (specificIssue) {
-                    issuePart = specificIssue;
+                    resourceIssuePart = specificIssue;
                 }
 
                 if (formattedUserRole) {
-                    issuePart += ` for ${formattedUserRole}`;
+                    resourceIssuePart += ` for ${formattedUserRole}`;
                 }
-                if (issuePart.trim()) {
-                    subjectParts.push(issuePart);
+                if (resourceIssuePart.trim()) {
+                    subjectParts.push(resourceIssuePart);
                 }
 
                 // Join all parts with " | "
@@ -2660,22 +2660,22 @@
                     subjectParts.push(appPart);
                 }
 
-                // Third part: Resource and specific issue with custom separator
-                let issuePart = '';
-                if (resource) {
-                    issuePart = `Resource: ${resource}`;
+                // Third part: Resource and specific issue combined with bullet separator
+                let resourceIssuePart = '';
+                if (resource && resource !== 'Placeholder') {
+                    resourceIssuePart = resource;
                     if (specificIssue) {
-                        issuePart += ` • ${specificIssue}`;
+                        resourceIssuePart += ` • ${specificIssue}`;
                     }
                 } else if (specificIssue) {
-                    issuePart = specificIssue;
+                    resourceIssuePart = specificIssue;
                 }
 
                 if (userRoleText) {
-                    issuePart += ` for ${userRoleText}`;
+                    resourceIssuePart += ` for ${userRoleText}`;
                 }
-                if (issuePart.trim()) {
-                    subjectParts.push(issuePart);
+                if (resourceIssuePart.trim()) {
+                    subjectParts.push(resourceIssuePart);
                 }
 
                 // Join all parts with " | "
