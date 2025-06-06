@@ -1718,6 +1718,47 @@
                     }
                 }
 
+                // Add dynamic subject line builder for SIM Dashboard template
+                if (this.trackerType === 'sim-dashboard') {
+                    const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'specificIssue'];
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+
+                    if (formattedSubjectField) {
+                        // Make it read-only
+                        formattedSubjectField.readOnly = true;
+
+                        // Update the formatted subject when any of the subject fields change
+                        subjectFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (field) {
+                                field.addEventListener('input', () => {
+                                    this.updateSimDashboardSubject();
+                                });
+                                field.addEventListener('change', () => {
+                                    this.updateSimDashboardSubject();
+                                });
+                            }
+                        });
+
+                        // Special handling for userRole checkboxes
+                        const userRoleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
+                        userRoleCheckboxes.forEach(checkbox => {
+                            checkbox.addEventListener('change', () => {
+                                console.log('User role checkbox changed, updating SIM Dashboard subject');
+                                this.updateSimDashboardSubject();
+                            });
+                        });
+
+                        // Initial update
+                        this.updateSimDashboardSubject();
+
+                        // Also do a delayed update to catch any dynamically loaded values
+                        setTimeout(() => {
+                            this.updateSimDashboardSubject();
+                        }, 500);
+                    }
+                }
+
                 // Add to the initEventListeners method
                 if (this.trackerType === 'sim-assignment' ||
                     this.trackerType === 'sim-assessment-reports' ||
@@ -1725,7 +1766,8 @@
                     this.trackerType === 'sim-library-view' ||
                     this.trackerType === 'sim-orr' ||
                     this.trackerType === 'sim-plan-teach' ||
-                    this.trackerType === 'sim-reading-log') {
+                    this.trackerType === 'sim-reading-log' ||
+                    this.trackerType === 'sim-dashboard') {
 
                     // Handle "All Users" checkbox
                     const allUsersCheckbox = document.querySelector('input[value="allUsers"]');
@@ -2641,6 +2683,98 @@
 
                 formattedSubjectField.value = subject;
                 console.log("Updated SIM Reading Log subject line:", subject);
+            }
+
+            updateSimDashboardSubject() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const districtStateField = document.getElementById('districtState');
+                const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
+                const resourceField = document.getElementById('resource');
+                const specificIssueField = document.getElementById('specificIssue');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
+                    !versionField || !resourceField || !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for SIM Dashboard subject formatting");
+                    return;
+                }
+
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
+                    }
+                });
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const districtState = districtStateField.value || '';
+                const application = applicationField.value || '';
+                const version = getVersionValue(versionField) || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
+                const resource = resourceField.value || '';
+                const specificIssue = specificIssueField.value || '';
+                const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
+
+                // Build the subject line dynamically, only including parts that have values
+                const subjectParts = [];
+
+                // First part: VIP status and district info
+                let districtPart = '';
+                if (isVip) {
+                    districtPart = `VIP* ${districtName} • ${districtState}`;
+                } else {
+                    districtPart = `${districtName} • ${districtState}`;
+                }
+                if (districtPart.trim() && districtPart !== ' • ') {
+                    subjectParts.push(districtPart);
+                }
+
+                // Second part: Application, version, and version state
+                let appPart = application;
+                if (version) {
+                    appPart += ` • ${version}`;
+                }
+                if (versionState) {
+                    appPart += ` ${versionState}`;
+                }
+                if (appPart.trim()) {
+                    subjectParts.push(appPart);
+                }
+
+                // Third part: Resource and specific issue combined with bullet separator
+                let resourceIssuePart = '';
+                if (resource && resource !== 'Placeholder') {
+                    resourceIssuePart = resource;
+                    if (specificIssue) {
+                        resourceIssuePart += ` • ${specificIssue}`;
+                    }
+                } else if (specificIssue) {
+                    resourceIssuePart = specificIssue;
+                }
+
+                // Add user role to the resource/issue part
+                if (userRoleText) {
+                    resourceIssuePart += ` for ${userRoleText}`;
+                }
+
+                if (resourceIssuePart.trim()) {
+                    subjectParts.push(resourceIssuePart);
+                }
+
+                // Join all parts with " | "
+                const subject = subjectParts.join(' | ');
+
+                formattedSubjectField.value = subject;
+                console.log("Updated SIM Dashboard subject line:", subject);
             }
 
             // Create a new non-async method for immediate subject updates
@@ -3822,6 +3956,8 @@
                     this.updateSimPlanTeachSubject();
                 } else if (this.trackerType === 'sim-reading-log') {
                     this.updateSimReadingLogSubject();
+                } else if (this.trackerType === 'sim-dashboard') {
+                    this.updateSimDashboardSubject();
                 }
 
                 console.log("Form filled with demo data");
@@ -7080,6 +7216,9 @@
                         break;
                     case 'sim-reading-log':
                         this.updateSimReadingLogSubject();
+                        break;
+                    case 'sim-dashboard':
+                        this.updateSimDashboardSubject();
                         break;
                 }
             }

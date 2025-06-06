@@ -4451,17 +4451,8 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["Placeholder", "Reports"],
+                        options: ["1", "2", "3"],
                         hint: "Select the resource type"
-                    },
-                    {
-                        id: "reportType",
-                        type: "select",
-                        label: "Report Type",
-                        required: false,
-                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
-                        hint: "Select the report type",
-                        showIf: "resource:Reports"
                     },
                     {
                         id: "userRole",
@@ -4644,11 +4635,12 @@ const TRACKER_CONFIGS = {
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
                 const versionStateField = document.getElementById('versionState');
+                const resourceField = document.getElementById('resource');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
                 if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
-                    !versionField || !specificIssueField || !formattedSubjectField) {
+                    !versionField || !resourceField || !specificIssueField || !formattedSubjectField) {
                     console.log("Missing required fields for subject formatting");
                     return;
                 }
@@ -4671,6 +4663,7 @@ const TRACKER_CONFIGS = {
                 const application = applicationField.value || '';
                 const version = getVersionValue(versionField) || '';
                 const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
+                const resource = resourceField.value || '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -4680,7 +4673,7 @@ const TRACKER_CONFIGS = {
                 // First part: VIP status and district info
                 let districtPart = '';
                 if (isVip) {
-                    districtPart = `VIP * ${districtName} • ${districtState}`;
+                    districtPart = `VIP* ${districtName} • ${districtState}`;
                 } else {
                     districtPart = `${districtName} • ${districtState}`;
                 }
@@ -4700,13 +4693,24 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(appPart);
                 }
 
-                // Third part: Specific issue and user role
-                let issuePart = specificIssue;
-                if (userRoleText) {
-                    issuePart += ` for ${userRoleText}`;
+                // Third part: Resource and specific issue combined with bullet separator
+                let resourceIssuePart = '';
+                if (resource && resource !== 'Placeholder') {
+                    resourceIssuePart = resource;
+                    if (specificIssue) {
+                        resourceIssuePart += ` • ${specificIssue}`;
+                    }
+                } else if (specificIssue) {
+                    resourceIssuePart = specificIssue;
                 }
-                if (issuePart.trim()) {
-                    subjectParts.push(issuePart);
+
+                // Add user role to the resource/issue part
+                if (userRoleText) {
+                    resourceIssuePart += ` for ${userRoleText}`;
+                }
+
+                if (resourceIssuePart.trim()) {
+                    subjectParts.push(resourceIssuePart);
                 }
 
                 // Join all parts with " | "
@@ -4723,6 +4727,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
             document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('resource')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -6012,6 +6017,9 @@ function setupResourceReportTypeCondition(retryCount = 0) {
             } else if (window.trackerApp.trackerType === 'sim-reading-log' && typeof window.trackerApp.updateSimReadingLogSubject === 'function') {
                 console.log("Triggering SIM Reading Log subject update after Resource change");
                 window.trackerApp.updateSimReadingLogSubject();
+            } else if (window.trackerApp.trackerType === 'sim-dashboard' && typeof window.trackerApp.updateSimDashboardSubject === 'function') {
+                console.log("Triggering SIM Dashboard subject update after Resource change");
+                window.trackerApp.updateSimDashboardSubject();
             }
             // Add other SIM tracker types here if they use Resource/Report Type fields
         }
