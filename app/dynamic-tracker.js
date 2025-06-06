@@ -981,6 +981,91 @@ class TrackerApp {
         }
     }
 
+    updateSimOrrSubject() {
+        const isVIPField = document.querySelector('select[name="isVIP"]');
+        const districtNameField = document.querySelector('input[name="districtName"]');
+        const districtStateField = document.querySelector('input[name="districtState"]');
+        const applicationField = document.querySelector('input[name="application"]');
+        const versionField = document.querySelector('select[name="version"]');
+        const versionStateField = document.querySelector('select[name="versionState"]');
+        const resourceField = document.querySelector('select[name="resource"]');
+        const specificIssueField = document.querySelector('input[name="specificIssue"]');
+
+        // Get all checked user role checkboxes
+        const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
+        const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
+        const formattedUserRole = this.formatUserRoles(selectedRoles);
+
+        const isVip = isVIPField?.value === 'Yes';
+        const districtName = districtNameField?.value || '';
+        const districtState = districtStateField?.value || '';
+        const application = applicationField?.value || '';
+        const version = versionField?.value || '';
+        const versionState = versionStateField?.value || '';
+        const resource = resourceField?.value || '';
+        const specificIssue = specificIssueField?.value || '';
+
+        // Build the subject line dynamically, only including parts that have values
+        const subjectParts = [];
+
+        // First part: VIP status and district info
+        let districtPart = '';
+        if (isVip) {
+            districtPart = `VIP * ${districtName} • ${districtState}`;
+        } else {
+            districtPart = `${districtName} • ${districtState}`;
+        }
+        if (districtPart.trim() && districtPart !== ' • ') {
+            subjectParts.push(districtPart);
+        }
+
+        // Second part: Application, version, and version state
+        let appPart = application;
+        if (version) {
+            appPart += ` • ${version}`;
+        }
+        if (versionState) {
+            appPart += ` ${versionState}`;
+        }
+        if (appPart.trim()) {
+            subjectParts.push(appPart);
+        }
+
+        // Third part: Resource and specific issue with custom separator
+        let issuePart = '';
+        if (resource) {
+            issuePart = `Resource: ${resource}`;
+            if (specificIssue) {
+                issuePart += ` • ${specificIssue}`;
+            }
+        } else if (specificIssue) {
+            issuePart = specificIssue;
+        }
+
+        if (formattedUserRole) {
+            issuePart += ` for ${formattedUserRole}`;
+        }
+        if (issuePart.trim()) {
+            subjectParts.push(issuePart);
+        }
+
+        // Join all parts with " | "
+        const subject = subjectParts.join(' | ');
+
+        // Update both the formatted and hidden subject fields
+        const formattedSubjectField = document.querySelector('input[name="formattedSubject"]');
+        const hiddenSubjectField = document.querySelector('input[name="subject"]');
+
+        if (formattedSubjectField) {
+            formattedSubjectField.value = subject;
+        }
+        if (hiddenSubjectField) {
+            hiddenSubjectField.value = subject;
+        }
+
+        console.log("Updated SIM ORR subject line:", subject);
+    }
+
     updateAchievementLevelsSubjectSync() {
         // ... existing code ...
     }
@@ -1199,6 +1284,47 @@ class TrackerApp {
 
                 // Initial update
                 this.updateSimFsaSubject();
+            }
+        }
+
+        // Add dynamic subject line builder for SIM ORR template
+        if (this.trackerType === 'sim-orr') {
+            const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'specificIssue'];
+            const formattedSubjectField = document.getElementById('formattedSubject');
+
+            if (formattedSubjectField) {
+                // Make it read-only
+                formattedSubjectField.readOnly = true;
+
+                // Update the formatted subject when any of the subject fields change
+                subjectFields.forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        field.addEventListener('input', () => {
+                            this.updateSimOrrSubject();
+                        });
+                        field.addEventListener('change', () => {
+                            this.updateSimOrrSubject();
+                        });
+                    }
+                });
+
+                // Special handling for userRole checkboxes
+                const userRoleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
+                userRoleCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        console.log('User role checkbox changed, updating SIM ORR subject');
+                        this.updateSimOrrSubject();
+                    });
+                });
+
+                // Initial update
+                this.updateSimOrrSubject();
+
+                // Also do a delayed update to catch any dynamically loaded values
+                setTimeout(() => {
+                    this.updateSimOrrSubject();
+                }, 500);
             }
         }
     }
