@@ -1641,7 +1641,23 @@ const TRACKER_CONFIGS = {
                         options: [],
                         hint: "Select the state or location variation for this version"
                     },
-
+                    {
+                        id: "resource",
+                        type: "select",
+                        label: "Resource",
+                        required: true,
+                        options: ["Placeholder", "Reports"],
+                        hint: "Select the resource type"
+                    },
+                    {
+                        id: "reportType",
+                        type: "select",
+                        label: "Report Type",
+                        required: false,
+                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
+                        hint: "Select the report type",
+                        showIf: "resource:Reports"
+                    },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -2002,6 +2018,23 @@ const TRACKER_CONFIGS = {
                         required: false,
                         options: [],
                         hint: "Select the state or location variation for this version"
+                    },
+                    {
+                        id: "resource",
+                        type: "select",
+                        label: "Resource",
+                        required: true,
+                        options: ["Placeholder", "Reports"],
+                        hint: "Select the resource type"
+                    },
+                    {
+                        id: "reportType",
+                        type: "select",
+                        label: "Report Type",
+                        required: false,
+                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
+                        hint: "Select the report type",
+                        showIf: "resource:Reports"
                     },
                     {
                         id: "userRole",
@@ -2514,6 +2547,23 @@ const TRACKER_CONFIGS = {
                         hint: "Select the state or location variation for this version"
                     },
                     {
+                        id: "resource",
+                        type: "select",
+                        label: "Resource",
+                        required: true,
+                        options: ["Placeholder", "Reports"],
+                        hint: "Select the resource type"
+                    },
+                    {
+                        id: "reportType",
+                        type: "select",
+                        label: "Report Type",
+                        required: false,
+                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
+                        hint: "Select the report type",
+                        showIf: "resource:Reports"
+                    },
+                    {
                         id: "userRole",
                         type: "checkboxes",
                         label: "User Role",
@@ -2875,6 +2925,23 @@ const TRACKER_CONFIGS = {
                         hint: "Select the state or location variation for this version"
                     },
                     {
+                        id: "resource",
+                        type: "select",
+                        label: "Resource",
+                        required: true,
+                        options: ["Placeholder", "Reports"],
+                        hint: "Select the resource type"
+                    },
+                    {
+                        id: "reportType",
+                        type: "select",
+                        label: "Report Type",
+                        required: false,
+                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
+                        hint: "Select the report type",
+                        showIf: "resource:Reports"
+                    },
+                    {
                         id: "userRole",
                         type: "checkboxes",
                         label: "User Role",
@@ -3225,6 +3292,23 @@ const TRACKER_CONFIGS = {
                         hint: "Select the state or location variation for this version"
                     },
                     {
+                        id: "resource",
+                        type: "select",
+                        label: "Resource",
+                        required: true,
+                        options: ["Placeholder", "Reports"],
+                        hint: "Select the resource type"
+                    },
+                    {
+                        id: "reportType",
+                        type: "select",
+                        label: "Report Type",
+                        required: false,
+                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
+                        hint: "Select the report type",
+                        showIf: "resource:Reports"
+                    },
+                    {
                         id: "userRole",
                         type: "checkboxes",
                         label: "User Role",
@@ -3514,8 +3598,6 @@ const TRACKER_CONFIGS = {
 
             // Schedule another update after a small delay to ensure fields are populated
             setTimeout(updateSubjectLine, 500);
-
-            setupHarFileCondition();
         }
     },
 
@@ -3576,6 +3658,23 @@ const TRACKER_CONFIGS = {
                         required: false,
                         options: [],
                         hint: "Select the state or location variation for this version"
+                    },
+                    {
+                        id: "resource",
+                        type: "select",
+                        label: "Resource",
+                        required: true,
+                        options: ["Placeholder", "Reports"],
+                        hint: "Select the resource type"
+                    },
+                    {
+                        id: "reportType",
+                        type: "select",
+                        label: "Report Type",
+                        required: false,
+                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
+                        hint: "Select the report type",
+                        showIf: "resource:Reports"
                     },
                     {
                         id: "userRole",
@@ -3918,6 +4017,23 @@ const TRACKER_CONFIGS = {
                         required: false,
                         options: [],
                         hint: "Select the state or location variation for this version"
+                    },
+                    {
+                        id: "resource",
+                        type: "select",
+                        label: "Resource",
+                        required: true,
+                        options: ["Placeholder", "Reports"],
+                        hint: "Select the resource type"
+                    },
+                    {
+                        id: "reportType",
+                        type: "select",
+                        label: "Report Type",
+                        required: false,
+                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
+                        hint: "Select the report type",
+                        showIf: "resource:Reports"
                     },
                     {
                         id: "userRole",
@@ -4263,6 +4379,23 @@ const TRACKER_CONFIGS = {
                         required: false,
                         options: [],
                         hint: "Select the state or location variation for this version"
+                    },
+                    {
+                        id: "resource",
+                        type: "select",
+                        label: "Resource",
+                        required: true,
+                        options: ["Placeholder", "Reports"],
+                        hint: "Select the resource type"
+                    },
+                    {
+                        id: "reportType",
+                        type: "select",
+                        label: "Report Type",
+                        required: false,
+                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
+                        hint: "Select the report type",
+                        showIf: "resource:Reports"
                     },
                     {
                         id: "userRole",
@@ -5671,6 +5804,7 @@ const originalSimAssignmentOnLoad = TRACKER_CONFIGS["sim-assignment"].onLoad;
 TRACKER_CONFIGS["sim-assignment"].onLoad = function () {
     originalSimAssignmentOnLoad.apply(this, arguments);
     setTimeout(setupClearFormattingButton, 500);
+    setTimeout(setupResourceReportTypeCondition, 100);
 };
 
 // Modify the sim-assessment-reports onLoad function
@@ -5678,6 +5812,7 @@ const originalSimAssessmentReportsOnLoad = TRACKER_CONFIGS["sim-assessment-repor
 TRACKER_CONFIGS["sim-assessment-reports"].onLoad = function () {
     originalSimAssessmentReportsOnLoad.apply(this, arguments);
     setTimeout(setupClearFormattingButton, 500);
+    setTimeout(setupResourceReportTypeCondition, 100);
 };
 
 // sim-fsa
@@ -5685,6 +5820,7 @@ const originalSimFsaOnLoad = TRACKER_CONFIGS["sim-fsa"].onLoad;
 TRACKER_CONFIGS["sim-fsa"].onLoad = function () {
     originalSimFsaOnLoad.apply(this, arguments);
     setTimeout(setupClearFormattingButton, 500);
+    setTimeout(setupResourceReportTypeCondition, 100);
 };
 
 // sim-library-view
@@ -5692,6 +5828,7 @@ const originalSimLibraryViewOnLoad = TRACKER_CONFIGS["sim-library-view"].onLoad;
 TRACKER_CONFIGS["sim-library-view"].onLoad = function () {
     originalSimLibraryViewOnLoad.apply(this, arguments);
     setTimeout(setupClearFormattingButton, 500);
+    setTimeout(setupResourceReportTypeCondition, 100);
 };
 
 // sim-orr
@@ -5699,6 +5836,7 @@ const originalSimOrrOnLoad = TRACKER_CONFIGS["sim-orr"].onLoad;
 TRACKER_CONFIGS["sim-orr"].onLoad = function () {
     originalSimOrrOnLoad.apply(this, arguments);
     setTimeout(setupClearFormattingButton, 500);
+    setTimeout(setupResourceReportTypeCondition, 100);
 };
 
 // sim-plan-teach
@@ -5706,6 +5844,7 @@ const originalSimPlanTeachOnLoad = TRACKER_CONFIGS["sim-plan-teach"].onLoad;
 TRACKER_CONFIGS["sim-plan-teach"].onLoad = function () {
     originalSimPlanTeachOnLoad.apply(this, arguments);
     setTimeout(setupClearFormattingButton, 500);
+    setTimeout(setupResourceReportTypeCondition, 100);
 };
 
 // sim-reading-log
@@ -5713,6 +5852,7 @@ const originalSimReadingLogOnLoad = TRACKER_CONFIGS["sim-reading-log"].onLoad;
 TRACKER_CONFIGS["sim-reading-log"].onLoad = function () {
     originalSimReadingLogOnLoad.apply(this, arguments);
     setTimeout(setupClearFormattingButton, 500);
+    setTimeout(setupResourceReportTypeCondition, 100);
 };
 
 // sim-dashboard
@@ -5720,6 +5860,7 @@ const originalSimDashboardOnLoad = TRACKER_CONFIGS["sim-dashboard"].onLoad;
 TRACKER_CONFIGS["sim-dashboard"].onLoad = function () {
     originalSimDashboardOnLoad.apply(this, arguments);
     setTimeout(setupClearFormattingButton, 500);
+    setTimeout(setupResourceReportTypeCondition, 100);
 };
 
 // Add function to sim-achievement-levels which doesn't have an onLoad function yet
@@ -5760,6 +5901,74 @@ TRACKER_CONFIGS["help-article"].onLoad = function () {
 // Export the tracker configurations for use in tests
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { TRACKER_CONFIGS };
+}
+
+// Helper function to setup conditional field display for Resource/Report Type
+function setupResourceReportTypeCondition(retryCount = 0) {
+    console.log(`Setting up Resource/Report Type conditional display (attempt ${retryCount + 1})`);
+
+    const resourceField = document.getElementById('resource');
+    const reportTypeField = document.getElementById('reportType');
+
+    // If fields aren't found, retry up to 5 times
+    if (!resourceField || !reportTypeField) {
+        if (retryCount < 5) {
+            console.log(`Fields not found yet, retrying in 500ms...`);
+            setTimeout(() => setupResourceReportTypeCondition(retryCount + 1), 500);
+            return;
+        } else {
+            console.error("Could not find Resource or Report Type fields after 5 attempts");
+            return;
+        }
+    }
+
+    // Find the form-group container for the Report Type field
+    const reportTypeContainer = reportTypeField.closest('.form-group');
+
+    if (!reportTypeContainer) {
+        console.error("Report Type container (.form-group) not found");
+        return;
+    }
+
+    // Function to toggle report type visibility
+    function toggleReportType() {
+        const selectedValue = resourceField.value;
+        console.log(`Resource field value changed to: ${selectedValue}`);
+
+        if (selectedValue === 'Reports') {
+            reportTypeContainer.style.display = '';
+            // Make the field required when shown
+            reportTypeField.required = true;
+        } else {
+            reportTypeContainer.style.display = 'none';
+            // Clear the value and make it not required when hidden
+            reportTypeField.value = '';
+            reportTypeField.required = false;
+        }
+    }
+
+    // Ensure the Resource field has a default value if none is set
+    if (!resourceField.value || resourceField.value === '') {
+        // Check if there's an empty option and if so, select "Placeholder" instead
+        const placeholderOption = Array.from(resourceField.options).find(opt => opt.value === 'Placeholder');
+        if (placeholderOption) {
+            resourceField.value = 'Placeholder';
+            console.log('Set Resource field default value to "Placeholder"');
+        }
+    }
+
+    // Force hide the Report Type field initially unless "Reports" is selected
+    if (resourceField.value !== 'Reports') {
+        reportTypeContainer.style.display = 'none';
+        reportTypeField.value = '';
+        reportTypeField.required = false;
+        console.log('Initially hiding Report Type field');
+    }
+
+    // Add event listener
+    resourceField.addEventListener('change', toggleReportType);
+
+    console.log("Resource/Report Type conditional display setup complete");
 }
 
 // Draft Management System
