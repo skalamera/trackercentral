@@ -1910,21 +1910,13 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(applicationPart);
                 }
 
-                // Third part: Resource (with Report Type if applicable)
+                // Third part: Resource
                 const resourceField = document.getElementById('resource');
-                const reportTypeField = document.getElementById('reportType');
                 const resource = resourceField ? resourceField.value || '' : '';
-                const reportType = reportTypeField ? reportTypeField.value || '' : '';
 
                 let resourcePart = '';
-                if (resource && resource.trim() && resource !== 'Placeholder') {
+                if (resource && resource.trim()) {
                     resourcePart = resource.trim();
-
-                    // Add Report Type if Resource is "Reports" and Report Type is selected
-                    if (resource === 'Reports' && reportType && reportType.trim()) {
-                        resourcePart += `: ${reportType.trim()}`;
-                    }
-
                     subjectParts.push(resourcePart);
                 }
 
@@ -1937,8 +1929,22 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(issuePart);
                 }
 
-                // Join all parts with " | " separator
-                const subject = subjectParts.join(' | ');
+                // Build subject with custom separators - use "•" between Resource and Specific Issue
+                let subject = '';
+                if (subjectParts.length > 0) {
+                    for (let i = 0; i < subjectParts.length; i++) {
+                        if (i === 0) {
+                            subject = subjectParts[i];
+                        } else {
+                            // Use "•" separator if this is the issue part and resource exists
+                            if (i === subjectParts.length - 1 && issuePart.trim() && resourcePart) {
+                                subject += ' • ' + subjectParts[i];
+                            } else {
+                                subject += ' | ' + subjectParts[i];
+                            }
+                        }
+                    }
+                }
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);

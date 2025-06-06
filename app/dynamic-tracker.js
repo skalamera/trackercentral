@@ -649,8 +649,8 @@ class TrackerApp {
 
         console.log("Subject update values - Resource:", resource);
 
-        // Build the subject line dynamically, only including parts that have values
-        const subjectParts = [];
+        // Build the subject line directly with explicit control over separators
+        let formattedSubject = '';
 
         // First part: VIP or Standard District Name • District State
         let districtPart = '';
@@ -674,7 +674,7 @@ class TrackerApp {
             }
         }
         if (districtPart) {
-            subjectParts.push(districtPart);
+            formattedSubject = districtPart;
         }
 
         // Second part: Application Name • Version State/National
@@ -696,33 +696,49 @@ class TrackerApp {
             }
         }
         if (applicationPart) {
-            subjectParts.push(applicationPart);
+            if (formattedSubject) {
+                formattedSubject += ' | ' + applicationPart;
+            } else {
+                formattedSubject = applicationPart;
+            }
         }
 
         // Third part: Resource
         let resourcePart = '';
         if (resource && resource.trim()) {
             resourcePart = resource.trim();
-            subjectParts.push(resourcePart);
+            if (formattedSubject) {
+                formattedSubject += ' | ' + resourcePart;
+            } else {
+                formattedSubject = resourcePart;
+            }
             console.log("Added resource to subject:", resourcePart);
         } else {
             console.log("Resource not added to subject. Resource value:", resource);
         }
 
-        // Fourth part: Specific issue for user role
+        // Fourth part: Specific issue for user role (use • separator if resource exists)
         let issuePart = '';
         if (specificIssue.trim()) {
             issuePart = specificIssue.trim();
             if (formattedUserRole) {
                 issuePart += ` for ${formattedUserRole}`;
             }
-        }
-        if (issuePart) {
-            subjectParts.push(issuePart);
-        }
 
-        // Join all parts with " | " separator
-        const formattedSubject = subjectParts.join(' | ');
+            if (formattedSubject) {
+                // Use • separator if the previous part was a resource, otherwise use |
+                if (resourcePart) {
+                    formattedSubject += ' • ' + issuePart;
+                    console.log("Using • separator between resource and issue");
+                } else {
+                    formattedSubject += ' | ' + issuePart;
+                    console.log("Using | separator for issue (no resource present)");
+                }
+            } else {
+                formattedSubject = issuePart;
+            }
+            console.log("Added issue to subject:", issuePart);
+        }
 
         console.log("Updated SIM Assignment subject line:", formattedSubject);
 
