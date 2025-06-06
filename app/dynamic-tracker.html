@@ -1636,12 +1636,54 @@
                     }
                 }
 
+                // Add dynamic subject line builder for SIM Plan & Teach template
+                if (this.trackerType === 'sim-plan-teach') {
+                    const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'specificIssue'];
+                    const formattedSubjectField = document.getElementById('formattedSubject');
+
+                    if (formattedSubjectField) {
+                        // Make it read-only
+                        formattedSubjectField.readOnly = true;
+
+                        // Update the formatted subject when any of the subject fields change
+                        subjectFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (field) {
+                                field.addEventListener('input', () => {
+                                    this.updateSimPlanTeachSubject();
+                                });
+                                field.addEventListener('change', () => {
+                                    this.updateSimPlanTeachSubject();
+                                });
+                            }
+                        });
+
+                        // Special handling for userRole checkboxes
+                        const userRoleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
+                        userRoleCheckboxes.forEach(checkbox => {
+                            checkbox.addEventListener('change', () => {
+                                console.log('User role checkbox changed, updating SIM Plan & Teach subject');
+                                this.updateSimPlanTeachSubject();
+                            });
+                        });
+
+                        // Initial update
+                        this.updateSimPlanTeachSubject();
+
+                        // Also do a delayed update to catch any dynamically loaded values
+                        setTimeout(() => {
+                            this.updateSimPlanTeachSubject();
+                        }, 500);
+                    }
+                }
+
                 // Add to the initEventListeners method
                 if (this.trackerType === 'sim-assignment' ||
                     this.trackerType === 'sim-assessment-reports' ||
                     this.trackerType === 'sim-fsa' ||
                     this.trackerType === 'sim-library-view' ||
-                    this.trackerType === 'sim-orr') {
+                    this.trackerType === 'sim-orr' ||
+                    this.trackerType === 'sim-plan-teach') {
 
                     // Handle "All Users" checkbox
                     const allUsersCheckbox = document.querySelector('input[value="allUsers"]');
@@ -2366,6 +2408,107 @@
                 }
 
                 console.log("Updated SIM ORR subject line:", subject);
+            }
+
+            updateSimPlanTeachSubject() {
+                const isVipField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const districtStateField = document.getElementById('districtState');
+                const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
+                const resourceField = document.getElementById('resource');
+                const specificIssueField = document.getElementById('specificIssue');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
+                    !versionField || !specificIssueField || !formattedSubjectField) {
+                    console.log("Missing required fields for SIM Plan & Teach subject formatting");
+                    return;
+                }
+
+                // Get user roles
+                const userRoles = [];
+                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
+                roleCheckboxes.forEach(cb => {
+                    if (cb.id === 'allUsers') {
+                        userRoles.push('All Users');
+                    } else {
+                        const label = cb.parentElement.textContent.trim();
+                        if (label) userRoles.push(label);
+                    }
+                });
+
+                const isVip = isVipField.value === 'Yes';
+                const districtName = districtNameField.value || '';
+                const districtState = districtStateField.value || '';
+                const application = applicationField.value || '';
+                const version = this.getVersionValue(versionField) || '';
+                const versionState = versionStateField ? this.getVersionStateValue(versionStateField) : '';
+                const resource = resourceField ? resourceField.value : '';
+                const specificIssue = specificIssueField.value || '';
+                const formattedUserRole = userRoles.length > 0 ? userRoles.join(' & ') : '';
+
+                // Build the subject line dynamically
+                const subjectParts = [];
+
+                // First part: VIP status and district information
+                let districtPart = '';
+                if (isVip) {
+                    districtPart = `VIP * ${districtName}`;
+                } else {
+                    districtPart = districtName;
+                }
+                if (districtState) {
+                    districtPart += ` • ${districtState}`;
+                }
+
+                if (districtPart.trim() && districtPart !== ' • ') {
+                    subjectParts.push(districtPart);
+                }
+
+                // Second part: Application, version, and version state
+                let appPart = application;
+                if (version) {
+                    appPart += ` • ${version}`;
+                }
+                if (versionState) {
+                    appPart += ` ${versionState}`;
+                }
+                if (appPart.trim()) {
+                    subjectParts.push(appPart);
+                }
+
+                // Third part: Resource and specific issue with custom separator
+                let issuePart = '';
+                if (resource) {
+                    issuePart = `Resource: ${resource}`;
+                    if (specificIssue) {
+                        issuePart += ` • ${specificIssue}`;
+                    }
+                } else if (specificIssue) {
+                    issuePart = specificIssue;
+                }
+
+                if (formattedUserRole) {
+                    issuePart += ` for ${formattedUserRole}`;
+                }
+                if (issuePart.trim()) {
+                    subjectParts.push(issuePart);
+                }
+
+                // Join all parts with " | "
+                const subject = subjectParts.join(' | ');
+
+                // Update both the formatted and hidden subject fields
+                formattedSubjectField.value = subject;
+
+                const hiddenSubjectField = document.getElementById('subject');
+                if (hiddenSubjectField) {
+                    hiddenSubjectField.value = subject;
+                }
+
+                console.log("Updated SIM Plan & Teach subject line:", subject);
             }
 
             // Create a new non-async method for immediate subject updates
@@ -3541,6 +3684,10 @@
                     this.updateSimAssignmentSubject();
                 } else if (this.trackerType === 'sim-assessment-reports') {
                     this.updateSIMAssessmentReportsSubject();
+                } else if (this.trackerType === 'sim-orr') {
+                    this.updateSimOrrSubject();
+                } else if (this.trackerType === 'sim-plan-teach') {
+                    this.updateSimPlanTeachSubject();
                 }
 
                 console.log("Form filled with demo data");
@@ -6790,6 +6937,12 @@
                         break;
                     case 'sim-library-view':
                         this.updateSimLibraryViewSubject();
+                        break;
+                    case 'sim-orr':
+                        this.updateSimOrrSubject();
+                        break;
+                    case 'sim-plan-teach':
+                        this.updateSimPlanTeachSubject();
                         break;
                 }
             }

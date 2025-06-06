@@ -3724,17 +3724,8 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["Placeholder", "Reports"],
+                        options: ["", "1", "2", "3"],
                         hint: "Select the resource type"
-                    },
-                    {
-                        id: "reportType",
-                        type: "select",
-                        label: "Report Type",
-                        required: false,
-                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
-                        hint: "Select the report type",
-                        showIf: "resource:Reports"
                     },
                     {
                         id: "userRole",
@@ -3925,6 +3916,7 @@ const TRACKER_CONFIGS = {
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
                 const versionStateField = document.getElementById('versionState');
+                const resourceField = document.getElementById('resource');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
@@ -3952,6 +3944,7 @@ const TRACKER_CONFIGS = {
                 const application = applicationField.value || '';
                 const version = getVersionValue(versionField) || '';
                 const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
+                const resource = resourceField ? resourceField.value : '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -3981,8 +3974,17 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(appPart);
                 }
 
-                // Third part: Specific issue and user role
-                let issuePart = specificIssue;
+                // Third part: Resource and specific issue with custom separator
+                let issuePart = '';
+                if (resource) {
+                    issuePart = `Resource: ${resource}`;
+                    if (specificIssue) {
+                        issuePart += ` • ${specificIssue}`;
+                    }
+                } else if (specificIssue) {
+                    issuePart = specificIssue;
+                }
+
                 if (userRoleText) {
                     issuePart += ` for ${userRoleText}`;
                 }
@@ -3994,7 +3996,7 @@ const TRACKER_CONFIGS = {
                 const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
-                console.log("Updated subject line:", subject);
+                console.log("Updated SIM Plan & Teach subject line:", subject);
             }
 
             // Set up event listeners
@@ -4004,6 +4006,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
             document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('resource')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -5999,6 +6002,9 @@ function setupResourceReportTypeCondition(retryCount = 0) {
             } else if (window.trackerApp.trackerType === 'sim-assessment-reports' && typeof window.trackerApp.updateSIMAssessmentReportsSubject === 'function') {
                 console.log("Triggering SIM Assessment Reports subject update after Resource/Report Type change");
                 window.trackerApp.updateSIMAssessmentReportsSubject();
+            } else if (window.trackerApp.trackerType === 'sim-plan-teach' && typeof window.trackerApp.updateSimPlanTeachSubject === 'function') {
+                console.log("Triggering SIM Plan & Teach subject update after Resource change");
+                window.trackerApp.updateSimPlanTeachSubject();
             }
             // Add other SIM tracker types here if they use Resource/Report Type fields
         }
