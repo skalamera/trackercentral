@@ -1102,7 +1102,7 @@ class TrackerApp {
 
         // Add dynamic subject line builder for SIM Assessment Reports template
         if (this.trackerType === 'sim-assessment-reports') {
-            const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'reportType', 'specificIssue'];
+            const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'specificIssue'];
             const formattedSubjectField = document.getElementById('formattedSubject');
 
             if (formattedSubjectField) {
@@ -1131,28 +1131,7 @@ class TrackerApp {
                     });
                 });
 
-                // Also handle the reportType field more robustly
-                // Set up a mutation observer to watch for when reportType becomes visible
-                const reportTypeField = document.getElementById('reportType');
-                if (reportTypeField) {
-                    const reportTypeContainer = reportTypeField.closest('.form-group');
-                    if (reportTypeContainer) {
-                        const observer = new MutationObserver((mutations) => {
-                            mutations.forEach((mutation) => {
-                                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                                    // Re-attach event listeners when visibility changes
-                                    if (reportTypeContainer.style.display !== 'none') {
-                                        reportTypeField.removeEventListener('change', () => this.updateSIMAssessmentReportsSubject());
-                                        reportTypeField.removeEventListener('input', () => this.updateSIMAssessmentReportsSubject());
-                                        reportTypeField.addEventListener('change', () => this.updateSIMAssessmentReportsSubject());
-                                        reportTypeField.addEventListener('input', () => this.updateSIMAssessmentReportsSubject());
-                                    }
-                                }
-                            });
-                        });
-                        observer.observe(reportTypeContainer, { attributes: true });
-                    }
-                }
+                // Note: reportType field removed since SIM Assessment Reports no longer has conditional Report Type field
 
                 // Initial update
                 this.updateSIMAssessmentReportsSubject();

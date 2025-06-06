@@ -2036,17 +2036,8 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["Placeholder", "Reports"],
+                        options: ["", "1", "2", "3"],
                         hint: "Select the resource type"
-                    },
-                    {
-                        id: "reportType",
-                        type: "select",
-                        label: "Report Type",
-                        required: false,
-                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
-                        hint: "Select the report type",
-                        showIf: "resource:Reports"
                     },
                     {
                         id: "userRole",
@@ -2358,7 +2349,17 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(applicationPart);
                 }
 
-                // Third part: Specific issue for user role
+                // Third part: Resource
+                const resourceField = document.getElementById('resource');
+                const resource = resourceField ? resourceField.value || '' : '';
+
+                let resourcePart = '';
+                if (resource && resource.trim()) {
+                    resourcePart = `Resource: ${resource.trim()}`;
+                    subjectParts.push(resourcePart);
+                }
+
+                // Fourth part: Specific issue for user role
                 let issuePart = specificIssue;
                 if (userRoleText) {
                     issuePart += ` for ${userRoleText}`;
@@ -2367,8 +2368,22 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(issuePart);
                 }
 
-                // Join all parts with " | " separator
-                const subject = subjectParts.join(' | ');
+                // Build subject with custom separators - use "•" between Resource and Specific Issue
+                let subject = '';
+                if (subjectParts.length > 0) {
+                    for (let i = 0; i < subjectParts.length; i++) {
+                        if (i === 0) {
+                            subject = subjectParts[i];
+                        } else {
+                            // Use "•" separator if this is the issue part and resource exists
+                            if (i === subjectParts.length - 1 && issuePart.trim() && resourcePart) {
+                                subject += ' • ' + subjectParts[i];
+                            } else {
+                                subject += ' | ' + subjectParts[i];
+                            }
+                        }
+                    }
+                }
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -2381,6 +2396,7 @@ const TRACKER_CONFIGS = {
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
             document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('resource')?.addEventListener('change', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
 
             // Add listeners to all checkboxes
@@ -5820,7 +5836,7 @@ const originalSimAssessmentReportsOnLoad = TRACKER_CONFIGS["sim-assessment-repor
 TRACKER_CONFIGS["sim-assessment-reports"].onLoad = function () {
     originalSimAssessmentReportsOnLoad.apply(this, arguments);
     setTimeout(setupClearFormattingButton, 500);
-    setTimeout(setupResourceReportTypeCondition, 100);
+    // Note: setupResourceReportTypeCondition removed since SIM Assessment Reports no longer has conditional Report Type field
 };
 
 // sim-fsa
