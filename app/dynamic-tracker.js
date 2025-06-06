@@ -1150,7 +1150,7 @@ class TrackerApp {
 
         // Add dynamic subject line builder for SIM Library View template
         if (this.trackerType === 'sim-library-view') {
-            const subjectFields = ['isVIP', 'districtName', 'application', 'version', 'specificIssue', 'userRole'];
+            const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'specificIssue', 'userRole'];
             const formattedSubjectField = document.getElementById('formattedSubject');
 
             if (formattedSubjectField) {
@@ -1177,7 +1177,7 @@ class TrackerApp {
 
         // Add this to the initEventListeners method, where the other template-specific subject handlers are
         if (this.trackerType === 'sim-fsa') {
-            const subjectFields = ['isVIP', 'districtName', 'application', 'version', 'specificIssue', 'userRole'];
+            const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'specificIssue', 'userRole'];
             const formattedSubjectField = document.getElementById('formattedSubject');
 
             if (formattedSubjectField) {
