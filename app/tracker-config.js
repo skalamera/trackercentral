@@ -1645,17 +1645,8 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["Placeholder", "Reports"],
+                        options: ["", "Resource 1", "Resource 2", "Resource 3"],
                         hint: "Select the resource type"
-                    },
-                    {
-                        id: "reportType",
-                        type: "select",
-                        label: "Report Type",
-                        required: false,
-                        options: ["Report Type 1", "Report Type 2", "Report Type 3"],
-                        hint: "Select the report type",
-                        showIf: "resource:Reports"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
@@ -5815,7 +5806,7 @@ const originalSimAssignmentOnLoad = TRACKER_CONFIGS["sim-assignment"].onLoad;
 TRACKER_CONFIGS["sim-assignment"].onLoad = function () {
     originalSimAssignmentOnLoad.apply(this, arguments);
     setTimeout(setupClearFormattingButton, 500);
-    setTimeout(setupResourceReportTypeCondition, 100);
+    // Note: setupResourceReportTypeCondition removed since SIM Assignment no longer has conditional Report Type field
 };
 
 // Modify the sim-assessment-reports onLoad function

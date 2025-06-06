@@ -603,7 +603,6 @@ class TrackerApp {
         const versionField = document.getElementById('version');
         const versionStateField = document.getElementById('versionState');
         const resourceField = document.getElementById('resource');
-        const reportTypeField = document.getElementById('reportType');
         const specificIssueField = document.getElementById('specificIssue');
         const formattedSubjectField = document.getElementById('formattedSubject');
 
@@ -614,7 +613,7 @@ class TrackerApp {
         }
 
         // Debug logging
-        console.log("Updating SIM Assignment subject. Resource:", resourceField.value, "Report Type:", reportTypeField?.value);
+        console.log("Updating SIM Assignment subject. Resource:", resourceField.value);
 
         // Get user roles
         const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
@@ -644,22 +643,11 @@ class TrackerApp {
             }
         }
 
-        // Get Resource and Report Type values with additional safeguards
+        // Get Resource value
         const resource = resourceField.value || '';
-        let reportType = '';
-
-        // Only get Report Type value if the field exists and is visible
-        if (reportTypeField) {
-            const reportTypeContainer = reportTypeField.closest('.form-group');
-            // Check if the Report Type field is visible
-            if (reportTypeContainer && reportTypeContainer.style.display !== 'none') {
-                reportType = reportTypeField.value || '';
-            }
-        }
-
         const specificIssue = specificIssueField.value || '';
 
-        console.log("Subject update values - Resource:", resource, "Report Type:", reportType, "Report Type visible:", reportTypeField?.closest('.form-group')?.style.display !== 'none');
+        console.log("Subject update values - Resource:", resource);
 
         // Build the subject line dynamically, only including parts that have values
         const subjectParts = [];
@@ -711,16 +699,10 @@ class TrackerApp {
             subjectParts.push(applicationPart);
         }
 
-        // Third part: Resource (with Report Type if applicable)
+        // Third part: Resource
         let resourcePart = '';
-        if (resource && resource.trim() && resource !== 'Placeholder') {
+        if (resource && resource.trim()) {
             resourcePart = resource.trim();
-
-            // Add Report Type if Resource is "Reports" and Report Type is selected
-            if (resource === 'Reports' && reportType && reportType.trim()) {
-                resourcePart += `: ${reportType.trim()}`;
-            }
-
             subjectParts.push(resourcePart);
             console.log("Added resource to subject:", resourcePart);
         } else {
@@ -1055,7 +1037,7 @@ class TrackerApp {
 
         // Add dynamic subject line builder for SIM Assignment template
         if (this.trackerType === 'sim-assignment') {
-            const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'reportType', 'specificIssue'];
+            const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'specificIssue'];
             const formattedSubjectField = document.getElementById('formattedSubject');
 
             if (formattedSubjectField) {
@@ -1080,42 +1062,17 @@ class TrackerApp {
                 userRoleCheckboxes.forEach(checkbox => {
                     checkbox.addEventListener('change', () => {
                         console.log('User role checkbox changed, updating subject');
-                        // Store current Resource and Report Type values before update
+                        // Store current Resource value before update
                         const currentResource = document.getElementById('resource')?.value;
-                        const currentReportType = document.getElementById('reportType')?.value;
-                        console.log('Before update - Resource:', currentResource, 'Report Type:', currentReportType);
+                        console.log('Before update - Resource:', currentResource);
 
                         this.updateSimAssignmentSubject();
 
                         // Verify values after update
                         const afterResource = document.getElementById('resource')?.value;
-                        const afterReportType = document.getElementById('reportType')?.value;
-                        console.log('After update - Resource:', afterResource, 'Report Type:', afterReportType);
+                        console.log('After update - Resource:', afterResource);
                     });
                 });
-
-                // Also handle the reportType field more robustly
-                // Set up a mutation observer to watch for when reportType becomes visible
-                const reportTypeField = document.getElementById('reportType');
-                if (reportTypeField) {
-                    const reportTypeContainer = reportTypeField.closest('.form-group');
-                    if (reportTypeContainer) {
-                        const observer = new MutationObserver((mutations) => {
-                            mutations.forEach((mutation) => {
-                                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                                    // Re-attach event listeners when visibility changes
-                                    if (reportTypeContainer.style.display !== 'none') {
-                                        reportTypeField.removeEventListener('change', () => this.updateSimAssignmentSubject());
-                                        reportTypeField.removeEventListener('input', () => this.updateSimAssignmentSubject());
-                                        reportTypeField.addEventListener('change', () => this.updateSimAssignmentSubject());
-                                        reportTypeField.addEventListener('input', () => this.updateSimAssignmentSubject());
-                                    }
-                                }
-                            });
-                        });
-                        observer.observe(reportTypeContainer, { attributes: true });
-                    }
-                }
 
                 // Initial update
                 this.updateSimAssignmentSubject();
