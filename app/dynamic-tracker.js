@@ -706,7 +706,7 @@ class TrackerApp {
         // Third part: Resource
         let resourcePart = '';
         if (resource && resource.trim()) {
-            resourcePart = resource.trim();
+            resourcePart = `Resource: ${resource.trim()}`;
             if (formattedSubject) {
                 formattedSubject += ' | ' + resourcePart;
             } else {

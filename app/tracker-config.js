@@ -1645,7 +1645,7 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["", "Resource 1", "Resource 2", "Resource 3"],
+                        options: ["", "1", "2", "3"],
                         hint: "Select the resource type"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
@@ -1916,7 +1916,7 @@ const TRACKER_CONFIGS = {
 
                 let resourcePart = '';
                 if (resource && resource.trim()) {
-                    resourcePart = resource.trim();
+                    resourcePart = `Resource: ${resource.trim()}`;
                     subjectParts.push(resourcePart);
                 }
 
