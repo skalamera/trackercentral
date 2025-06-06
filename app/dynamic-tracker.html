@@ -1836,7 +1836,8 @@
                 const applicationValue = document.getElementById('application')?.value || '';
                 const versionValue = document.getElementById('version')?.value || '';
                 const stateNationalValue = document.getElementById('versionState')?.value || '';
-                const resourcePathValue = document.getElementById('resourcePath')?.value || '';
+                const resourceValue = document.getElementById('resource')?.value || '';
+                const pathValue = document.getElementById('path')?.value || '';
                 const specificIssueValue = document.getElementById('specificIssue')?.value || '';
                 const isVIP = document.getElementById('isVIP')?.value || 'No';
 
@@ -1846,7 +1847,8 @@
                     application: applicationValue,
                     version: versionValue,
                     stateNational: stateNationalValue,
-                    resourcePath: resourcePathValue,
+                    resource: resourceValue,
+                    path: pathValue,
                     specificIssue: specificIssueValue,
                     isVIP: isVIP
                 });
@@ -1859,11 +1861,12 @@
                     subjectParts.push(xcodeValue.trim());
                 }
 
-                // Third part: VIP or Standard
-                const vipStatus = isVIP === 'Yes' ? 'VIP' : 'Standard';
-                subjectParts.push(vipStatus);
+                // Second part: VIP (only if VIP)
+                if (isVIP === 'Yes') {
+                    subjectParts.push('VIP');
+                }
 
-                // Second part: Application • Version State/National
+                // Third part: Application • Version State/National
                 let applicationPart = '';
                 if (applicationValue.trim()) {
                     applicationPart = applicationValue.trim();
@@ -1885,12 +1888,20 @@
                     subjectParts.push(applicationPart);
                 }
 
-                // Fourth part: Resource Path - Specific Issue
+                // Fourth part: Resource: Path - Specific Issue
                 let resourceIssuePart = '';
-                if (resourcePathValue.trim() && specificIssueValue.trim()) {
-                    resourceIssuePart = `${resourcePathValue.trim()} - ${specificIssueValue.trim()}`;
-                } else if (resourcePathValue.trim()) {
-                    resourceIssuePart = resourcePathValue.trim();
+                if (resourceValue.trim() && pathValue.trim() && specificIssueValue.trim()) {
+                    resourceIssuePart = `${resourceValue.trim()}: ${pathValue.trim()} - ${specificIssueValue.trim()}`;
+                } else if (resourceValue.trim() && pathValue.trim()) {
+                    resourceIssuePart = `${resourceValue.trim()}: ${pathValue.trim()}`;
+                } else if (resourceValue.trim() && specificIssueValue.trim()) {
+                    resourceIssuePart = `${resourceValue.trim()} - ${specificIssueValue.trim()}`;
+                } else if (pathValue.trim() && specificIssueValue.trim()) {
+                    resourceIssuePart = `${pathValue.trim()} - ${specificIssueValue.trim()}`;
+                } else if (resourceValue.trim()) {
+                    resourceIssuePart = resourceValue.trim();
+                } else if (pathValue.trim()) {
+                    resourceIssuePart = pathValue.trim();
                 } else if (specificIssueValue.trim()) {
                     resourceIssuePart = specificIssueValue.trim();
                 }

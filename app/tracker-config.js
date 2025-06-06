@@ -1089,7 +1089,22 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Subscription Version",
                         required: false,
-                        options: [],
+                        options: [
+                            "",
+                            "2.0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ],
                         hint: "Select the appropriate subscription version number from the dropdown. Ex: 2.5"
                     },
                     {
@@ -1097,12 +1112,134 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "State/National",
                         required: false,
-                        options: [],
+                        options: [
+                            "",
+                            "National",
+                            "Alabama",
+                            "Alaska",
+                            "Arizona",
+                            "Arkansas",
+                            "California",
+                            "Colorado",
+                            "Connecticut",
+                            "Delaware",
+                            "Florida",
+                            "Georgia",
+                            "Hawaii",
+                            "Idaho",
+                            "Illinois",
+                            "Indiana",
+                            "Iowa",
+                            "Kansas",
+                            "Kentucky",
+                            "Louisiana",
+                            "Maine",
+                            "Maryland",
+                            "Massachusetts",
+                            "Michigan",
+                            "Minnesota",
+                            "Mississippi",
+                            "Missouri",
+                            "Montana",
+                            "Nebraska",
+                            "Nevada",
+                            "New Hampshire",
+                            "New Jersey",
+                            "New Mexico",
+                            "New York",
+                            "North Carolina",
+                            "North Dakota",
+                            "Ohio",
+                            "Oklahoma",
+                            "Oregon",
+                            "Pennsylvania",
+                            "Rhode Island",
+                            "South Carolina",
+                            "South Dakota",
+                            "Tennessee",
+                            "Texas",
+                            "Utah",
+                            "Vermont",
+                            "Virginia",
+                            "Washington",
+                            "West Virginia",
+                            "Wisconsin",
+                            "Wyoming",
+                            "Other"
+                        ],
                         hint: "Select the corresponding state or national version from the dropdown. Ex: 2.5 Virginia. Note: Just because a district is in CA does not mean they will have the California version of the product. You must check their subscriptions to verify."
                     },
-                    { id: "resourcePath", type: "text", label: "Resource Path", required: true, placeholder: "e.g. TRS: G5>U1>W2>L12", hint: "Enter the path of clicks taken to recreate issue." },
+                    {
+                        id: "resource",
+                        type: "select",
+                        label: "Resource",
+                        required: true,
+                        options: [
+                            "",
+                            "TRS",
+                            "Additional Materials Bank",
+                            "Articulation Videos",
+                            "Biliteracy Resources",
+                            "Book Club Resources",
+                            "Build Reading Foundations",
+                            "Build-Reflect-Write eNotebooks",
+                            "Cards and Manipulatives",
+                            "Distance Learning",
+                            "eAssessments",
+                            "eBook",
+                            "ePocket Charts",
+                            "Extra Support",
+                            "Foundational Skills Lesson Presentations",
+                            "Handwriting",
+                            "High-Frequency Word Videos",
+                            "Home-Connections",
+                            "Home-School Connections: Unit Activities",
+                            "Home-School Connections: Unit Letters",
+                            "How-To Videos: Benchmark Universe",
+                            "Interactive Learning Games",
+                            "Interactive Read-Alouds",
+                            "Interactive Sound-Spelling Cards and Articulation Videos",
+                            "Intervention",
+                            "Knowledge-Building Topic Libraries",
+                            "Letter Songs",
+                            "Media Source Videos",
+                            "Mentor Read-Alouds",
+                            "Multilingual Glossary",
+                            "Multimedia",
+                            "My Language Buddy Student Book",
+                            "My Language Companion Student Book",
+                            "My Reading & Writing",
+                            "Novel Study",
+                            "Overview and Training",
+                            "Phonics Songs",
+                            "Phonological Awareness Resources",
+                            "Poetry Out Loud",
+                            "Poetry Posters",
+                            "Practice",
+                            "Practice Decodable Texts",
+                            "Pre-Decodable and Decodable Texts",
+                            "Program Review",
+                            "Program Support",
+                            "Reader's Theater",
+                            "Reproducible Assessments",
+                            "Responsive Teaching Toolkit",
+                            "Shared Reading",
+                            "Shared Reading and Poetry",
+                            "Sing, Swing, and Learn Unit Songs",
+                            "Small Group and Independent Resources",
+                            "Student Book Answer Keys",
+                            "Student How-To Videos",
+                            "Texts for Close Reading",
+                            "Unit Opener Videos",
+                            "Vocabulary Cards",
+                            "Whole Group Teacher Resources",
+                            "Word Study Resources"
+                        ],
+                        hint: "Select the resource type where the issue occurs"
+                    },
+                    { id: "path", type: "text", label: "Path", required: true, placeholder: "e.g. G5>U1>W2>L12", hint: "Enter the path of clicks taken to recreate issue." },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Title Missing", hint: "Enter a succinct description of issue. Note: if the user is requesting a rationale use: Rationale" },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will auto-populate based on your submissions. Be sure to review for accuracy. Naming convention: Xcode | VIP or Standard | Application Name • Variation National or State if SS | Resource name: Grade > Unit > Week > Day > Lesson - Short description of issue. EX: X11111 | VIP | Advance • 2.8 Florida | TRS: G5 > U1 > W2 > L12 - Title Missing", readOnly: true }
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will auto-populate based on your submissions. Be sure to review for accuracy. Naming convention: Xcode | VIP or Standard | Application Name • Variation National or State if SS | Resource: Path - Short description of issue. EX: X11111 | VIP | Advance • 2.8 Florida | TRS: G5 > U1 > W2 > L12 - Title Missing", readOnly: true }
                 ]
             },
             {
@@ -1288,17 +1425,18 @@ const TRACKER_CONFIGS = {
             // Also setup custom version state input when "Other" is selected
             setupCustomVersionStateInput();
 
-            // Function to sync XCODE and Resource Path fields
+            // Function to sync XCODE, Resource and Path fields
             function syncFields() {
                 // Get the source fields from Subject section
                 const xcodeField = document.getElementById('xcode');
-                const resourcePathField = document.getElementById('resourcePath');
+                const resourceField = document.getElementById('resource');
+                const pathField = document.getElementById('path');
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
-                // const versionStateField = document.getElementById('versionState'); // Currently unused
+                const versionStateField = document.getElementById('versionState');
 
                 // Get the target fields
-                const pathField = document.getElementById('pathField');
+                const pathFieldTarget = document.getElementById('pathField');
                 const xcodeInfoField = document.getElementById('xcodeInfo');
                 const productImpactedField = document.getElementById('productImpacted');
 
@@ -1308,18 +1446,37 @@ const TRACKER_CONFIGS = {
                     console.log("Synced XCODE to Xcode field in user info section");
                 }
 
-                // Sync applicationName and resourcePath to pathField if the fields exist
-                if (pathField) {
-                    // Only populate the Path field if both Application Name and Resource Path fields have values
-                    if (applicationField && applicationField.value && resourcePathField && resourcePathField.value) {
-                        const pathValue = applicationField.value + ' > ' + resourcePathField.value;
-                        pathField.value = pathValue;
-                        console.log("Synced Application Name + Resource Path to Path field: " + pathValue);
-                    } else {
-                        // Clear the path field if either input is missing
-                        pathField.value = '';
-                        console.log("Path field cleared - both Application Name and Resource Path are required");
+                // Sync applicationName, resource and path to pathField if the fields exist
+                if (pathFieldTarget) {
+                    // Build the path value from application, resource, and path
+                    let pathValue = '';
+
+                    if (applicationField && applicationField.value) {
+                        pathValue = applicationField.value;
                     }
+
+                    if (resourceField && resourceField.value && pathField && pathField.value) {
+                        if (pathValue) {
+                            pathValue += ` > ${resourceField.value}: ${pathField.value}`;
+                        } else {
+                            pathValue = `${resourceField.value}: ${pathField.value}`;
+                        }
+                    } else if (resourceField && resourceField.value) {
+                        if (pathValue) {
+                            pathValue += ` > ${resourceField.value}`;
+                        } else {
+                            pathValue = resourceField.value;
+                        }
+                    } else if (pathField && pathField.value) {
+                        if (pathValue) {
+                            pathValue += ` > ${pathField.value}`;
+                        } else {
+                            pathValue = pathField.value;
+                        }
+                    }
+
+                    pathFieldTarget.value = pathValue;
+                    console.log("Synced Application Name + Resource + Path to Path field: " + pathValue);
                 }
 
                 // Sync application and version to productImpacted if the fields exist
@@ -1351,10 +1508,16 @@ const TRACKER_CONFIGS = {
                 console.log("Added event listener to XCODE field");
             }
 
-            const resourcePathField = document.getElementById('resourcePath');
-            if (resourcePathField) {
-                resourcePathField.addEventListener('input', syncFields);
-                console.log("Added event listener to Resource Path field");
+            const resourceField = document.getElementById('resource');
+            if (resourceField) {
+                resourceField.addEventListener('change', syncFields);
+                console.log("Added event listener to Resource field");
+            }
+
+            const pathField = document.getElementById('path');
+            if (pathField) {
+                pathField.addEventListener('input', syncFields);
+                console.log("Added event listener to Path field");
             }
 
             const applicationField = document.getElementById('application');
@@ -1383,22 +1546,35 @@ const TRACKER_CONFIGS = {
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
                 const versionStateField = document.getElementById('versionState');
-                const resourcePathField = document.getElementById('resourcePath');
+                const resourceField = document.getElementById('resource');
+                const pathField = document.getElementById('path');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
                 const isVIPField = document.getElementById('isVIP');
 
-                if (!xcodeField || !applicationField || !resourcePathField || !specificIssueField || !formattedSubjectField) {
-                    console.log("Missing required fields for subject formatting");
+                if (!xcodeField || !applicationField || !resourceField || !pathField || !specificIssueField || !formattedSubjectField) {
+                    console.log("SEDCUST Missing required fields for subject formatting:", {
+                        xcodeField: !!xcodeField,
+                        applicationField: !!applicationField,
+                        resourceField: !!resourceField,
+                        pathField: !!pathField,
+                        specificIssueField: !!specificIssueField,
+                        formattedSubjectField: !!formattedSubjectField
+                    });
                     return;
                 }
 
                 const xcode = xcodeField.value || '';
                 const application = applicationField.value || '';
                 const version = versionField ? getVersionValue(versionField) : '';
-                const versionState = versionStateField ? versionStateField.value : '';
-                const resourcePath = resourcePathField.value || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
+                const resource = resourceField.value || '';
+                const path = pathField.value || '';
                 const specificIssue = specificIssueField.value || '';
+
+                console.log("SEDCUST Subject Line Debug:", {
+                    xcode, application, version, versionState, resource, path, specificIssue
+                });
 
                 // Check if this is a VIP customer
                 let isVIP = false;
@@ -1414,11 +1590,9 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(xcode.trim());
                 }
 
-                // Second part: VIP or Standard
+                // Second part: VIP (only if VIP)
                 if (isVIP) {
                     subjectParts.push('VIP');
-                } else {
-                    subjectParts.push('Standard');
                 }
 
                 // Third part: Application • Version State/National
@@ -1443,21 +1617,52 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(applicationPart);
                 }
 
-                // Fourth part: Resource Path - Specific Issue
+                // Fourth part: Resource: Path - Specific Issue
                 let resourceIssuePart = '';
-                if (resourcePath.trim() && specificIssue.trim()) {
-                    resourceIssuePart = `${resourcePath.trim()} - ${specificIssue.trim()}`;
-                } else if (resourcePath.trim()) {
-                    resourceIssuePart = resourcePath.trim();
+
+                console.log("SEDCUST Building resourceIssuePart:", {
+                    "resource.trim()": resource.trim(),
+                    "path.trim()": path.trim(),
+                    "specificIssue.trim()": specificIssue.trim(),
+                    "resource && path && specificIssue": !!(resource.trim() && path.trim() && specificIssue.trim())
+                });
+
+                if (resource.trim() && path.trim() && specificIssue.trim()) {
+                    resourceIssuePart = `${resource.trim()}: ${path.trim()} - ${specificIssue.trim()}`;
+                    console.log("SEDCUST: Using case 1 - all three fields");
+                } else if (resource.trim() && path.trim()) {
+                    resourceIssuePart = `${resource.trim()}: ${path.trim()}`;
+                    console.log("SEDCUST: Using case 2 - resource and path");
+                } else if (resource.trim() && specificIssue.trim()) {
+                    resourceIssuePart = `${resource.trim()} - ${specificIssue.trim()}`;
+                    console.log("SEDCUST: Using case 3 - resource and issue");
+                } else if (path.trim() && specificIssue.trim()) {
+                    resourceIssuePart = `${path.trim()} - ${specificIssue.trim()}`;
+                    console.log("SEDCUST: Using case 4 - path and issue");
+                } else if (resource.trim()) {
+                    resourceIssuePart = resource.trim();
+                    console.log("SEDCUST: Using case 5 - resource only");
+                } else if (path.trim()) {
+                    resourceIssuePart = path.trim();
+                    console.log("SEDCUST: Using case 6 - path only");
                 } else if (specificIssue.trim()) {
                     resourceIssuePart = specificIssue.trim();
+                    console.log("SEDCUST: Using case 7 - issue only");
+                } else {
+                    console.log("SEDCUST: No case matched - empty resourceIssuePart");
                 }
+
+                console.log("SEDCUST Resource Issue Part:", resourceIssuePart);
+
                 if (resourceIssuePart) {
                     subjectParts.push(resourceIssuePart);
                 }
 
                 // Join all parts with " | " separator
                 const subject = subjectParts.join(' | ');
+
+                console.log("SEDCUST Subject Parts Array:", subjectParts);
+                console.log("SEDCUST Final Subject:", subject);
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -1468,7 +1673,8 @@ const TRACKER_CONFIGS = {
             document.getElementById('application')?.addEventListener('input', updateSubjectLine);
             document.getElementById('version')?.addEventListener('change', updateSubjectLine);
             document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('resourcePath')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('resource')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('path')?.addEventListener('input', updateSubjectLine);
             document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
             document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
 
