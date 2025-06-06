@@ -1645,7 +1645,35 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["", "1", "2", "3"],
+                        options: [
+                            "",
+                            "Assignments",
+                            "Assignments: Grade View",
+                            "Assignments: Live View",
+                            "Bookshelves",
+                            "Dashboard",
+                            "ePocket Chart",
+                            "FSA: History",
+                            "FSA: Overview",
+                            "FSA: Recommended Placement",
+                            "High-Frequency Word Videos",
+                            "Interactive Learning Games",
+                            "Letter Songs",
+                            "ORR: Error Analysis",
+                            "ORR: Fluency Analysis",
+                            "ORR: Reading Behaviors",
+                            "ORR: Reading History",
+                            "ORR: Reading Level Progress",
+                            "Phonics Songs",
+                            "Plan & Teach",
+                            "Reading Log",
+                            "Reports: Single Test Analysis",
+                            "Reports: Standards Performance",
+                            "Reports: Summary",
+                            "Reports: Test Scores",
+                            "Reports: Test Status",
+                            "Resource Library: Filters"
+                        ],
                         hint: "Select the resource type"
                     },
                     { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
@@ -1988,8 +2016,6 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
-
                     { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
@@ -2022,12 +2048,41 @@ const TRACKER_CONFIGS = {
                         options: [],
                         hint: "Select the state or location variation for this version"
                     },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "resource",
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["", "1", "2", "3"],
+                        options: [
+                            "",
+                            "Assignments",
+                            "Assignments: Grade View",
+                            "Assignments: Live View",
+                            "Bookshelves",
+                            "Dashboard",
+                            "ePocket Chart",
+                            "FSA: History",
+                            "FSA: Overview",
+                            "FSA: Recommended Placement",
+                            "High-Frequency Word Videos",
+                            "Interactive Learning Games",
+                            "Letter Songs",
+                            "ORR: Error Analysis",
+                            "ORR: Fluency Analysis",
+                            "ORR: Reading Behaviors",
+                            "ORR: Reading History",
+                            "ORR: Reading Level Progress",
+                            "Phonics Songs",
+                            "Plan & Teach",
+                            "Reading Log",
+                            "Reports: Single Test Analysis",
+                            "Reports: Standards Performance",
+                            "Reports: Summary",
+                            "Reports: Test Scores",
+                            "Reports: Test Status",
+                            "Resource Library: Filters"
+                        ],
                         hint: "Select the resource type"
                     },
                     {
@@ -2528,8 +2583,6 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
-
                     { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
@@ -2562,12 +2615,41 @@ const TRACKER_CONFIGS = {
                         options: [],
                         hint: "Select the state or location variation for this version"
                     },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "resource",
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["", "1", "2", "3"],
+                        options: [
+                            "",
+                            "Assignments",
+                            "Assignments: Grade View",
+                            "Assignments: Live View",
+                            "Bookshelves",
+                            "Dashboard",
+                            "ePocket Chart",
+                            "FSA: History",
+                            "FSA: Overview",
+                            "FSA: Recommended Placement",
+                            "High-Frequency Word Videos",
+                            "Interactive Learning Games",
+                            "Letter Songs",
+                            "ORR: Error Analysis",
+                            "ORR: Fluency Analysis",
+                            "ORR: Reading Behaviors",
+                            "ORR: Reading History",
+                            "ORR: Reading Level Progress",
+                            "Phonics Songs",
+                            "Plan & Teach",
+                            "Reading Log",
+                            "Reports: Single Test Analysis",
+                            "Reports: Standards Performance",
+                            "Reports: Summary",
+                            "Reports: Test Scores",
+                            "Reports: Test Status",
+                            "Resource Library: Filters"
+                        ],
                         hint: "Select the resource type"
                     },
                     {
@@ -2922,8 +3004,6 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
-
                     { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
@@ -2956,12 +3036,41 @@ const TRACKER_CONFIGS = {
                         options: [],
                         hint: "Select the state or location variation for this version"
                     },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "resource",
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["", "1", "2", "3"],
+                        options: [
+                            "",
+                            "Assignments",
+                            "Assignments: Grade View",
+                            "Assignments: Live View",
+                            "Bookshelves",
+                            "Dashboard",
+                            "ePocket Chart",
+                            "FSA: History",
+                            "FSA: Overview",
+                            "FSA: Recommended Placement",
+                            "High-Frequency Word Videos",
+                            "Interactive Learning Games",
+                            "Letter Songs",
+                            "ORR: Error Analysis",
+                            "ORR: Fluency Analysis",
+                            "ORR: Reading Behaviors",
+                            "ORR: Reading History",
+                            "ORR: Reading Level Progress",
+                            "Phonics Songs",
+                            "Plan & Teach",
+                            "Reading Log",
+                            "Reports: Single Test Analysis",
+                            "Reports: Standards Performance",
+                            "Reports: Summary",
+                            "Reports: Test Scores",
+                            "Reports: Test Status",
+                            "Resource Library: Filters"
+                        ],
                         hint: "Select the resource type"
                     },
                     {
@@ -3305,7 +3414,6 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
 
                     { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
@@ -3339,12 +3447,42 @@ const TRACKER_CONFIGS = {
                         options: [],
                         hint: "Select the state or location variation for this version"
                     },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+
                     {
                         id: "resource",
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["", "1", "2", "3"],
+                        options: [
+                            "",
+                            "Assignments",
+                            "Assignments: Grade View",
+                            "Assignments: Live View",
+                            "Bookshelves",
+                            "Dashboard",
+                            "ePocket Chart",
+                            "FSA: History",
+                            "FSA: Overview",
+                            "FSA: Recommended Placement",
+                            "High-Frequency Word Videos",
+                            "Interactive Learning Games",
+                            "Letter Songs",
+                            "ORR: Error Analysis",
+                            "ORR: Fluency Analysis",
+                            "ORR: Reading Behaviors",
+                            "ORR: Reading History",
+                            "ORR: Reading Level Progress",
+                            "Phonics Songs",
+                            "Plan & Teach",
+                            "Reading Log",
+                            "Reports: Single Test Analysis",
+                            "Reports: Standards Performance",
+                            "Reports: Summary",
+                            "Reports: Test Scores",
+                            "Reports: Test Status",
+                            "Resource Library: Filters"
+                        ],
                         hint: "Select the resource type"
                     },
                     {
@@ -3676,7 +3814,6 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
 
                     { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
@@ -3710,12 +3847,42 @@ const TRACKER_CONFIGS = {
                         options: [],
                         hint: "Select the state or location variation for this version"
                     },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+
                     {
                         id: "resource",
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["", "1", "2", "3"],
+                        options: [
+                            "",
+                            "Assignments",
+                            "Assignments: Grade View",
+                            "Assignments: Live View",
+                            "Bookshelves",
+                            "Dashboard",
+                            "ePocket Chart",
+                            "FSA: History",
+                            "FSA: Overview",
+                            "FSA: Recommended Placement",
+                            "High-Frequency Word Videos",
+                            "Interactive Learning Games",
+                            "Letter Songs",
+                            "ORR: Error Analysis",
+                            "ORR: Fluency Analysis",
+                            "ORR: Reading Behaviors",
+                            "ORR: Reading History",
+                            "ORR: Reading Level Progress",
+                            "Phonics Songs",
+                            "Plan & Teach",
+                            "Reading Log",
+                            "Reports: Single Test Analysis",
+                            "Reports: Standards Performance",
+                            "Reports: Summary",
+                            "Reports: Test Scores",
+                            "Reports: Test Status",
+                            "Resource Library: Filters"
+                        ],
                         hint: "Select the resource type"
                     },
                     {
@@ -4038,7 +4205,6 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
 
                     { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
@@ -4072,12 +4238,42 @@ const TRACKER_CONFIGS = {
                         options: [],
                         hint: "Select the state or location variation for this version"
                     },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+
                     {
                         id: "resource",
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["", "1", "2", "3"],
+                        options: [
+                            "",
+                            "Assignments",
+                            "Assignments: Grade View",
+                            "Assignments: Live View",
+                            "Bookshelves",
+                            "Dashboard",
+                            "ePocket Chart",
+                            "FSA: History",
+                            "FSA: Overview",
+                            "FSA: Recommended Placement",
+                            "High-Frequency Word Videos",
+                            "Interactive Learning Games",
+                            "Letter Songs",
+                            "ORR: Error Analysis",
+                            "ORR: Fluency Analysis",
+                            "ORR: Reading Behaviors",
+                            "ORR: Reading History",
+                            "ORR: Reading Level Progress",
+                            "Phonics Songs",
+                            "Plan & Teach",
+                            "Reading Log",
+                            "Reports: Single Test Analysis",
+                            "Reports: Standards Performance",
+                            "Reports: Summary",
+                            "Reports: Test Scores",
+                            "Reports: Test Status",
+                            "Resource Library: Filters"
+                        ],
                         hint: "Select the resource type"
                     },
                     {
@@ -4403,7 +4599,6 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
 
                     { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
@@ -4437,12 +4632,42 @@ const TRACKER_CONFIGS = {
                         options: [],
                         hint: "Select the state or location variation for this version"
                     },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
+
                     {
                         id: "resource",
                         type: "select",
                         label: "Resource",
                         required: true,
-                        options: ["1", "2", "3"],
+                        options: [
+                            "",
+                            "Assignments",
+                            "Assignments: Grade View",
+                            "Assignments: Live View",
+                            "Bookshelves",
+                            "Dashboard",
+                            "ePocket Chart",
+                            "FSA: History",
+                            "FSA: Overview",
+                            "FSA: Recommended Placement",
+                            "High-Frequency Word Videos",
+                            "Interactive Learning Games",
+                            "Letter Songs",
+                            "ORR: Error Analysis",
+                            "ORR: Fluency Analysis",
+                            "ORR: Reading Behaviors",
+                            "ORR: Reading History",
+                            "ORR: Reading Level Progress",
+                            "Phonics Songs",
+                            "Plan & Teach",
+                            "Reading Log",
+                            "Reports: Single Test Analysis",
+                            "Reports: Standards Performance",
+                            "Reports: Summary",
+                            "Reports: Test Scores",
+                            "Reports: Test Status",
+                            "Resource Library: Filters"
+                        ],
                         hint: "Select the resource type"
                     },
                     {
