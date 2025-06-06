@@ -1359,7 +1359,7 @@
 
                 // Add dynamic subject line builder for SIM Assignment template
                 if (this.trackerType === 'sim-assignment') {
-                    const subjectFields = ['isVIP', 'districtName', 'application', 'specificIssue', 'userRole'];
+                    const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'reportType', 'specificIssue', 'userRole'];
                     const formattedSubjectField = document.getElementById('formattedSubject');
 
                     if (formattedSubjectField) {
@@ -1820,11 +1820,13 @@
                 const applicationField = document.getElementById('application');
                 const versionField = document.getElementById('version');
                 const versionStateField = document.getElementById('versionState');
+                const resourceField = document.getElementById('resource');
+                const reportTypeField = document.getElementById('reportType');
                 const specificIssueField = document.getElementById('specificIssue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
                 if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
-                    !versionField || !specificIssueField || !formattedSubjectField) {
+                    !specificIssueField || !formattedSubjectField || !resourceField) {
                     console.log("Missing required fields for subject formatting");
                     return;
                 }
@@ -1847,6 +1849,8 @@
                 const application = applicationField.value || '';
                 const version = this.getVersionValue(versionField) || '';
                 const versionState = versionStateField ? this.getVersionStateValue(versionStateField) : '';
+                const resource = resourceField.value || '';
+                const reportType = reportTypeField?.value || '';
                 const specificIssue = specificIssueField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -1900,7 +1904,21 @@
                     subjectParts.push(applicationPart);
                 }
 
-                // Third part: Specific issue for user role
+                // Third part: Resource (with Report Type if applicable)
+                let resourcePart = '';
+                if (resource.trim()) {
+                    resourcePart = resource.trim();
+
+                    // Add Report Type if Resource is "Reports" and Report Type is selected
+                    if (resource === 'Reports' && reportType.trim()) {
+                        resourcePart += `: ${reportType.trim()}`;
+                    }
+                }
+                if (resourcePart) {
+                    subjectParts.push(resourcePart);
+                }
+
+                // Fourth part: Specific issue for user role
                 let issuePart = '';
                 if (specificIssue.trim()) {
                     issuePart = specificIssue.trim();
@@ -1916,7 +1934,7 @@
                 const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
-                console.log("Updated subject line:", subject);
+                console.log("Updated SIM Assignment subject line:", subject);
 
                 // Also update the hidden subject field
                 const subjectField = document.getElementById('subject');

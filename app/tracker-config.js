@@ -1608,7 +1608,6 @@ const TRACKER_CONFIGS = {
                         id: "districtState", type: "text", label: "District State", required: true,
                         hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
                     {
                         id: "version",
@@ -1658,6 +1657,7 @@ const TRACKER_CONFIGS = {
                         hint: "Select the report type",
                         showIf: "resource:Reports"
                     },
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -1919,15 +1919,30 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(applicationPart);
                 }
 
-                // Third part: Specific issue for user role
-                let issuePart = '';
-                if (specificIssue.trim()) {
-                    issuePart = specificIssue.trim();
-                    if (userRoleText) {
-                        issuePart += ` for ${userRoleText}`;
+                // Third part: Resource (with Report Type if applicable)
+                const resourceField = document.getElementById('resource');
+                const reportTypeField = document.getElementById('reportType');
+                const resource = resourceField ? resourceField.value || '' : '';
+                const reportType = reportTypeField ? reportTypeField.value || '' : '';
+
+                let resourcePart = '';
+                if (resource && resource.trim() && resource !== 'Placeholder') {
+                    resourcePart = resource.trim();
+
+                    // Add Report Type if Resource is "Reports" and Report Type is selected
+                    if (resource === 'Reports' && reportType && reportType.trim()) {
+                        resourcePart += `: ${reportType.trim()}`;
                     }
+
+                    subjectParts.push(resourcePart);
                 }
-                if (issuePart) {
+
+                // Fourth part: Specific issue for user role
+                let issuePart = specificIssue;
+                if (userRoleText) {
+                    issuePart += ` for ${userRoleText}`;
+                }
+                if (issuePart.trim()) {
                     subjectParts.push(issuePart);
                 }
 
@@ -2347,14 +2362,11 @@ const TRACKER_CONFIGS = {
                 }
 
                 // Third part: Specific issue for user role
-                let issuePart = '';
-                if (specificIssue.trim()) {
-                    issuePart = specificIssue.trim();
-                    if (userRoleText) {
-                        issuePart += ` for ${userRoleText}`;
-                    }
+                let issuePart = specificIssue;
+                if (userRoleText) {
+                    issuePart += ` for ${userRoleText}`;
                 }
-                if (issuePart) {
+                if (issuePart.trim()) {
                     subjectParts.push(issuePart);
                 }
 
@@ -4291,7 +4303,6 @@ const TRACKER_CONFIGS = {
                 if (issuePart.trim()) {
                     subjectParts.push(issuePart);
                 }
-
                 // Join all parts with " | "
                 const subject = subjectParts.join(' | ');
 
@@ -5930,6 +5941,21 @@ function setupResourceReportTypeCondition(retryCount = 0) {
         return;
     }
 
+    // Function to trigger subject line update
+    function triggerSubjectUpdate() {
+        // Check if we have the tracker app instance with the appropriate update method
+        if (window.trackerApp) {
+            if (window.trackerApp.trackerType === 'sim-assignment' && typeof window.trackerApp.updateSimAssignmentSubject === 'function') {
+                console.log("Triggering SIM Assignment subject update after Resource/Report Type change");
+                window.trackerApp.updateSimAssignmentSubject();
+            } else if (window.trackerApp.trackerType === 'sim-assessment-reports' && typeof window.trackerApp.updateSIMAssessmentReportsSubject === 'function') {
+                console.log("Triggering SIM Assessment Reports subject update after Resource/Report Type change");
+                window.trackerApp.updateSIMAssessmentReportsSubject();
+            }
+            // Add other SIM tracker types here if they use Resource/Report Type fields
+        }
+    }
+
     // Function to toggle report type visibility
     function toggleReportType() {
         const selectedValue = resourceField.value;
@@ -5939,12 +5965,21 @@ function setupResourceReportTypeCondition(retryCount = 0) {
             reportTypeContainer.style.display = '';
             // Make the field required when shown
             reportTypeField.required = true;
+
+            // Re-attach event listeners to Report Type field when shown
+            reportTypeField.removeEventListener('change', triggerSubjectUpdate);
+            reportTypeField.removeEventListener('input', triggerSubjectUpdate);
+            reportTypeField.addEventListener('change', triggerSubjectUpdate);
+            reportTypeField.addEventListener('input', triggerSubjectUpdate);
         } else {
             reportTypeContainer.style.display = 'none';
             // Clear the value and make it not required when hidden
             reportTypeField.value = '';
             reportTypeField.required = false;
         }
+
+        // Always trigger subject update when Resource changes
+        triggerSubjectUpdate();
     }
 
     // Ensure the Resource field has a default value if none is set
@@ -5963,12 +5998,28 @@ function setupResourceReportTypeCondition(retryCount = 0) {
         reportTypeField.value = '';
         reportTypeField.required = false;
         console.log('Initially hiding Report Type field');
+    } else {
+        // If Reports is initially selected, attach event listeners to Report Type
+        reportTypeField.removeEventListener('change', triggerSubjectUpdate);
+        reportTypeField.removeEventListener('input', triggerSubjectUpdate);
+        reportTypeField.addEventListener('change', triggerSubjectUpdate);
+        reportTypeField.addEventListener('input', triggerSubjectUpdate);
     }
 
-    // Add event listener
+    // Add event listener to Resource field
+    resourceField.removeEventListener('change', toggleReportType);
     resourceField.addEventListener('change', toggleReportType);
 
+    // Also ensure the Resource field triggers subject updates
+    resourceField.removeEventListener('change', triggerSubjectUpdate);
+    resourceField.removeEventListener('input', triggerSubjectUpdate);
+    resourceField.addEventListener('change', triggerSubjectUpdate);
+    resourceField.addEventListener('input', triggerSubjectUpdate);
+
     console.log("Resource/Report Type conditional display setup complete");
+
+    // Trigger initial subject update in case fields are pre-populated
+    setTimeout(triggerSubjectUpdate, 100);
 }
 
 // Draft Management System
@@ -6230,3 +6281,4 @@ window.loadDraftToForm = function (draftId) {
         }
     }
 };
+

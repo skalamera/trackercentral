@@ -596,33 +596,160 @@ class TrackerApp {
     }
 
     updateSimAssignmentSubject() {
-        const isVIP = document.getElementById('isVIP')?.value || 'No';
-        const vipPrefix = isVIP === "Yes" ? "VIP * " : "";
-        const districtValue = document.getElementById('districtName')?.value || '';
-        const applicationValue = document.getElementById('application')?.value || '';
-        const versionValue = document.getElementById('version')?.value || '';
-        const specificIssueValue = document.getElementById('specificIssue')?.value || '';
+        const isVipField = document.getElementById('isVIP');
+        const districtNameField = document.getElementById('districtName');
+        const districtStateField = document.getElementById('districtState');
+        const applicationField = document.getElementById('application');
+        const versionField = document.getElementById('version');
+        const versionStateField = document.getElementById('versionState');
+        const resourceField = document.getElementById('resource');
+        const reportTypeField = document.getElementById('reportType');
+        const specificIssueField = document.getElementById('specificIssue');
+        const formattedSubjectField = document.getElementById('formattedSubject');
 
-        // Include version if selected (not empty)
-        const versionPart = versionValue ? ` v${versionValue}` : '';
+        if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
+            !specificIssueField || !formattedSubjectField || !resourceField) {
+            console.log("Missing required fields for subject formatting");
+            return;
+        }
 
-        // Get all checked user role checkboxes
+        // Debug logging
+        console.log("Updating SIM Assignment subject. Resource:", resourceField.value, "Report Type:", reportTypeField?.value);
+
+        // Get user roles
         const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]:checked');
         const selectedRoles = Array.from(userRoleCheckboxes).map(cb => cb.value);
         const formattedUserRole = this.formatUserRoles(selectedRoles);
 
-        const formattedSubject =
-            `${vipPrefix}${districtValue} | ${applicationValue}${versionPart} - ${specificIssueValue} for ${formattedUserRole}`;
+        const isVip = isVipField.value === 'Yes';
+        const districtName = districtNameField.value || '';
+        const districtState = districtStateField.value || '';
+        const application = applicationField.value || '';
 
-        const formattedSubjectField = document.getElementById('formattedSubject');
-        if (formattedSubjectField) {
-            formattedSubjectField.value = formattedSubject;
+        // Get version value (handle custom versions)
+        let version = '';
+        if (versionField.value === "Other" && versionField.hasAttribute('data-custom-value')) {
+            version = versionField.getAttribute('data-custom-value');
+        } else {
+            version = versionField.value || '';
+        }
 
-            // Also update the hidden subject field
-            const subjectField = document.getElementById('subject');
-            if (subjectField) {
-                subjectField.value = formattedSubject;
+        // Get version state value (handle custom version states)
+        let versionState = '';
+        if (versionStateField) {
+            if (versionStateField.value === "Other" && versionStateField.hasAttribute('data-custom-value')) {
+                versionState = versionStateField.getAttribute('data-custom-value');
+            } else {
+                versionState = versionStateField.value || '';
             }
+        }
+
+        // Get Resource and Report Type values with additional safeguards
+        const resource = resourceField.value || '';
+        let reportType = '';
+
+        // Only get Report Type value if the field exists and is visible
+        if (reportTypeField) {
+            const reportTypeContainer = reportTypeField.closest('.form-group');
+            // Check if the Report Type field is visible
+            if (reportTypeContainer && reportTypeContainer.style.display !== 'none') {
+                reportType = reportTypeField.value || '';
+            }
+        }
+
+        const specificIssue = specificIssueField.value || '';
+
+        console.log("Subject update values - Resource:", resource, "Report Type:", reportType, "Report Type visible:", reportTypeField?.closest('.form-group')?.style.display !== 'none');
+
+        // Build the subject line dynamically, only including parts that have values
+        const subjectParts = [];
+
+        // First part: VIP or Standard District Name • District State
+        let districtPart = '';
+        if (districtName.trim() && districtState.trim()) {
+            if (isVip) {
+                districtPart = `VIP * ${districtName.trim()} • ${districtState.trim()}`;
+            } else {
+                districtPart = `${districtName.trim()} • ${districtState.trim()}`;
+            }
+        } else if (districtName.trim()) {
+            if (isVip) {
+                districtPart = `VIP * ${districtName.trim()}`;
+            } else {
+                districtPart = districtName.trim();
+            }
+        } else if (districtState.trim()) {
+            if (isVip) {
+                districtPart = `VIP * ${districtState.trim()}`;
+            } else {
+                districtPart = districtState.trim();
+            }
+        }
+        if (districtPart) {
+            subjectParts.push(districtPart);
+        }
+
+        // Second part: Application Name • Version State/National
+        let applicationPart = '';
+        if (application.trim()) {
+            applicationPart = application.trim();
+
+            // Add version and state/national if they exist
+            const versionParts = [];
+            if (version.trim()) {
+                versionParts.push(version.trim());
+            }
+            if (versionState.trim()) {
+                versionParts.push(versionState.trim());
+            }
+
+            if (versionParts.length > 0) {
+                applicationPart += ` • ${versionParts.join(' ')}`;
+            }
+        }
+        if (applicationPart) {
+            subjectParts.push(applicationPart);
+        }
+
+        // Third part: Resource (with Report Type if applicable)
+        let resourcePart = '';
+        if (resource && resource.trim() && resource !== 'Placeholder') {
+            resourcePart = resource.trim();
+
+            // Add Report Type if Resource is "Reports" and Report Type is selected
+            if (resource === 'Reports' && reportType && reportType.trim()) {
+                resourcePart += `: ${reportType.trim()}`;
+            }
+
+            subjectParts.push(resourcePart);
+            console.log("Added resource to subject:", resourcePart);
+        } else {
+            console.log("Resource not added to subject. Resource value:", resource);
+        }
+
+        // Fourth part: Specific issue for user role
+        let issuePart = '';
+        if (specificIssue.trim()) {
+            issuePart = specificIssue.trim();
+            if (formattedUserRole) {
+                issuePart += ` for ${formattedUserRole}`;
+            }
+        }
+        if (issuePart) {
+            subjectParts.push(issuePart);
+        }
+
+        // Join all parts with " | " separator
+        const formattedSubject = subjectParts.join(' | ');
+
+        console.log("Updated SIM Assignment subject line:", formattedSubject);
+
+        formattedSubjectField.value = formattedSubject;
+
+        // Also update the hidden subject field
+        const subjectField = document.getElementById('subject');
+        if (subjectField) {
+            subjectField.value = formattedSubject;
         }
     }
 
@@ -633,6 +760,8 @@ class TrackerApp {
         const applicationField = document.getElementById('application');
         const versionField = document.getElementById('version');
         const versionStateField = document.getElementById('versionState');
+        const resourceField = document.getElementById('resource');
+        const reportTypeField = document.getElementById('reportType');
         const specificIssueField = document.getElementById('specificIssue');
         const formattedSubjectField = document.getElementById('formattedSubject');
 
@@ -677,6 +806,8 @@ class TrackerApp {
             }
         }
 
+        const resource = resourceField ? resourceField.value || '' : '';
+        const reportType = reportTypeField ? reportTypeField.value || '' : '';
         const specificIssue = specificIssueField.value || '';
         const userRoleText = userRoles.length > 0 ? userRoles.join(' & ') : '';
 
@@ -730,7 +861,23 @@ class TrackerApp {
             subjectParts.push(applicationPart);
         }
 
-        // Third part: Specific issue for user role
+        // Third part: Resource (with Report Type if applicable)
+        let resourcePart = '';
+        if (resource && resource.trim() && resource !== 'Placeholder') {
+            resourcePart = resource.trim();
+
+            // Add Report Type if Resource is "Reports" and Report Type is selected
+            if (resource === 'Reports' && reportType && reportType.trim()) {
+                resourcePart += `: ${reportType.trim()}`;
+            }
+
+            subjectParts.push(resourcePart);
+            console.log("Added resource to SIM Assessment Reports subject:", resourcePart);
+        } else {
+            console.log("Resource not added to SIM Assessment Reports subject. Resource value:", resource);
+        }
+
+        // Fourth part: Specific issue for user role
         let issuePart = '';
         if (specificIssue.trim()) {
             issuePart = specificIssue.trim();
@@ -908,7 +1055,7 @@ class TrackerApp {
 
         // Add dynamic subject line builder for SIM Assignment template
         if (this.trackerType === 'sim-assignment') {
-            const subjectFields = ['isVIP', 'districtName', 'application', 'version', 'specificIssue', 'userRole'];
+            const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'reportType', 'specificIssue'];
             const formattedSubjectField = document.getElementById('formattedSubject');
 
             if (formattedSubjectField) {
@@ -928,14 +1075,61 @@ class TrackerApp {
                     }
                 });
 
+                // Special handling for userRole checkboxes
+                const userRoleCheckboxes = document.querySelectorAll('input[name="userRole"]');
+                userRoleCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        console.log('User role checkbox changed, updating subject');
+                        // Store current Resource and Report Type values before update
+                        const currentResource = document.getElementById('resource')?.value;
+                        const currentReportType = document.getElementById('reportType')?.value;
+                        console.log('Before update - Resource:', currentResource, 'Report Type:', currentReportType);
+
+                        this.updateSimAssignmentSubject();
+
+                        // Verify values after update
+                        const afterResource = document.getElementById('resource')?.value;
+                        const afterReportType = document.getElementById('reportType')?.value;
+                        console.log('After update - Resource:', afterResource, 'Report Type:', afterReportType);
+                    });
+                });
+
+                // Also handle the reportType field more robustly
+                // Set up a mutation observer to watch for when reportType becomes visible
+                const reportTypeField = document.getElementById('reportType');
+                if (reportTypeField) {
+                    const reportTypeContainer = reportTypeField.closest('.form-group');
+                    if (reportTypeContainer) {
+                        const observer = new MutationObserver((mutations) => {
+                            mutations.forEach((mutation) => {
+                                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                                    // Re-attach event listeners when visibility changes
+                                    if (reportTypeContainer.style.display !== 'none') {
+                                        reportTypeField.removeEventListener('change', () => this.updateSimAssignmentSubject());
+                                        reportTypeField.removeEventListener('input', () => this.updateSimAssignmentSubject());
+                                        reportTypeField.addEventListener('change', () => this.updateSimAssignmentSubject());
+                                        reportTypeField.addEventListener('input', () => this.updateSimAssignmentSubject());
+                                    }
+                                }
+                            });
+                        });
+                        observer.observe(reportTypeContainer, { attributes: true });
+                    }
+                }
+
                 // Initial update
                 this.updateSimAssignmentSubject();
+
+                // Also do a delayed update to catch any dynamically loaded values
+                setTimeout(() => {
+                    this.updateSimAssignmentSubject();
+                }, 500);
             }
         }
 
         // Add dynamic subject line builder for SIM Assessment Reports template
         if (this.trackerType === 'sim-assessment-reports') {
-            const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'specificIssue', 'userRole'];
+            const subjectFields = ['isVIP', 'districtName', 'districtState', 'application', 'version', 'versionState', 'resource', 'reportType', 'specificIssue'];
             const formattedSubjectField = document.getElementById('formattedSubject');
 
             if (formattedSubjectField) {
@@ -955,8 +1149,45 @@ class TrackerApp {
                     }
                 });
 
+                // Special handling for userRole checkboxes
+                const userRoleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
+                userRoleCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        console.log('User role checkbox changed, updating SIM Assessment Reports subject');
+                        this.updateSIMAssessmentReportsSubject();
+                    });
+                });
+
+                // Also handle the reportType field more robustly
+                // Set up a mutation observer to watch for when reportType becomes visible
+                const reportTypeField = document.getElementById('reportType');
+                if (reportTypeField) {
+                    const reportTypeContainer = reportTypeField.closest('.form-group');
+                    if (reportTypeContainer) {
+                        const observer = new MutationObserver((mutations) => {
+                            mutations.forEach((mutation) => {
+                                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                                    // Re-attach event listeners when visibility changes
+                                    if (reportTypeContainer.style.display !== 'none') {
+                                        reportTypeField.removeEventListener('change', () => this.updateSIMAssessmentReportsSubject());
+                                        reportTypeField.removeEventListener('input', () => this.updateSIMAssessmentReportsSubject());
+                                        reportTypeField.addEventListener('change', () => this.updateSIMAssessmentReportsSubject());
+                                        reportTypeField.addEventListener('input', () => this.updateSIMAssessmentReportsSubject());
+                                    }
+                                }
+                            });
+                        });
+                        observer.observe(reportTypeContainer, { attributes: true });
+                    }
+                }
+
                 // Initial update
                 this.updateSIMAssessmentReportsSubject();
+
+                // Also do a delayed update to catch any dynamically loaded values
+                setTimeout(() => {
+                    this.updateSIMAssessmentReportsSubject();
+                }, 500);
             }
         }
 
