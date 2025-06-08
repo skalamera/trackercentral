@@ -417,7 +417,7 @@
 
                 // For select fields, we'll update them after rendering if they need custom values
                 let needsCustomValues = false;
-                if (field.type === 'select' && (field.id === 'version' || field.id === 'versionState')) {
+                if (field.type === 'select' && (field.id === 'version' || field.id === 'versionState' || field.id === 'resource' || field.needsCustomValues)) {
                     needsCustomValues = true;
                 }
 
@@ -523,7 +523,8 @@
 
                 // Map field IDs to storage keys
                 const storageKey = fieldId === 'version' ? 'customVersionValues' :
-                    fieldId === 'versionState' ? 'customLocationValues' : null;
+                    fieldId === 'versionState' ? 'customLocationValues' :
+                        fieldId === 'resource' ? 'customResourceValues' : null;
 
                 if (!storageKey) return null;
 
