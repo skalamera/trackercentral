@@ -2890,7 +2890,22 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pencil-alt",
                 fields: [
-                    // Remove the isVIP and districtName fields, keep only formattedSubject
+                    {
+                        id: "districtName",
+                        type: "text",
+                        label: "District Name",
+                        required: true,
+                        hint: "Auto-populates from original ticket.",
+                        readOnly: true
+                    },
+                    {
+                        id: "districtState",
+                        type: "text",
+                        label: "District State",
+                        required: true,
+                        placeholder: "Ex: VA",
+                        hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field, be sure to only use the state abbreviation."
+                    },
                     { id: "formattedSubject", type: "text", label: "Subject", required: false, hint: "This will be submitted as your ticket subject", readOnly: true }
                 ]
             },
@@ -2901,7 +2916,7 @@ const TRACKER_CONFIGS = {
                 fields: [
                     {
                         id: "summaryContent", type: "richtext", label: "Include name of school district that is requesting customized achievement levels", required: true,
-                        hint: "EX. Jersey City Public School district is requesting customized achievement levels."
+                        hint: "Enter [District Name] is requesting custom achievement levels.<br>Note: Be sure you are including the district name.<br>Ex: Jersey City Public School District is requesting custom achievement levels."
                     }
                 ]
             },
@@ -2912,27 +2927,33 @@ const TRACKER_CONFIGS = {
                 fields: [
                     {
                         id: "username", type: "text", label: "Username", required: true,
-                        hint: "Provide the username of the user requesting the customized achievement levels"
+                        hint: "Enter the Username of the user requesting the change.",
+                        placeholder: "Ex: amiller3"
                     },
                     {
                         id: "userRole", type: "text", label: "Role", required: true,
-                        hint: "Provide the role they have within Benchmark Universe (user must have a district admin. role)"
+                        hint: "Enter the User Role that is requesting the change. Remember: they MUST be a DA",
+                        placeholder: "Ex: District Admin"
                     },
                     {
-                        id: "realm", type: "text", label: "Realm (BURC Link)", required: true,
-                        hint: "Provide BURC Link to the District realm"
+                        id: "realm", type: "text", label: "District BURC Link", required: true,
+                        hint: "Paste the District BURC Link.",
+                        placeholder: "Ex: <a href='https://onboarding-production.benchmarkuniverse.com/85066/dashboard' target='_blank'>https://onboarding-production.benchmarkuniverse.com/85066/dashboard</a>"
                     },
                     {
                         id: "districtName", type: "text", label: "District Name", required: true,
-                        hint: "Provide the name of the district"
+                        hint: "Auto-populates from original ticket and is uneditable.",
+                        readOnly: true
                     },
                     {
                         id: "districtState", type: "text", label: "District State", required: true,
-                        hint: "State where the district is located"
+                        hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located.<br>Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field, be sure to only use the state abbreviation.",
+                        placeholder: "Ex: FL"
                     },
                     {
-                        id: "dateRequested", type: "date", label: "Date Requested By Customer", required: true,
-                        hint: "Provide the date the user requested the custom achievement levels"
+                        id: "dateRequested", type: "date", label: "Date Issue Reported", required: true,
+                        hint: "Select the date the user requested the custom achievement levels.",
+                        placeholder: "Ex: 06/05/2025"
                     }
                 ]
             },
@@ -2976,6 +2997,78 @@ const TRACKER_CONFIGS = {
             }
 
             return description;
+        },
+
+        // Add onLoad function for field population and subject line updates
+        onLoad: function () {
+            console.log("SIM Achievement Levels Tracker onLoad function executing");
+
+            // Auto-populate district state
+            populateDistrictState();
+
+            // Function to update subject line according to SIM Achievement Levels format
+            function updateSubjectLine() {
+                const districtNameField = document.getElementById('districtName');
+                const districtStateField = document.getElementById('districtState');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!districtNameField || !districtStateField || !formattedSubjectField) {
+                    console.log("SIM Achievement Levels: Missing required fields for subject formatting");
+                    return;
+                }
+
+                const districtName = districtNameField.value || '';
+                const districtState = districtStateField.value || '';
+
+                // Check if this is a VIP district (will be determined from ticket data)
+                // For now, we'll use the ticket data if available
+                let isVIP = false;
+                if (window.trackerApp && window.trackerApp.ticketData && window.trackerApp.ticketData.isVip === true) {
+                    isVIP = true;
+                }
+
+                // Format: "VIP* District Name • District State | Custom Achievement Levels" or "District Name • District State | Custom Achievement Levels"
+                let subject = '';
+                if (districtName.trim() && districtState.trim()) {
+                    if (isVIP) {
+                        subject = `VIP* ${districtName.trim()} • ${districtState.trim()} | Custom Achievement Levels`;
+                    } else {
+                        subject = `${districtName.trim()} • ${districtState.trim()} | Custom Achievement Levels`;
+                    }
+                } else if (districtName.trim()) {
+                    if (isVIP) {
+                        subject = `VIP* ${districtName.trim()} | Custom Achievement Levels`;
+                    } else {
+                        subject = `${districtName.trim()} | Custom Achievement Levels`;
+                    }
+                } else {
+                    subject = 'Custom Achievement Levels';
+                }
+
+                formattedSubjectField.value = subject;
+                console.log("SIM Achievement Levels: Updated subject line:", subject);
+            }
+
+            // Set up event listeners for subject line formatting
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
+
+            // Initial subject line update
+            updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
+
+            // Set up clear formatting button for Quill editors
+            setTimeout(setupClearFormattingButton, 500);
+
+            // If the trackerApp is available, call its setupSmartsheetUploader method
+            if (window.trackerApp && typeof window.trackerApp.setupSmartsheetUploader === 'function') {
+                console.log("Setting up smartsheet uploader through trackerApp");
+                window.trackerApp.setupSmartsheetUploader();
+            } else {
+                console.warn("TrackerApp or setupSmartsheetUploader not available");
+            }
         }
     },
 
@@ -6740,6 +6833,102 @@ TRACKER_CONFIGS["sim-dashboard"].onLoad = function () {
 TRACKER_CONFIGS["sim-achievement-levels"].onLoad = function () {
     console.log("SIM Achievement Levels Tracker onLoad function executing");
     setTimeout(setupClearFormattingButton, 500);
+
+    // Auto-populate district state
+    populateDistrictState();
+
+    // Function to update subject line according to SIM Achievement Levels format
+    function updateSubjectLine() {
+        const districtNameField = document.getElementById('districtName');
+        const districtStateField = document.getElementById('districtState');
+        const formattedSubjectField = document.getElementById('formattedSubject');
+
+        if (!districtNameField || !districtStateField || !formattedSubjectField) {
+            console.log("SIM Achievement Levels: Missing required fields for subject formatting");
+            return;
+        }
+
+        const districtName = districtNameField.value || '';
+        const districtState = districtStateField.value || '';
+
+        // Check if this is a VIP district (will be determined from ticket data)
+        // For now, we'll use the ticket data if available
+        let isVIP = false;
+        if (window.trackerApp && window.trackerApp.ticketData && window.trackerApp.ticketData.isVip === true) {
+            isVIP = true;
+        }
+
+        // Format: "VIP* District Name • District State | Custom Achievement Levels" or "District Name • District State | Custom Achievement Levels"
+        let subject = '';
+        if (districtName.trim() && districtState.trim()) {
+            if (isVIP) {
+                subject = `VIP* ${districtName.trim()} • ${districtState.trim()} | Custom Achievement Levels`;
+            } else {
+                subject = `${districtName.trim()} • ${districtState.trim()} | Custom Achievement Levels`;
+            }
+        } else if (districtName.trim()) {
+            if (isVIP) {
+                subject = `VIP* ${districtName.trim()} | Custom Achievement Levels`;
+            } else {
+                subject = `${districtName.trim()} | Custom Achievement Levels`;
+            }
+        } else {
+            subject = 'Custom Achievement Levels';
+        }
+
+        formattedSubjectField.value = subject;
+        console.log("SIM Achievement Levels: Updated subject line:", subject);
+
+        // Also call the existing updateAchievementLevelsSubject method if available
+        if (window.trackerApp && typeof window.trackerApp.updateAchievementLevelsSubject === 'function') {
+            setTimeout(() => {
+                window.trackerApp.updateAchievementLevelsSubject();
+            }, 100);
+        }
+    }
+
+    // Function to sync District Name from Subject section to Description section
+    function syncDistrictNameFields() {
+        const subjectDistrictName = document.querySelector('#section-subject #districtName');
+        const descriptionDistrictName = document.querySelector('#section-userDetails #districtName');
+
+        if (subjectDistrictName && descriptionDistrictName) {
+            // Copy value from subject to description
+            descriptionDistrictName.value = subjectDistrictName.value;
+
+            // Style the description field as read-only
+            descriptionDistrictName.readOnly = true;
+            descriptionDistrictName.style.backgroundColor = '#f0f0f0';
+            descriptionDistrictName.style.color = '#666';
+            descriptionDistrictName.style.border = '1px solid #ddd';
+            descriptionDistrictName.style.cursor = 'not-allowed';
+
+            console.log("SIM Achievement Levels: Synced District Name to Description section:", subjectDistrictName.value);
+        }
+    }
+
+    // Set up event listeners for subject line formatting and field synchronization
+    setTimeout(() => {
+        const subjectDistrictName = document.querySelector('#section-subject #districtName');
+        const subjectDistrictState = document.querySelector('#section-subject #districtState');
+
+        // Set up event listeners for subject line updates
+        subjectDistrictName?.addEventListener('input', updateSubjectLine);
+        subjectDistrictState?.addEventListener('input', updateSubjectLine);
+
+        // Set up event listener for District Name synchronization
+        subjectDistrictName?.addEventListener('input', syncDistrictNameFields);
+
+        // Initial synchronization and subject line update
+        syncDistrictNameFields();
+        updateSubjectLine();
+
+        // Schedule another update after a small delay to ensure fields are populated
+        setTimeout(() => {
+            syncDistrictNameFields();
+            updateSubjectLine();
+        }, 500);
+    }, 500);
 
     // If the trackerApp is available, call its setupSmartsheetUploader method
     if (window.trackerApp && typeof window.trackerApp.setupSmartsheetUploader === 'function') {
