@@ -2021,7 +2021,7 @@ const TRACKER_CONFIGS = {
                         label: "VIP Status",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the VIP list if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     },
                     {
                         id: "districtName",
@@ -2507,19 +2507,37 @@ const TRACKER_CONFIGS = {
                         label: "VIP Status",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     },
-                    { id: "districtName", type: "text", label: "District Name", required: true },
                     {
-                        id: "districtState", type: "text", label: "District State", required: true,
-                        hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
+                        id: "districtName",
+                        type: "text",
+                        label: "District Name",
+                        required: true,
+                        hint: "Auto-populates from original ticket."
                     },
-                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
+                    {
+                        id: "districtState",
+                        type: "text",
+                        label: "District State",
+                        required: true,
+                        placeholder: "Ex: FL",
+                        hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field be sure to only use state abbreviation."
+                    },
+                    {
+                        id: "application",
+                        type: "text",
+                        label: "Program Name",
+                        required: true,
+                        placeholder: "Ex: Advance -c2022",
+                        hint: "Auto-populates from the original ticket."
+                    },
                     {
                         id: "version",
                         type: "select",
-                        label: "Version",
+                        label: "Subscription Version",
                         required: false,
+                        placeholder: "Ex: 2.5",
                         options: [
                             "",
                             "2.0",
@@ -2536,22 +2554,23 @@ const TRACKER_CONFIGS = {
                             "National",
                             "Other"
                         ],
-                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
+                        hint: "Select the appropriate subscription version number from the dropdown."
                     },
                     {
                         id: "versionState",
                         type: "select",
                         label: "State/National",
                         required: false,
+                        placeholder: "Ex: 2.5 Virginia",
                         options: [],
-                        hint: "Select the state or location variation for this version"
+                        hint: "Select the corresponding state or national version from the dropdown. Note: Just because a district is located in CA does not mean they will have the California version of the product. You must check their subscriptions to verify."
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "resource",
                         type: "select",
                         label: "Resource",
                         required: true,
+                        placeholder: "Ex: Grade View",
                         options: [
                             "",
                             "Assignments",
@@ -2581,21 +2600,39 @@ const TRACKER_CONFIGS = {
                             "Reports: Test Status",
                             "Resource Library: Filters"
                         ],
-                        hint: "Select the resource type"
+                        hint: "Select the impacted resource."
+                    },
+                    {
+                        id: "specificIssue",
+                        type: "text",
+                        label: "Specific Issue",
+                        required: true,
+                        placeholder: "Ex: AutoGrade Is Not Processing",
+                        hint: "Enter a succinct description of the issue."
                     },
                     {
                         id: "userRole",
                         type: "checkboxes",
                         label: "User Role",
                         required: true,
+                        placeholder: "Ex: Teacher",
                         options: [
                             { id: "students", label: "Students" },
                             { id: "teachers", label: "Teachers" },
                             { id: "admin", label: "Admin" },
                             { id: "allUsers", label: "All Users" }
-                        ]
+                        ],
+                        hint: "Select the User Role that is impacted by the issue. Note: Multiple roles can be selected."
                     },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: true, hint: "This will be submitted as your ticket subject", readOnly: true }
+                    {
+                        id: "formattedSubject",
+                        type: "text",
+                        label: "Formatted Subject Line",
+                        required: false,
+                        placeholder: "Ex: MAPLE SHADE TWP SCHOOL DIST • NJ | Advance c2022 • 2.5 National | Grade View • AutoGrade Not Processing for Teachers",
+                        hint: "This will auto-populate based on your submissions. Be sure to review for accuracy. Naming convention: VIP or Standard District Name • District State (Abv) | Program Name • Variation National / State | Resource • Specific issue for user role",
+                        readOnly: true
+                    }
                 ]
             },
             {
@@ -2603,13 +2640,13 @@ const TRACKER_CONFIGS = {
                 title: "ISSUE DESCRIPTION",
                 icon: "fa-exclamation-circle",
                 fields: [
-                    { id: "reportName", type: "text", label: "Name of impacted report", required: true },
+                    { id: "reportName", type: "text", label: "Name of impacted report", required: true, placeholder: "Ex: Test Status", hint: "Enter the name of the Impacted Report." },
                     {
                         id: "issueDetails",
                         type: "richtext",
                         label: "Specific details outlining user impact",
                         required: true,
-                        hint: "EX: Teacher is receiving a server error upon clicking \"Grade View\" for the Unit 3 Assessment (Gr. 2)"
+                        hint: "Ex: A Technical Error is received when in the Test Status report.<br>Enter the issue details as reported by the user in a concise and constructive manner."
                     }
                 ]
             },
@@ -2623,7 +2660,8 @@ const TRACKER_CONFIGS = {
                         type: "richtext",
                         label: "",
                         required: true,
-                        placeholder: "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR"
+                        placeholder: "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR",
+                        hint: "Enter the exact steps taken by the user and yourself to recreate the issue.<br>Ex: Log in as Teacher > Click on Reports > Click on Assessments > Click on Test Status"
                     }
                 ]
             },
@@ -2645,8 +2683,22 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "teacherName", type: "text", label: "Teacher/Admin Name", required: true },
-                    { id: "username", type: "text", label: "Username", required: true, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
+                    { 
+                        id: "teacherName", 
+                        type: "text", 
+                        label: "Teacher/Admin Name", 
+                        required: true,
+                        placeholder: "Ex: Abby Miller",
+                        hint: "Enter the Full Name of the impacted user."
+                    },
+                    { 
+                        id: "username", 
+                        type: "text", 
+                        label: "Username", 
+                        required: true, 
+                        placeholder: "Ex: amiller3", 
+                        hint: "Enter the Username of the impacted user."
+                    },
                     {
                         id: "userRole",
                         type: "text",
@@ -2654,34 +2706,101 @@ const TRACKER_CONFIGS = {
                         required: true,
                         hint: "Provide the users role at the district. EX: District Admin, School Admin, Teacher, Student"
                     },
-                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
-                    {
-                        id: "realm", type: "text", label: "Realm", required: true,
-                        hint: "Provide the districts realm."
+                    { 
+                        id: "BURCLink", 
+                        type: "text", 
+                        label: "BURC Link", 
+                        required: true, 
+                        placeholder: "Ex: https://onboarding-production.benchmarkuniverse.com/544931/manage-account/district/teachers/dlulgjuraj@benchmarkeducation.com",
+                        hint: "Paste the BURC Link of the impacted user."
                     },
-                    { id: "browser", type: "text", label: "Browser", required: true },
                     {
-                        id: "assessmentId", type: "text", label: "Assessment Assignment ID", required: true,
-                        placeholder: "EX: https://bec-micro.benchmarkuniverse.com/?#assignments/6727303",
-                        hint: "Provide the assignment ID where the issue is prevalent. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
+                        id: "realm", 
+                        type: "text", 
+                        label: "Realm", 
+                        required: true,
+                        placeholder: "Ex: msemail",
+                        hint: "Enter the district's Realm."
                     },
-                    { id: "assessmentUrl", type: "text", label: "Assessment Assignment URL", required: true },
-                    { id: "dateTaken", type: "date", label: "Date test was taken", required: true },
-                    { id: "dateGraded", type: "date", label: "Date test was graded", required: true },
-                    { id: "className", type: "text", label: "Impacted Class Name", required: true },
-                    { id: "classLink", type: "text", label: "Impacted Class BURC Link", required: true },
+                    { 
+                        id: "browser", 
+                        type: "text", 
+                        label: "Browser", 
+                        required: true,
+                        placeholder: "Ex: Google Chrome",
+                        hint: "Enter the impacted user's Browser."
+                    },
                     {
-                        id: "studentIds", type: "text", label: "Impacted Student(s) Internal ID(s)", required: true,
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                        id: "assessmentId", 
+                        type: "text", 
+                        label: "Assessment Assignment ID", 
+                        required: true,
+                        placeholder: "Ex: 11569615",
+                        hint: "Paste the Assignment ID of the impacted assignment. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
+                    { 
+                        id: "assessmentUrl", 
+                        type: "text", 
+                        label: "Assessment Assignment URL", 
+                        required: true,
+                        placeholder: "Ex: https://msemail.benchmarkuniverse.com/?#assignments/11569615",
+                        hint: "Paste the Assignment ID URL of the impacted assignment."
+                    },
+                    { 
+                        id: "dateTaken", 
+                        type: "date", 
+                        label: "Date Test Was Taken", 
+                        required: true,
+                        placeholder: "Ex: 05/30/2025",
+                        hint: "Select the date the impacted assessment was taken."
+                    },
+                    { 
+                        id: "dateGraded", 
+                        type: "date", 
+                        label: "Date Test Was Graded", 
+                        required: true,
+                        placeholder: "Ex: 05/30/2025",
+                        hint: "Select the date the impacted assessment was graded."
+                    },
+                    { 
+                        id: "className", 
+                        type: "text", 
+                        label: "Impacted Class Name", 
+                        required: true,
+                        placeholder: "Ex: Tech Support Class 2-Lulgjuraj",
+                        hint: "Paste the Impacted Class Name."
+                    },
+                    { 
+                        id: "classLink", 
+                        type: "text", 
+                        label: "Impacted Class BURC Link", 
+                        required: true,
+                        placeholder: "Ex: https://onboarding-production.benchmarkuniverse.com/544931/manage-account/school/545757/classes/7536061/activated/Tech%20Support%20Class%202-Lulgjuraj",
+                        hint: "Paste the Impacted Class BURC Link."
+                    },
+                    {
+                        id: "studentIds", 
+                        type: "text", 
+                        label: "Impacted Student(s) Internal ID(s)", 
+                        required: true,
+                        placeholder: "Ex: 15665275",
+                        hint: "Paste the Student Internal ID of the impacted user(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>How to Locate a User's Internal ID</a>"
+                    },
+                    { 
+                        id: "dateReported", 
+                        type: "date", 
+                        label: "Date Issue Reported", 
+                        required: true, 
+                        placeholder: "Ex: 06/05/2025",
+                        hint: "Select the date the issue was reported."
+                    },
                     {
                         id: "harFileAttached",
                         type: "select",
-                        label: "HAR file attached",
+                        label: "HAR File Attached",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "HAR files help identify browser network issues"
+                        hint: "Choose Yes if a HAR file has been captured, or No if it has not been. Note: All SIM Trackers should have a HAR File unless told otherwise by a lead or manager. If No is chosen from the drop-down, you will need to enter a reason why you do not have one in order to create the tracker."
                     },
                     {
                         id: "harFileReason",
@@ -2700,7 +2819,8 @@ const TRACKER_CONFIGS = {
                         id: "expectedResults",
                         type: "richtext",
                         label: "",
-                        required: true
+                        required: true,
+                        hint: "Enter details regarding expected functionality.<br>Ex: Student's Test Status should be available to view."
                     }
                 ]
             }
@@ -3167,19 +3287,37 @@ const TRACKER_CONFIGS = {
                         label: "VIP Status",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     },
-                    { id: "districtName", type: "text", label: "District Name", required: true },
                     {
-                        id: "districtState", type: "text", label: "District State", required: true,
-                        hint: "Use 2-letter state abbreviation (e.g., NY, CA, TX)"
+                        id: "districtName",
+                        type: "text",
+                        label: "District Name",
+                        required: true,
+                        hint: "Auto-populates from original ticket."
                     },
-                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "EX: Grade View" },
+                    {
+                        id: "districtState",
+                        type: "text",
+                        label: "District State",
+                        required: true,
+                        placeholder: "Ex: FL",
+                        hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field be sure to only use state abbreviation."
+                    },
+                    {
+                        id: "application",
+                        type: "text",
+                        label: "Program Name",
+                        required: true,
+                        placeholder: "Ex: Advance -c2022",
+                        hint: "Auto-populates from the original ticket."
+                    },
                     {
                         id: "version",
                         type: "select",
-                        label: "Version",
+                        label: "Subscription Version",
                         required: false,
+                        placeholder: "Ex: 2.5",
                         options: [
                             "",
                             "2.0",
@@ -3196,22 +3334,23 @@ const TRACKER_CONFIGS = {
                             "National",
                             "Other"
                         ],
-                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
+                        hint: "Select the appropriate subscription version number from the dropdown."
                     },
                     {
                         id: "versionState",
                         type: "select",
                         label: "State/National",
                         required: false,
+                        placeholder: "Ex: 2.5 Virginia",
                         options: [],
-                        hint: "Select the state or location variation for this version"
+                        hint: "Select the corresponding state or national version from the dropdown. Note: Just because a district is located in CA does not mean they will have the California version of the product. You must check their subscriptions to verify."
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "EX: Server Error Received" },
                     {
                         id: "resource",
                         type: "select",
                         label: "Resource",
                         required: true,
+                        placeholder: "Ex: Grade View",
                         options: [
                             "",
                             "Assignments",
@@ -3241,21 +3380,39 @@ const TRACKER_CONFIGS = {
                             "Reports: Test Status",
                             "Resource Library: Filters"
                         ],
-                        hint: "Select the resource type"
+                        hint: "Select the impacted resource."
+                    },
+                    {
+                        id: "specificIssue",
+                        type: "text",
+                        label: "Specific Issue",
+                        required: true,
+                        placeholder: "Ex: AutoGrade Is Not Processing",
+                        hint: "Enter a succinct description of the issue."
                     },
                     {
                         id: "userRole",
                         type: "checkboxes",
                         label: "User Role",
                         required: true,
+                        placeholder: "Ex: Teacher",
                         options: [
                             { id: "students", label: "Students" },
                             { id: "teachers", label: "Teachers" },
                             { id: "admin", label: "Admin" },
                             { id: "allUsers", label: "All Users" }
-                        ]
+                        ],
+                        hint: "Select the User Role that is impacted by the issue. Note: Multiple roles can be selected."
                     },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: true, hint: "This will be submitted as your ticket subject", readOnly: true }
+                    {
+                        id: "formattedSubject",
+                        type: "text",
+                        label: "Formatted Subject Line",
+                        required: false,
+                        placeholder: "Ex: MAPLE SHADE TWP SCHOOL DIST • NJ | Advance c2022 • 2.5 National | Grade View • AutoGrade Not Processing for Teachers",
+                        hint: "This will auto-populate based on your submissions. Be sure to review for accuracy.<br>Naming convention: VIP or Standard District Name • District State (Abv) | Program Name • Variation National / State | Resource • Specific issue for user role",
+                        readOnly: true
+                    }
                 ]
             },
             {
@@ -3268,12 +3425,15 @@ const TRACKER_CONFIGS = {
                         type: "richtext",
                         label: "Specific Issue Details",
                         required: true,
-                        hint: "EX: Teacher is receiving a server error upon clicking \"Grade View\" for the Unit 3 Assessment (Gr. 2)"
+                        hint: "Enter the issue details as reported by the user in a concise and constructive manner.<br>Ex: A Server Error is received after clicking on FSA from the dashboard."
                     },
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "districtBURCLink", type: "text", label: "District BURC Link", required: true, hint: "Provide BURC Link to the district" },
-                    { id: "schoolName", type: "text", label: "School Name", required: true },
-                    { id: "schoolBURCLink", type: "text", label: "School BURC Link", required: true, hint: "Provide BURC Link to the school" }
+                    { id: "districtName", type: "text", label: "District Name", required: true, hint: "Auto-populates from original ticket." },
+                    {
+                        id: "districtBURCLink", type: "text", label: "District BURC Link", required: true, placeholder: "Ex: https://onboarding-production.benchmarkuniverse.com/4545/dashboard", hint: "Paste the District BURC Link" },
+                    {
+                        id: "schoolName", type: "text", label: "School Name", required: true, placeholder: "Ex: Maple Shade Township School District", hint: "Paste the name of the school the user is associated with." },
+                    {
+                        id: "schoolBURCLink", type: "text", label: "School BURC Link", required: true, placeholder: "Ex: https://onboarding-production.benchmarkuniverse.com/4545/manage-account/school/7314", hint: "Paste the School BURC Link that the user is associated with." }
                 ]
             },
             {
@@ -3286,7 +3446,8 @@ const TRACKER_CONFIGS = {
                         type: "richtext",
                         label: "The exact path taken by the user and yourself to get to the reported issue",
                         required: true,
-                        placeholder: "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR"
+                        placeholder: "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR",
+                        hint: "Ex: Log in as Teacher > In the Dashboard click on FSA >"
                     }
                 ]
             },
@@ -3308,23 +3469,23 @@ const TRACKER_CONFIGS = {
                 title: "IMPACTED TEACHER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: true, placeholder: "EX: mitzisheppard", hint: "Provide the users username at the district." },
-                    { id: "name", type: "text", label: "Name", required: true },
-                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, hint: "Provide BURC Link to the affected teacher/administrator" },
-                    { id: "administrationUrl", type: "text", label: "Administration URL", required: true },
-                    { id: "device", type: "text", label: "Device", required: true, placeholder: "EX: Chromebook", hint: "Provide the device the users are on." },
+                    { id: "username", type: "text", label: "Username", required: true, placeholder: "Ex: amiller3", hint: "Enter the Username of the impacted user." },
+                    { id: "name", type: "text", label: "Name", required: true, placeholder: "Ex: Abby Miller", hint: "Enter the Full Name of the impacted user." },
+                    { id: "BURCLink", type: "text", label: "BURC Link", required: true, placeholder: "Ex: https://onboarding-production.benchmarkuniverse.com/544931/manage-account/district/teachers/dlulgjuraj@benchmarkeducation.com", hint: "Paste the BURC Link of the impacted user." },
+                    { id: "administrationUrl", type: "text", label: "Administration URL", required: true, placeholder: "Ex: https://bec-micro.benchmarkuniverse.com/?#/teacher-led-assessments/administration/16215085/228564/X89128/7604136", hint: "Paste the administered test URL.<br>Note: When the issue is related to administering the test to a student, provide the administration URL. This should be the URL displayed after the user has selected the administer button." },
+                    { id: "device", type: "text", label: "Device", required: true, placeholder: "Ex: PC", hint: "Enter the impacted user's Device." },
                     {
-                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: true,
-                        hint: "Provide the impacted students internal ID(s). <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739508' target='_blank'>Locating a User's Internal ID</a>"
+                        id: "studentInternalId", type: "text", label: "Student Internal ID", required: true, placeholder: "Ex: 15665275",
+                        hint: "Paste the Student Internal ID of the impacted user(s)."
                     },
-                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, hint: "Provide the date the user reported the issue. EX: 01/10/2023" },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, placeholder: "Ex: 06/05/2025", hint: "Select the date the issue was reported." },
                     {
                         id: "harFileAttached",
                         type: "select",
-                        label: "HAR file attached",
+                        label: "HAR File Attached",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "HAR files help identify browser network issues"
+                        hint: "Choose Yes if a HAR file has been captured, or No if it has not been.<br>Note: All SIM Trackers should have a HAR File unless told otherwise by a lead or manager. If No is chosen from the drop-down, you will need to enter a reason why you do not have one in order to create the tracker."
                     },
                     {
                         id: "harFileReason",
@@ -3347,7 +3508,8 @@ const TRACKER_CONFIGS = {
                         id: "expectedResults",
                         type: "richtext",
                         label: "Explain/Show how the system should be functioning if working correctly",
-                        required: true
+                        required: true,
+                        hint: "Enter details regarding expected functionality.<br>Ex: FSA should load without receiving any errors."
                     }
                 ]
             }
@@ -3588,7 +3750,7 @@ const TRACKER_CONFIGS = {
                         label: "VIP Status",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     {
@@ -3998,7 +4160,7 @@ const TRACKER_CONFIGS = {
                         label: "VIP Status",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     {
@@ -4398,7 +4560,7 @@ const TRACKER_CONFIGS = {
                         label: "VIP Status",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     {
@@ -4789,7 +4951,7 @@ const TRACKER_CONFIGS = {
                         label: "VIP Status",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     {
@@ -5183,7 +5345,7 @@ const TRACKER_CONFIGS = {
                         label: "VIP Status",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true },
                     {
@@ -5568,7 +5730,7 @@ const TRACKER_CONFIGS = {
                         label: "VIP Status",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the VIP list if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     },
                     { id: "districtName", type: "text", label: "District Name", required: true, hint: "Auto-populates from original ticket." },
                     { id: "districtState", type: "text", label: "District State", required: true, placeholder: "VA", hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field be sure to only use state abbreviation." },
