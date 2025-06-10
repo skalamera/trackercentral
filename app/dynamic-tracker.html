@@ -1037,7 +1037,7 @@
                                     const editor = new Quill(`#${editorId}`, {
                                         theme: 'snow',
                                         placeholder: field.id === 'stepsToReproduce' ?
-                                            "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR" :
+                                            "EX: Teacher dashboard > Assignments > Unit 5 Assessment (Gr. 2) > Grade View > Click on student > See question 15" :
                                             `Enter ${field.id.replace(/([A-Z])/g, ' $1').toLowerCase()}...`,
                                         modules: {
                                             toolbar: {
@@ -1118,7 +1118,7 @@
                         const editor = new Quill(`#${textarea.id}Editor`, {
                             theme: 'snow',
                             placeholder: textarea.id === 'stepsToReproduce' ?
-                                "EX:\n1. Log in as Teacher\n2. On Dashboard Click ORR" :
+                                "EX: Teacher dashboard > Assignments > Unit 5 Assessment (Gr. 2) > Grade View > Click on student > See question 15" :
                                 (textarea.placeholder || `Enter ${textarea.id.replace(/([A-Z])/g, ' $1').toLowerCase()}...`),
                             modules: {
                                 toolbar: {
