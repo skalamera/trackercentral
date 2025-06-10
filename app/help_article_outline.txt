@@ -1,0 +1,33 @@
+Help Article Name
+•	Paste the name of the help article.
+•	Ex: About Grading eAssessments
+Formatted Subject Line
+•	This will auto-populate based on your submissions. Be sure to review for accuracy.
+•	Naming convention: BU Help Article Update | Help Article Name
+•	Ex: BU Help Article Update | About Grading eAssessments 
+
+Step 4: Summary
+
+IMAGE
+•	Enter the details that need to be updated in the BU Help Article.
+•	Ex: The dropdown menu for the Test Filter options no longer reflect the listed items in the article.
+
+Step 5: Description
+
+IMAGE
+
+Requestor
+•	Enter the Requestor's name.
+•	Ex: Abby Miller
+Date Request
+•	Select the date the request was made.
+•	Ex: 06/05/2025
+Name of BU Help Article
+•	Paste the name of the BU help article.
+•	Ex: About Grading eAssessments
+URL of BU Help Article
+•	Paste the URL of the BU help article.
+•	Ex: https://help.benchmarkuniverse.com/bubateacher/Content/eAssessments/Grading/About%20Grading%20eAssessments.htm
+Images for Reference
+•	Add any screenshots that would be helpful.
+
