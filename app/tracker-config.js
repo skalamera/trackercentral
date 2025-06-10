@@ -34,7 +34,47 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pencil-alt",
                 fields: [
-                    { id: "subject", type: "text", label: "Subject", required: true, hint: "BL Xcode removal request" }
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "Auto-populates from original ticket. If not, choose Yes if the District is VIP and No if it is not. You can review the VIP list if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
+                    },
+                    {
+                        id: "districtName",
+                        type: "text",
+                        label: "District Name",
+                        required: true,
+                        hint: "Auto-populates from original ticket.",
+                        readOnly: true
+                    },
+                    {
+                        id: "districtState",
+                        type: "text",
+                        label: "District State",
+                        required: true,
+                        placeholder: "Ex: FL",
+                        hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field, be sure to only use the state abbreviation."
+                    },
+                    {
+                        id: "issue",
+                        type: "text",
+                        label: "Issue",
+                        required: true,
+                        value: "Assembly Rollover",
+                        hint: "This field will auto-populate and always be \"Assembly Rollover\" and cannot be edited",
+                        readOnly: true
+                    },
+                    {
+                        id: "formattedSubject",
+                        type: "text",
+                        label: "Formatted Subject Line",
+                        required: false,
+                        hint: "This will auto-populate based on your submissions. Be sure to review for accuracy.",
+                        readOnly: true
+                    }
                 ]
             },
             {
@@ -42,7 +82,13 @@ const TRACKER_CONFIGS = {
                 title: "SUMMARY",
                 icon: "fa-file-alt",
                 fields: [
-                    { id: "summaryContent", type: "richtext", label: "", required: true }
+                    {
+                        id: "summaryContent",
+                        type: "richtext",
+                        label: "",
+                        required: true,
+                        defaultValue: "Ex: This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies."
+                    }
                 ]
             },
             {
@@ -50,7 +96,6 @@ const TRACKER_CONFIGS = {
                 title: "DESCRIPTION",
                 icon: "fa-clipboard-list",
                 fields: [
-                    { id: "districtName", type: "text", label: "District Name", required: true },
                     { id: "realm", type: "text", label: "Realm (BURC Link)", required: true, hint: "Provide BURC Link to the district realm." },
                     { id: "effectiveDate", type: "date", label: "Effective Return Date", required: true, hint: "The effective return date is the date the customer service rep. processed the return in NetSuite. This date should be provided in the initial ticket request. If it is not provided you will need to ask the person who submitted the ticket." },
                     { id: "assemblyCodes", type: "textarea", label: "Assembly Codes To Be Removed", required: true, hint: "Include the list of assembly codes that need to be removed from the district's account. This list of codes will be included in the initial ticket request." }
@@ -63,12 +108,15 @@ const TRACKER_CONFIGS = {
             description += '<div>Please see the BL Xcode removal request below.</div>';
             description += '<div style="margin-bottom: 20px;"></div>';
 
-            // Add summary section if provided
+            // Always add summary section (includes default text if no custom content)
+            description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
             if (fields.summaryContent && fields.summaryContent.trim() !== '<p><br></p>') {
-                description += '<div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div>';
-                description += `<div>${fields.summaryContent || ''}</div>`;
-                description += '<div style="margin-bottom: 20px;"></div>';
+                description += `<div>${fields.summaryContent}</div>`;
+            } else {
+                // Use default text if no content provided
+                description += '<div>Ex: This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies.</div>';
             }
+            description += '<div style="margin-bottom: 20px;"></div>';
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
             description += `District Name: ${fields.districtName || ''}<br>`;
@@ -84,6 +132,231 @@ const TRACKER_CONFIGS = {
 
             // First populate Application Name from product info
             populateApplicationName();
+
+            // Auto-populate district state for assembly rollover
+            populateDistrictState();
+
+            // Populate summary section with default text
+            function populateSummaryDefault(retryCount = 0) {
+                console.log(`Assembly Rollover: Attempting to populate summary (attempt ${retryCount + 1})`);
+
+                // Debug: Log all elements we can find
+                if (retryCount === 0) {
+                    console.log("Assembly Rollover: Debug - All elements with ID summaryContent:", document.querySelectorAll('#summaryContent'));
+                    console.log("Assembly Rollover: Debug - All .ql-editor elements:", document.querySelectorAll('.ql-editor'));
+                    console.log("Assembly Rollover: Debug - All .quill-editor elements:", document.querySelectorAll('.quill-editor'));
+                    console.log("Assembly Rollover: Debug - Looking for TrackerApp.quillInstances");
+                    if (window.trackerApp && window.trackerApp.quillInstances) {
+                        console.log("Assembly Rollover: Debug - TrackerApp quill instances:", Object.keys(window.trackerApp.quillInstances));
+                    }
+                }
+
+                // Method 1: Try to use the Quill instance directly
+                let quillInstance = null;
+                if (window.trackerApp && window.trackerApp.quillInstances && window.trackerApp.quillInstances.summaryContent) {
+                    quillInstance = window.trackerApp.quillInstances.summaryContent;
+                    console.log("Assembly Rollover: Found Quill instance for summaryContent");
+                }
+
+                if (quillInstance) {
+                    const currentContent = quillInstance.root.innerHTML;
+                    console.log("Assembly Rollover: Current Quill content via instance:", currentContent);
+
+                    // Check if content is empty or just contains default Quill placeholder
+                    if (!currentContent ||
+                        currentContent.trim() === '' ||
+                        currentContent.trim() === '<p><br></p>' ||
+                        currentContent.trim() === '<p></p>' ||
+                        currentContent.trim() === '<div><br></div>') {
+
+                        quillInstance.root.innerHTML = '<p>Ex: This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies.</p>';
+                        console.log("Assembly Rollover: Populated summary via Quill instance");
+
+                        // Trigger Quill change event
+                        quillInstance.emitter.emit('text-change');
+                        return;
+                    } else {
+                        console.log("Assembly Rollover: Summary already has content via Quill instance, not overwriting");
+                        return;
+                    }
+                }
+
+                // Method 2: Try multiple selectors for the Quill editor
+                let summaryEditor = document.querySelector('#summaryContent .ql-editor');
+                if (!summaryEditor) {
+                    summaryEditor = document.querySelector('[data-field-id="summaryContent"] .ql-editor');
+                }
+                if (!summaryEditor) {
+                    summaryEditor = document.querySelector('.section[data-section-id="summary"] .ql-editor');
+                }
+                if (!summaryEditor) {
+                    // Look for any Quill editor in the summary section
+                    const summarySection = document.querySelector('.section[data-section-id="summary"]');
+                    if (summarySection) {
+                        summaryEditor = summarySection.querySelector('.ql-editor');
+                    }
+                }
+                if (!summaryEditor) {
+                    // Try looking for the summaryContent element and find any .ql-editor within it or its siblings
+                    const summaryContent = document.getElementById('summaryContent');
+                    if (summaryContent) {
+                        summaryEditor = summaryContent.querySelector('.ql-editor');
+                        if (!summaryEditor && summaryContent.parentElement) {
+                            summaryEditor = summaryContent.parentElement.querySelector('.ql-editor');
+                        }
+                    }
+                }
+
+                console.log(`Assembly Rollover: Summary editor found via DOM:`, !!summaryEditor);
+
+                if (summaryEditor) {
+                    const currentContent = summaryEditor.innerHTML;
+                    console.log(`Assembly Rollover: Current content via DOM:`, currentContent);
+
+                    // Check if content is empty or just contains default Quill placeholder
+                    if (!currentContent ||
+                        currentContent.trim() === '' ||
+                        currentContent.trim() === '<p><br></p>' ||
+                        currentContent.trim() === '<p></p>' ||
+                        currentContent.trim() === '<div><br></div>') {
+
+                        summaryEditor.innerHTML = '<p>Ex: This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies.</p>';
+                        console.log("Assembly Rollover: Populated summary section with default text via DOM");
+
+                        // Try to trigger any change events
+                        const event = new Event('input', { bubbles: true });
+                        summaryEditor.dispatchEvent(event);
+                    } else {
+                        console.log("Assembly Rollover: Summary already has content via DOM, not overwriting");
+                    }
+                } else if (retryCount < 10) {
+                    // Retry if editor not found yet
+                    console.log(`Assembly Rollover: Summary editor not found, retrying in 500ms (attempt ${retryCount + 1}/10)`);
+                    setTimeout(() => populateSummaryDefault(retryCount + 1), 500);
+                } else {
+                    console.warn("Assembly Rollover: Could not find summary editor after 10 attempts");
+                }
+            }
+
+            // Try to populate immediately and with delays
+            setTimeout(() => populateSummaryDefault(), 100);
+            setTimeout(() => populateSummaryDefault(), 500);
+            setTimeout(() => populateSummaryDefault(), 1500);
+            setTimeout(() => populateSummaryDefault(), 3000);
+            setTimeout(() => populateSummaryDefault(), 5000);
+
+            // Set up a MutationObserver to watch for when Quill editors are added
+            const observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.addedNodes.length) {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType === 1) { // Element node
+                                // Check if this node or its children contain a Quill editor
+                                if (node.classList && (node.classList.contains('ql-editor') || node.classList.contains('quill-editor') || node.querySelector('.ql-editor'))) {
+                                    console.log("Assembly Rollover: MutationObserver detected Quill editor being added:", node);
+
+                                    // Check if it's related to summary content
+                                    const summarySection = document.querySelector('.section[data-section-id="summary"]');
+                                    const summaryContent = document.getElementById('summaryContent');
+
+                                    if ((summarySection && (summarySection.contains(node) || node.contains(summarySection))) ||
+                                        (summaryContent && (summaryContent.contains(node) || node.contains(summaryContent))) ||
+                                        node.id === 'summaryContent' ||
+                                        node.classList.contains('ql-editor')) {
+                                        console.log("Assembly Rollover: Detected summary-related Quill editor being added to DOM");
+                                        setTimeout(() => populateSummaryDefault(), 100);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Start observing
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            // Stop observing after 10 seconds to avoid memory leaks
+            setTimeout(() => {
+                observer.disconnect();
+                console.log("Assembly Rollover: Stopped observing for summary editor");
+            }, 10000);
+
+            // Set the Issue field to "Assembly Rollover" and make it readonly
+            const issueField = document.getElementById('issue');
+            if (issueField) {
+                issueField.value = "Assembly Rollover";
+                issueField.readOnly = true;
+                issueField.style.backgroundColor = '#f0f0f0';
+                issueField.style.color = '#666';
+                issueField.style.border = '1px solid #ddd';
+                issueField.style.cursor = 'not-allowed';
+            }
+
+            // Function to update subject line according to assembly rollover format
+            function updateSubjectLine() {
+                const isVIPField = document.getElementById('isVIP');
+                const districtNameField = document.getElementById('districtName');
+                const districtStateField = document.getElementById('districtState');
+                const issueField = document.getElementById('issue');
+                const formattedSubjectField = document.getElementById('formattedSubject');
+
+                if (!isVIPField || !districtNameField || !districtStateField || !issueField || !formattedSubjectField) {
+                    console.log("Assembly Rollover: Missing required fields for subject formatting");
+                    return;
+                }
+
+                const vipStatus = isVIPField.value || 'No';
+                const districtName = districtNameField.value || '';
+                const districtState = districtStateField.value || '';
+                const issue = issueField.value || 'Assembly Rollover';
+
+                // Build the subject line: | VIP | District Name • District State | Assembly Rollover
+                // Only include VIP in subject if status is VIP, otherwise start with District Name
+                const subjectParts = [];
+
+                // First part: VIP Status (only if VIP)
+                if (vipStatus.trim() === 'Yes') {
+                    subjectParts.push('VIP');
+                }
+
+                // Second part: District Name • District State  
+                let districtPart = '';
+                if (districtName.trim() && districtState.trim()) {
+                    districtPart = `${districtName.trim()} • ${districtState.trim()}`;
+                } else if (districtName.trim()) {
+                    districtPart = districtName.trim();
+                } else if (districtState.trim()) {
+                    districtPart = districtState.trim();
+                }
+
+                if (districtPart) {
+                    subjectParts.push(districtPart);
+                }
+
+                // Third part: Issue (Assembly Rollover)
+                if (issue.trim()) {
+                    subjectParts.push(issue.trim());
+                }
+
+                // Join all parts with " | " separator
+                const subject = subjectParts.join(' | ');
+
+                formattedSubjectField.value = subject;
+                console.log("Assembly Rollover: Updated subject line:", subject);
+            }
+
+            // Set up event listeners for subject line formatting
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('issue')?.addEventListener('input', updateSubjectLine);
+
+            // Initial subject line update
+            updateSubjectLine();
+
+            // Schedule another update after a small delay to ensure fields are populated
+            setTimeout(updateSubjectLine, 500);
 
             // Try to get the source ticket ID from localStorage
             let sourceTicketId = null;
@@ -6331,6 +6604,37 @@ TRACKER_CONFIGS["help-article"].onLoad = function () {
     originalHelpArticleOnLoad.apply(this, arguments);
     setTimeout(setupClearFormattingButton, 500);
 };
+
+// Update all SIM tracker resource fields to use dynamic loading
+(function updateSIMResourceFields() {
+    const simTrackers = [
+        'sim-assignment',
+        'sim-assessment-reports',
+        'sim-fsa',
+        'sim-library-view',
+        'sim-orr',
+        'sim-plan-teach',
+        'sim-reading-log',
+        'sim-dashboard'
+    ];
+
+    simTrackers.forEach(trackerName => {
+        if (TRACKER_CONFIGS[trackerName]) {
+            // Find the subject section
+            const subjectSection = TRACKER_CONFIGS[trackerName].sections.find(s => s.id === 'subject');
+            if (subjectSection) {
+                // Find the resource field
+                const resourceField = subjectSection.fields.find(f => f.id === 'resource');
+                if (resourceField) {
+                    // Update the resource field to use dynamic loading
+                    resourceField.options = ["-- Loading from settings --"];
+                    resourceField.needsCustomValues = true;
+                    console.log(`Updated ${trackerName} resource field to use dynamic loading`);
+                }
+            }
+        }
+    });
+})();
 
 // Export the tracker configurations for use in tests
 if (typeof module !== 'undefined' && module.exports) {

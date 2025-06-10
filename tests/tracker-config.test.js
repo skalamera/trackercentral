@@ -580,8 +580,12 @@ describe('Assembly Rollover Tracker', () => {
 
     test('description generator formats assembly rollover details correctly', () => {
         const mockFields = {
-            subject: 'BL Xcode removal request',
+            isVIP: 'VIP',
             districtName: 'Test School District',
+            districtState: 'NJ',
+            issue: 'Assembly Rollover',
+            formattedSubject: 'VIP | Test School District • NJ | Assembly Rollover',
+            summaryContent: '<p>BL Xcode removal request summary</p>',
             realm: 'test.realm.burc',
             effectiveDate: '2023-08-15',
             assemblyCodes: 'X12345, X56789'
@@ -595,6 +599,80 @@ describe('Assembly Rollover Tracker', () => {
         expect(result).toContain('User BURC Link: test.realm.burc');
         expect(result).toContain('Effective Return Date: 08/15/2023');
         expect(result).toContain('Assembly Codes To Be Removed:<br>X12345, X56789');
+    });
+
+    test('subject line formatting follows correct pattern', () => {
+        // Mock DOM setup for subject line testing
+        const isVipField = createMockElement();
+        isVipField.value = 'VIP';
+
+        const districtNameField = createMockElement();
+        districtNameField.value = 'MAPLE SHADE TOWNSHIP';
+
+        const districtStateField = createMockElement();
+        districtStateField.value = 'NJ';
+
+        const issueField = createMockElement();
+        issueField.value = 'Assembly Rollover';
+
+        const formattedSubjectField = createMockElement();
+
+        // Setup the mock implementation for getElementById
+        document.getElementById.mockImplementation((id) => {
+            const elements = {
+                'isVIP': isVipField,
+                'districtName': districtNameField,
+                'districtState': districtStateField,
+                'issue': issueField,
+                'formattedSubject': formattedSubjectField,
+            };
+            return elements[id] || createMockElement();
+        });
+
+        // Call onLoad if it exists to set up the subject line formatting
+        if (template.onLoad) {
+            template.onLoad();
+
+            // Expected format: "VIP | MAPLE SHADE TOWNSHIP • NJ | Assembly Rollover"
+            expect(formattedSubjectField.value).toBe('VIP | MAPLE SHADE TOWNSHIP • NJ | Assembly Rollover');
+        }
+    });
+
+    test('subject line formatting handles Standard VIP status', () => {
+        // Mock DOM setup for subject line testing
+        const isVipField = createMockElement();
+        isVipField.value = 'Standard';
+
+        const districtNameField = createMockElement();
+        districtNameField.value = 'Test District';
+
+        const districtStateField = createMockElement();
+        districtStateField.value = 'CA';
+
+        const issueField = createMockElement();
+        issueField.value = 'Assembly Rollover';
+
+        const formattedSubjectField = createMockElement();
+
+        // Setup the mock implementation for getElementById
+        document.getElementById.mockImplementation((id) => {
+            const elements = {
+                'isVIP': isVipField,
+                'districtName': districtNameField,
+                'districtState': districtStateField,
+                'issue': issueField,
+                'formattedSubject': formattedSubjectField,
+            };
+            return elements[id] || createMockElement();
+        });
+
+        // Call onLoad if it exists to set up the subject line formatting
+        if (template.onLoad) {
+            template.onLoad();
+
+            // Expected format: "Standard | Test District • CA | Assembly Rollover"
+            expect(formattedSubjectField.value).toBe('Standard | Test District • CA | Assembly Rollover');
+        }
     });
 
     test.skip('onLoad function adds ESCALATED TO ASSEMBLY tag to source ticket', async () => {

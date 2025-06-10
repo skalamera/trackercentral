@@ -522,9 +522,21 @@
                 const client = window.trackerApp.client;
 
                 // Map field IDs to storage keys
-                const storageKey = fieldId === 'version' ? 'customVersionValues' :
-                    fieldId === 'versionState' ? 'customLocationValues' :
-                        fieldId === 'resource' ? 'customResourceValues' : null;
+                let storageKey = null;
+                if (fieldId === 'version') {
+                    storageKey = 'customVersionValues';
+                } else if (fieldId === 'versionState') {
+                    storageKey = 'customLocationValues';
+                } else if (fieldId === 'resource') {
+                    // Check if this is a SIM tracker to use the appropriate resource values
+                    if (window.trackerApp && window.trackerApp.trackerType && window.trackerApp.trackerType.startsWith('sim-')) {
+                        storageKey = 'customSimResourceValues';
+                        console.log('Using SIM resource values for tracker:', window.trackerApp.trackerType);
+                    } else {
+                        storageKey = 'customResourceValues';
+                        console.log('Using standard resource values for tracker:', window.trackerApp ? window.trackerApp.trackerType : 'unknown');
+                    }
+                }
 
                 if (!storageKey) return null;
 
