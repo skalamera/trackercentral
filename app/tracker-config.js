@@ -96,9 +96,10 @@ const TRACKER_CONFIGS = {
                 title: "DESCRIPTION",
                 icon: "fa-clipboard-list",
                 fields: [
-                    { id: "realm", type: "text", label: "Realm (BURC Link)", required: true, hint: "Provide BURC Link to the district realm." },
-                    { id: "effectiveDate", type: "date", label: "Effective Return Date", required: true, hint: "The effective return date is the date the customer service rep. processed the return in NetSuite. This date should be provided in the initial ticket request. If it is not provided you will need to ask the person who submitted the ticket." },
-                    { id: "assemblyCodes", type: "textarea", label: "Assembly Codes To Be Removed", required: true, hint: "Include the list of assembly codes that need to be removed from the district's account. This list of codes will be included in the initial ticket request." }
+                    { id: "districtName", type: "text", label: "District Name", required: true, hint: "Auto-populates from original ticket.", readOnly: true },
+                    { id: "districtBURCLink", type: "text", label: "District BURC Link", required: true, hint: "Paste the district's BURC Link.", placeholder: "Ex: https://onboarding-production.benchmarkuniverse.com/3138327/dashboard" },
+                    { id: "effectiveDate", type: "date", label: "Effective Return Date", required: true, hint: "Select the effective return date.<br>Note: the effective return date is the date the customer service rep processed the return in NetSuite. This date should be provided in the initial ticket request. If it is not provided, you will need to ask the person who submitted the ticket." },
+                    { id: "assemblyCodes", type: "textarea", label: "Assembly Codes To Be Removed", required: true, hint: "Enter or upload the assembly codes that need to be removed.", placeholder: "Ex: X100876 BEC Benchmark Advance 2022 (National Edition) Gr. 2 Student Digital Subscription" }
                 ]
             }
         ],
@@ -120,7 +121,7 @@ const TRACKER_CONFIGS = {
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
             description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `User BURC Link: ${fields.realm || ''}<br>`;
+            description += `District BURC Link: ${fields.districtBURCLink || ''}<br>`;
             description += `Effective Return Date: ${formatDate(fields.effectiveDate) || ''}<br>`;
             description += `Assembly Codes To Be Removed:<br>${fields.assemblyCodes || ''}`;
 
@@ -246,7 +247,7 @@ const TRACKER_CONFIGS = {
             setTimeout(() => populateSummaryDefault(), 5000);
 
             // Set up a MutationObserver to watch for when Quill editors are added
-            const observer = new MutationObserver(function (mutations) {
+            const summaryObserver = new MutationObserver(function (mutations) {
                 mutations.forEach(function (mutation) {
                     if (mutation.addedNodes.length) {
                         mutation.addedNodes.forEach(node => {
@@ -274,11 +275,11 @@ const TRACKER_CONFIGS = {
             });
 
             // Start observing
-            observer.observe(document.body, { childList: true, subtree: true });
+            summaryObserver.observe(document.body, { childList: true, subtree: true });
 
             // Stop observing after 10 seconds to avoid memory leaks
             setTimeout(() => {
-                observer.disconnect();
+                summaryObserver.disconnect();
                 console.log("Assembly Rollover: Stopped observing for summary editor");
             }, 10000);
 
@@ -292,6 +293,104 @@ const TRACKER_CONFIGS = {
                 issueField.style.border = '1px solid #ddd';
                 issueField.style.cursor = 'not-allowed';
             }
+
+            // Function to sync District Name from subject to description section
+            function syncDistrictName() {
+                // Get all district name fields (there should be 2 - one in subject, one in description)
+                const allDistrictNameFields = document.querySelectorAll('#districtName');
+
+                console.log(`Assembly Rollover: Found ${allDistrictNameFields.length} district name fields`);
+
+                if (allDistrictNameFields.length >= 2) {
+                    // The first one should be in the subject section, the second in description
+                    const subjectDistrictNameField = allDistrictNameFields[0];
+                    const descriptionDistrictNameField = allDistrictNameFields[1];
+
+                    // Copy value from subject to description
+                    descriptionDistrictNameField.value = subjectDistrictNameField.value;
+
+                    // Make sure the description field is styled as auto-populated
+                    if (!descriptionDistrictNameField.readOnly) {
+                        descriptionDistrictNameField.style.backgroundColor = '#f0f0f0';
+                        descriptionDistrictNameField.style.color = '#666';
+                    }
+
+                    console.log("Assembly Rollover: Synced District Name to description section:", subjectDistrictNameField.value);
+                } else {
+                    // Fallback to more specific selectors
+                    const subjectDistrictNameField = document.querySelector('#section-subject #districtName') ||
+                        document.querySelector('[data-section-id="subject"] #districtName') ||
+                        document.getElementById('districtName');
+
+                    const descriptionDistrictNameField = document.querySelector('#section-details #districtName') ||
+                        document.querySelector('[data-section-id="details"] #districtName') ||
+                        document.querySelector('#details #districtName');
+
+                    if (subjectDistrictNameField && descriptionDistrictNameField) {
+                        descriptionDistrictNameField.value = subjectDistrictNameField.value;
+
+                        // Make sure the description field is styled as auto-populated
+                        if (!descriptionDistrictNameField.readOnly) {
+                            descriptionDistrictNameField.style.backgroundColor = '#f0f0f0';
+                            descriptionDistrictNameField.style.color = '#666';
+                        }
+
+                        console.log("Assembly Rollover: Synced District Name to description section using fallback selectors:", subjectDistrictNameField.value);
+                    } else {
+                        console.log("Assembly Rollover: Could not find district name fields for syncing", {
+                            subjectField: !!subjectDistrictNameField,
+                            descriptionField: !!descriptionDistrictNameField,
+                            totalFields: allDistrictNameFields.length
+                        });
+                    }
+                }
+            }
+
+            // Set up event listener for District Name field synchronization
+            // Use a more specific approach to ensure we get the right field
+            setTimeout(() => {
+                const allDistrictNameFields = document.querySelectorAll('#districtName');
+                if (allDistrictNameFields.length > 0) {
+                    // The first district name field should be in the subject section
+                    const subjectDistrictNameField = allDistrictNameFields[0];
+                    subjectDistrictNameField.addEventListener('input', syncDistrictName);
+                    subjectDistrictNameField.addEventListener('change', syncDistrictName);
+                    console.log("Assembly Rollover: Added event listeners to subject district name field");
+                } else {
+                    // Fallback approach
+                    const subjectDistrictNameField = document.getElementById('districtName');
+                    if (subjectDistrictNameField) {
+                        subjectDistrictNameField.addEventListener('input', syncDistrictName);
+                        subjectDistrictNameField.addEventListener('change', syncDistrictName);
+                        console.log("Assembly Rollover: Added event listeners to district name field (fallback)");
+                    }
+                }
+                // Initial sync
+                syncDistrictName();
+            }, 100);
+
+            // Also check for district name population from ticket data
+            setTimeout(() => {
+                if (window.trackerApp && window.trackerApp.ticketData && window.trackerApp.ticketData.company) {
+                    const companyName = window.trackerApp.ticketData.company.name;
+                    const allDistrictNameFields = document.querySelectorAll('#districtName');
+
+                    if (companyName && allDistrictNameFields.length > 0) {
+                        const subjectDistrictNameField = allDistrictNameFields[0];
+                        if (!subjectDistrictNameField.value) {
+                            subjectDistrictNameField.value = companyName;
+                            console.log("Assembly Rollover: Auto-populated district name from ticket data:", companyName);
+
+                            // Trigger input event to ensure any listeners are fired
+                            const event = new Event('input', { bubbles: true });
+                            subjectDistrictNameField.dispatchEvent(event);
+
+                            // Trigger sync after setting the value
+                            setTimeout(syncDistrictName, 100);
+                        }
+                    }
+                }
+            }, 200);
 
             // Function to update subject line according to assembly rollover format
             function updateSubjectLine() {
@@ -357,6 +456,56 @@ const TRACKER_CONFIGS = {
 
             // Schedule another update after a small delay to ensure fields are populated
             setTimeout(updateSubjectLine, 500);
+
+            // Schedule District Name sync at multiple intervals to ensure it works
+            setTimeout(syncDistrictName, 100);
+            setTimeout(syncDistrictName, 500);
+            setTimeout(syncDistrictName, 1000);
+            setTimeout(syncDistrictName, 2000);
+
+            // Set up a MutationObserver to watch for when the description section is added/rendered
+            const districtNameObserver = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.addedNodes.length) {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType === 1) { // Element node
+                                // Check if this node contains a district name field
+                                const hasDistrictNameField = node.id === 'districtName' ||
+                                    (node.querySelector && node.querySelector('#districtName'));
+
+                                if (hasDistrictNameField) {
+                                    console.log("Assembly Rollover: District name field detected in DOM");
+
+                                    // Check if we now have both fields
+                                    setTimeout(() => {
+                                        const allDistrictNameFields = document.querySelectorAll('#districtName');
+                                        if (allDistrictNameFields.length >= 2) {
+                                            console.log("Assembly Rollover: Both district name fields now present, syncing");
+                                            syncDistrictName();
+
+                                            // Re-setup event listeners on the subject field
+                                            const subjectField = allDistrictNameFields[0];
+                                            subjectField.removeEventListener('input', syncDistrictName);
+                                            subjectField.removeEventListener('change', syncDistrictName);
+                                            subjectField.addEventListener('input', syncDistrictName);
+                                            subjectField.addEventListener('change', syncDistrictName);
+                                        }
+                                    }, 100);
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Start observing for dynamic content
+            districtNameObserver.observe(document.body, { childList: true, subtree: true });
+
+            // Stop observing after 10 seconds to avoid memory leaks
+            setTimeout(() => {
+                districtNameObserver.disconnect();
+                console.log("Assembly Rollover: Stopped observing for description section");
+            }, 10000);
 
             // Try to get the source ticket ID from localStorage
             let sourceTicketId = null;
@@ -475,13 +624,13 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pencil-alt",
                 fields: [
-                    { id: "xcode", type: "text", label: "XCODE", required: true, hint: "<a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to Find a Resource Xcode</a>", placeholder: "e.g. X56723" },
-                    { id: "hasMultipleXcodes", type: "select", label: "Multiple Xcodes?", required: true, options: ["No", "Yes"], hint: "Select 'Yes' if this issue affects multiple Xcodes" },
-                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "e.g. Advance c2022" },
+                    { id: "xcode", type: "text", label: "Xcode", required: true, hint: "Enter the Xcode of the impacted resource.<br>Ex: X72525", placeholder: "Ex: X72525" },
+                    { id: "hasMultipleXcodes", type: "select", label: "Multiple Xcodes", required: true, options: ["No", "Yes"], hint: "Select whether more than one Xcode is impacted.<br>Ex: Yes" },
+                    { id: "application", type: "text", label: "Program Name", required: true, placeholder: "Ex: Advance -c2022", hint: "Auto-populates from original ticket." },
                     {
                         id: "version",
                         type: "select",
-                        label: "Version",
+                        label: "Subscription Version",
                         required: false,
                         options: [
                             "",
@@ -499,19 +648,19 @@ const TRACKER_CONFIGS = {
                             "National",
                             "Other"
                         ],
-                        hint: "<a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000741470' target='_blank'>Benchmark Program Variations</a>"
+                        hint: "Select the appropriate subscription version number from the dropdown.<br>Ex: 2.5"
                     },
                     {
                         id: "versionState",
                         type: "select",
-                        label: "State/National",
+                        label: "State / National",
                         required: false,
                         options: [],
-                        hint: "Select the state or location variation for this version"
+                        hint: "Select the corresponding state or national version from the dropdown.<br>Ex: 2.5 Virginia<br>Note: Just because a district is located in CA does not mean they will have the California version of the product. You must check their subscriptions to verify."
                     },
-                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "e.g. Symbols Of Our Country Missing" },
-                    { id: "gradesImpacted", type: "text", label: "Grades Impacted", required: true, placeholder: "e.g. Grade 2" },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject" }
+                    { id: "specificIssue", type: "text", label: "Specific Issue", required: true, placeholder: "Ex: Unit 7 My Reading & Writing Missing", hint: "Enter a succinct description of the issue.<br>Ex: Unit 7 My Reading & Writing Missing" },
+                    { id: "gradesImpacted", type: "text", label: "Grades Impacted", required: true, placeholder: "Ex: Grade K", hint: "Enter the Grade level impacted by the issue.<br>Ex: Grade K" },
+                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will auto-populate based on your submissions. Be sure to review for accuracy.<br>Naming convention: Xcode (indicate if more than one) | VIP or Standard | Program Name • Variation National / State | Specific issue: grades impacted<br>Ex: X97536 | VIP | Advance - c2022 • 2.75 Virginia | Unit 7 My Reading & Writing Missing: Grade K", readOnly: true }
                 ]
             },
             {
@@ -519,7 +668,7 @@ const TRACKER_CONFIGS = {
                 title: "SUMMARY",
                 icon: "fa-file-alt",
                 fields: [
-                    { id: "summary", type: "richtext", label: "", required: true }
+                    { id: "summary", type: "richtext", label: "", required: true, hint: "Enter a short summary of the issue as reported by the user.<br>Ex: In Advance -c2022, the Grade K Unit 7 My Reading & Writing is missing from the Resource Library." }
                 ]
             },
             {
@@ -527,28 +676,28 @@ const TRACKER_CONFIGS = {
                 title: "DESCRIPTION",
                 icon: "fa-clipboard-list",
                 fields: [
-                    { id: "issue", type: "richtext", label: "Issue", required: true, hint: "Explain the issue the user has reported in detail." },
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "schoolName", type: "text", label: "School Name", required: true, hint: "Provide the customer account and name of the user that the issue is affecting, as well as the role they have within Benchmark Universe (district admin, school admin, teacher). EX: Echo Lake Elementary School" },
-                    { id: "districtState", type: "text", label: "District State", required: true },
-                    { id: "program", type: "text", label: "Program Impacted", required: true, hint: "This field will be automatically populated with Program Name • Version State/National" },
-                    { id: "dateReported", type: "date", label: "Date issue reported by user", required: true, hint: "Provide the date the user reported the issue. EX: 5/18/23" },
-                    { id: "subscriptionCodes", type: "richtext", label: "Subscription codes customer is onboarded with", required: true, hint: "Provide the subscription code of the product the user has the issue in. EX: X71647 <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720168' target='_blank'>How to find an Xcode</a>" },
+                    { id: "issue", type: "richtext", label: "Issue", required: true, hint: "Describe in detail the issue as reported by the user.<br><br>You can insert exactly what the user reports in their submitted ticket if needed for clarification. However, only do so if it is clear and helpful.<br><br>Ex: User reports \"I tried opening Unit 7 workbook for Kindergarten and the link did not work last week or today. Today, I went into open it from the online Benchmark Curriculum and the workbook is not on the site.\"" },
+                    { id: "districtName", type: "text", label: "District Name", required: true, hint: "Auto-populates from original ticket." },
+                    { id: "schoolName", type: "text", label: "School Name", required: true, hint: "Paste the school name the user is associated to.<br>Ex: Maple Elementary School" },
+                    { id: "districtState", type: "text", label: "District State", required: true, placeholder: "Ex: FL", hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located.<br>Ex: FL<br>Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field, be sure to only use the state abbreviation." },
+                    { id: "program", type: "text", label: "Program Impacted", required: true, hint: "Auto-populates from the subject details<br>Ex: Advance -c2022 • 2.75 Virginia" },
+                    { id: "dateReported", type: "date", label: "Date Issue Reported By User", required: true, placeholder: "Ex: 06/05/2025", hint: "Select the date the user reported the issue.<br>Ex: 06/05/2025" },
+                    { id: "subscriptionCodes", type: "richtext", label: "Subscription Codes Customer Is Onboarded With", required: true, hint: "Enter or upload the subscriptions the impacted school/district has.<br><br>To upload a file, click on the image icon > click on the file > click open.<br><br>Ex: BEC Benchmark Advance 2022 (National Edition) Gr. K Classroom Digital" },
                     {
                         id: "impactScope",
                         type: "select",
-                        label: "Teacher vs Student impact",
+                        label: "Teacher Vs Student Impact",
                         required: true,
                         options: ["", "Teacher Only", "Student Only", "Both Teacher and Student"],
-                        hint: "Identify if the teacher or the student is impacted by the issue. EX: Teacher and Student"
+                        hint: "Select whether the issue impacts a teacher, a student, or both.<br>Ex: Both"
                     },
                     {
                         id: "isVIP",
                         type: "select",
-                        label: "VIP Customer",
+                        label: "VIP Status",
                         required: true,
                         options: ["No", "Yes"],
-                        hint: "Identify if the user is a VIP customer. EX: No <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP District List</a>"
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP.<br>Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     }
                 ]
             },
@@ -562,21 +711,22 @@ const TRACKER_CONFIGS = {
                         type: "text",
                         label: "Path",
                         required: true,
-                        hint: "Path taken to recreate issue and screenshots if necessary. EX: Advance -c2022 > TRS > G5 > U1 > W2 > L12"
+                        placeholder: "Ex: Advance -c2022 > Grade K > Student Books > My Reading and Writing > Show More",
+                        hint: "Enter the exact path taken to replicate the issue."
                     },
                     {
                         id: "actualResults",
                         type: "richtext",
-                        label: "Actual results",
+                        label: "Actual Results",
                         required: true,
-                        hint: "Provide Screenshots and any other information that would be helpful to replicate the reported issue."
+                        hint: "Enter any information that would be helpful to replicate the reported issue.<br><br>- To add screenshots, you can either click the image icon > select the image file > click Open, or paste the screenshot in the box. <br>- Add as many as you see fit to explain the issue (if needed, you can add additional screenshots or video, see Step 9)<br>- To add links, type the word or phrase indicating what you are linking to > click the link icon and paste the URL > click Save.<br>- Ex: The Unit 7 My Reading & Writing missing from the user's account:"
                     },
                     {
                         id: "expectedResults",
                         type: "richtext",
-                        label: "Expected results",
+                        label: "Expected Results",
                         required: true,
-                        hint: "Explain/show how the system should be functioning if working correctly. Our role is to convey what the user is requesting. Ie. the user feels a certain standard is missing from a lesson. Request that rationale be provided. Example of expected results: Provide title for lesson, Fix hyperlink, Provide rationale, Fix grammatical errors."
+                        hint: "Enter details of what the user expects once the issue has been resolved.<br><br>Ex: The Grade K Unit 7 My Reading & Writing book should be visible in the user's account."
                     }
                 ]
             },
@@ -590,7 +740,7 @@ const TRACKER_CONFIGS = {
                         type: "richtext",
                         label: "Screenshots and Supporting Materials",
                         required: false,
-                        hint: "Paste screenshots or add descriptions of visual evidence here"
+                        hint: "Click Upload Files to add any additional information that will be helpful."
                     }
                 ]
             }
@@ -618,13 +768,13 @@ const TRACKER_CONFIGS = {
             if (fields.schoolName) description += `School Name: ${fields.schoolName}<br>`;
             if (fields.districtState) description += `District State: ${fields.districtState}<br>`;
             description += `Program Impacted: ${fields.program || ''}<br>`;
-            if (fields.dateReported) description += `Date issue reported by user: ${formatDate(fields.dateReported)}<br>`;
+            if (fields.dateReported) description += `Date Issue Reported By User: ${formatDate(fields.dateReported)}<br>`;
             if (fields.subscriptionCodes && fields.subscriptionCodes.trim() !== '<p><br></p>') {
-                description += `<div><strong>Subscription codes:</strong></div>`;
+                description += `<div><strong>Subscription Codes Customer Is Onboarded With:</strong></div>`;
                 description += `<div>${fields.subscriptionCodes}</div>`;
             }
-            if (fields.impactScope) description += `Teacher vs Student impact: ${fields.impactScope}<br>`;
-            description += `VIP Customer: ${fields.isVIP || 'No'}<br>`;
+            if (fields.impactScope) description += `Teacher Vs Student Impact: ${fields.impactScope}<br>`;
+            description += `VIP Status: ${fields.isVIP || 'No'}<br>`;
 
             // Add steps to reproduce section
             description += '<div style="margin-bottom: 20px;"></div>';
@@ -641,22 +791,22 @@ const TRACKER_CONFIGS = {
 
             // Add actual results
             if (fields.actualResults && fields.actualResults.trim() !== '<p><br></p>') {
-                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Actual results</span></div>`;
+                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Actual Results</span></div>`;
                 description += `<div>${fields.actualResults}</div>`;
                 description += '<div style="margin-bottom: 10px;"></div>';
             } else {
-                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Actual results</span></div>`;
+                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Actual Results</span></div>`;
                 description += '<div><em>No actual results provided.</em></div>';
                 description += '<div style="margin-bottom: 10px;"></div>';
             }
 
             // Add expected results
             if (fields.expectedResults && fields.expectedResults.trim() !== '<p><br></p>') {
-                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Expected results</span></div>`;
+                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Expected Results</span></div>`;
                 description += `<div>${fields.expectedResults}</div>`;
                 description += '<div style="margin-bottom: 20px;"></div>';
             } else {
-                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Expected results</span></div>`;
+                description += `<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">Expected Results</span></div>`;
                 description += '<div><em>No expected results provided.</em></div>';
                 description += '<div style="margin-bottom: 20px;"></div>';
             }
@@ -779,19 +929,21 @@ const TRACKER_CONFIGS = {
                 if (xcode.trim()) {
                     xcodePart = xcode.trim();
                     if (hasMultipleXcodes) {
-                        xcodePart += ' (multiple)';
+                        xcodePart += ' (indicate if more than one)';
                     }
                 }
                 if (xcodePart) {
                     subjectParts.push(xcodePart);
                 }
 
-                // VIP status part (if applicable)
+                // Second part: VIP or Standard
                 if (isVIP) {
                     subjectParts.push('VIP');
+                } else {
+                    subjectParts.push('Standard');
                 }
 
-                // Application and version part
+                // Third part: Program Name • Variation National / State
                 let applicationPart = '';
                 if (application.trim()) {
                     applicationPart = application.trim();
@@ -813,14 +965,14 @@ const TRACKER_CONFIGS = {
                     subjectParts.push(applicationPart);
                 }
 
-                // Specific issue and grades part
+                // Fourth part: Specific issue: grades impacted
                 let issueGradesPart = '';
                 if (specificIssue.trim() && gradesImpacted.trim()) {
                     issueGradesPart = `${specificIssue.trim()}: ${gradesImpacted.trim()}`;
                 } else if (specificIssue.trim()) {
                     issueGradesPart = specificIssue.trim();
                 } else if (gradesImpacted.trim()) {
-                    issueGradesPart = gradesImpacted.trim();
+                    issueGradesPart = `Grades Impacted: ${gradesImpacted.trim()}`;
                 }
                 if (issueGradesPart) {
                     subjectParts.push(issueGradesPart);
@@ -3956,11 +4108,6 @@ const TRACKER_CONFIGS = {
                         id: "realm", type: "text", label: "Realm", required: true, placeholder: "Ex: msemail",
                         hint: "Enter the district's Realm."
                     },
-                    {
-                        id: "assignmentId", type: "text", label: "Assignment ID", required: true,
-                        placeholder: "Ex: https://msemail.benchmarkuniverse.com/?#assignments/11569615",
-                        hint: "Paste the Assignment ID of the impacted assignment. <a href='https://techsupport.benchmarkeducation.com/a/solutions/articles/67000720821' target='_blank'>Finding assignment ID</a>"
-                    },
                     { id: "dateReported", type: "date", label: "Date Issue Reported", required: true, placeholder: "Ex: 06/05/2025", hint: "Select the date the issue was reported." },
                     {
                         id: "harFileAttached",
@@ -4037,7 +4184,6 @@ const TRACKER_CONFIGS = {
             }
             if (fields.device) description += `Device: ${fields.device}<br>`;
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
-            if (fields.assignmentId) description += `Assignment ID: ${fields.assignmentId}<br>`;
             if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported)}<br>`;
             if (fields.harFileAttached) {
                 description += `HAR file attached: ${fields.harFileAttached}`;
@@ -6361,7 +6507,46 @@ const TRACKER_CONFIGS = {
                 title: "SUBJECT",
                 icon: "fa-pencil-alt",
                 fields: [
-                    { id: "formattedSubject", type: "text", label: "Subject", required: true, hint: "This will be submitted as your ticket subject" }
+                    {
+                        id: "isVIP",
+                        type: "select",
+                        label: "VIP Status",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP.<br>Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
+                    },
+                    {
+                        id: "districtName",
+                        type: "text",
+                        label: "District Name",
+                        required: true,
+                        hint: "Auto-populates from original ticket."
+                    },
+                    {
+                        id: "districtState",
+                        type: "text",
+                        label: "District State",
+                        required: true,
+                        placeholder: "Ex: FL",
+                        hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located.<br>Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field, be sure to only use the state abbreviation."
+                    },
+                    {
+                        id: "issue",
+                        type: "text",
+                        label: "Issue",
+                        required: true,
+                        value: "Timeout Extension",
+                        readOnly: true,
+                        hint: "This will auto-populate to say Timeout Extension."
+                    },
+                    {
+                        id: "formattedSubject",
+                        type: "text",
+                        label: "Formatted Subject Line",
+                        required: false,
+                        readOnly: true,
+                        hint: "This will auto-populate based on your submissions. Be sure to review for accuracy.<br><br>Naming convention: VIP or Standard District Name • District State (Abv) | Issue<br><br>Ex: VIP * FAIRFAX CO PUBLIC SCHOOL DIST • VA | Timeout Extension"
+                    }
                 ]
             },
             {
@@ -6369,31 +6554,177 @@ const TRACKER_CONFIGS = {
                 title: "DESCRIPTION",
                 icon: "fa-clipboard-list",
                 fields: [
-                    { id: "requestedLength", type: "text", label: "REQUESTED TIME OUT LENGTH (max 12 hours)", required: true },
-                    { id: "isVIP", type: "select", label: "VIP (yes or no)", required: true, options: ["No", "Yes"] },
-                    { id: "username", type: "text", label: "Username", required: true },
-                    { id: "role", type: "text", label: "Role (Must be district or tech admin)", required: true },
-                    { id: "adminLink", type: "text", label: "BURC Link", required: true },
-                    { id: "realm", type: "text", label: "Realm", required: true },
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "districtState", type: "text", label: "District State", required: true },
-                    { id: "dateRequested", type: "date", label: "Date requested by customer", required: true }
+                    {
+                        id: "username",
+                        type: "text",
+                        label: "Username",
+                        required: true,
+                        placeholder: "Ex: amiller3",
+                        hint: "Enter the Username of the District Admin that is experiencing the issue."
+                    },
+                    {
+                        id: "role",
+                        type: "text",
+                        label: "Role",
+                        required: true,
+                        value: "District Admin",
+                        placeholder: "Ex: District Admin",
+                        hint: "Enter District Admin.<br>Note: If the user has a different role they do not have access to this feature."
+                    },
+                    {
+                        id: "adminLink",
+                        type: "text",
+                        label: "BURC Link",
+                        required: true,
+                        placeholder: "Ex: https://onboarding-production.benchmarkuniverse.com/7630420/manage-account/district/techadmins/heather_tech",
+                        hint: "Paste the BURC Link of the user."
+                    },
+                    {
+                        id: "realm",
+                        type: "text",
+                        label: "Realm",
+                        required: true,
+                        placeholder: "Ex: msemail",
+                        hint: "Enter the district's Realm."
+                    },
+                    {
+                        id: "districtNameDesc",
+                        type: "text",
+                        label: "District Name",
+                        required: true,
+                        hint: "Auto-populates from original ticket.",
+                        readOnly: true
+                    },
+                    {
+                        id: "timeoutLength",
+                        type: "text",
+                        label: "New Timeout Length Set Tool",
+                        required: true,
+                        placeholder: "Ex: 5 hours",
+                        hint: "Enter the timeout length the DA has set.<br>Note: The timeout can be between 30 minutes and twelve hours long based on 30 minute increments. If they are choosing outside of these parameters the tool will fail."
+                    },
+                    {
+                        id: "issueDetails",
+                        type: "richtext",
+                        label: "Details",
+                        required: true,
+                        hint: "Enter the details of how the timeout tool is failing.<br>Ex: DA has set the timeout feature to 2 hours and 30 minutes but the users are being logged out after only 30 minutes."
+                    },
+                    {
+                        id: "dateReported",
+                        type: "date",
+                        label: "Date Issue Reported",
+                        required: true,
+                        placeholder: "Ex: 06/05/2025",
+                        hint: "Select the date the issue was reported."
+                    },
+                    {
+                        id: "harFileAttached",
+                        type: "select",
+                        label: "HAR File Attached",
+                        required: true,
+                        options: ["No", "Yes"],
+                        hint: "Choose Yes if a HAR file has been captured, or No if it has not been.<br>Note: All SIM Trackers should have a HAR File unless told otherwise by a lead or manager. If No is chosen from the drop-down, you will need to enter a reason why you do not have one in order to create the tracker."
+                    },
+                    {
+                        id: "harFileReason",
+                        type: "text",
+                        label: "Reason if HAR file not attached",
+                        required: false,
+                        condition: {
+                            field: "harFileAttached",
+                            value: "No"
+                        }
+                    }
+                ]
+            },
+            {
+                id: "reproduction",
+                title: "STEPS/FILTERS TO REPRODUCE",
+                icon: "fa-list-ol",
+                fields: [
+                    {
+                        id: "stepsToReproduce",
+                        type: "richtext",
+                        label: "",
+                        required: true,
+                        hint: "Enter the exact steps taken by the user and yourself to recreate the issue."
+                    }
+                ]
+            },
+            {
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [
+                    {
+                        id: "screenshotsDescription",
+                        type: "richtext",
+                        label: "",
+                        required: false,
+                        hint: "Click Upload Files to add any additional information that will be helpful."
+                    }
+                ]
+            },
+            {
+                id: "expectedResults",
+                title: "EXPECTED RESULTS",
+                icon: "fa-check-circle",
+                fields: [
+                    {
+                        id: "expectedResults",
+                        type: "richtext",
+                        label: "",
+                        required: true,
+                        hint: "Enter details regarding expected functionality."
+                    }
                 ]
             }
         ],
         descriptionGenerator: function (fields) {
             let description = '';
 
+            // Description section
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>';
-            description += `REQUESTED TIME OUT LENGTH (max 12 hours): ${fields.requestedLength || ''}<br>`;
-            description += `VIP: ${fields.isVIP || 'No'}<br>`;
             description += `Username: ${fields.username || ''}<br>`;
-            description += `Role (Must be district or tech admin): ${fields.role || ''}<br>`;
+            description += `Role: ${fields.role || ''}<br>`;
             description += `BURC Link: ${fields.adminLink || ''}<br>`;
             description += `Realm: ${fields.realm || ''}<br>`;
-            description += `District Name: ${fields.districtName || ''}<br>`;
-            description += `District State: ${fields.districtState || ''}<br>`;
-            description += `Date requested by customer: ${formatDate(fields.dateRequested) || ''}<br>`;
+            description += `District Name: ${fields.districtNameDesc || fields.districtName || ''}<br>`;
+            description += `New Timeout Length Set Tool: ${fields.timeoutLength || ''}<br>`;
+
+            if (fields.issueDetails && fields.issueDetails.trim() !== '<p><br></p>') {
+                description += `<div style="margin-top: 10px;"><strong>Details:</strong></div>`;
+                description += `<div>${fields.issueDetails}</div>`;
+            }
+
+            description += `<div style="margin-top: 10px;">Date Issue Reported: ${formatDate(fields.dateReported) || ''}</div>`;
+            description += `HAR File Attached: ${fields.harFileAttached || ''}`;
+            if (fields.harFileAttached === "No" && fields.harFileReason) {
+                description += ` (${fields.harFileReason})`;
+            }
+            description += '<br>';
+            description += '<div style="margin-bottom: 20px;"></div>';
+
+            // Steps to Reproduce section
+            if (fields.stepsToReproduce && fields.stepsToReproduce.trim() !== '<p><br></p>') {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">STEPS/FILTERS TO REPRODUCE</span></div>';
+                description += `<div>${fields.stepsToReproduce}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Screenshots section
+            if (fields.screenshotsDescription && fields.screenshotsDescription.trim() !== '<p><br></p>') {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS, VIDEOS & OTHER SUPPORTING FILE ATTACHMENTS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+                description += '<div style="margin-bottom: 20px;"></div>';
+            }
+
+            // Expected Results section
+            if (fields.expectedResults && fields.expectedResults.trim() !== '<p><br></p>') {
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">EXPECTED RESULTS</span></div>';
+                description += `<div>${fields.expectedResults}</div>`;
+            }
 
             return description;
         },
@@ -6403,33 +6734,68 @@ const TRACKER_CONFIGS = {
             // Call the helper functions to populate fields
             populateDistrictState();
 
-            // Format subject line based on district name and VIP status
+            // Set the Issue field to "Timeout Extension" and make it readonly
+            const issueField = document.getElementById('issue');
+            if (issueField) {
+                issueField.value = "Timeout Extension";
+                issueField.readOnly = true;
+                issueField.style.backgroundColor = '#f0f0f0';
+                issueField.style.color = '#666';
+                issueField.style.border = '1px solid #ddd';
+                issueField.style.cursor = 'not-allowed';
+            }
+
+            // Set default value for Role field
+            const roleField = document.getElementById('role');
+            if (roleField && !roleField.value) {
+                roleField.value = "District Admin";
+            }
+
+            // Function to sync District Name from subject to description section
+            function syncDistrictName() {
+                const subjectDistrictName = document.getElementById('districtName');
+                const descDistrictName = document.getElementById('districtNameDesc');
+
+                if (subjectDistrictName && descDistrictName) {
+                    descDistrictName.value = subjectDistrictName.value;
+                    console.log("Synced District Name to description section:", subjectDistrictName.value);
+                }
+            }
+
+            // Format subject line based on district name, state and VIP status
             function updateSubjectLine() {
                 const districtNameField = document.getElementById('districtName');
+                const districtStateField = document.getElementById('districtState');
                 const isVIPField = document.getElementById('isVIP');
-                const requestedLengthField = document.getElementById('requestedLength');
+                const issueField = document.getElementById('issue');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
-                if (!districtNameField || !isVIPField || !formattedSubjectField) {
+                if (!districtNameField || !districtStateField || !isVIPField || !formattedSubjectField) {
                     console.log("Missing required fields for subject formatting");
                     return;
                 }
 
                 const districtName = districtNameField.value || '';
+                const districtState = districtStateField.value || '';
                 const isVip = isVIPField.value === 'Yes';
-                const timeOutLength = requestedLengthField ? requestedLengthField.value : '';
+                const issue = issueField ? issueField.value || 'Timeout Extension' : 'Timeout Extension';
 
-                // Format: "VIP * District Name | Time Out Extension - Time Out Length" or "District Name | Time Out Extension - Time Out Length"
+                // Format: "VIP or Standard District Name • District State (Abv) | Issue"
                 let subject = '';
-                if (isVip) {
-                    subject = `VIP * ${districtName} | Time Out Extension`;
+                if (districtName.trim() && districtState.trim()) {
+                    if (isVip) {
+                        subject = `VIP * ${districtName.trim()} • ${districtState.trim()} | ${issue}`;
+                    } else {
+                        subject = `Standard ${districtName.trim()} • ${districtState.trim()} | ${issue}`;
+                    }
+                } else if (districtName.trim()) {
+                    if (isVip) {
+                        subject = `VIP * ${districtName.trim()} | ${issue}`;
+                    } else {
+                        subject = `Standard ${districtName.trim()} | ${issue}`;
+                    }
                 } else {
-                    subject = `${districtName} | Time Out Extension`;
-                }
-
-                // Add the time out length if provided
-                if (timeOutLength) {
-                    subject += ` - ${timeOutLength}`;
+                    subject = issue;
                 }
 
                 formattedSubjectField.value = subject;
@@ -6438,14 +6804,45 @@ const TRACKER_CONFIGS = {
 
             // Set up event listeners
             document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('requestedLength')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', function () {
+                updateSubjectLine();
+                syncDistrictName();
+            });
+            document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
 
             // Initial update attempt
             updateSubjectLine();
+            syncDistrictName();
 
             // Schedule another update after a small delay to ensure fields are populated
-            setTimeout(updateSubjectLine, 500);
+            setTimeout(() => {
+                updateSubjectLine();
+                syncDistrictName();
+            }, 500);
+
+            // Handle HAR file reason field visibility
+            const harFileField = document.getElementById('harFileAttached');
+            const harFileReasonField = document.getElementById('harFileReason');
+            const harFileReasonContainer = harFileReasonField?.closest('.form-group');
+
+            function toggleHarFileReason() {
+                if (harFileReasonContainer) {
+                    if (harFileField?.value === 'No') {
+                        harFileReasonContainer.style.display = '';
+                        harFileReasonField.required = true;
+                    } else {
+                        harFileReasonContainer.style.display = 'none';
+                        harFileReasonField.required = false;
+                        harFileReasonField.value = '';
+                    }
+                }
+            }
+
+            if (harFileField) {
+                harFileField.addEventListener('change', toggleHarFileReason);
+                // Initial check
+                toggleHarFileReason();
+            }
         }
     },
 
