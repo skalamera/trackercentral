@@ -682,7 +682,7 @@ const TRACKER_CONFIGS = {
                     { id: "districtState", type: "text", label: "District State", required: true, placeholder: "Ex: FL", hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located.<br>Ex: FL<br>Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field, be sure to only use the state abbreviation." },
                     { id: "program", type: "text", label: "Program Impacted", required: true, hint: "Auto-populates from the subject details<br>Ex: Advance -c2022 • 2.75 Virginia" },
                     { id: "dateReported", type: "date", label: "Date Issue Reported By User", required: true, placeholder: "Ex: 06/05/2025", hint: "Select the date the user reported the issue.<br>Ex: 06/05/2025" },
-                    { id: "subscriptionCodes", type: "richtext", label: "Subscription Codes Customer Is Onboarded With", required: true, hint: "Enter or upload the subscriptions the impacted school/district has.<br><br>To upload a file, click on the image icon > click on the file > click open.<br><br>Ex: BEC Benchmark Advance 2022 (National Edition) Gr. K Classroom Digital" },
+                    { id: "subscriptionCodes", type: "richtext", label: "Subscription Codes Customer Is Onboarded With", required: true, hint: "Enter or upload the subscriptions the impacted school/district has.<br>- To upload a file, click on the image icon > click on the file > click open.<br>- Ex: BEC Benchmark Advance 2022 (National Edition) Gr. K Classroom Digital<br>- Note: to upload a file, see step 7." },
                     {
                         id: "impactScope",
                         type: "select",
@@ -1123,12 +1123,83 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "VIP Status",
                         required: true,
-                        options: ["No", "Yes"]
+                        options: ["No", "Yes"],
+                        hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP.<br>Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                     },
-                    { id: "districtName", type: "text", label: "District Name", required: true },
-                    { id: "application", type: "text", label: "Application Name", required: true },
-                    { id: "resourceName", type: "text", label: "Resource Name", required: true },
-                    { id: "shortDescription", type: "text", label: "Short Description of Request", required: true },
+                    {
+                        id: "districtName",
+                        type: "text",
+                        label: "District Name",
+                        required: true,
+                        hint: "Auto-populates from original ticket."
+                    },
+                    {
+                        id: "districtState",
+                        type: "text",
+                        label: "District State",
+                        required: true,
+                        placeholder: "Ex: VA",
+                        hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located.<br>Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field be sure to only use state abbreviation."
+                    },
+                    {
+                        id: "application",
+                        type: "text",
+                        label: "Program Name",
+                        required: true,
+                        placeholder: "Ex: Advance -c2022",
+                        hint: "Auto-populates from original ticket."
+                    },
+                    {
+                        id: "version",
+                        type: "select",
+                        label: "Subscription Version",
+                        required: false,
+                        placeholder: "Ex: 2.75",
+                        options: [
+                            "",
+                            "2.0",
+                            "2.5",
+                            "2.5 Mod / 2.6",
+                            "2.5 Mod / 2.6 National",
+                            "2.5 National",
+                            "2.75",
+                            "2.75 National",
+                            "2.8",
+                            "2.8 National",
+                            "2.8 Florida",
+                            "Florida",
+                            "National",
+                            "Other"
+                        ],
+                        hint: "Select the appropriate subscription version number from the dropdown."
+                    },
+                    {
+                        id: "versionState",
+                        type: "select",
+                        label: "State / National",
+                        required: false,
+                        placeholder: "Ex: 2.75 Virginia",
+                        options: [],
+                        hint: "Select the corresponding state or national version from the dropdown.<br>Note: Just because a district is located in CA does not mean they will have the California version of the product. You must check their subscriptions to verify."
+                    },
+                    {
+                        id: "resourceName",
+                        type: "select",
+                        label: "Resource",
+                        required: true,
+                        placeholder: "Ex: Bookshelves",
+                        options: ["-- Loading from settings --"],
+                        needsCustomValues: true,
+                        hint: "Select the impacted resource."
+                    },
+                    {
+                        id: "shortDescription",
+                        type: "text",
+                        label: "Short Description of Issue",
+                        required: true,
+                        placeholder: "Ex: Option to Select Whole Class to Share Bookshelves",
+                        hint: "Enter a short description of the functionality the user is requesting."
+                    },
                     {
                         id: "userRole",
                         type: "checkboxes",
@@ -1139,9 +1210,17 @@ const TRACKER_CONFIGS = {
                             { id: "teachers", label: "Teachers" },
                             { id: "admin", label: "Admin" },
                             { id: "allUsers", label: "All Users" }
-                        ]
+                        ],
+                        hint: "Select the User Role(s) that would be impacted by the new functionality.<br>Ex: Teacher<br>Note: Multiple roles can be selected."
                     },
-                    { id: "formattedSubject", type: "text", label: "Formatted Subject Line", required: false, hint: "This will be submitted as your ticket subject", readOnly: true, disabled: true }
+                    {
+                        id: "formattedSubject",
+                        type: "text",
+                        label: "Formatted Subject Line",
+                        required: false,
+                        hint: "This will auto-populate based on your submissions. Be sure to review for accuracy.<br>Naming convention: VIP or Standard District Name • District State (Abv) | Program Name • Variation National / State | Resource • Specific issue for user role<br>Ex: VIP | FAIRFAX CO SCHOOL DIST• VA | Advance -c2022 • 2.75 Virginia | Bookshelves: • Option to Select Whole Class to Share Bookshelves",
+                        readOnly: true
+                    }
                 ]
             },
             {
@@ -1154,12 +1233,15 @@ const TRACKER_CONFIGS = {
                         type: "select",
                         label: "Team",
                         required: true,
+                        placeholder: "Ex: SIM (Colleen Baker)",
                         options: [
+                            "",
                             "Assessments (Marty O'Kane)",
                             "Editorial English (Max Prinz)",
                             "SIM (Colleen Baker)",
                             "TRS (Edgar Fernandez)"
-                        ]
+                        ],
+                        hint: "Select the team that should manage the request."
                     }
                 ]
             },
@@ -1171,16 +1253,19 @@ const TRACKER_CONFIGS = {
                     {
                         id: "applicationDetails",
                         type: "text",
-                        label: "Application",
+                        label: "Program Name",
                         required: true,
-                        hint: "Provide the application in which the user is referring to. EX: Assessments."
+                        placeholder: "Ex: Advance -c2022 • 2.75 Virginia",
+                        hint: "Auto-populates from subject details.",
+                        readOnly: true
                     },
                     {
                         id: "shortDescriptionDetails",
                         type: "text",
-                        label: "Short description",
+                        label: "Short Description",
                         required: true,
-                        hint: "Explain what the user is requesting. EX: Allow students to enable text to speech for the writing portion of assessments."
+                        placeholder: "Ex: Option to Select Whole Class to Share Bookshelves",
+                        hint: "Auto-populates from subject details.<br>Note: this field can be edited."
                     }
                 ]
             },
@@ -1189,7 +1274,13 @@ const TRACKER_CONFIGS = {
                 title: "ADDITIONAL DETAILS",
                 icon: "fa-info-circle",
                 fields: [
-                    { id: "additionalDetails", type: "richtext", label: "", required: true }
+                    {
+                        id: "additionalDetails",
+                        type: "richtext",
+                        label: "",
+                        required: true,
+                        hint: "Describe in detail the feature request as reported by the user.<br>You can insert exactly what the user reports in their submitted ticket if needed for clarification. However, only do so if it is clear and helpful.<br>EX: User reports \"It would be extremely helpful if we had the option to select a class to share a bookshelf with, rather than having to select student by student.\""
+                    }
                 ]
             },
             {
@@ -1197,11 +1288,60 @@ const TRACKER_CONFIGS = {
                 title: "USER INFO",
                 icon: "fa-user",
                 fields: [
-                    { id: "username", type: "text", label: "Username", required: true, hint: "Provide the username of the customer submitting the request. EX: mitizishepard." },
-                    { id: "role", type: "text", label: "Role", required: true, hint: "Provide the role of the customer submitting the request. EX: District Admin, School Admin, Teacher, or Student." },
-                    { id: "name", type: "text", label: "Name", required: true, hint: "Provide the name of the customer submitting the request. EX: Mitizi Shepard" },
-                    { id: "customer_email", type: "email", label: "Email", required: true, hint: "Provide the email of the customer submitting the request." },
-                    { id: "dateRequested", type: "date", label: "Date Requested", required: true }
+                    {
+                        id: "username",
+                        type: "text",
+                        label: "Username",
+                        required: true,
+                        placeholder: "Ex: amiller3",
+                        hint: "Enter the Username of the requestor"
+                    },
+                    {
+                        id: "role",
+                        type: "text",
+                        label: "Role",
+                        required: true,
+                        placeholder: "Ex: Teacher",
+                        hint: "Enter the BU Role of the requestor."
+                    },
+                    {
+                        id: "name",
+                        type: "text",
+                        label: "Name",
+                        required: true,
+                        placeholder: "Ex: Abby Miller",
+                        hint: "Enter the full Name of the requestor."
+                    },
+                    {
+                        id: "customer_email",
+                        type: "email",
+                        label: "Email",
+                        required: true,
+                        placeholder: "Ex: amiller3@alphabetshools.org",
+                        hint: "Paste the email of the requestor."
+                    },
+                    {
+                        id: "dateRequested",
+                        type: "date",
+                        label: "Date Request",
+                        required: true,
+                        placeholder: "Ex: 06/05/2025",
+                        hint: "Select the date the request was made."
+                    }
+                ]
+            },
+            {
+                id: "screenshots",
+                title: "SCREENSHOTS, VIDEOS & OTHER SUPPORTING FILE ATTACHMENTS",
+                icon: "fa-images",
+                fields: [
+                    {
+                        id: "screenshotsDescription",
+                        type: "richtext",
+                        label: "",
+                        required: false,
+                        hint: "Click Upload Files to add any additional information that will be helpful."
+                    }
                 ]
             }
         ],
@@ -1212,26 +1352,31 @@ const TRACKER_CONFIGS = {
             description += '<div style="margin-bottom: 20px;"></div>';
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">FEATURE REQUEST SUMMARY</span></div>';
-            description += `<div><strong>Application:</strong></div>`;
+            description += `<div><strong>Program Name:</strong></div>`;
             description += `<div>${fields.applicationDetails || ''}</div>`;
-            description += `<div><strong>Short description:</strong></div>`;
+            description += `<div><strong>Short Description:</strong></div>`;
             description += `<div>${fields.shortDescriptionDetails || ''}</div>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
-            if (fields.additionalDetails) {
+            if (fields.additionalDetails && fields.additionalDetails.trim() !== '<p><br></p>') {
                 description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">ADDITIONAL DETAILS</span></div>';
                 description += `<div>${fields.additionalDetails}</div>`;
                 description += '<div style="margin-bottom: 20px;"></div>';
             }
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">USER INFO</span></div>';
-            description += `VIP Status: ${fields.isVIP === 'Yes' ? 'VIP' : 'Core'}<br>`;
-            description += `District: ${fields.districtName || ''}<br>`;
             if (fields.username) description += `Username: ${fields.username}<br>`;
             if (fields.role) description += `Role: ${fields.role}<br>`;
             if (fields.name) description += `Name: ${fields.name}<br>`;
             if (fields.customer_email) description += `Email: ${fields.customer_email}<br>`;
-            if (fields.dateRequested) description += `Date Requested: ${formatDate(fields.dateRequested) || ''}<br>`;
+            if (fields.dateRequested) description += `Date Request: ${formatDate(fields.dateRequested) || ''}<br>`;
+
+            // Add screenshots section if content is provided
+            if (fields.screenshotsDescription && fields.screenshotsDescription.trim() !== '<p><br></p>') {
+                description += '<div style="margin-bottom: 20px;"></div>';
+                description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS, VIDEOS & OTHER SUPPORTING FILE ATTACHMENTS</span></div>';
+                description += `<div>${fields.screenshotsDescription}</div>`;
+            }
 
             return description;
         },
@@ -1239,6 +1384,18 @@ const TRACKER_CONFIGS = {
         // Add onLoad function for dynamic subject line formatting
         onLoad: function () {
             console.log("Feature Request onLoad function executing");
+
+            // Auto-populate district state
+            populateDistrictState();
+
+            // Handle custom version input when "Other" is selected
+            setupCustomVersionInput();
+
+            // Also setup custom version state input when "Other" is selected
+            setupCustomVersionStateInput();
+
+            // First populate Application Name from product info
+            populateApplicationName();
 
             // Hide the Requester Email property field as it will always be the logged in agent
             // Look specifically for the ticket property field, not our custom form field
@@ -1286,12 +1443,15 @@ const TRACKER_CONFIGS = {
             function updateSubjectLine() {
                 const isVipField = document.getElementById('isVIP');
                 const districtNameField = document.getElementById('districtName');
+                const districtStateField = document.getElementById('districtState');
                 const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
                 const resourceNameField = document.getElementById('resourceName');
                 const shortDescriptionField = document.getElementById('shortDescription');
                 const formattedSubjectField = document.getElementById('formattedSubject');
 
-                if (!isVipField || !districtNameField || !applicationField ||
+                if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
                     !resourceNameField || !shortDescriptionField || !formattedSubjectField) {
                     console.log("Missing required fields for subject formatting");
                     return;
@@ -1311,18 +1471,80 @@ const TRACKER_CONFIGS = {
 
                 const isVip = isVipField.value === 'Yes';
                 const districtName = districtNameField.value || '';
+                const districtState = districtStateField.value || '';
                 const application = applicationField.value || '';
+                const version = getVersionValue(versionField) || '';
+                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
                 const resourceName = resourceNameField.value || '';
                 const shortDescription = shortDescriptionField.value || '';
                 const userRoleText = userRoles.length > 0 ? userRoles.join(', ') : '';
 
-                // Format: "VIP * District Name | Application Name | Resource Name - Short Description of Request for User Role"
-                let subject = '';
+                // Build the subject line according to the new format
+                // Format: "VIP or Standard District Name • District State (Abv) | Program Name • Variation National / State | Resource • Specific issue for user role"
+                const subjectParts = [];
+
+                // First part: VIP/Standard District Name • District State
+                let districtPart = '';
                 if (isVip) {
-                    subject = `VIP * ${districtName} | ${application} | ${resourceName} - ${shortDescription} for ${userRoleText}`;
+                    districtPart = 'VIP | ';
                 } else {
-                    subject = `${districtName} | ${application} | ${resourceName} - ${shortDescription} for ${userRoleText}`;
+                    districtPart = '';
                 }
+
+                if (districtName.trim() && districtState.trim()) {
+                    districtPart += `${districtName.trim()} • ${districtState.trim()}`;
+                } else if (districtName.trim()) {
+                    districtPart += districtName.trim();
+                }
+
+                if (districtPart) {
+                    subjectParts.push(districtPart);
+                }
+
+                // Second part: Program Name • Version State/National
+                let applicationPart = '';
+                if (application.trim()) {
+                    applicationPart = application.trim();
+
+                    // Add version and state/national if they exist
+                    const versionParts = [];
+                    if (version.trim()) {
+                        versionParts.push(version.trim());
+                    }
+                    if (versionState.trim()) {
+                        versionParts.push(versionState.trim());
+                    }
+
+                    if (versionParts.length > 0) {
+                        applicationPart += ` • ${versionParts.join(' ')}`;
+                    }
+                }
+                if (applicationPart) {
+                    subjectParts.push(applicationPart);
+                }
+
+                // Third part: Resource • Specific issue for user role
+                let resourceIssuePart = '';
+                if (resourceName.trim()) {
+                    resourceIssuePart = resourceName.trim();
+                    if (shortDescription.trim()) {
+                        resourceIssuePart += `: • ${shortDescription.trim()}`;
+                    }
+                    if (userRoleText) {
+                        resourceIssuePart += ` for ${userRoleText}`;
+                    }
+                } else if (shortDescription.trim()) {
+                    resourceIssuePart = shortDescription.trim();
+                    if (userRoleText) {
+                        resourceIssuePart += ` for ${userRoleText}`;
+                    }
+                }
+                if (resourceIssuePart) {
+                    subjectParts.push(resourceIssuePart);
+                }
+
+                // Join all parts with " | "
+                const subject = subjectParts.join(' | ');
 
                 formattedSubjectField.value = subject;
                 console.log("Updated subject line:", subject);
@@ -1336,148 +1558,62 @@ const TRACKER_CONFIGS = {
                 console.log("Set default date for Date Requested:", today);
             }
 
-            // Autopopulate VIP and District Name from the subject section
-            function syncUserInfoFields() {
-                // These fields should be synchronized from subject fields to user info display
-                const isVipField = document.getElementById('isVIP');
-                const districtNameField = document.getElementById('districtName');
-
-                if (isVipField && districtNameField) {
-                    // Display VIP status and district name in the USER INFO section
-                    const userInfoSection = document.querySelector('#userInfo');
-                    if (userInfoSection) {
-                        // Create a display element for VIP status if not exists
-                        let vipDisplay = document.getElementById('vipDisplay');
-                        if (!vipDisplay) {
-                            vipDisplay = document.createElement('div');
-                            vipDisplay.id = 'vipDisplay';
-                            vipDisplay.className = 'form-group';
-                            vipDisplay.innerHTML = `
-                                <label>VIP</label>
-                                <div id="vipValue" class="field-value"></div>
-                            `;
-                            userInfoSection.prepend(vipDisplay);
-                        }
-
-                        // Create a display element for district name if not exists
-                        let districtDisplay = document.getElementById('districtDisplay');
-                        if (!districtDisplay) {
-                            districtDisplay = document.createElement('div');
-                            districtDisplay.id = 'districtDisplay';
-                            districtDisplay.className = 'form-group';
-                            districtDisplay.innerHTML = `
-                                <label>District Name</label>
-                                <div id="districtValue" class="field-value"></div>
-                            `;
-                            userInfoSection.prepend(districtDisplay);
-                        }
-
-                        // Update the display values
-                        document.getElementById('vipValue').textContent = isVipField.value || 'No';
-                        document.getElementById('districtValue').textContent = districtNameField.value || '';
-
-                        // Add style to make it look like a field
-                        const style = document.createElement('style');
-                        style.textContent = `
-                            .field-value {
-                                padding: 8px;
-                                border: 1px solid #ccc;
-                                border-radius: 4px;
-                                background-color: #f9f9f9;
-                                min-height: 37px;
-                            }
-                        `;
-                        document.head.appendChild(style);
-                    }
-                }
-            }
-
-            // Run sync once at load
-            setTimeout(syncUserInfoFields, 500);
-
-            // Set up event listeners
-            document.getElementById('isVIP')?.addEventListener('change', function () {
-                updateSubjectLine();
-                syncUserInfoFields();
-            });
-            document.getElementById('districtName')?.addEventListener('input', function () {
-                updateSubjectLine();
-                syncUserInfoFields();
-            });
-            document.getElementById('application')?.addEventListener('input', function () {
-                updateSubjectLine();
-                syncFeatureRequestFields();
-            });
-            document.getElementById('resourceName')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('shortDescription')?.addEventListener('input', function () {
-                updateSubjectLine();
-                syncFeatureRequestFields();
-            });
-
             // Function to sync fields from Subject to Feature Request Summary
             function syncFeatureRequestFields() {
                 const applicationField = document.getElementById('application');
+                const versionField = document.getElementById('version');
+                const versionStateField = document.getElementById('versionState');
                 const shortDescriptionField = document.getElementById('shortDescription');
                 const applicationDetailsField = document.getElementById('applicationDetails');
                 const shortDescriptionDetailsField = document.getElementById('shortDescriptionDetails');
 
-                // Simple direct field-to-field population for text fields
+                // Build Program Name with version for Feature Request Summary
                 if (applicationField && applicationDetailsField) {
-                    applicationDetailsField.value = applicationField.value;
-                    console.log("Updated Application in Feature Request Summary:", applicationField.value);
-                } else {
-                    console.log("Application fields not found for syncing");
+                    let programValue = applicationField.value || '';
+
+                    // Add version if available
+                    const version = getVersionValue(versionField);
+                    if (version) {
+                        programValue += ` • ${version}`;
+                    }
+
+                    // Add state/national if available
+                    const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
+                    if (versionState) {
+                        programValue += ` ${versionState}`;
+                    }
+
+                    applicationDetailsField.value = programValue;
+                    console.log("Updated Program Name in Feature Request Summary:", programValue);
                 }
 
                 if (shortDescriptionField && shortDescriptionDetailsField) {
                     shortDescriptionDetailsField.value = shortDescriptionField.value;
                     console.log("Updated Short Description in Feature Request Summary:", shortDescriptionField.value);
-                } else {
-                    console.log("Short Description fields not found for syncing");
                 }
             }
 
-            // Try to synchronize after DOM is fully loaded
-            setTimeout(syncFeatureRequestFields, 500);
-            setTimeout(syncFeatureRequestFields, 1000);
-
             // Set up event listeners
-            document.getElementById('isVIP')?.addEventListener('change', function () {
-                updateSubjectLine();
-                syncUserInfoFields();
-            });
-            document.getElementById('districtName')?.addEventListener('input', function () {
-                updateSubjectLine();
-                syncUserInfoFields();
-            });
+            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
             document.getElementById('application')?.addEventListener('input', function () {
                 updateSubjectLine();
                 syncFeatureRequestFields();
             });
-            document.getElementById('resourceName')?.addEventListener('input', updateSubjectLine);
+            document.getElementById('version')?.addEventListener('change', function () {
+                updateSubjectLine();
+                syncFeatureRequestFields();
+            });
+            document.getElementById('versionState')?.addEventListener('change', function () {
+                updateSubjectLine();
+                syncFeatureRequestFields();
+            });
+            document.getElementById('resourceName')?.addEventListener('change', updateSubjectLine);
             document.getElementById('shortDescription')?.addEventListener('input', function () {
                 updateSubjectLine();
                 syncFeatureRequestFields();
             });
-
-            // When the feature details section becomes visible, try to sync again
-            const featureDetailsObserver = new MutationObserver(function (mutations) {
-                mutations.forEach(function (mutation) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                        const featureDetailsSection = document.getElementById('featureDetails');
-                        if (featureDetailsSection && window.getComputedStyle(featureDetailsSection).display !== 'none') {
-                            console.log("Feature details section is now visible, syncing fields");
-                            syncFeatureRequestFields();
-                        }
-                    }
-                });
-            });
-
-            // Start observing the feature details section
-            const featureDetailsSection = document.getElementById('featureDetails');
-            if (featureDetailsSection) {
-                featureDetailsObserver.observe(featureDetailsSection, { attributes: true });
-            }
 
             // Add listeners to all checkboxes
             const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
@@ -1492,7 +1628,10 @@ const TRACKER_CONFIGS = {
             syncFeatureRequestFields();
 
             // Schedule another update after a small delay to ensure fields are populated
-            setTimeout(updateSubjectLine, 500);
+            setTimeout(() => {
+                updateSubjectLine();
+                syncFeatureRequestFields();
+            }, 500);
         }
     },
 
