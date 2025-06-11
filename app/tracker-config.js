@@ -87,7 +87,7 @@ const TRACKER_CONFIGS = {
                         type: "richtext",
                         label: "",
                         required: true,
-                        defaultValue: "Ex: This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies."
+                        defaultValue: "This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies."
                     }
                 ]
             },
@@ -114,7 +114,7 @@ const TRACKER_CONFIGS = {
                 description += `<div>${fields.summaryContent}</div>`;
             } else {
                 // Use default text if no content provided
-                description += '<div>Ex: This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies.</div>';
+                description += '<div>This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies.</div>';
             }
             description += '<div style="margin-bottom: 20px;"></div>';
 
@@ -169,7 +169,7 @@ const TRACKER_CONFIGS = {
                         currentContent.trim() === '<p></p>' ||
                         currentContent.trim() === '<div><br></div>') {
 
-                        quillInstance.root.innerHTML = '<p>Ex: This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies.</p>';
+                        quillInstance.root.innerHTML = '<p>This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies.</p>';
                         console.log("Assembly Rollover: Populated summary via Quill instance");
 
                         // Trigger Quill change event
@@ -220,7 +220,7 @@ const TRACKER_CONFIGS = {
                         currentContent.trim() === '<p></p>' ||
                         currentContent.trim() === '<div><br></div>') {
 
-                        summaryEditor.innerHTML = '<p>Ex: This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies.</p>';
+                        summaryEditor.innerHTML = '<p>This district has received new subscriptions / assemblies & Order Concerns is unable to remove the old subs / assemblies.</p>';
                         console.log("Assembly Rollover: Populated summary section with default text via DOM");
 
                         // Try to trigger any change events

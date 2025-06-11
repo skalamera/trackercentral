@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https: d3h0owdjgzys62.cloudfront.net;">
     <script async src="{{{appclient}}}"></script>
     <link rel="stylesheet" type="text/css" href="styles/style.css" /> <!-- Add this line for theme variables -->
     <link rel="stylesheet" type="text/css" href="styles/dynamic-tracker.css" />
@@ -220,12 +221,15 @@
                     <div class="form-group">
                         <label for="agentField">Agent</label>
                         <select id="agentField" name="agentField"></select>
-                        <div class="hint"><i class="fas fa-info-circle"></i> Leave the options as --Select Agent-- so the tracker will round robin to the appropriate escalation agent.<br><br>Select the agent only if you have been directed to assign the tracker to a particular escalation agent.</div>
+                        <div class="hint"><i class="fas fa-info-circle"></i> Leave the options as --Select Agent-- so
+                            the tracker will round robin to the appropriate escalation agent.<br><br>Select the agent
+                            only if you have been directed to assign the tracker to a particular escalation agent.</div>
                     </div>
 
                     <div class="form-group">
                         <label for="districtField">District</label>
-                        <input type="text" id="districtField" name="districtField" readonly style="background-color: #f5f5f5; color: #666; cursor: not-allowed;">
+                        <input type="text" id="districtField" name="districtField" readonly
+                            style="background-color: #f5f5f5; color: #666; cursor: not-allowed;">
                         <div class="hint"><i class="fas fa-info-circle"></i> Auto-populates from original ticket</div>
                     </div>
                 </div>
@@ -3503,6 +3507,9 @@
             }
 
             showDPTNextStepsMessage() {
+                // Prevent body scrolling
+                document.body.style.overflow = 'hidden';
+
                 // Create modal backdrop
                 const backdrop = document.createElement('div');
                 backdrop.className = 'modal-backdrop';
@@ -3517,6 +3524,8 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    padding: 20px;
+                    box-sizing: border-box;
                 `;
 
                 // Create modal content
@@ -3525,14 +3534,25 @@
                 modal.style.cssText = `
                     background: white;
                     border-radius: 8px;
-                    padding: 30px;
                     max-width: 600px;
-                    width: 90%;
+                    width: 100%;
+                    max-height: 90vh;
                     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
                     font-family: Arial, sans-serif;
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
                 `;
 
-                modal.innerHTML = `
+                // Create scrollable content wrapper
+                const modalContent = document.createElement('div');
+                modalContent.style.cssText = `
+                    padding: 30px;
+                    overflow-y: auto;
+                    flex: 1;
+                `;
+
+                modalContent.innerHTML = `
                     <div style="text-align: center; margin-bottom: 25px;">
                         <i class="fas fa-info-circle" style="font-size: 48px; color: #3498db; margin-bottom: 15px;"></i>
                         <h2 style="color: #2c3e50; margin: 0; font-size: 24px;">Next Steps</h2>
@@ -3544,23 +3564,52 @@
                             Add District To List:
                         </h3>
                         <p style="margin: 0 0 20px 26px; color: #555; line-height: 1.5;">
-                            Message <a id="feliciaTeamsLink" href="msteams:/l/chat/0/0?users=fwold@benchmarkeducation.com" style="color: #3498db; text-decoration: underline;">Felicia</a> or <a id="dritaTeamsLink" href="msteams:/l/chat/0/0?users=Dlulgjuraj@benchmarkeducation.com" style="color: #3498db; text-decoration: underline;">Drita</a> in Teams the name of the district requesting to be added to the table so the list of districts on the table can be kept up to date.
+                            Let fate decide! Flip a coin to randomly choose between Felicia and Drita to message in Teams about adding this district to the DPT.
                         </p>
+                        
+                        <!-- Coin Flip Section -->
+                        <div id="coinFlipSection" style="text-align: center; margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 10px;">
+                            <div id="coinFlipResult" style="margin-bottom: 15px; font-size: 18px; font-weight: bold; color: #2c3e50; min-height: 25px;"></div>
+                            
+                            <div id="coinAnimation" style="margin: 20px 0; font-size: 60px; min-height: 80px; display: flex; align-items: center; justify-content: center;">
+                                <div id="coinFace" style="transition: transform 0.6s ease-in-out;">🪙</div>
+                            </div>
+                            
+                            <button id="flipCoinBtn" style="
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                color: white;
+                                border: none;
+                                padding: 15px 30px;
+                                border-radius: 25px;
+                                cursor: pointer;
+                                font-size: 16px;
+                                font-weight: bold;
+                                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                                transition: all 0.3s ease;
+                            " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                <i class="fas fa-coins" style="margin-right: 8px;"></i>
+                                Flip the Coin!
+                            </button>
+                        </div>
+                        
+                        <!-- Tally Section -->
+                        <div style="display: flex; justify-content: space-around; margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; margin-bottom: 5px;">👩‍💼</div>
+                                <div style="font-weight: bold; color: #e91e63;">Felicia</div>
+                                <div id="feliciaTally" style="font-size: 20px; font-weight: bold; color: #2c3e50;">0</div>
+                                <div style="font-size: 12px; color: #666;">selections</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; margin-bottom: 5px;">👩‍💼</div>
+                                <div style="font-weight: bold; color: #9c27b0;">Drita</div>
+                                <div id="dritaTally" style="font-size: 20px; font-weight: bold; color: #2c3e50;">0</div>
+                                <div style="font-size: 12px; color: #666;">selections</div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div style="text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
-                        <button id="continueSubmission" style="
-                            background-color: #27ae60;
-                            color: white;
-                            border: none;
-                            padding: 12px 24px;
-                            border-radius: 5px;
-                            cursor: pointer;
-                            font-size: 16px;
-                            margin-right: 10px;
-                        ">
-                            <i class="fas fa-check" style="margin-right: 8px;"></i>
-                            Got it - Create Tracker
-                        </button>
                         <button id="cancelSubmission" style="
                             background-color: #95a5a6;
                             color: white;
@@ -3576,45 +3625,250 @@
                     </div>
                 `;
 
+                // Add scrollable content to modal
+                modal.appendChild(modalContent);
+
                 // Add modal to backdrop
                 backdrop.appendChild(modal);
                 document.body.appendChild(backdrop);
 
-                // Update Teams links with district name
+                // Initialize coin flip functionality
                 const districtNameField = document.getElementById('districtName');
                 const districtName = districtNameField ? districtNameField.value : '';
 
-                if (districtName) {
-                    const encodedMessage = encodeURIComponent(`Please add ${districtName} to the District Preference Table for customized eAssessments.`);
+                // Load and display current tallies
+                this.loadDPTTallies();
 
-                    const feliciaLink = document.getElementById('feliciaTeamsLink');
-                    const dritaLink = document.getElementById('dritaTeamsLink');
-
-                    if (feliciaLink) {
-                        feliciaLink.href = `msteams:/l/chat/0/0?users=fwold@benchmarkeducation.com&message=${encodedMessage}`;
-                    }
-
-                    if (dritaLink) {
-                        dritaLink.href = `msteams:/l/chat/0/0?users=Dlulgjuraj@benchmarkeducation.com&message=${encodedMessage}`;
-                    }
+                // Set up coin flip button
+                const flipCoinBtn = document.getElementById('flipCoinBtn');
+                if (flipCoinBtn) {
+                    flipCoinBtn.addEventListener('click', () => {
+                        this.performCoinFlip(districtName);
+                    });
                 }
 
-                // Add event listeners
-                document.getElementById('continueSubmission').addEventListener('click', () => {
+                // Function to close modal and restore body scrolling
+                const closeModal = () => {
+                    document.body.style.overflow = ''; // Restore body scrolling
                     document.body.removeChild(backdrop);
-                    this.proceedWithSubmission();
-                });
+                };
 
+                // Add event listeners
                 document.getElementById('cancelSubmission').addEventListener('click', () => {
-                    document.body.removeChild(backdrop);
+                    closeModal();
                 });
 
                 // Allow clicking backdrop to close
                 backdrop.addEventListener('click', (e) => {
                     if (e.target === backdrop) {
-                        document.body.removeChild(backdrop);
+                        closeModal();
                     }
                 });
+            }
+
+            // DPT Coin Flip Methods
+            async loadDPTTallies() {
+                try {
+                    console.log('DPT: Loading tallies from app storage...');
+
+                    // Get tallies from app storage
+                    const data = await this.client.db.get('dpt_tallies');
+                    const tallies = data || { felicia: 0, drita: 0 };
+
+                    console.log('DPT: Current tallies:', tallies);
+
+                    // Update the display
+                    const feliciaTally = document.getElementById('feliciaTally');
+                    const dritaTally = document.getElementById('dritaTally');
+
+                    if (feliciaTally) feliciaTally.textContent = tallies.felicia || 0;
+                    if (dritaTally) dritaTally.textContent = tallies.drita || 0;
+
+                } catch (error) {
+                    console.warn('DPT: Could not load tallies from app storage:', error);
+                    // Set default values if storage fails
+                    const feliciaTally = document.getElementById('feliciaTally');
+                    const dritaTally = document.getElementById('dritaTally');
+                    if (feliciaTally) feliciaTally.textContent = '0';
+                    if (dritaTally) dritaTally.textContent = '0';
+                }
+            }
+
+            async updateDPTTallies(winner) {
+                try {
+                    console.log('DPT: Updating tallies, winner:', winner);
+
+                    // Get current tallies
+                    let data;
+                    try {
+                        data = await this.client.db.get('dpt_tallies');
+                    } catch (error) {
+                        console.log('DPT: No existing tallies found, creating new ones');
+                        data = null;
+                    }
+
+                    const tallies = data || { felicia: 0, drita: 0 };
+
+                    // Increment the winner's tally
+                    if (winner === 'felicia') {
+                        tallies.felicia = (tallies.felicia || 0) + 1;
+                    } else if (winner === 'drita') {
+                        tallies.drita = (tallies.drita || 0) + 1;
+                    }
+
+                    console.log('DPT: New tallies:', tallies);
+
+                    // Save back to app storage
+                    await this.client.db.set('dpt_tallies', tallies);
+
+                    // Update the display
+                    const feliciaTally = document.getElementById('feliciaTally');
+                    const dritaTally = document.getElementById('dritaTally');
+
+                    if (feliciaTally) feliciaTally.textContent = tallies.felicia;
+                    if (dritaTally) dritaTally.textContent = tallies.drita;
+
+                    console.log('DPT: Tallies updated successfully');
+
+                } catch (error) {
+                    console.error('DPT: Failed to update tallies:', error);
+                }
+            }
+
+            performCoinFlip(districtName) {
+                const flipCoinBtn = document.getElementById('flipCoinBtn');
+                const coinFace = document.getElementById('coinFace');
+                const coinFlipResult = document.getElementById('coinFlipResult');
+
+                if (!flipCoinBtn || !coinFace || !coinFlipResult) {
+                    console.error('DPT: Missing coin flip elements');
+                    return;
+                }
+
+                // Disable button during animation
+                flipCoinBtn.disabled = true;
+                flipCoinBtn.textContent = 'Flipping...';
+                flipCoinBtn.style.opacity = '0.6';
+
+                // Clear previous result
+                coinFlipResult.textContent = '';
+
+                // Animate coin flip
+                let rotations = 0;
+                const maxRotations = 8; // 8 full rotations
+                const flipInterval = setInterval(() => {
+                    rotations++;
+                    coinFace.style.transform = `rotateY(${rotations * 180}deg)`;
+
+                    // Alternate between coin faces during flip
+                    if (rotations % 2 === 0) {
+                        coinFace.textContent = '🪙';
+                    } else {
+                        coinFace.textContent = '⭐';
+                    }
+
+                    if (rotations >= maxRotations) {
+                        clearInterval(flipInterval);
+                        this.resolveCoinFlip(districtName, flipCoinBtn, coinFace, coinFlipResult);
+                    }
+                }, 150);
+            }
+
+            resolveCoinFlip(districtName, flipCoinBtn, coinFace, coinFlipResult) {
+                // Randomly choose between Felicia (0) and Drita (1)
+                const winner = Math.random() < 0.5 ? 'felicia' : 'drita';
+                const winnerName = winner === 'felicia' ? 'Felicia' : 'Drita';
+                const winnerEmail = winner === 'felicia' ? 'fwold@benchmarkeducation.com' : 'dlulgjuraj@benchmarkeducation.com';
+
+                console.log('DPT: Coin flip result:', winnerName);
+
+                // Set final coin face based on winner
+                if (winner === 'felicia') {
+                    coinFace.textContent = '👩‍💼';
+                    coinFace.style.transform = 'rotateY(0deg)';
+                } else {
+                    coinFace.textContent = '👩‍💼';
+                    coinFace.style.transform = 'rotateY(0deg)';
+                }
+
+                // Show result with celebration
+                setTimeout(() => {
+                    coinFlipResult.innerHTML = `
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                            <i class="fas fa-trophy" style="margin-right: 8px; color: #ffd700;"></i>
+                            <strong>${winnerName} wins!</strong>
+                        </div>
+                        <p style="margin: 10px 0; color: #2c3e50;">
+                            <i class="fas fa-comments" style="margin-right: 5px; color: #3498db;"></i>
+                            Click below to message ${winnerName} in Teams
+                        </p>
+                        <button id="messageWinnerBtn" style="
+                            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+                            color: white;
+                            border: none;
+                            padding: 12px 24px;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 14px;
+                            font-weight: bold;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <i class="fas fa-rocket" style="margin-right: 8px;"></i>
+                            Message ${winnerName} & Create Tracker
+                        </button>
+                    `;
+
+                    // Add click handler for the message button
+                    const messageBtn = document.getElementById('messageWinnerBtn');
+                    if (messageBtn) {
+                        messageBtn.addEventListener('click', () => {
+                            // Open Teams link
+                            this.openTeamsLink(winnerEmail, districtName);
+
+                            // Close modal and proceed with tracker creation
+                            setTimeout(() => {
+                                // Find and close the modal
+                                const modalBackdrop = document.querySelector('.modal-backdrop');
+                                if (modalBackdrop) {
+                                    document.body.style.overflow = ''; // Restore body scrolling
+                                    document.body.removeChild(modalBackdrop);
+                                }
+
+                                // Proceed with submission
+                                this.proceedWithSubmission();
+                            }, 500); // Small delay to ensure Teams opens first
+                        });
+                    }
+
+                    // Update tallies
+                    this.updateDPTTallies(winner);
+
+                    // Re-enable flip button for another flip
+                    flipCoinBtn.disabled = false;
+                    flipCoinBtn.innerHTML = '<i class="fas fa-coins" style="margin-right: 8px;"></i>Flip Again!';
+                    flipCoinBtn.style.opacity = '1';
+
+                }, 500);
+            }
+
+            openTeamsLink(email, districtName) {
+                if (!districtName) {
+                    console.warn('DPT: No district name provided for Teams link');
+                    return;
+                }
+
+                const encodedMessage = encodeURIComponent(`Please add ${districtName} to the District Preference Table for customized eAssessments.`);
+                const teamsUrl = `https://teams.microsoft.com/l/chat/0/0?users=${email}&message=${encodedMessage}`;
+
+                console.log('DPT: Opening Teams link:', teamsUrl);
+
+                try {
+                    window.open(teamsUrl, '_blank');
+                } catch (error) {
+                    console.error('DPT: Failed to open Teams link:', error);
+                    window.location.href = teamsUrl;
+                }
             }
 
             proceedWithSubmission() {
@@ -4332,6 +4586,9 @@
                             message: `Tracker ticket #${ticketData.id} created successfully!`
                         }).catch(err => console.error("Error showing notification:", err));
 
+                        // Send Teams notification
+                        this.sendTeamsNotification(ticketData);
+
                         // Get the Freshdesk subdomain and automatically open the ticket in a new tab
                         this.client.iparams.get("freshdesk_subdomain").then(iparams => {
                             const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
@@ -4366,6 +4623,9 @@
                         // Show a more helpful error message
                         this.showError('Ticket created, but there was an error uploading attachments. You may need to manually add files to the ticket.');
 
+                        // Send Teams notification even if attachments failed
+                        this.sendTeamsNotification(ticketData);
+
                         // Still open the ticket
                         this.client.iparams.get("freshdesk_subdomain").then(iparams => {
                             const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
@@ -4381,6 +4641,216 @@
                             setTimeout(() => window.location.href = 'template-selector.html', 1500);
                         });
                     });
+            }
+
+            // Send Teams notification with tracker information
+            sendTeamsNotification(ticketData) {
+                try {
+                    // Skip Teams notification for DPT template as it has special handling
+                    if (this.trackerType === 'dpt') {
+                        console.log('Skipping Teams notification for DPT template');
+                        return;
+                    }
+
+                    // Check if Teams notifications are enabled in admin settings
+                    this.client.db.get('teamsNotificationEnabled')
+                        .then(setting => {
+                            // Handle both boolean and object formats for backward compatibility
+                            let isEnabled = true; // Default to enabled
+                            if (setting !== null && setting !== undefined) {
+                                if (typeof setting === 'boolean') {
+                                    isEnabled = setting;
+                                } else if (typeof setting === 'object' && setting.enabled !== undefined) {
+                                    isEnabled = setting.enabled;
+                                }
+                            }
+
+                            if (!isEnabled) {
+                                console.log('Teams notifications are disabled in admin settings, skipping');
+                                return;
+                            }
+
+                            console.log('Teams notifications are enabled, proceeding with notification');
+                            this.sendTeamsNotificationInternal(ticketData);
+                        })
+                        .catch(error => {
+                            console.error('Error checking Teams notification setting, defaulting to enabled:', error);
+                            // Default to enabled if we can't check the setting
+                            this.sendTeamsNotificationInternal(ticketData);
+                        });
+
+                } catch (error) {
+                    console.error('Error in sendTeamsNotification:', error);
+                }
+            }
+
+            // Internal method to actually send the Teams notification
+            sendTeamsNotificationInternal(ticketData) {
+                try {
+                    console.log('Preparing Teams notification for tracker:', this.trackerType);
+
+                    // Get form data to extract the appropriate content
+                    const formData = this.getFormData();
+
+                    // Determine which field to use based on tracker type
+                    const contentField = this.getContentFieldForTeamsMessage();
+                    let messageContent = '';
+
+                    if (contentField && formData[contentField]) {
+                        messageContent = this.stripHtmlTags(formData[contentField]);
+                    }
+
+                    // Fallback to empty string if no content found
+                    if (!messageContent.trim()) {
+                        messageContent = 'No additional details provided.';
+                    }
+
+                    // Create the Teams message parts
+                    const emailSubject = `[${ticketData.id}] : ${ticketData.subject}`;
+                    const emailBody = messageContent;
+
+                    // Open Teams channel with message (same as DPT template approach)
+                    this.openTeamsChannelWithMessage(emailSubject, emailBody);
+
+                } catch (error) {
+                    console.error('Error sending Teams notification:', error);
+                    // Don't let Teams notification errors affect the main flow
+                }
+            }
+
+            // Open Teams channel with message (same approach as DPT template)
+            openTeamsChannelWithMessage(subject, body) {
+                try {
+                    console.log('Opening Teams channel with subject:', subject, 'and body:', body);
+
+                    // Use the same approach as DPT template but for the channel email
+                    const encodedSubject = encodeURIComponent(subject);
+                    const encodedBody = encodeURIComponent(body);
+                    const channelEmail = '7b7647c8.benchmarkeducation.com@amer.teams.ms';
+
+                    // Create mailto link with both subject and body
+                    const teamsMailtoUrl = `mailto:${channelEmail}?subject=${encodedSubject}&body=${encodedBody}`;
+
+                    console.log('Opening Teams channel email link:', teamsMailtoUrl);
+
+                    try {
+                        window.open(teamsMailtoUrl, '_blank');
+                    } catch (error) {
+                        console.error('Failed to open Teams channel link:', error);
+                        window.location.href = teamsMailtoUrl;
+                    }
+
+                } catch (error) {
+                    console.error('Error opening Teams channel:', error);
+
+                    // Fallback: copy to clipboard and show instructions
+                    const fullMessage = `${subject}\n${body}`;
+                    try {
+                        navigator.clipboard.writeText(fullMessage).then(() => {
+                            alert(`Message copied to clipboard!\n\nPlease open Teams and paste this message in your Trackers channel:\n\n${fullMessage}`);
+                        }).catch(() => {
+                            alert(`Please copy this message and paste it in your Trackers Teams channel:\n\n${fullMessage}`);
+                        });
+                    } catch (fallbackError) {
+                        alert(`Please copy this message and paste it in your Trackers Teams channel:\n\n${fullMessage}`);
+                    }
+                }
+            }
+
+            // Determine which field to use for Teams message content based on tracker type
+            getContentFieldForTeamsMessage() {
+                // Get form data to check what fields are actually available
+                const formData = this.getFormData();
+
+                // Templates that use "Summary":
+                // - SIM Achievement Levels 
+                // - All SEDCUST templates
+                // - All Assembly templates  
+                // - All "Other Templates" (Feature Request, DPT, Timeout Extension, Help Article, Blank)
+
+                const useSummaryTemplates = [
+                    'sim-achievement-levels',
+                    'sedcust',
+                    'assembly',
+                    'assembly-rollover',
+                    'feature-request',
+                    'dpt',
+                    'timeout-extension',
+                    'help-article',
+                    'blank'
+                ];
+
+                if (useSummaryTemplates.includes(this.trackerType)) {
+                    // Try different summary field names in order of preference
+                    const summaryFields = ['summaryContent', 'summary', 'issueSummary'];
+                    for (const field of summaryFields) {
+                        if (formData[field] && formData[field].trim()) {
+                            return field;
+                        }
+                    }
+                    return 'summaryContent'; // default
+                }
+
+                // Templates that use "Issue Description":
+                // - SIM Assignment, Assessment Reports, FSA, Library View, ORR, Plan & Teach, Reading Log, Dashboard
+                const useIssueDescriptionTemplates = [
+                    'sim-assignment',
+                    'sim-assessment-reports',
+                    'sim-fsa',
+                    'sim-library-view',
+                    'sim-orr',
+                    'sim-plan-teach',
+                    'sim-reading-log',
+                    'sim-dashboard'
+                ];
+
+                if (useIssueDescriptionTemplates.includes(this.trackerType)) {
+                    // Try different issue field names in order of preference  
+                    const issueFields = ['issueDetails', 'issue', 'issueDescription'];
+                    for (const field of issueFields) {
+                        if (formData[field] && formData[field].trim()) {
+                            return field;
+                        }
+                    }
+                    return 'issueDetails'; // default
+                }
+
+                // Default fallback - try multiple field names
+                const fallbackFields = ['summaryContent', 'summary', 'issueDetails', 'issue', 'issueSummary'];
+                for (const field of fallbackFields) {
+                    if (formData[field] && formData[field].trim()) {
+                        return field;
+                    }
+                }
+
+                return 'summary';
+            }
+
+            // Strip HTML tags and decode entities for clean text output
+            stripHtmlTags(html) {
+                if (!html) return '';
+
+                try {
+                    // Create a temporary div to parse HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+
+                    // Get text content (automatically strips tags)
+                    let text = tempDiv.textContent || tempDiv.innerText || '';
+
+                    // Clean up whitespace
+                    text = text.replace(/\s+/g, ' ').trim();
+
+                    // Limit length to keep email reasonable (Teams has limits too)
+                    if (text.length > 500) {
+                        text = text.substring(0, 497) + '...';
+                    }
+
+                    return text;
+                } catch (error) {
+                    console.error('Error stripping HTML tags:', error);
+                    return html; // Return original if parsing fails
+                }
             }
 
             async associateWithRelatedTickets(ticketId) {

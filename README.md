@@ -8,13 +8,32 @@ When initiating a tracker, agents access a purpose-built creation interface feat
 
 By collecting data through standardized template forms and automating the population of critical fields, Tracker Central ensures data consistency across all trackers. This standardization significantly enhances reporting capabilities, enabling management to generate accurate analytics on issue patterns, resolution metrics, and district-specific impacts. The streamlined workflow reduces manual data entry requirements, eliminating potential human error, and allowing agents to dedicate more time to resolution activities rather than administrative tasks, while simultaneously providing reliable data.
 
+
+## Integrations
+
+### 🗣️ **Microsoft Teams Integration**
+Automatically draft and paste messages into Teams for particular cases where this was done manually. Greatly Streamlines the tracker creation workflow
+
+### 🔍 **HAR File Analysis**
+A HAR File Analysis tool has been integrated into tracker templates where appropriate, giving agents immediate feedback. Detailed Analysis Excel Report is attached to Tracker.
+
+### 🙋‍♀️ **Sharepoint Integration for Feature Requests via PowerAutomate**
+Completing the Feature Request template in Tracker Central not only creates the Tracker Ticket in Freshdesk, but also adds the appropriate information to the shared Feature Request spreadsheet on Sharepoint
+
+
 ## Key Features
 
-### 🎯 **Multiple Specialized Templates**
-17 different tracker templates tailored to specific issue categories
+### 💾 **Draft Management System**
+Save work in progress and resume later with full form state preservation
 
-### 📊 **Dynamic Forms**
-Fields change based on selections and template requirements with intelligent auto-population
+### 📊 **Today's Trackers Widget**
+A dashboard widget that provides real-time visibility into tracker activity, displaying all trackers created on the current date with key metrics and quick access links
+
+### 🛠️ **Admin Settings Management**
+Comprehensive admin interface for managing global template settings, dropdown values, and user permissions with real-time updates across all users
+
+### 🎯 **Multiple Specialized Templates & Dynamic Forms**
+16 specialized tracker templates tailored to specific issue categories with dynamic fields that change based on selections and template requirements
 
 ### 📝 **Rich Text Editing**
 Embedded image support and advanced formatting options with clear formatting tools
@@ -23,16 +42,8 @@ Embedded image support and advanced formatting options with clear formatting too
 Upload multiple files (screenshots, videos, HAR files) with comprehensive size validation
 
 ### 🔄 **Auto-populated Fields**
-Key fields are pre-filled from source tickets including district information and VIP status
+Intelligent auto population allows for key fields to be pre-filled from source ticket data including district name, state, VIP status, etc.
 
-### 🔗 **Related Ticket Linking**
-Created trackers are automatically linked to source tickets with proper associations
-
-### 💾 **Draft Management System**
-Save work in progress and resume later with full form state preservation
-
-### 📱 **Mobile-Responsive Design**
-Works seamlessly across various screen sizes and devices
 
 ## Sidebar Functionality
 
@@ -82,7 +93,7 @@ Works seamlessly across various screen sizes and devices
    - Captures district information, BURC links, effective dates, and assembly codes
    - Streamlined workflow for code removal requests
 
-### SIM (Student Information Manager) Templates
+### SIM Templates
 
 3. **SIM Assignment Tracker**
    - For assignment and eAssessment functionality issues
@@ -101,7 +112,7 @@ Works seamlessly across various screen sizes and devices
    - Smartsheet integration for achievement level specifications
    - District admin validation and approval workflow
 
-6. **SIM FSA (Formative Student Assessment) Tracker**
+6. **SIM FSA Tracker**
    - For FSA functionality issues and administration problems
    - Environment/browser information capture
    - Student impact assessment and administration URL tracking
@@ -111,7 +122,7 @@ Works seamlessly across various screen sizes and devices
    - Resource filtering and path-specific problem reporting
    - Content type classification and access issues
 
-8. **SIM ORR (Online Reading Records) Tracker**
+8. **SIM ORR Tracker**
    - For online reading records functionality
    - Student-specific information fields and reading level tracking
    - Recording and microphone functionality testing
@@ -276,7 +287,6 @@ Templates automatically generate standardized subject lines with intelligent for
 - **Platform Problems**: Choose appropriate SIM template based on affected area
 - **Content Errors**: Use SEDCUST template for editorial issues
 - **New Features**: Use Feature Request template with team assignment
-- **General Issues**: Use Blank Tracker for uncategorized problems
 
 ## Error Handling and Validation
 

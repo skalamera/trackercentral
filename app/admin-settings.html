@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https: d3h0owdjgzys62.cloudfront.net;">
     <script async src="{{{appclient}}}"></script>
     <link rel="stylesheet" type="text/css" href="styles/style.css" />
     <link rel="stylesheet" type="text/css" href="styles/template-selector.css" />
@@ -487,6 +488,32 @@
                 </div>
             </div>
 
+            <!-- Teams Notification Settings Section -->
+            <div class="settings-section">
+                <div class="section-header" onclick="toggleSection('teams-section')">
+                    <h2><i class="fas fa-comments"></i> Teams Notification</h2>
+                    <div style="display: flex; align-items: center;">
+                        <span class="section-summary" id="teams-summary"></span>
+                        <i class="fas fa-chevron-down collapse-icon collapsed" id="teams-section-icon"></i>
+                    </div>
+                </div>
+                <div class="section-content collapsed" id="teams-section">
+                    <p>Control whether tracker creation automatically opens a Teams notification message</p>
+
+                    <div style="margin: 20px 0;">
+                        <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 16px;">
+                            <input type="checkbox" id="teamsNotificationEnabled" style="width: 18px; height: 18px;">
+                            <span>Enable Teams notifications when creating trackers</span>
+                        </label>
+                        <div
+                            style="margin-top: 10px; font-size: 14px; color: var(--text-color); opacity: 0.8; margin-left: 30px;">
+                            When enabled, creating a tracker will automatically open a pre-filled email draft for your
+                            Teams channel. When disabled, trackers are created normally without the Teams notification.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Agent Selection Settings Section -->
             <div class="settings-section">
                 <div class="section-header" onclick="toggleSection('agent-section')">
@@ -612,7 +639,7 @@
         <div class="settings-category">
             <h1 class="category-title"><i class="fas fa-layer-group"></i> Assembly Settings</h1>
             <p class="category-description">Manage settings specific to Assembly templates</p>
-        
+
             <div class="settings-section">
                 <div class="placeholder-message">
                     <i class="fas fa-info-circle"></i>
@@ -780,6 +807,11 @@
                     }
                     return null;
                 }),
+                client.db.get('teamsNotificationEnabled').catch(error => {
+                    console.error("Error loading Teams notification setting from Freshdesk DB:", error);
+                    // Default to enabled if no setting found
+                    return { enabled: true };
+                }),
                 client.db.get('customLocationValues').catch(error => {
                     console.error("Error loading location values from Freshdesk DB:", error);
                     // Only fall back to localStorage if it's a connectivity issue
@@ -812,9 +844,10 @@
                 })
             ]).then(function (results) {
                 const storedVersionValues = results[0];
-                const storedLocationValues = results[1];
-                const storedResourceValues = results[2];
-                const storedSimResourceValues = results[3];
+                const storedTeamsNotification = results[1];
+                const storedLocationValues = results[2];
+                const storedResourceValues = results[3];
+                const storedSimResourceValues = results[4];
 
                 let versionValues = [];
                 let locationValues = [];
@@ -1010,6 +1043,22 @@
 
                     // Save default values to Freshdesk storage
                     saveValues('customSimResourceValues', simResourceValues);
+                }
+
+                // Set Teams notification checkbox
+                const teamsCheckbox = document.getElementById('teamsNotificationEnabled');
+                if (teamsCheckbox) {
+                    // Handle both boolean and object formats for backward compatibility
+                    let isEnabled = true; // Default to enabled
+                    if (storedTeamsNotification !== null && storedTeamsNotification !== undefined) {
+                        if (typeof storedTeamsNotification === 'boolean') {
+                            isEnabled = storedTeamsNotification;
+                        } else if (typeof storedTeamsNotification === 'object' && storedTeamsNotification.enabled !== undefined) {
+                            isEnabled = storedTeamsNotification.enabled;
+                        }
+                    }
+                    teamsCheckbox.checked = isEnabled;
+                    console.log("Loaded Teams notification setting:", storedTeamsNotification, "-> enabled:", isEnabled);
                 }
 
                 // Render the dropdown values to the UI
@@ -1653,7 +1702,23 @@
 
         // Function to save all changes
         function saveChanges() {
-            showStatus("All changes have been saved to Freshdesk App storage and will be reflected for all users", true);
+            // Save Teams notification setting
+            const teamsCheckbox = document.getElementById('teamsNotificationEnabled');
+            if (teamsCheckbox) {
+                const isEnabled = teamsCheckbox.checked;
+                const settingObject = { enabled: isEnabled };
+                client.db.set('teamsNotificationEnabled', settingObject)
+                    .then(() => {
+                        console.log(`Teams notification setting saved: ${isEnabled}`);
+                        showStatus("All changes have been saved to Freshdesk App storage and will be reflected for all users", true);
+                    })
+                    .catch(error => {
+                        console.error("Error saving Teams notification setting:", error);
+                        showStatus("Failed to save Teams notification setting. Other changes may have been saved.", false);
+                    });
+            } else {
+                showStatus("All changes have been saved to Freshdesk App storage and will be reflected for all users", true);
+            }
         }
 
         // Function to show status message
@@ -1726,6 +1791,14 @@
                     addSimResourceValue(newValue);
                 }
             });
+
+            // Teams notification checkbox change event
+            const teamsCheckbox = document.getElementById('teamsNotificationEnabled');
+            if (teamsCheckbox) {
+                teamsCheckbox.addEventListener('change', function () {
+                    updateSectionSummaries();
+                });
+            }
 
             // Setup agent management event listeners
             setupAgentEventListeners();
@@ -2096,6 +2169,13 @@
             const agentSummary = document.getElementById('agent-summary');
             if (agentSummary) {
                 agentSummary.textContent = `(${selectedCount} agents selected)`;
+            }
+
+            // Update Teams notification summary
+            const teamsCheckbox = document.getElementById('teamsNotificationEnabled');
+            const teamsSummary = document.getElementById('teams-summary');
+            if (teamsSummary && teamsCheckbox) {
+                teamsSummary.textContent = teamsCheckbox.checked ? '(Enabled)' : '(Disabled)';
             }
         }
 
