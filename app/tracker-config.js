@@ -5127,7 +5127,7 @@ const TRACKER_CONFIGS = {
                     },
                     {
                         id: "subscriptions",
-                        type: "text",
+                        type: "richtext",
                         label: "List of District Subscriptions",
                         required: true,
                         placeholder: "Ex: BEC Benchmark Advance 2022 (National Edition) Gr. K Classroom Digital",
@@ -5212,7 +5212,10 @@ const TRACKER_CONFIGS = {
             if (fields.realm) description += `Realm: ${fields.realm}<br>`;
             if (fields.assignmentId) description += `Assignment ID: ${fields.assignmentId}<br>`;
             if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported) || ''}<br>`;
-            if (fields.subscriptions) description += `List of District Subscriptions: ${fields.subscriptions}<br>`;
+            if (fields.subscriptions) {
+                description += `List of District Subscriptions:<br>`;
+                description += `<div style="margin-left: 20px;">${fields.subscriptions}</div>`;
+            }
             if (fields.harFileAttached) {
                 description += `HAR File Attached: ${fields.harFileAttached}`;
                 if (fields.harFileAttached === "No" && fields.harFileReason) {
