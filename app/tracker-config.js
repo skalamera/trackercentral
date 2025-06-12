@@ -929,7 +929,7 @@ const TRACKER_CONFIGS = {
                 if (xcode.trim()) {
                     xcodePart = xcode.trim();
                     if (hasMultipleXcodes) {
-                        xcodePart += ' (indicate if more than one)';
+                        xcodePart += ' (Multiple)';
                     }
                 }
                 if (xcodePart) {
