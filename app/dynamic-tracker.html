@@ -270,7 +270,7 @@
             </fw-button>
 
             <fw-button id="createTracker" color="primary" type="submit" size="small" style="margin-left: 10px;">
-                <i class="fas fa-check" style="margin-right: 8px;"></i>Create Tracker
+                <i class="fas fa-clipboard-check" style="margin-right: 8px;"></i>Copy Subject & Create Tracker
             </fw-button>
         </div>
         </div>
@@ -421,7 +421,7 @@
 
                 // For select fields, we'll update them after rendering if they need custom values
                 let needsCustomValues = false;
-                if (field.type === 'select' && (field.id === 'version' || field.id === 'versionState' || field.id === 'resource' || field.needsCustomValues)) {
+                if (field.type === 'select' && (field.id === 'version' || field.id === 'versionState' || field.id === 'resource' || field.id === 'resourceName' || field.needsCustomValues)) {
                     needsCustomValues = true;
                 }
 
@@ -531,14 +531,22 @@
                     storageKey = 'customVersionValues';
                 } else if (fieldId === 'versionState') {
                     storageKey = 'customLocationValues';
-                } else if (fieldId === 'resource') {
-                    // Check if this is a SIM tracker to use the appropriate resource values
-                    if (window.trackerApp && window.trackerApp.trackerType && window.trackerApp.trackerType.startsWith('sim-')) {
-                        storageKey = 'customSimResourceValues';
-                        console.log('Using SIM resource values for tracker:', window.trackerApp.trackerType);
+                } else if (fieldId === 'resource' || fieldId === 'resourceName') {
+                    // Check which type of tracker this is to use the appropriate resource values
+                    if (window.trackerApp && window.trackerApp.trackerType) {
+                        if (window.trackerApp.trackerType === 'feature-request') {
+                            storageKey = 'customAllResourcesValues';
+                            console.log('Using All Resources values for Feature Request tracker');
+                        } else if (window.trackerApp.trackerType.startsWith('sim-')) {
+                            storageKey = 'customSimResourceValues';
+                            console.log('Using SIM resource values for tracker:', window.trackerApp.trackerType);
+                        } else {
+                            storageKey = 'customResourceValues';
+                            console.log('Using standard resource values for tracker:', window.trackerApp.trackerType);
+                        }
                     } else {
                         storageKey = 'customResourceValues';
-                        console.log('Using standard resource values for tracker:', window.trackerApp ? window.trackerApp.trackerType : 'unknown');
+                        console.log('Using standard resource values (default)');
                     }
                 }
 
@@ -1187,7 +1195,7 @@
                 if (createTrackerButton) {
                     createTrackerButton.addEventListener('click', (e) => {
                         e.preventDefault();
-                        console.log('Create Tracker button clicked');
+                        console.log('Copy Subject & Create Tracker button clicked');
                         this.handleFormSubmit();
                     });
                 }
@@ -4538,6 +4546,29 @@
                 const form = document.getElementById('trackerForm');
                 form.insertBefore(successMessage, form.firstChild);
 
+                // Copy subject line to clipboard
+                if (ticketData.subject) {
+                    try {
+                        navigator.clipboard.writeText(ticketData.subject).then(() => {
+                            console.log('Subject line copied to clipboard:', ticketData.subject);
+
+                            // Show Freshdesk notification
+                            this.client.interface.trigger("showNotify", {
+                                type: "success",
+                                message: "Subject line copied to clipboard!"
+                            }).catch(err => console.error("Error showing clipboard notification:", err));
+                        }).catch(err => {
+                            console.error('Failed to copy subject line to clipboard:', err);
+                            // Fallback for browsers that don't support clipboard API
+                            this.fallbackCopyToClipboard(ticketData.subject);
+                        });
+                    } catch (error) {
+                        console.error('Error accessing clipboard:', error);
+                        // Use fallback method
+                        this.fallbackCopyToClipboard(ticketData.subject);
+                    }
+                }
+
                 // Increment the daily tracker count
                 try {
                     console.log(`[TRACKER COUNT] Attempting to increment count for tracker type: ${this.trackerType}`);
@@ -4850,6 +4881,64 @@
                 } catch (error) {
                     console.error('Error stripping HTML tags:', error);
                     return html; // Return original if parsing fails
+                }
+            }
+
+            // Fallback method for copying to clipboard
+            fallbackCopyToClipboard(text) {
+                try {
+                    // Create a temporary textarea element
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.top = '0';
+                    textArea.style.left = '0';
+                    textArea.style.width = '2em';
+                    textArea.style.height = '2em';
+                    textArea.style.padding = '0';
+                    textArea.style.border = 'none';
+                    textArea.style.outline = 'none';
+                    textArea.style.boxShadow = 'none';
+                    textArea.style.background = 'transparent';
+
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+
+                    const successful = document.execCommand('copy');
+                    document.body.removeChild(textArea);
+
+                    if (successful) {
+                        console.log('Subject line copied to clipboard using fallback method');
+
+                        // Show Freshdesk notification
+                        if (this.client) {
+                            this.client.interface.trigger("showNotify", {
+                                type: "success",
+                                message: "Subject line copied to clipboard!"
+                            }).catch(err => console.error("Error showing clipboard notification:", err));
+                        }
+                    } else {
+                        console.error('Fallback copy failed');
+
+                        // Show error notification
+                        if (this.client) {
+                            this.client.interface.trigger("showNotify", {
+                                type: "danger",
+                                message: "Failed to copy subject line to clipboard"
+                            }).catch(err => console.error("Error showing error notification:", err));
+                        }
+                    }
+                } catch (error) {
+                    console.error('Fallback copy to clipboard failed:', error);
+
+                    // Show error notification
+                    if (this.client) {
+                        this.client.interface.trigger("showNotify", {
+                            type: "danger",
+                            message: "Failed to copy subject line to clipboard"
+                        }).catch(err => console.error("Error showing error notification:", err));
+                    }
                 }
             }
 

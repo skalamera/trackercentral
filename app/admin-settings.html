@@ -559,6 +559,36 @@
                     </div>
                 </div>
             </div>
+
+            <!-- All Resources Settings Section -->
+            <div class="settings-section">
+                <div class="section-header" onclick="toggleSection('all-resources-section')">
+                    <h2><i class="fas fa-book-open"></i> All Resources Dropdown Values</h2>
+                    <div style="display: flex; align-items: center;">
+                        <span class="section-summary" id="all-resources-summary"></span>
+                        <i class="fas fa-chevron-down collapse-icon collapsed" id="all-resources-section-icon"></i>
+                    </div>
+                </div>
+                <div class="section-content collapsed" id="all-resources-section">
+                    <p>Manage the options available in the Resources dropdown for Feature Request template's Subject
+                        section</p>
+
+                    <div class="values-container" id="allResourcesValuesContainer">
+                        <!-- Values will be loaded here dynamically -->
+                        <div class="value-item">
+                            <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+                            <div class="value-text">Loading values...</div>
+                        </div>
+                    </div>
+
+                    <div class="add-value-form">
+                        <input type="text" id="newAllResourcesValue" placeholder="Add new resource value...">
+                        <button class="btn-add" id="addAllResourcesBtn">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- SEDCUST SETTINGS -->
@@ -841,6 +871,16 @@
                         return JSON.parse(localValues);
                     }
                     return null;
+                }),
+                client.db.get('customAllResourcesValues').catch(error => {
+                    console.error("Error loading All Resources values from Freshdesk DB:", error);
+                    // Only fall back to localStorage if it's a connectivity issue
+                    const localValues = localStorage.getItem('customAllResourcesValues');
+                    if (localValues) {
+                        showStatus("Using cached values due to connection issue. Changes may not be saved.", false);
+                        return JSON.parse(localValues);
+                    }
+                    return null;
                 })
             ]).then(function (results) {
                 const storedVersionValues = results[0];
@@ -848,11 +888,13 @@
                 const storedLocationValues = results[2];
                 const storedResourceValues = results[3];
                 const storedSimResourceValues = results[4];
+                const storedAllResourcesValues = results[5];
 
                 let versionValues = [];
                 let locationValues = [];
                 let resourceValues = [];
                 let simResourceValues = [];
+                let allResourcesValues = [];
 
                 if (storedVersionValues) {
                     // Convert to array if it's an object with numeric keys
@@ -1045,6 +1087,109 @@
                     saveValues('customSimResourceValues', simResourceValues);
                 }
 
+                if (storedAllResourcesValues) {
+                    // Convert to array if it's an object with numeric keys
+                    if (typeof storedAllResourcesValues === 'object' && !Array.isArray(storedAllResourcesValues)) {
+                        console.log("Converting All Resources values from object to array:", storedAllResourcesValues);
+                        allResourcesValues = Object.values(storedAllResourcesValues);
+                    } else {
+                        allResourcesValues = storedAllResourcesValues;
+                    }
+                    console.log("Loaded All Resources values from Freshdesk storage:", allResourcesValues);
+                } else {
+                    // Default All Resources values for Feature Request template
+                    allResourcesValues = [
+                        "",
+                        "Assignments",
+                        "Assignments: Grade View",
+                        "Assignments: Live View",
+                        "Bookshelves",
+                        "Dashboard",
+                        "ePocket Chart",
+                        "FSA: History",
+                        "FSA: Overview",
+                        "FSA: Recommended Placement",
+                        "High-Frequency Word Videos",
+                        "Interactive Learning Games",
+                        "Letter Songs",
+                        "ORR: Error Analysis",
+                        "ORR: Fluency Analysis",
+                        "ORR: Reading Behaviors",
+                        "ORR: Reading History",
+                        "ORR: Reading Level Progress",
+                        "Phonics Songs",
+                        "Plan & Teach",
+                        "Reading Log",
+                        "Reports: Single Test Analysis",
+                        "Reports: Standards Performance",
+                        "Reports: Summary",
+                        "Reports: Test Scores",
+                        "Reports: Test Status",
+                        "Resource Library: Filters",
+                        "TRS",
+                        "Additional Materials Bank",
+                        "Articulation Videos",
+                        "Biliteracy Resources",
+                        "Book Club Resources",
+                        "Build Reading Foundations",
+                        "Build-Reflect-Write eNotebooks",
+                        "Cards and Manipulatives",
+                        "Distance Learning",
+                        "eAssessments",
+                        "eBook",
+                        "ePocket Charts",
+                        "Extra Support",
+                        "Foundational Skills Lesson Presentations",
+                        "Handwriting",
+                        "High-Frequency Word Videos",
+                        "Home-Connections",
+                        "Home-School Connections: Unit Activities",
+                        "Home-School Connections: Unit Letters",
+                        "How-To Videos: Benchmark Universe",
+                        "Interactive Learning Games",
+                        "Interactive Read-Alouds",
+                        "Interactive Sound-Spelling Cards and Articulation Videos",
+                        "Intervention",
+                        "Knowledge-Building Topic Libraries",
+                        "Letter Songs",
+                        "Media Source Videos",
+                        "Mentor Read-Alouds",
+                        "Multilingual Glossary",
+                        "Multimedia",
+                        "My Language Buddy Student Book",
+                        "My Language Companion Student Book",
+                        "My Reading & Writing",
+                        "Novel Study",
+                        "Overview and Training",
+                        "Phonics Songs",
+                        "Phonological Awareness Resources",
+                        "Poetry Out Loud",
+                        "Poetry Posters",
+                        "Practice",
+                        "Practice Decodable Texts",
+                        "Pre-Decodable and Decodable Texts",
+                        "Program Review",
+                        "Program Support",
+                        "Reader's Theater",
+                        "Reproducible Assessments",
+                        "Responsive Teaching Toolkit",
+                        "Shared Reading",
+                        "Shared Reading and Poetry",
+                        "Sing, Swing, and Learn Unit Songs",
+                        "Small Group and Independent Resources",
+                        "Student Book Answer Keys",
+                        "Student How-To Videos",
+                        "Texts for Close Reading",
+                        "Unit Opener Videos",
+                        "Vocabulary Cards",
+                        "Whole Group Teacher Resources",
+                        "Word Study Resources"
+                    ];
+
+                    // Save default values to Freshdesk storage
+                    saveValues('customAllResourcesValues', allResourcesValues);
+                }
+
                 // Set Teams notification checkbox
                 const teamsCheckbox = document.getElementById('teamsNotificationEnabled');
                 if (teamsCheckbox) {
@@ -1066,6 +1211,7 @@
                 renderLocationValues(locationValues);
                 renderResourceValues(resourceValues);
                 renderSimResourceValues(simResourceValues);
+                renderAllResourcesValues(allResourcesValues);
 
                 // Update section summaries
                 updateSectionSummaries();
@@ -1208,10 +1354,100 @@
                     "Resource Library: Filters"
                 ];
 
+                // Use All Resources values as fallback
+                const allResourcesValues = [
+                    "",
+                    "Assignments",
+                    "Assignments: Grade View",
+                    "Assignments: Live View",
+                    "Bookshelves",
+                    "Dashboard",
+                    "ePocket Chart",
+                    "FSA: History",
+                    "FSA: Overview",
+                    "FSA: Recommended Placement",
+                    "High-Frequency Word Videos",
+                    "Interactive Learning Games",
+                    "Letter Songs",
+                    "ORR: Error Analysis",
+                    "ORR: Fluency Analysis",
+                    "ORR: Reading Behaviors",
+                    "ORR: Reading History",
+                    "ORR: Reading Level Progress",
+                    "Phonics Songs",
+                    "Plan & Teach",
+                    "Reading Log",
+                    "Reports: Single Test Analysis",
+                    "Reports: Standards Performance",
+                    "Reports: Summary",
+                    "Reports: Test Scores",
+                    "Reports: Test Status",
+                    "Resource Library: Filters",
+                    "TRS",
+                    "Additional Materials Bank",
+                    "Articulation Videos",
+                    "Biliteracy Resources",
+                    "Book Club Resources",
+                    "Build Reading Foundations",
+                    "Build-Reflect-Write eNotebooks",
+                    "Cards and Manipulatives",
+                    "Distance Learning",
+                    "eAssessments",
+                    "eBook",
+                    "ePocket Charts",
+                    "Extra Support",
+                    "Foundational Skills Lesson Presentations",
+                    "Handwriting",
+                    "High-Frequency Word Videos",
+                    "Home-Connections",
+                    "Home-School Connections: Unit Activities",
+                    "Home-School Connections: Unit Letters",
+                    "How-To Videos: Benchmark Universe",
+                    "Interactive Learning Games",
+                    "Interactive Read-Alouds",
+                    "Interactive Sound-Spelling Cards and Articulation Videos",
+                    "Intervention",
+                    "Knowledge-Building Topic Libraries",
+                    "Letter Songs",
+                    "Media Source Videos",
+                    "Mentor Read-Alouds",
+                    "Multilingual Glossary",
+                    "Multimedia",
+                    "My Language Buddy Student Book",
+                    "My Language Companion Student Book",
+                    "My Reading & Writing",
+                    "Novel Study",
+                    "Overview and Training",
+                    "Phonics Songs",
+                    "Phonological Awareness Resources",
+                    "Poetry Out Loud",
+                    "Poetry Posters",
+                    "Practice",
+                    "Practice Decodable Texts",
+                    "Pre-Decodable and Decodable Texts",
+                    "Program Review",
+                    "Program Support",
+                    "Reader's Theater",
+                    "Reproducible Assessments",
+                    "Responsive Teaching Toolkit",
+                    "Shared Reading",
+                    "Shared Reading and Poetry",
+                    "Sing, Swing, and Learn Unit Songs",
+                    "Small Group and Independent Resources",
+                    "Student Book Answer Keys",
+                    "Student How-To Videos",
+                    "Texts for Close Reading",
+                    "Unit Opener Videos",
+                    "Vocabulary Cards",
+                    "Whole Group Teacher Resources",
+                    "Word Study Resources"
+                ];
+
                 renderVersionValues(versionValues);
                 renderLocationValues(locationValues);
                 renderResourceValues(resourceValues);
                 renderSimResourceValues(simResourceValues);
+                renderAllResourcesValues(allResourcesValues);
 
                 // Update section summaries after rendering
                 updateSectionSummaries();
@@ -1524,6 +1760,76 @@
                 });
         }
 
+        // Function to render All Resources values to the UI
+        function renderAllResourcesValues(values) {
+            const container = document.getElementById('allResourcesValuesContainer');
+            container.innerHTML = '';
+
+            values.forEach((value, index) => {
+                if (value !== undefined) {
+                    const valueItem = document.createElement('div');
+                    valueItem.className = 'value-item';
+                    valueItem.dataset.value = value;
+                    valueItem.draggable = true;
+
+                    // Add drag event listeners
+                    valueItem.addEventListener('dragstart', handleDragStart);
+                    valueItem.addEventListener('dragover', handleDragOver);
+                    valueItem.addEventListener('drop', handleDrop);
+                    valueItem.addEventListener('dragend', handleDragEnd);
+
+                    valueItem.innerHTML = `
+                        <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+                        <div class="value-text">${value || "(Empty value)"}</div>
+                        <div class="value-actions">
+                            <button class="btn-delete" data-index="${index}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(valueItem);
+                }
+            });
+
+            // Add click handlers for delete buttons
+            const deleteButtons = container.querySelectorAll('.btn-delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const index = parseInt(this.dataset.index);
+                    deleteAllResourcesValue(index);
+                });
+            });
+        }
+
+        // Function to delete an All Resources value
+        function deleteAllResourcesValue(index) {
+            client.db.get('customAllResourcesValues')
+                .then(function (values) {
+                    // Convert to array if necessary
+                    if (values && typeof values === 'object' && !Array.isArray(values)) {
+                        values = Object.values(values);
+                    }
+
+                    if (!values || !Array.isArray(values)) {
+                        showStatus("No values found to delete", false);
+                        return;
+                    }
+
+                    values.splice(index, 1);
+
+                    // Save changes to Freshdesk DB
+                    saveValues('customAllResourcesValues', values);
+
+                    // Update UI
+                    renderAllResourcesValues(values);
+                    updateSectionSummaries();
+                })
+                .catch(function (error) {
+                    console.error("Error deleting All Resources value:", error);
+                    showStatus("Failed to delete All Resources value: " + error.message, false);
+                });
+        }
+
         // Function to add a new SIM resource value
         function addSimResourceValue(value) {
             if (!value || value.trim() === '') {
@@ -1700,6 +2006,50 @@
                 });
         }
 
+        // Function to add a new All Resources value
+        function addAllResourcesValue(value) {
+            if (!value || value.trim() === '') {
+                showStatus("Please enter a value to add", false);
+                return;
+            }
+
+            client.db.get('customAllResourcesValues')
+                .catch(error => {
+                    console.error("Error getting All Resources values:", error);
+                    return [];
+                })
+                .then(function (values) {
+                    // Convert to array if necessary
+                    if (values && typeof values === 'object' && !Array.isArray(values)) {
+                        values = Object.values(values);
+                    }
+
+                    if (!values || !Array.isArray(values)) {
+                        values = [];
+                    }
+
+                    // Check if value already exists
+                    if (values.includes(value)) {
+                        showStatus("This value already exists in the list", false);
+                        return;
+                    }
+
+                    values.push(value);
+
+                    // Save changes to Freshdesk DB
+                    saveValues('customAllResourcesValues', values);
+
+                    // Update UI
+                    renderAllResourcesValues(values);
+                    document.getElementById('newAllResourcesValue').value = '';
+                    updateSectionSummaries();
+                })
+                .catch(function (error) {
+                    console.error("Error adding All Resources value:", error);
+                    showStatus("Failed to add All Resources value: " + error.message, false);
+                });
+        }
+
         // Function to save all changes
         function saveChanges() {
             // Save Teams notification setting
@@ -1760,6 +2110,12 @@
                 addSimResourceValue(newValue);
             });
 
+            // Add All Resources value button
+            document.getElementById('addAllResourcesBtn').addEventListener('click', function () {
+                const newValue = document.getElementById('newAllResourcesValue').value;
+                addAllResourcesValue(newValue);
+            });
+
             // Save all changes button
             document.getElementById('saveChangesBtn').addEventListener('click', saveChanges);
 
@@ -1789,6 +2145,13 @@
                 if (e.key === 'Enter') {
                     const newValue = this.value;
                     addSimResourceValue(newValue);
+                }
+            });
+
+            document.getElementById('newAllResourcesValue').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    const newValue = this.value;
+                    addAllResourcesValue(newValue);
                 }
             });
 
@@ -2047,6 +2410,7 @@
                 const isLocationContainer = container.id === 'locationValuesContainer';
                 const isResourceContainer = container.id === 'resourceValuesContainer';
                 const isSimResourceContainer = container.id === 'simResourceValuesContainer';
+                const isAllResourcesContainer = container.id === 'allResourcesValuesContainer';
 
                 // Get the values from Freshdesk storage
                 let storageKey;
@@ -2058,6 +2422,8 @@
                     storageKey = 'customResourceValues';
                 } else if (isSimResourceContainer) {
                     storageKey = 'customSimResourceValues';
+                } else if (isAllResourcesContainer) {
+                    storageKey = 'customAllResourcesValues';
                 } else {
                     console.error('Unknown container for drag and drop:', container.id);
                     return;
@@ -2095,6 +2461,8 @@
                             renderResourceValues(values);
                         } else if (isSimResourceContainer) {
                             renderSimResourceValues(values);
+                        } else if (isAllResourcesContainer) {
+                            renderAllResourcesValues(values);
                         }
 
                         // Update summaries after reordering
@@ -2161,6 +2529,14 @@
             const simResourceSummary = document.getElementById('sim-resource-summary');
             if (simResourceSummary) {
                 simResourceSummary.textContent = `(${simResourceCount} values)`;
+            }
+
+            // Update All Resources summary
+            const allResourcesContainer = document.getElementById('allResourcesValuesContainer');
+            const allResourcesCount = allResourcesContainer ? allResourcesContainer.querySelectorAll('.value-item').length : 0;
+            const allResourcesSummary = document.getElementById('all-resources-summary');
+            if (allResourcesSummary) {
+                allResourcesSummary.textContent = `(${allResourcesCount} values)`;
             }
 
             // Update agent summary

@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracker Central - Transform Your Workflow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0ba87d;
+            --secondary: #12344d;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow: hidden;
+            background: #0f0f0f;
+            color: #ffffff;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            background: linear-gradient(135deg, #12344d 0%, #0a1f2e 100%);
+            padding: 60px 100px 80px 100px;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        .nav-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(11, 168, 125, 0.2);
+            border: 2px solid #0ba87d;
+            color: #0ba87d;
+            padding: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .nav-btn.prev {
+            left: 30px;
+        }
+
+        .nav-btn.next {
+            right: 30px;
+        }
+
+        .nav-btn:hover {
+            background: #0ba87d;
+            color: #12344d;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 10px 30px rgba(11, 168, 125, 0.3);
+        }
+
+        .nav-dots {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+            background: rgba(18, 52, 77, 0.6);
+            padding: 10px 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: #0ba87d;
+            transform: scale(1.5);
+        }
+
+        .glow-card {
+            background: rgba(11, 168, 125, 0.1);
+            border: 1px solid rgba(11, 168, 125, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(11, 168, 125, 0.1);
+            transition: all 0.3s;
+        }
+
+        .glow-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(11, 168, 125, 0.2);
+            border-color: #0ba87d;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0ba87d, #12344d);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0ba87d, #1ef4b1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .time-comparison {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .time-bar {
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .time-fill {
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            color: #12344d;
+            font-weight: 700;
+        }
+
+        .old-time {
+            width: 100%;
+            background: #ef4444;
+        }
+
+        .new-time {
+            width: 52%;
+            background: #0ba87d;
+        }
+
+        .integration-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .integration-card:hover {
+            background: rgba(11, 168, 125, 0.1);
+            border-color: #0ba87d;
+            transform: translateY(-5px);
+        }
+
+        .integration-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #0ba87d;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #0ba87d, #1ef4b1, #0ba87d);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            z-index: 100;
+        }
+
+        /* Custom scrollbar */
+        .slide::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slide::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .slide::-webkit-scrollbar-thumb {
+            background: rgba(11, 168, 125, 0.5);
+            border-radius: 4px;
+        }
+
+        .slide::-webkit-scrollbar-thumb:hover {
+            background: rgba(11, 168, 125, 0.7);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 60px 80px 80px 80px;
+            }
+
+            .nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+            }
+
+            .nav-btn.prev {
+                left: 15px;
+            }
+
+            .nav-btn.next {
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Slide 1: Title -->
+    <div class="slide active">
+        <div class="container mx-auto px-8 text-center">
+            <div class="floating">
+                <div
+                    class="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-to-br from-[#0ba87d] to-[#12344d] mb-8 p-6">
+                    <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1749811988/icon_p3ajuo.svg"
+                        alt="Tracker Central Logo" class="w-full h-full">
+                </div>
+            </div>
+            <h1 class="text-7xl font-bold mb-4 gradient-text">Tracker Central</h1>
+            <p class="text-2xl text-gray-300 mb-8">Work Smarter, Not Harder</p>
+            <div class="flex justify-center gap-6 mt-12">
+                <div class="text-center">
+                    <div class="stat-number">~50%</div>
+                    <p class="text-gray-400">Time Saved</p>
+                </div>
+                <div class="text-center">
+                    <div class="stat-number">100%</div>
+                    <p class="text-gray-400">Accuracy</p>
+                </div>
+                <div class="text-center">
+                    <div class="stat-number">10+</div>
+                    <p class="text-gray-400">Fields Auto-Populated</p>
+                </div>
+                <div class="text-center">
+                    <div class="stat-number">16</div>
+                    <p class="text-gray-400">Smart Templates</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">1 / 12</div>
+    </div>
+
+    <!-- Slide 2: The Problem -->
+    <div class="slide">
+        <div class="container mx-auto px-8 max-w-6xl">
+            <h2 class="text-5xl font-bold mb-12 text-center">The Problems We're Solving</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glow-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Reporting Nightmares</h3>
+                    <p class="text-gray-300">Non-standardized data makes it impossible to generate accurate reports.
+                        Without consistent formatting, we can't track trends or measure performance effectively.</p>
+                </div>
+                <div class="glow-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-exclamation-triangle text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Missing Information</h3>
+                    <p class="text-gray-300">Incomplete trackers lead to back-and-forth communication, delays in
+                        resolution, and frustrated internal teams waiting for complete information.</p>
+                </div>
+                <div class="glow-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-random text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Inconsistent Data Entry</h3>
+                    <p class="text-gray-300">Without forms and required fields, it's almost impossible to enter data the
+                        exact same way every time.</p>
+                </div>
+                <div class="glow-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-redo text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Duplicate Work</h3>
+                    <p class="text-gray-300">Agents waste time re-entering the same information multiple times, when
+                        they could be using that time to solve issues.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">2 / 12</div>
+    </div>
+
+    <!-- Slide 3: Time Savings -->
+    <div class="slide">
+        <div class="container mx-auto px-8 max-w-6xl text-center">
+            <h2 class="text-5xl font-bold mb-8">~50% Faster Tracker Creation</h2>
+            <p class="text-2xl text-gray-300 mb-12">Predictions based on internal surveys and testing</p>
+
+            <div class="grid md:grid-cols-2 gap-12 items-center mb-12">
+                <div class="space-y-8">
+                    <div class="glow-card p-8">
+                        <div class="flex items-center justify-center mb-6">
+                            <div
+                                class="w-24 h-24 rounded-full bg-red-500/20 border-4 border-red-500 flex items-center justify-center">
+                                <i class="fas fa-clock text-red-500 text-3xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3">Old Manual Process</h3>
+                        <p class="text-gray-300 mb-4">Time-consuming manual data entry</p>
+                        <div class="relative">
+                            <div class="w-full h-4 bg-gray-700 rounded-full">
+                                <div class="h-4 bg-red-500 rounded-full" style="width: 100%"></div>
+                            </div>
+                            <p class="text-red-400 font-bold mt-2">100% Manual Work</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="glow-card p-8">
+                        <div class="flex items-center justify-center mb-6">
+                            <div
+                                class="w-24 h-24 rounded-full bg-[#0ba87d]/20 border-4 border-[#0ba87d] flex items-center justify-center">
+                                <i class="fas fa-rocket text-[#0ba87d] text-3xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3">Tracker Central</h3>
+                        <p class="text-gray-300 mb-4">Smart automation and templates</p>
+                        <div class="relative">
+                            <div class="w-full h-4 bg-gray-700 rounded-full">
+                                <div class="h-4 bg-[#0ba87d] rounded-full" style="width: 50%"></div>
+                            </div>
+                            <p class="text-[#0ba87d] font-bold mt-2">~50% Time Saved</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center mb-12">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-arrow-down text-4xl text-[#0ba87d]"></i>
+                    <span class="text-3xl font-bold gradient-text">50% Less Time</span>
+                    <i class="fas fa-arrow-down text-4xl text-[#0ba87d]"></i>
+                </div>
+            </div>
+
+            <div class="glow-card max-w-4xl mx-auto">
+                <h3 class="text-2xl font-semibold mb-6">What This Means For Us</h3>
+                <div class="grid md:grid-cols-2 gap-8 text-left">
+                    <div>
+                        <h4 class="text-lg font-semibold text-[#0ba87d] mb-3">Monthly Impact</h4>
+                        <p class="text-gray-300">If we create <span class="text-white font-bold">200 trackers per
+                                month</span>, we save approximately <span class="text-[#0ba87d] font-bold">17
+                                hours</span> of manual work across the team.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-[#0ba87d] mb-3">Annual Benefits</h4>
+                        <p class="text-gray-300">That's <span class="text-[#0ba87d] font-bold">over 200 hours per
+                                year</span> that can be redirected to solving customer issues and improving service
+                            quality.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">3 / 12</div>
+    </div>
+
+    <!-- Slide 4: 16 Smart Templates -->
+    <div class="slide">
+        <div class="container mx-auto px-8 max-w-6xl">
+            <h2 class="text-5xl font-bold mb-12 text-center">16 Smart Templates</h2>
+            <p class="text-xl text-gray-300 text-center mb-12">Carefully designed to adapt dynamically as you fill them
+                out</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-edit text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">SEDCUST</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-puzzle-piece text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">Assembly</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-sync-alt text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">Assembly Rollover</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-tasks text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">SIM Assignment</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-chart-bar text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">SIM Assessment Reports</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-trophy text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">SIM Achievement Levels</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-check-circle text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">SIM FSA</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-book-open text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">SIM Library View</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-file-alt text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">SIM ORR</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-chalkboard-teacher text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">SIM Plan & Teach</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-book-reader text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">SIM Reading Log</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-tachometer-alt text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">SIM Dashboard</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-lightbulb text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">Feature Request</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-clipboard-check text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">DPT (Customized eAssessment)</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-clock text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">Timeout Extension</p>
+                </div>
+                <div class="glow-card text-center p-4">
+                    <i class="fas fa-question-circle text-2xl text-[#0ba87d] mb-2"></i>
+                    <p class="font-semibold">Help Article</p>
+                </div>
+            </div>
+
+            <div class="glow-card">
+                <h3 class="text-2xl font-semibold mb-4">Dynamic Field Intelligence</h3>
+                <p class="text-gray-300">Each template includes detailed field descriptions and examples pulled directly
+                    from KBAs. No more switching between tabs to find the right format!</p>
+            </div>
+        </div>
+        <div class="slide-number">4 / 12</div>
+    </div>
+
+    <!-- Slide 5: Auto-Population Magic -->
+    <div class="slide">
+        <div class="container mx-auto px-8 max-w-6xl">
+            <h2 class="text-5xl font-bold mb-8 text-center">11+ Auto-Populated Fields</h2>
+            <p class="text-xl text-gray-300 text-center mb-12">Less typing, more solving</p>
+
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="glow-card p-8">
+                        <h3 class="text-3xl font-semibold mb-8 text-center text-[#0ba87d]">Automatically Populated
+                            Fields</h3>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-[#0ba87d] mr-3 text-lg"></i>
+                                    <span class="text-gray-300">Type</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-[#0ba87d] mr-3 text-lg"></i>
+                                    <span class="text-gray-300">Source</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-[#0ba87d] mr-3 text-lg"></i>
+                                    <span class="text-gray-300">Product Type</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-[#0ba87d] mr-3 text-lg"></i>
+                                    <span class="text-gray-300">Category</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-[#0ba87d] mr-3 text-lg"></i>
+                                    <span class="text-gray-300">Sub-category</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-[#0ba87d] mr-3 text-lg"></i>
+                                    <span class="text-gray-300">Issue Detail</span>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-[#0ba87d] mr-3 text-lg"></i>
+                                    <span class="text-gray-300">Group</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-[#0ba87d] mr-3 text-lg"></i>
+                                    <span class="text-gray-300">RVP</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-[#0ba87d] mr-3 text-lg"></i>
+                                    <span class="text-gray-300">Account Manager</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-[#0ba87d] mr-3 text-lg"></i>
+                                    <span class="text-gray-300">District</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-[#0ba87d] mr-3 text-lg"></i>
+                                    <span class="text-gray-300">District State</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="text-center">
+                        <div
+                            class="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-to-br from-[#0ba87d]/20 to-[#12344d]/20 border-4 border-[#0ba87d]/30 mb-6">
+                            <i class="fas fa-magic text-5xl text-[#0ba87d] pulse"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-4">Smart Data Transfer</h3>
+                        <p class="text-gray-300 text-lg leading-relaxed">All this information is automatically pulled
+                            from your original ticket and populated into the tracker template, then persists through to the newly created tracker with all ticket properties fully populated. No more copy-paste, no
+                            more manual data entry!</p>
+                    </div>
+
+                    <div class="glow-card p-6 text-center">
+                        <div class="text-4xl font-bold text-[#0ba87d] mb-2">90%</div>
+                        <p class="text-gray-300">Less Manual Data Entry</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">5 / 12</div>
+    </div>
+
+    <!-- Slide 6: Key Integrations -->
+    <div class="slide">
+        <div class="container mx-auto px-8 max-w-6xl">
+            <h2 class="text-5xl font-bold mb-8 text-center">Powerful Integrations</h2>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <i class="fab fa-microsoft"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Teams</h3>
+                    <p class="text-gray-300 text-sm">Automated alerts with one-click confirmation</p>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">SharePoint</h3>
+                    <p class="text-gray-300 text-sm">Feature requests auto-sync to SharePoint lists</p>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Power Automate</h3>
+                    <p class="text-gray-300 text-sm">Seamless workflow automation</p>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1749812444/hat_luknw4.svg"
+                            alt="HAR Analyzer" class="w-12 h-12 mx-auto">
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">HAR Analyzer</h3>
+                    <p class="text-gray-300 text-sm">Instant analysis with detailed reports</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glow-card">
+                    <h3 class="text-2xl font-semibold mb-4">SharePoint Integration Example</h3>
+                    <p class="text-gray-300 mb-4">No more double work! When you create a Feature Request tracker:</p>
+                    <div class="flex items-center gap-4">
+                        <div class="text-center">
+                            <div
+                                class="w-16 h-16 rounded-full bg-[#0ba87d]/20 border-2 border-[#0ba87d] flex items-center justify-center">
+                                <i class="fas fa-file-alt text-[#0ba87d]"></i>
+                            </div>
+                            <p class="text-sm mt-2">Create Tracker</p>
+                        </div>
+                        <i class="fas fa-arrow-right text-2xl text-[#0ba87d]"></i>
+                        <div class="text-center">
+                            <div
+                                class="w-16 h-16 rounded-full bg-[#0ba87d]/20 border-2 border-[#0ba87d] flex items-center justify-center">
+                                <i class="fas fa-robot text-[#0ba87d]"></i>
+                            </div>
+                            <p class="text-sm mt-2">Power Automate</p>
+                        </div>
+                        <i class="fas fa-arrow-right text-2xl text-[#0ba87d]"></i>
+                        <div class="text-center">
+                            <div
+                                class="w-16 h-16 rounded-full bg-[#0ba87d]/20 border-2 border-[#0ba87d] flex items-center justify-center">
+                                <i class="fas fa-share-alt text-[#0ba87d]"></i>
+                            </div>
+                            <p class="text-sm mt-2">SharePoint List</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="glow-card">
+                        <h4 class="text-lg font-semibold mb-3 text-[#0ba87d]">Teams Integration Benefits</h4>
+                        <ul class="space-y-2 text-gray-300 text-sm">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-[#0ba87d] mr-2 mt-1 flex-shrink-0"></i>
+                                <span>Automated message drafting and pasting</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-[#0ba87d] mr-2 mt-1 flex-shrink-0"></i>
+                                <span>Automated message formatting</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-[#0ba87d] mr-2 mt-1 flex-shrink-0"></i>
+                                <span>Reduces manual copy-paste work</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card">
+                        <h4 class="text-lg font-semibold mb-3 text-[#0ba87d]">Power Automate Workflows</h4>
+                        <ul class="space-y-2 text-gray-300 text-sm">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-[#0ba87d] mr-2 mt-1 flex-shrink-0"></i>
+                                <span>Intelligent field mapping</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-[#0ba87d] mr-2 mt-1 flex-shrink-0"></i>
+                                <span>Error handling and validation</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-[#0ba87d] mr-2 mt-1 flex-shrink-0"></i>
+                                <span>Real-time sync between systems</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">6 / 12</div>
+    </div>
+
+    <!-- Slide 7: HAR File Analyzer -->
+    <div class="slide">
+        <div class="container mx-auto px-8 max-w-6xl">
+            <h2 class="text-5xl font-bold mb-8 text-center">Built-in HAR File Analyzer</h2>
+
+            <div class="grid md:grid-cols-2 gap-8 items-start mb-6">
+                <div class="space-y-6">
+                    <div class="glow-card">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="feature-icon flex items-center justify-center flex-shrink-0">
+                                <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1749812444/hat_luknw4.svg"
+                                    alt="HAR Analyzer" class="w-8 h-8">
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-semibold">Instant Analysis</h3>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 mb-4">Get immediate feedback on HAR files before submitting the tracker.
+                            The analyzer highlights errors, warnings, and potential issues.</p>
+                        <ul class="space-y-3 text-gray-300">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-[#0ba87d] mr-3 mt-1 flex-shrink-0"></i>
+                                <span>Error detection and highlighting with detailed explanations</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-[#0ba87d] mr-3 mt-1 flex-shrink-0"></i>
+                                <span>Performance metrics analysis including load times and sizes</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-[#0ba87d] mr-3 mt-1 flex-shrink-0"></i>
+                                <span>Detailed Excel report generation with all findings</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-[#0ba87d] mr-3 mt-1 flex-shrink-0"></i>
+                                <span>Automatic attachment to tracker for development teams</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card">
+                        <h4 class="text-lg font-semibold mb-3 text-[#0ba87d]">Key Metrics Analyzed</h4>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Total Requests:</span>
+                                    <span class="text-white">6</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Errors:</span>
+                                    <span class="text-red-400">3</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Warnings:</span>
+                                    <span class="text-yellow-400">2</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Total Size:</span>
+                                    <span class="text-white">248 KB</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Load Time:</span>
+                                    <span class="text-white">1570ms</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Avg Response:</span>
+                                    <span class="text-white">126ms</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glow-card p-6">
+                    <h4 class="text-lg font-semibold mb-4 text-center">Live Analysis View</h4>
+                    <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1749822522/harfile_yec0s4.svg"
+                        alt="HAR File Analyzer Overview" class="w-full h-auto rounded-lg shadow-lg">
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glow-card text-center">
+                    <div class="stat-number text-3xl">0</div>
+                    <p class="text-gray-300">Back-and-forth requests for HAR files</p>
+                </div>
+                <div class="glow-card text-center">
+                    <div class="stat-number text-3xl">100%</div>
+                    <p class="text-gray-300">Complete technical information first time</p>
+                </div>
+                <div class="glow-card text-center">
+                    <div class="stat-number text-3xl">15MB</div>
+                    <p class="text-gray-300">Maximum HAR file size supported</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">7 / 12</div>
+    </div>
+
+    <!-- Slide 8: Never Lose Work Again -->
+    <div class="slide">
+        <div class="container mx-auto px-8 max-w-6xl">
+            <h2 class="text-5xl font-bold mb-12 text-center">Never Lose Your Work Again</h2>
+
+            <div class="grid md:grid-cols-2 gap-8 items-stretch mb-8">
+                <div class="flex flex-col gap-6">
+                    <div class="glow-card flex-1 flex flex-col">
+                        <div class="feature-icon mx-auto mb-4">
+                            <i class="fas fa-shield-alt text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-4 text-center">Click-Outside Protection</h3>
+                        <p class="text-gray-300 text-center flex-1">No more losing everything because you accidentally
+                            clicked
+                            outside the
+                            modal. Your work is safe!</p>
+                    </div>
+
+                    <div class="glow-card flex-1 flex flex-col">
+                        <div class="feature-icon mx-auto mb-4">
+                            <i class="fas fa-save text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-4 text-center">Draft Management System</h3>
+                        <p class="text-gray-300 text-center flex-1">Save incomplete trackers as drafts and return later
+                            to
+                            finish exactly where
+                            you left off.</p>
+                    </div>
+                </div>
+
+                <div class="glow-card p-6 flex flex-col">
+                    <h4 class="text-lg font-semibold mb-4 text-center">Saved Drafts in Template Selector</h4>
+                    <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1749821779/dfs_elqt38.svg"
+                        alt="Draft Management System" class="w-full h-auto rounded-lg shadow-lg">
+                </div>
+            </div>
+
+            <div class="glow-card max-w-4xl mx-auto mt-8">
+                <h3 class="text-xl font-semibold mb-4 text-center">How Draft Management Works</h3>
+                <div class="flex justify-around items-center">
+                    <div class="text-center">
+                        <i class="fas fa-edit text-3xl text-[#0ba87d] mb-2"></i>
+                        <p class="text-sm">Start Tracker</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-[#0ba87d]"></i>
+                    <div class="text-center">
+                        <i class="fas fa-save text-3xl text-[#0ba87d] mb-2"></i>
+                        <p class="text-sm">Save Draft</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-[#0ba87d]"></i>
+                    <div class="text-center">
+                        <i class="fas fa-coffee text-3xl text-[#0ba87d] mb-2"></i>
+                        <p class="text-sm">Take Break</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-[#0ba87d]"></i>
+                    <div class="text-center">
+                        <i class="fas fa-undo text-3xl text-[#0ba87d] mb-2"></i>
+                        <p class="text-sm">Resume Later</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">8 / 12</div>
+    </div>
+
+    <!-- Slide 9: Today's Trackers Widget -->
+    <div class="slide">
+        <div class="container mx-auto px-8 max-w-6xl">
+            <h2 class="text-5xl font-bold mb-12 text-center">Today's Trackers Widget</h2>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="glow-card h-full">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="feature-icon flex-shrink-0">
+                            <i class="fas fa-calendar-day text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold">Real-Time Visibility</h3>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">See all trackers created today at a glance. No more duplicate
+                        work!</p>
+
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-[#0ba87d] mr-3 mt-1 flex-shrink-0"></i>
+                            <span>View all trackers created today in one place</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-[#0ba87d] mr-3 mt-1 flex-shrink-0"></i>
+                            <span>Quick access to any tracker with one click</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-[#0ba87d] mr-3 mt-1 flex-shrink-0"></i>
+                            <span>Avoid creating duplicate trackers</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-[#0ba87d] mr-3 mt-1 flex-shrink-0"></i>
+                            <span>Filter and search through today's work</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="glow-card p-6">
+                    <h4 class="text-lg font-semibold mb-4 text-center">Today's Trackers List View</h4>
+                    <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1749822250/todaystrackers_wqlvg8.svg"
+                        alt="Today's Trackers Widget" class="w-full h-auto rounded-lg shadow-lg">
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <p class="text-xl text-gray-300">Check existing trackers before creating new ones!</p>
+            </div>
+        </div>
+        <div class="slide-number">9 / 12</div>
+    </div>
+
+    <!-- Slide 10: Perfect Subject Lines -->
+    <div class="slide">
+        <div class="container mx-auto px-8 max-w-6xl">
+            <h2 class="text-5xl font-bold mb-8 text-center">100% Accurate Subject Lines</h2>
+            <p class="text-xl text-gray-300 text-center mb-8">Never worry about formatting again</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glow-card p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-semibold"><span class="text-[#0ba87d] font-bold">LIVE!</span> Subject
+                            Line Generation (Assembly Rollover)</h3>
+                        <button onclick="autoPopulateFields()"
+                            class="bg-[#0ba87d] hover:bg-[#0ba87d]/80 text-white px-4 py-2 rounded-lg transition-all">
+                            Auto-Fill Demo
+                        </button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">VIP Status <span
+                                    class="text-red-400">*</span></label>
+                            <select id="vipStatus" onchange="updateSubjectLine()"
+                                class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-[#0ba87d] focus:outline-none">
+                                <option value="">Select...</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">District Name <span
+                                    class="text-red-400">*</span></label>
+                            <input type="text" id="districtName" onkeyup="updateSubjectLine()"
+                                class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-[#0ba87d] focus:outline-none"
+                                placeholder="Enter district name">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">District State <span
+                                    class="text-red-400">*</span></label>
+                            <input type="text" id="districtState" onkeyup="updateSubjectLine()" maxlength="2"
+                                class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-[#0ba87d] focus:outline-none"
+                                placeholder="e.g., VA">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Issue</label>
+                            <input type="text" value="Assembly Rollover" readonly
+                                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-gray-300 cursor-not-allowed"
+                                title="This field is auto-populated for Assembly trackers">
+                        </div>
+
+                        <div class="pt-4 border-t border-gray-600">
+                            <label class="block text-sm font-medium text-[#0ba87d] mb-2">Generated Subject Line</label>
+                            <div id="subjectLine"
+                                class="w-full bg-gradient-to-r from-[#0ba87d]/10 to-[#12344d]/10 border border-[#0ba87d]/50 rounded-lg px-3 py-3 text-white font-mono min-h-[50px] flex items-center">
+                                <span class="text-gray-400 italic">Subject line will appear here...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="glow-card p-6">
+                        <h4 class="text-lg font-semibold mb-4 text-[#0ba87d]">Actual Format Examples</h4>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-gray-800/50 rounded p-3">
+                                <p class="text-gray-400 mb-1">VIP Assembly Rollover:</p>
+                                <p class="font-mono text-xs">VIP * MAPLE SHADE TOWNSHIP • NJ | Assembly Rollover</p>
+                            </div>
+                            <div class="bg-gray-800/50 rounded p-3">
+                                <p class="text-gray-400 mb-1">Standard Assembly Rollover:</p>
+                                <p class="font-mono text-xs">FAIRFAX COUNTY • VA | Assembly Rollover</p>
+                            </div>
+                            <div class="bg-gray-800/50 rounded p-3">
+                                <p class="text-gray-400 mb-1">VIP SIM Example:</p>
+                                <p class="font-mono text-xs">VIP * Fairfax • VA | Benchmark Advance c2022 • 2.75
+                                    Virginia | Filter not displaying for teachers</p>
+                            </div>
+                            <div class="bg-gray-800/50 rounded p-3">
+                                <p class="text-gray-400 mb-1">VIP SEDCUST Example:</p>
+                                <p class="font-mono text-xs">X68144 | VIP | Advance c2022 • 2.75 Virginia | Practice: G2
+                                    > U10 > W1 - Spelling Error</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="glow-card text-center p-4">
+                            <i class="fas fa-check-double text-2xl text-[#0ba87d] mb-3"></i>
+                            <h4 class="text-sm font-semibold mb-2">Consistent Format</h4>
+                            <p class="text-gray-300 text-xs">Every tracker follows exact naming convention</p>
+                        </div>
+                        <div class="glow-card text-center p-4">
+                            <i class="fas fa-tachometer-alt text-2xl text-[#0ba87d] mb-3"></i>
+                            <h4 class="text-sm font-semibold mb-2">Better Reports</h4>
+                            <p class="text-gray-300 text-xs">Standardized data enables powerful analytics</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">10 / 12</div>
+    </div>
+
+    <!-- Slide 11: Admin Center -->
+    <div class="slide">
+        <div class="container mx-auto px-8 max-w-5xl">
+            <h2 class="text-5xl font-bold mb-12 text-center">No-Code Admin Center</h2>
+            <p class="text-xl text-gray-300 text-center mb-12">Future-proof and flexible</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glow-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Template Management</h3>
+                    <p class="text-gray-300 mb-4">Update templates without touching code:</p>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><i class="fas fa-plus text-[#0ba87d] mr-2"></i>Add/remove fields</li>
+                        <li><i class="fas fa-edit text-[#0ba87d] mr-2"></i>Update dropdown values</li>
+                        <li><i class="fas fa-sync text-[#0ba87d] mr-2"></i>Modify field requirements</li>
+                        <li><i class="fas fa-palette text-[#0ba87d] mr-2"></i>Customize templates</li>
+                    </ul>
+                </div>
+
+                <div class="glow-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">User Management</h3>
+                    <p class="text-gray-300 mb-4">Control access and escalations:</p>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><i class="fas fa-user-plus text-[#0ba87d] mr-2"></i>Manage escalation rotations</li>
+                        <li><i class="fas fa-shield-alt text-[#0ba87d] mr-2"></i>Set permissions</li>
+                        <li><i class="fas fa-chart-line text-[#0ba87d] mr-2"></i>View usage analytics</li>
+                        <li><i class="fas fa-bell text-[#0ba87d] mr-2"></i>Configure notifications</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <div class="inline-flex items-center gap-4 glow-card px-8 py-4">
+                    <i class="fas fa-rocket text-2xl text-[#0ba87d]"></i>
+                    <p class="text-lg">Designed to grow and adapt with our needs</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">11 / 12</div>
+    </div>
+    <!-- Slide 12: Get Started -->
+    <div class="slide">
+        <div class="container mx-auto px-8 max-w-5xl text-center">
+            <div class="mb-12">
+                <div
+                    class="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-to-br from-[#0ba87d] to-[#12344d] mb-8 floating">
+                    <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1749811988/icon_p3ajuo.svg"
+                        alt="Tracker Central Logo" class="w-full h-full">
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-12">
+                <div class="glow-card">
+                    <h3 class="text-xl font-semibold mb-3 text-[#0ba87d]">Save Time</h3>
+                    <p class="text-gray-300">~50% faster tracker creation means more time for actual support</p>
+                </div>
+                <div class="glow-card">
+                    <h3 class="text-xl font-semibold mb-3 text-[#0ba87d]">Be Accurate</h3>
+                    <p class="text-gray-300">100% complete trackers with perfect formatting every time</p>
+                </div>
+                <div class="glow-card">
+                    <h3 class="text-xl font-semibold mb-3 text-[#0ba87d]">Work Smarter</h3>
+                    <p class="text-gray-300">Let automation handle the repetitive tasks</p>
+                </div>
+            </div>
+
+            <div class="glow-card max-w-2xl mx-auto">
+                <h3 class="text-2xl font-semibold mb-4">Additional Features</h3>
+                <div class="flex justify-center gap-8">
+                    <div class="text-center">
+                        <i class="fas fa-moon text-3xl text-[#0ba87d] mb-2"></i>
+                        <p class="text-sm">Dark/Light Mode</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-shield-alt text-3xl text-[#0ba87d] mb-2"></i>
+                        <p class="text-sm">Required Fields</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-sync text-3xl text-[#0ba87d] mb-2"></i>
+                        <p class="text-sm">Auto-Updates</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                <p class="text-2xl font-semibold gradient-text">Welcome to Tracker Central</p>
+                <p class="text-gray-300 mt-2">Start Working Smarter, Not Harder Today</p>
+            </div>
+        </div>
+        <div class="slide-number">12 / 12</div>
+    </div>
+
+    <!-- Navigation -->
+    <button class="nav-btn prev" onclick="previousSlide()">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="nav-btn next" onclick="nextSlide()">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <!-- Navigation Dots -->
+    <div class="nav-dots">
+        <span class="dot active" onclick="goToSlide(0)"></span>
+        <span class="dot" onclick="goToSlide(1)"></span>
+        <span class="dot" onclick="goToSlide(2)"></span>
+        <span class="dot" onclick="goToSlide(3)"></span>
+        <span class="dot" onclick="goToSlide(4)"></span>
+        <span class="dot" onclick="goToSlide(5)"></span>
+        <span class="dot" onclick="goToSlide(6)"></span>
+        <span class="dot" onclick="goToSlide(7)"></span>
+        <span class="dot" onclick="goToSlide(8)"></span>
+        <span class="dot" onclick="goToSlide(9)"></span>
+        <span class="dot" onclick="goToSlide(10)"></span>
+        <span class="dot" onclick="goToSlide(11)"></span>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev');
+                if (i < index) slide.classList.add('prev');
+                if (i === index) slide.classList.add('active');
+            });
+
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) previousSlide();
+        }
+
+        // Interactive Subject Line Generator
+        function updateSubjectLine() {
+            const vipStatus = document.getElementById('vipStatus').value;
+            const districtName = document.getElementById('districtName').value.trim().toUpperCase();
+            const districtState = document.getElementById('districtState').value.trim().toUpperCase();
+
+            if (!districtName || !districtState) {
+                document.getElementById('subjectLine').innerHTML = '<span class="text-gray-400 italic">Fill in district name and state to generate subject line...</span>';
+                return;
+            }
+
+            let subjectLine = '';
+
+            // Assembly Rollover format: VIP * District Name • State | Assembly Rollover
+            // OR: District Name • State | Assembly Rollover (for non-VIP)
+
+            // Add VIP prefix if VIP is Yes
+            if (vipStatus === 'Yes') {
+                subjectLine += 'VIP * ';
+            }
+
+            // Add district and state
+            subjectLine += `${districtName} • ${districtState}`;
+
+            // Add issue type
+            subjectLine += ' | Assembly Rollover';
+
+            // Update the subject line display
+            document.getElementById('subjectLine').innerHTML = `<span class="text-white">${subjectLine}</span>`;
+        }
+
+        function autoPopulateFields() {
+            // Auto-populate demo data
+            document.getElementById('vipStatus').value = 'Yes';
+            document.getElementById('districtName').value = 'Fairfax County';
+            document.getElementById('districtState').value = 'VA';
+
+            // Update the subject line
+            updateSubjectLine();
+
+            // Add a subtle animation effect
+            const form = document.querySelector('.glow-card');
+            form.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                form.style.transform = 'scale(1)';
+            }, 200);
+        }
+    </script>
+</body>
+
+</html>

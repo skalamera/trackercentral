@@ -1352,10 +1352,27 @@ const TRACKER_CONFIGS = {
             description += '<div style="margin-bottom: 20px;"></div>';
 
             description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">FEATURE REQUEST SUMMARY</span></div>';
+
+            // Add Resource field first
+            if (fields.resourceName) {
+                description += `<div><strong>Resource:</strong></div>`;
+                description += `<div>${fields.resourceName}</div>`;
+            }
+
             description += `<div><strong>Program Name:</strong></div>`;
-            description += `<div>${fields.applicationDetails || ''}</div>`;
+
+            // Build program name with version and state/national
+            let programName = fields.application || fields.applicationDetails || '';
+            if (fields.version) {
+                programName += ` • ${fields.version}`;
+            }
+            if (fields.versionState) {
+                programName += ` ${fields.versionState}`;
+            }
+            description += `<div>${programName}</div>`;
+
             description += `<div><strong>Short Description:</strong></div>`;
-            description += `<div>${fields.shortDescriptionDetails || ''}</div>`;
+            description += `<div>${fields.shortDescriptionDetails || fields.shortDescription || ''}</div>`;
             description += '<div style="margin-bottom: 20px;"></div>';
 
             if (fields.additionalDetails && fields.additionalDetails.trim() !== '<p><br></p>') {
