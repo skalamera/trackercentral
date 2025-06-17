@@ -270,7 +270,7 @@
             </fw-button>
 
             <fw-button id="createTracker" color="primary" type="submit" size="small" style="margin-left: 10px;">
-                <i class="fas fa-clipboard-check" style="margin-right: 8px;"></i>Copy Subject & Create Tracker
+                <i class="fas fa-check" style="margin-right: 8px;"></i>Create Tracker
             </fw-button>
         </div>
         </div>
@@ -1195,7 +1195,7 @@
                 if (createTrackerButton) {
                     createTrackerButton.addEventListener('click', (e) => {
                         e.preventDefault();
-                        console.log('Copy Subject & Create Tracker button clicked');
+                        console.log('Create Tracker button clicked');
                         this.handleFormSubmit();
                     });
                 }
@@ -4534,38 +4534,52 @@
                     loadingOverlay.querySelector('.spinner-text').textContent = "Processing attachments...";
                 }
 
-                // Show success message
-                const successMessage = document.createElement('div');
-                successMessage.className = 'success-message';
-                successMessage.innerHTML = `
-                    <i class="fas fa-check-circle"></i>
-                    Tracker ticket #${ticketData.id} created successfully!
-                `;
+                // Check if this is a Feature Request or DPT tracker
+                const isFeatureRequest = this.trackerType === 'feature-request';
+                const isDPT = this.trackerType === 'dpt';
 
-                // Insert at the top of the form
-                const form = document.getElementById('trackerForm');
-                form.insertBefore(successMessage, form.firstChild);
+                // For all trackers except Feature Request and DPT, show the success modal
+                if (!isFeatureRequest && !isDPT) {
+                    // Store reference for use in later callbacks
+                    this.ticketData = ticketData;
 
-                // Copy subject line to clipboard
-                if (ticketData.subject) {
-                    try {
-                        navigator.clipboard.writeText(ticketData.subject).then(() => {
-                            console.log('Subject line copied to clipboard:', ticketData.subject);
+                    // The modal will handle navigation and ticket opening
+                    // So we'll skip the rest of the normal flow here
+                } else {
+                    // For Feature Request and DPT, use the original behavior
+                    // Show success message
+                    const successMessage = document.createElement('div');
+                    successMessage.className = 'success-message';
+                    successMessage.innerHTML = `
+                        <i class="fas fa-check-circle"></i>
+                        Tracker ticket #${ticketData.id} created successfully!
+                    `;
 
-                            // Show Freshdesk notification
-                            this.client.interface.trigger("showNotify", {
-                                type: "success",
-                                message: "Subject line copied to clipboard!"
-                            }).catch(err => console.error("Error showing clipboard notification:", err));
-                        }).catch(err => {
-                            console.error('Failed to copy subject line to clipboard:', err);
-                            // Fallback for browsers that don't support clipboard API
+                    // Insert at the top of the form
+                    const form = document.getElementById('trackerForm');
+                    form.insertBefore(successMessage, form.firstChild);
+
+                    // Copy subject line to clipboard
+                    if (ticketData.subject) {
+                        try {
+                            navigator.clipboard.writeText(ticketData.subject).then(() => {
+                                console.log('Subject line copied to clipboard:', ticketData.subject);
+
+                                // Show Freshdesk notification
+                                this.client.interface.trigger("showNotify", {
+                                    type: "success",
+                                    message: "Subject line copied to clipboard!"
+                                }).catch(err => console.error("Error showing clipboard notification:", err));
+                            }).catch(err => {
+                                console.error('Failed to copy subject line to clipboard:', err);
+                                // Fallback for browsers that don't support clipboard API
+                                this.fallbackCopyToClipboard(ticketData.subject);
+                            });
+                        } catch (error) {
+                            console.error('Error accessing clipboard:', error);
+                            // Use fallback method
                             this.fallbackCopyToClipboard(ticketData.subject);
-                        });
-                    } catch (error) {
-                        console.error('Error accessing clipboard:', error);
-                        // Use fallback method
-                        this.fallbackCopyToClipboard(ticketData.subject);
+                        }
                     }
                 }
 
@@ -4611,37 +4625,47 @@
                             submitButton.disabled = true;
                         }
 
-                        // Show notification
-                        this.client.interface.trigger("showNotify", {
-                            type: "success",
-                            message: `Tracker ticket #${ticketData.id} created successfully!`
-                        }).catch(err => console.error("Error showing notification:", err));
+                        // Check if we should show the modal (for all trackers except Feature Request and DPT)
+                        if (!isFeatureRequest && !isDPT) {
+                            // Show the success modal
+                            this.showSuccessModal(ticketData);
 
-                        // Send Teams notification
-                        this.sendTeamsNotification(ticketData);
+                            // Send Teams notification in background
+                            this.sendTeamsNotification(ticketData);
+                        } else {
+                            // For Feature Request and DPT, use original flow
+                            // Show notification
+                            this.client.interface.trigger("showNotify", {
+                                type: "success",
+                                message: `Tracker ticket #${ticketData.id} created successfully!`
+                            }).catch(err => console.error("Error showing notification:", err));
 
-                        // Get the Freshdesk subdomain and automatically open the ticket in a new tab
-                        this.client.iparams.get("freshdesk_subdomain").then(iparams => {
-                            const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
-                            const ticketUrl = `https://${subdomain}.freshdesk.com/a/tickets/${ticketData.id}`;
+                            // Send Teams notification
+                            this.sendTeamsNotification(ticketData);
 
-                            // Open in a new tab
-                            window.open(ticketUrl, '_blank');
+                            // Get the Freshdesk subdomain and automatically open the ticket in a new tab
+                            this.client.iparams.get("freshdesk_subdomain").then(iparams => {
+                                const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
+                                const ticketUrl = `https://${subdomain}.freshdesk.com/a/tickets/${ticketData.id}`;
 
-                            // Return to template selector after a short delay
-                            setTimeout(() => {
-                                window.location.href = 'template-selector.html';
-                            }, 1500);
-                        }).catch((error) => {
-                            console.error("Error getting subdomain:", error);
-                            // Fallback to generic URL
-                            window.open(`https://freshdesk.com/a/tickets/${ticketData.id}`, '_blank');
+                                // Open in a new tab
+                                window.open(ticketUrl, '_blank');
 
-                            // Return to template selector after a short delay
-                            setTimeout(() => {
-                                window.location.href = 'template-selector.html';
-                            }, 1500);
-                        });
+                                // Return to template selector after a short delay
+                                setTimeout(() => {
+                                    window.location.href = 'template-selector.html';
+                                }, 1500);
+                            }).catch((error) => {
+                                console.error("Error getting subdomain:", error);
+                                // Fallback to generic URL
+                                window.open(`https://freshdesk.com/a/tickets/${ticketData.id}`, '_blank');
+
+                                // Return to template selector after a short delay
+                                setTimeout(() => {
+                                    window.location.href = 'template-selector.html';
+                                }, 1500);
+                            });
+                        }
                     })
                     .catch(error => {
                         console.error('Error during post-creation tasks:', error);
@@ -4657,20 +4681,27 @@
                         // Send Teams notification even if attachments failed
                         this.sendTeamsNotification(ticketData);
 
-                        // Still open the ticket
-                        this.client.iparams.get("freshdesk_subdomain").then(iparams => {
-                            const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
-                            const ticketUrl = `https://${subdomain}.freshdesk.com/a/tickets/${ticketData.id}`;
-                            window.open(ticketUrl, '_blank');
+                        // Check if we should show the modal
+                        if (!isFeatureRequest && !isDPT) {
+                            // Show the success modal even if attachments failed
+                            this.showSuccessModal(ticketData);
+                        } else {
+                            // For Feature Request and DPT, use original flow
+                            // Still open the ticket
+                            this.client.iparams.get("freshdesk_subdomain").then(iparams => {
+                                const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
+                                const ticketUrl = `https://${subdomain}.freshdesk.com/a/tickets/${ticketData.id}`;
+                                window.open(ticketUrl, '_blank');
 
-                            // Return to template selector after a short delay
-                            setTimeout(() => {
-                                window.location.href = 'template-selector.html';
-                            }, 1500);
-                        }).catch(() => {
-                            window.open(`https://freshdesk.com/a/tickets/${ticketData.id}`, '_blank');
-                            setTimeout(() => window.location.href = 'template-selector.html', 1500);
-                        });
+                                // Return to template selector after a short delay
+                                setTimeout(() => {
+                                    window.location.href = 'template-selector.html';
+                                }, 1500);
+                            }).catch(() => {
+                                window.open(`https://freshdesk.com/a/tickets/${ticketData.id}`, '_blank');
+                                setTimeout(() => window.location.href = 'template-selector.html', 1500);
+                            });
+                        }
                     });
             }
 
@@ -4940,6 +4971,159 @@
                         }).catch(err => console.error("Error showing error notification:", err));
                     }
                 }
+            }
+
+            // Show success modal for tracker creation
+            showSuccessModal(ticketData) {
+                // Create modal backdrop
+                const backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop';
+                backdrop.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                    box-sizing: border-box;
+                `;
+
+                // Create modal content
+                const modal = document.createElement('div');
+                modal.className = 'tracker-success-modal';
+                modal.style.cssText = `
+                    background: white;
+                    border-radius: 12px;
+                    max-width: 600px;
+                    width: 100%;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                    font-family: Arial, sans-serif;
+                    overflow: hidden;
+                `;
+
+                // Create modal content
+                const modalContent = document.createElement('div');
+                modalContent.style.cssText = `
+                    padding: 40px;
+                    text-align: center;
+                `;
+
+                modalContent.innerHTML = `
+                    <div style="margin-bottom: 30px;">
+                        <div style="display: inline-flex; align-items: center; justify-content: center; width: 80px; height: 80px; background: linear-gradient(135deg, #0ba87d 0%, #0a8f6b 100%); border-radius: 50%; margin-bottom: 20px;">
+                            <i class="fas fa-check" style="font-size: 40px; color: white;"></i>
+                        </div>
+                        <h2 style="color: #2c3e50; margin: 0; font-size: 28px; font-weight: 600;">Tracker Successfully Created!</h2>
+                        <p style="color: #7f8c8d; margin-top: 10px; font-size: 16px;">Ticket #${ticketData.id}</p>
+                    </div>
+                    
+                    <div style="background: #f8f9fa; border-radius: 8px; padding: 25px; margin-bottom: 30px; border: 1px solid #e9ecef;">
+                        <p style="color: #95a5a6; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">Subject Line</p>
+                        <p style="color: #2c3e50; font-size: 18px; line-height: 1.6; margin: 0; font-weight: 500; word-wrap: break-word;">${ticketData.subject}</p>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button id="copyAndOpenTeams" style="
+                            background: linear-gradient(135deg, #0ba87d 0%, #0a8f6b 100%);
+                            color: white;
+                            border: none;
+                            padding: 15px 25px;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-size: 16;
+                            font-weight: 500;
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 4px 12px rgba(11, 168, 125, 0.3);
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(11, 168, 125, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(11, 168, 125, 0.3)'">
+                            <i class="fas fa-clipboard"></i>
+                            Copy Subject & Open Teams
+                        </button>
+                        
+                        <button id="continueToTracker" style="
+                            background: #ecf0f1;
+                            color: #2c3e50;
+                            border: 2px solid #bdc3c7;
+                            padding: 15px 25px;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-size: 16px;
+                            font-weight: 500;
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.borderColor='#95a5a6'" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='#bdc3c7'">
+                            <i class="fas fa-arrow-right"></i>
+                            Continue to Tracker
+                        </button>
+                    </div>
+                `;
+
+                // Add content to modal
+                modal.appendChild(modalContent);
+                backdrop.appendChild(modal);
+                document.body.appendChild(backdrop);
+
+                // Set up event handlers
+                document.getElementById('copyAndOpenTeams').addEventListener('click', () => {
+                    // Copy subject to clipboard
+                    if (ticketData.subject) {
+                        navigator.clipboard.writeText(ticketData.subject).then(() => {
+                            console.log('Subject line copied to clipboard');
+                        }).catch(err => {
+                            console.error('Failed to copy subject line:', err);
+                            this.fallbackCopyToClipboard(ticketData.subject);
+                        });
+                    }
+
+                    // Open Teams application
+                    window.open('msteams://');
+
+                    // Continue to tracker after a short delay
+                    setTimeout(() => {
+                        document.body.removeChild(backdrop);
+                        this.openTrackerAndReturn(ticketData);
+                    }, 500);
+                });
+
+                document.getElementById('continueToTracker').addEventListener('click', () => {
+                    document.body.removeChild(backdrop);
+                    this.openTrackerAndReturn(ticketData);
+                });
+            }
+
+            // Helper method to open tracker and return to template selector
+            openTrackerAndReturn(ticketData) {
+                // Get the Freshdesk subdomain and automatically open the ticket in a new tab
+                this.client.iparams.get("freshdesk_subdomain").then(iparams => {
+                    const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
+                    const ticketUrl = `https://${subdomain}.freshdesk.com/a/tickets/${ticketData.id}`;
+
+                    // Open in a new tab
+                    window.open(ticketUrl, '_blank');
+
+                    // Return to template selector after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'template-selector.html';
+                    }, 1500);
+                }).catch((error) => {
+                    console.error("Error getting subdomain:", error);
+                    // Fallback to generic URL
+                    window.open(`https://freshdesk.com/a/tickets/${ticketData.id}`, '_blank');
+
+                    // Return to template selector after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'template-selector.html';
+                    }, 1500);
+                });
             }
 
             async associateWithRelatedTickets(ticketId) {
