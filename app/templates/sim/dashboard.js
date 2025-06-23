@@ -4,6 +4,7 @@
 // - populateApplicationName, populateDistrictState from app/utils/fieldPopulators.js
 // - setupCustomVersionInput, setupCustomVersionStateInput, getVersionValue, getVersionStateValue from app/utils/versionFieldHandlers.js
 // - TemplateBase from app/utils/templateBase.js
+// - DemoDataHelper from app/utils/demoDataHelper.js
 
 module.exports = {
         title: "SIM Dashboard Tracker",
@@ -355,7 +356,16 @@ module.exports = {
 
             templateBase.initializeSubjectLineFormatting();
 
-            // Schedule another update after a small delay to ensure fields are populated
-            setTimeout(() => templateBase.updateSubjectLine(), 500);
+                    // Schedule another update after a small delay to ensure fields are populated
+        setTimeout(() => templateBase.updateSubjectLine(), 500);
+
+        // Add demo data functionality
+        const demoDataHelper = new DemoDataHelper();
+        const demoButton = demoDataHelper.addDemoDataButton();
+        if (demoButton) {
+            demoButton.addEventListener('click', () => {
+                demoDataHelper.fillDemoData(module.exports);
+            });
         }
-    };
+    }
+};
