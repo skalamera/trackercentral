@@ -375,70 +375,16 @@ const TRACKER_CONFIGS = {
                 }
             }, 200);
 
-            // Function to update subject line according to assembly rollover format
-            function updateSubjectLine() {
-                const isVIPField = document.getElementById('isVIP');
-                const districtNameField = document.getElementById('districtName');
-                const districtStateField = document.getElementById('districtState');
-                const issueField = document.getElementById('issue');
-                const formattedSubjectField = document.getElementById('formattedSubject');
+            // Initialize TemplateBase for subject line formatting
+            const templateBase = new TemplateBase({
+                templateName: 'assembly-rollover',
+                subjectLineFormat: 'assembly-rollover',
+                additionalFields: ['issue'],
+                requiredFields: ['districtName', 'districtState']
+            });
 
-                if (!isVIPField || !districtNameField || !districtStateField || !issueField || !formattedSubjectField) {
-                    console.log("Assembly Rollover: Missing required fields for subject formatting");
-                    return;
-                }
-
-                const vipStatus = isVIPField.value || 'No';
-                const districtName = districtNameField.value || '';
-                const districtState = districtStateField.value || '';
-                const issue = issueField.value || 'Assembly Rollover';
-
-                // Build the subject line: | VIP | District Name • District State | Assembly Rollover
-                // Only include VIP in subject if status is VIP, otherwise start with District Name
-                const subjectParts = [];
-
-                // First part: VIP Status (only if VIP)
-                if (vipStatus.trim() === 'Yes') {
-                    subjectParts.push('VIP');
-                }
-
-                // Second part: District Name • District State  
-                let districtPart = '';
-                if (districtName.trim() && districtState.trim()) {
-                    districtPart = `${districtName.trim()} • ${districtState.trim()}`;
-                } else if (districtName.trim()) {
-                    districtPart = districtName.trim();
-                } else if (districtState.trim()) {
-                    districtPart = districtState.trim();
-                }
-
-                if (districtPart) {
-                    subjectParts.push(districtPart);
-                }
-
-                // Third part: Issue (Assembly Rollover)
-                if (issue.trim()) {
-                    subjectParts.push(issue.trim());
-                }
-
-                // Join all parts with " | " separator
-                const subject = subjectParts.join(' | ');
-
-                formattedSubjectField.value = subject;
-                console.log("Assembly Rollover: Updated subject line:", subject);
-            }
-
-            // Set up event listeners for subject line formatting
-            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('issue')?.addEventListener('input', updateSubjectLine);
-
-            // Initial subject line update
-            updateSubjectLine();
-
-            // Schedule another update after a small delay to ensure fields are populated
-            setTimeout(updateSubjectLine, 500);
+            // Initialize the template (sets up event listeners and formats subject)
+            templateBase.initialize();
 
             // Schedule District Name sync at multiple intervals to ensure it works
             setTimeout(syncDistrictName, 100);
@@ -871,112 +817,16 @@ const TRACKER_CONFIGS = {
             // Schedule another sync after a small delay to ensure fields are loaded
             setTimeout(syncFields, 500);
 
-            // Function to update subject line according to new format
-            function updateSubjectLine() {
-                // Define all required field variables properly
-                const xcodeField = document.getElementById('xcode');
-                const hasMultipleXcodesField = document.getElementById('hasMultipleXcodes');
-                const applicationField = document.getElementById('application');
-                const versionField = document.getElementById('version');
-                const versionStateField = document.getElementById('versionState');
-                const specificIssueField = document.getElementById('specificIssue');
-                const gradesImpactedField = document.getElementById('gradesImpacted');
-                const formattedSubjectField = document.getElementById('formattedSubject');
-                const isVIPField = document.getElementById('isVIP');
+            // Initialize TemplateBase for subject line formatting
+            const templateBase = new TemplateBase({
+                templateName: 'assembly',
+                subjectLineFormat: 'assembly',
+                additionalFields: ['hasMultipleXcodes', 'gradesImpacted'],
+                requiredFields: ['xcode', 'application', 'specificIssue', 'gradesImpacted']
+            });
 
-                if (!xcodeField || !hasMultipleXcodesField || !applicationField || !versionField ||
-                    !specificIssueField || !gradesImpactedField || !formattedSubjectField) {
-                    console.log("Missing required fields for subject formatting");
-                    return;
-                }
-
-                const xcode = xcodeField.value || '';
-                const hasMultipleXcodes = hasMultipleXcodesField.value === 'Yes';
-                const application = applicationField.value || '';
-                const version = getVersionValue(versionField) || '';
-                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
-                const specificIssue = specificIssueField.value || '';
-                const gradesImpacted = gradesImpactedField.value || '';
-
-                // Check if this is a VIP customer
-                let isVIP = false;
-                if (isVIPField) {
-                    isVIP = isVIPField.value === 'Yes';
-                }
-
-                // Build the subject line dynamically, only including parts that have values
-                const subjectParts = [];
-
-                // First part: Xcode (indicate if more than one)
-                let xcodePart = '';
-                if (xcode.trim()) {
-                    xcodePart = xcode.trim();
-                    if (hasMultipleXcodes) {
-                        xcodePart += ' (Multiple)';
-                    }
-                }
-                if (xcodePart) {
-                    subjectParts.push(xcodePart);
-                }
-
-                // Second part: VIP or Standard
-                if (isVIP) {
-                    subjectParts.push('VIP');
-                } else {
-                    subjectParts.push('Standard');
-                }
-
-                // Third part: Program Name • Variation National / State
-                let applicationPart = '';
-                if (application.trim()) {
-                    applicationPart = application.trim();
-
-                    // Add version and state/national if they exist
-                    const versionParts = [];
-                    if (version.trim()) {
-                        versionParts.push(version.trim());
-                    }
-                    if (versionState.trim()) {
-                        versionParts.push(versionState.trim());
-                    }
-
-                    if (versionParts.length > 0) {
-                        applicationPart += ` • ${versionParts.join(' ')}`;
-                    }
-                }
-                if (applicationPart) {
-                    subjectParts.push(applicationPart);
-                }
-
-                // Fourth part: Specific issue: grades impacted
-                let issueGradesPart = '';
-                if (specificIssue.trim() && gradesImpacted.trim()) {
-                    issueGradesPart = `${specificIssue.trim()}: ${gradesImpacted.trim()}`;
-                } else if (specificIssue.trim()) {
-                    issueGradesPart = specificIssue.trim();
-                } else if (gradesImpacted.trim()) {
-                    issueGradesPart = `Grades Impacted: ${gradesImpacted.trim()}`;
-                }
-                if (issueGradesPart) {
-                    subjectParts.push(issueGradesPart);
-                }
-
-                // Join all parts with " | " separator
-                const subject = subjectParts.join(' | ');
-
-                formattedSubjectField.value = subject;
-                console.log("Updated subject line:", subject);
-            }
-
-            // Set up event listeners for subject line formatting
-            document.getElementById('xcode')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('hasMultipleXcodes')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('version')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('gradesImpacted')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            // Initialize the template (sets up event listeners and formats subject)
+            templateBase.initialize();
 
             // Try to get the source ticket ID from localStorage
             let sourceTicketId = null;
@@ -992,12 +842,6 @@ const TRACKER_CONFIGS = {
             } catch (error) {
                 console.error("Error getting source ticket ID from localStorage:", error);
             }
-
-            // Initial attempt to update subject line
-            updateSubjectLine();
-
-            // Schedule another update after a small delay to ensure fields are populated
-            setTimeout(updateSubjectLine, 500);
 
             // If we have a source ticket ID, add the tag
             if (sourceTicketId) {
@@ -1440,115 +1284,48 @@ const TRACKER_CONFIGS = {
             // And also try after a short delay to ensure the DOM is fully loaded
             setTimeout(hideRequesterEmail, 500);
 
-            function updateSubjectLine() {
-                const isVipField = document.getElementById('isVIP');
-                const districtNameField = document.getElementById('districtName');
-                const districtStateField = document.getElementById('districtState');
-                const applicationField = document.getElementById('application');
-                const versionField = document.getElementById('version');
-                const versionStateField = document.getElementById('versionState');
-                const resourceNameField = document.getElementById('resourceName');
-                const shortDescriptionField = document.getElementById('shortDescription');
-                const formattedSubjectField = document.getElementById('formattedSubject');
+            // Initialize TemplateBase for subject line formatting
+            const templateBase = new TemplateBase({
+                templateName: 'feature-request',
+                subjectLineFormat: 'sim', // Uses SIM format for subject lines
+                additionalFields: ['resourceName', 'shortDescription'],
+                checkboxGroups: ['userRole'],
+                requiredFields: ['districtName', 'districtState', 'application', 'resourceName', 'shortDescription']
+            });
 
-                if (!isVipField || !districtNameField || !districtStateField || !applicationField ||
-                    !resourceNameField || !shortDescriptionField || !formattedSubjectField) {
-                    console.log("Missing required fields for subject formatting");
-                    return;
+            // Override getFieldValue for fields that need mapping
+            const originalGetFieldValue = templateBase.getFieldValue.bind(templateBase);
+            templateBase.getFieldValue = function (fieldName) {
+                // Map feature-request fields to SIM format fields
+                if (fieldName === 'specificIssue') {
+                    return originalGetFieldValue('shortDescription');
                 }
-
-                // Get user roles
-                const userRoles = [];
-                const roleCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]:checked');
-                roleCheckboxes.forEach(cb => {
-                    if (cb.id === 'allUsers') {
-                        userRoles.push('All Users');
-                    } else {
-                        const label = cb.parentElement.textContent.trim();
-                        if (label) userRoles.push(label);
-                    }
-                });
-
-                const isVip = isVipField.value === 'Yes';
-                const districtName = districtNameField.value || '';
-                const districtState = districtStateField.value || '';
-                const application = applicationField.value || '';
-                const version = getVersionValue(versionField) || '';
-                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
-                const resourceName = resourceNameField.value || '';
-                const shortDescription = shortDescriptionField.value || '';
-                const userRoleText = userRoles.length > 0 ? userRoles.join(', ') : '';
-
-                // Build the subject line according to the new format
-                // Format: "VIP or Standard District Name • District State (Abv) | Program Name • Variation National / State | Resource • Specific issue for user role"
-                const subjectParts = [];
-
-                // First part: VIP/Standard District Name • District State
-                let districtPart = '';
-                if (isVip) {
-                    districtPart = 'VIP | ';
-                } else {
-                    districtPart = '';
+                if (fieldName === 'resource') {
+                    return originalGetFieldValue('resourceName');
                 }
+                return originalGetFieldValue(fieldName);
+            };
 
-                if (districtName.trim() && districtState.trim()) {
-                    districtPart += `${districtName.trim()} • ${districtState.trim()}`;
-                } else if (districtName.trim()) {
-                    districtPart += districtName.trim();
-                }
+            // Override formatting to handle the `: •` separator in resource
+            const originalFormatSIMSubjectLine = templateBase.formatSIMSubjectLine.bind(templateBase);
+            templateBase.formatSIMSubjectLine = function () {
+                const parts = originalFormatSIMSubjectLine();
 
-                if (districtPart) {
-                    subjectParts.push(districtPart);
-                }
-
-                // Second part: Program Name • Version State/National
-                let applicationPart = '';
-                if (application.trim()) {
-                    applicationPart = application.trim();
-
-                    // Add version and state/national if they exist
-                    const versionParts = [];
-                    if (version.trim()) {
-                        versionParts.push(version.trim());
-                    }
-                    if (versionState.trim()) {
-                        versionParts.push(versionState.trim());
-                    }
-
-                    if (versionParts.length > 0) {
-                        applicationPart += ` • ${versionParts.join(' ')}`;
+                // Fix the resource part to use `: •` separator if needed
+                for (let i = 0; i < parts.length; i++) {
+                    const part = parts[i];
+                    if (part && part.includes('•') && (part.includes(this.getFieldValue('resourceName')))) {
+                        // Check if this is the resource part and fix separator
+                        const resourceName = this.getFieldValue('resourceName');
+                        const shortDescription = this.getFieldValue('shortDescription');
+                        if (resourceName && shortDescription && part.includes(resourceName) && part.includes(shortDescription)) {
+                            parts[i] = part.replace(`${resourceName} • ${shortDescription}`, `${resourceName}: • ${shortDescription}`);
+                        }
                     }
                 }
-                if (applicationPart) {
-                    subjectParts.push(applicationPart);
-                }
 
-                // Third part: Resource • Specific issue for user role
-                let resourceIssuePart = '';
-                if (resourceName.trim()) {
-                    resourceIssuePart = resourceName.trim();
-                    if (shortDescription.trim()) {
-                        resourceIssuePart += `: • ${shortDescription.trim()}`;
-                    }
-                    if (userRoleText) {
-                        resourceIssuePart += ` for ${userRoleText}`;
-                    }
-                } else if (shortDescription.trim()) {
-                    resourceIssuePart = shortDescription.trim();
-                    if (userRoleText) {
-                        resourceIssuePart += ` for ${userRoleText}`;
-                    }
-                }
-                if (resourceIssuePart) {
-                    subjectParts.push(resourceIssuePart);
-                }
-
-                // Join all parts with " | "
-                const subject = subjectParts.join(' | ');
-
-                formattedSubjectField.value = subject;
-                console.log("Updated subject line:", subject);
-            }
+                return parts;
+            };
 
             // Set default date for Date Requested field to today
             const dateRequestedField = document.getElementById('dateRequested');
@@ -1593,45 +1370,20 @@ const TRACKER_CONFIGS = {
                 }
             }
 
-            // Set up event listeners
-            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('districtName')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('districtState')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('application')?.addEventListener('input', function () {
-                updateSubjectLine();
-                syncFeatureRequestFields();
-            });
-            document.getElementById('version')?.addEventListener('change', function () {
-                updateSubjectLine();
-                syncFeatureRequestFields();
-            });
-            document.getElementById('versionState')?.addEventListener('change', function () {
-                updateSubjectLine();
-                syncFeatureRequestFields();
-            });
-            document.getElementById('resourceName')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('shortDescription')?.addEventListener('input', function () {
-                updateSubjectLine();
-                syncFeatureRequestFields();
-            });
+            // Initialize the template (sets up event listeners and formats subject)
+            templateBase.initialize();
 
-            // Add listeners to all checkboxes
-            const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateSubjectLine);
-            });
-
-            // Initial update attempt
-            updateSubjectLine();
+            // Set up additional event listeners for field syncing
+            document.getElementById('application')?.addEventListener('input', syncFeatureRequestFields);
+            document.getElementById('version')?.addEventListener('change', syncFeatureRequestFields);
+            document.getElementById('versionState')?.addEventListener('change', syncFeatureRequestFields);
+            document.getElementById('shortDescription')?.addEventListener('input', syncFeatureRequestFields);
 
             // Initial sync of feature request fields
             syncFeatureRequestFields();
 
-            // Schedule another update after a small delay to ensure fields are populated
-            setTimeout(() => {
-                updateSubjectLine();
-                syncFeatureRequestFields();
-            }, 500);
+            // Schedule another sync after a small delay to ensure fields are populated
+            setTimeout(syncFeatureRequestFields, 500);
         }
     },
 
@@ -2044,144 +1796,16 @@ const TRACKER_CONFIGS = {
                 console.log("Added event listener to Version State field");
             }
 
-            // Add function to update subject line according to new format
-            function updateSubjectLine() {
-                // Define all field variables properly
-                const xcodeField = document.getElementById('xcode');
-                const applicationField = document.getElementById('application');
-                const versionField = document.getElementById('version');
-                const versionStateField = document.getElementById('versionState');
-                const resourceField = document.getElementById('resource');
-                const pathField = document.getElementById('path');
-                const specificIssueField = document.getElementById('specificIssue');
-                const formattedSubjectField = document.getElementById('formattedSubject');
-                const isVIPField = document.getElementById('isVIP');
+            // Initialize TemplateBase for subject line formatting
+            const templateBase = new TemplateBase({
+                templateName: 'sedcust',
+                subjectLineFormat: 'sedcust',
+                additionalFields: ['path'],
+                requiredFields: ['xcode', 'application', 'resource', 'path', 'specificIssue']
+            });
 
-                if (!xcodeField || !applicationField || !resourceField || !pathField || !specificIssueField || !formattedSubjectField) {
-                    console.log("SEDCUST Missing required fields for subject formatting:", {
-                        xcodeField: !!xcodeField,
-                        applicationField: !!applicationField,
-                        resourceField: !!resourceField,
-                        pathField: !!pathField,
-                        specificIssueField: !!specificIssueField,
-                        formattedSubjectField: !!formattedSubjectField
-                    });
-                    return;
-                }
-
-                const xcode = xcodeField.value || '';
-                const application = applicationField.value || '';
-                const version = versionField ? getVersionValue(versionField) : '';
-                const versionState = versionStateField ? getVersionStateValue(versionStateField) : '';
-                const resource = resourceField.value || '';
-                const path = pathField.value || '';
-                const specificIssue = specificIssueField.value || '';
-
-                console.log("SEDCUST Subject Line Debug:", {
-                    xcode, application, version, versionState, resource, path, specificIssue
-                });
-
-                // Check if this is a VIP customer
-                let isVIP = false;
-                if (isVIPField) {
-                    isVIP = isVIPField.value === 'Yes';
-                }
-
-                // Build the subject line dynamically, only including parts that have values
-                const subjectParts = [];
-
-                // First part: XCODE
-                if (xcode.trim()) {
-                    subjectParts.push(xcode.trim());
-                }
-
-                // Second part: VIP (only if VIP)
-                if (isVIP) {
-                    subjectParts.push('VIP');
-                }
-
-                // Third part: Application • Version State/National
-                let applicationPart = '';
-                if (application.trim()) {
-                    applicationPart = application.trim();
-
-                    // Add version and state/national if they exist
-                    const versionParts = [];
-                    if (version.trim()) {
-                        versionParts.push(version.trim());
-                    }
-                    if (versionState.trim()) {
-                        versionParts.push(versionState.trim());
-                    }
-
-                    if (versionParts.length > 0) {
-                        applicationPart += ` • ${versionParts.join(' ')}`;
-                    }
-                }
-                if (applicationPart) {
-                    subjectParts.push(applicationPart);
-                }
-
-                // Fourth part: Resource: Path - Specific Issue
-                let resourceIssuePart = '';
-
-                console.log("SEDCUST Building resourceIssuePart:", {
-                    "resource.trim()": resource.trim(),
-                    "path.trim()": path.trim(),
-                    "specificIssue.trim()": specificIssue.trim(),
-                    "resource && path && specificIssue": !!(resource.trim() && path.trim() && specificIssue.trim())
-                });
-
-                if (resource.trim() && path.trim() && specificIssue.trim()) {
-                    resourceIssuePart = `${resource.trim()}: ${path.trim()} - ${specificIssue.trim()}`;
-                    console.log("SEDCUST: Using case 1 - all three fields");
-                } else if (resource.trim() && path.trim()) {
-                    resourceIssuePart = `${resource.trim()}: ${path.trim()}`;
-                    console.log("SEDCUST: Using case 2 - resource and path");
-                } else if (resource.trim() && specificIssue.trim()) {
-                    resourceIssuePart = `${resource.trim()} - ${specificIssue.trim()}`;
-                    console.log("SEDCUST: Using case 3 - resource and issue");
-                } else if (path.trim() && specificIssue.trim()) {
-                    resourceIssuePart = `${path.trim()} - ${specificIssue.trim()}`;
-                    console.log("SEDCUST: Using case 4 - path and issue");
-                } else if (resource.trim()) {
-                    resourceIssuePart = resource.trim();
-                    console.log("SEDCUST: Using case 5 - resource only");
-                } else if (path.trim()) {
-                    resourceIssuePart = path.trim();
-                    console.log("SEDCUST: Using case 6 - path only");
-                } else if (specificIssue.trim()) {
-                    resourceIssuePart = specificIssue.trim();
-                    console.log("SEDCUST: Using case 7 - issue only");
-                } else {
-                    console.log("SEDCUST: No case matched - empty resourceIssuePart");
-                }
-
-                console.log("SEDCUST Resource Issue Part:", resourceIssuePart);
-
-                if (resourceIssuePart) {
-                    subjectParts.push(resourceIssuePart);
-                }
-
-                // Join all parts with " | " separator
-                const subject = subjectParts.join(' | ');
-
-                console.log("SEDCUST Subject Parts Array:", subjectParts);
-                console.log("SEDCUST Final Subject:", subject);
-
-                formattedSubjectField.value = subject;
-                console.log("Updated subject line:", subject);
-            }
-
-            // Set up event listeners for subject line formatting
-            document.getElementById('xcode')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('application')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('version')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('versionState')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('resource')?.addEventListener('change', updateSubjectLine);
-            document.getElementById('path')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('specificIssue')?.addEventListener('input', updateSubjectLine);
-            document.getElementById('isVIP')?.addEventListener('change', updateSubjectLine);
+            // Initialize the template (sets up event listeners and formats subject)
+            templateBase.initialize();
 
             // Try to get the source ticket ID from localStorage
             let sourceTicketId = null;
@@ -2197,12 +1821,6 @@ const TRACKER_CONFIGS = {
             } catch (error) {
                 console.error("Error getting source ticket ID from localStorage:", error);
             }
-
-            // Initial attempt to update subject line
-            updateSubjectLine();
-
-            // Schedule another update after a small delay to ensure fields are populated
-            setTimeout(updateSubjectLine, 500);
 
             // If we have a source ticket ID, add the tag
             if (sourceTicketId) {

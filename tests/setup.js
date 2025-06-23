@@ -48,6 +48,20 @@ global.window = {
 global.setTimeout = jest.fn(fn => fn());
 global.setInterval = jest.fn();
 
+// Mock utility functions from fieldPopulators.js
+global.populateApplicationName = jest.fn();
+global.populateDistrictState = jest.fn();
+
+// Mock utility functions from versionFieldHandlers.js
+global.setupCustomVersionInput = jest.fn();
+global.setupCustomVersionStateInput = jest.fn();
+global.getVersionValue = jest.fn().mockReturnValue('');
+global.getVersionStateValue = jest.fn().mockReturnValue('');
+
+// Mock utility functions from quillHelpers.js
+global.setupClearFormattingButton = jest.fn();
+global.addFormatButtonToQuillDefaults = jest.fn();
+
 // Export the TRACKER_CONFIGS mock for tests that need to mock it
 module.exports = {
     mockTrackerConfig: () => ({
