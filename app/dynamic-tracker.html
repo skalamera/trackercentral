@@ -4538,48 +4538,39 @@
                 const isFeatureRequest = this.trackerType === 'feature-request';
                 const isDPT = this.trackerType === 'dpt';
 
-                // For all trackers except Feature Request and DPT, show the success modal
-                if (!isFeatureRequest && !isDPT) {
-                    // Store reference for use in later callbacks
-                    this.ticketData = ticketData;
+                // Use original behavior for all templates (direct redirect)
+                // Show success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    Tracker ticket #${ticketData.id} created successfully!
+                `;
 
-                    // The modal will handle navigation and ticket opening
-                    // So we'll skip the rest of the normal flow here
-                } else {
-                    // For Feature Request and DPT, use the original behavior
-                    // Show success message
-                    const successMessage = document.createElement('div');
-                    successMessage.className = 'success-message';
-                    successMessage.innerHTML = `
-                        <i class="fas fa-check-circle"></i>
-                        Tracker ticket #${ticketData.id} created successfully!
-                    `;
+                // Insert at the top of the form
+                const form = document.getElementById('trackerForm');
+                form.insertBefore(successMessage, form.firstChild);
 
-                    // Insert at the top of the form
-                    const form = document.getElementById('trackerForm');
-                    form.insertBefore(successMessage, form.firstChild);
+                // Copy subject line to clipboard
+                if (ticketData.subject) {
+                    try {
+                        navigator.clipboard.writeText(ticketData.subject).then(() => {
+                            console.log('Subject line copied to clipboard:', ticketData.subject);
 
-                    // Copy subject line to clipboard
-                    if (ticketData.subject) {
-                        try {
-                            navigator.clipboard.writeText(ticketData.subject).then(() => {
-                                console.log('Subject line copied to clipboard:', ticketData.subject);
-
-                                // Show Freshdesk notification
-                                this.client.interface.trigger("showNotify", {
-                                    type: "success",
-                                    message: "Subject line copied to clipboard!"
-                                }).catch(err => console.error("Error showing clipboard notification:", err));
-                            }).catch(err => {
-                                console.error('Failed to copy subject line to clipboard:', err);
-                                // Fallback for browsers that don't support clipboard API
-                                this.fallbackCopyToClipboard(ticketData.subject);
-                            });
-                        } catch (error) {
-                            console.error('Error accessing clipboard:', error);
-                            // Use fallback method
+                            // Show Freshdesk notification
+                            this.client.interface.trigger("showNotify", {
+                                type: "success",
+                                message: "Subject line copied to clipboard!"
+                            }).catch(err => console.error("Error showing clipboard notification:", err));
+                        }).catch(err => {
+                            console.error('Failed to copy subject line to clipboard:', err);
+                            // Fallback for browsers that don't support clipboard API
                             this.fallbackCopyToClipboard(ticketData.subject);
-                        }
+                        });
+                    } catch (error) {
+                        console.error('Error accessing clipboard:', error);
+                        // Use fallback method
+                        this.fallbackCopyToClipboard(ticketData.subject);
                     }
                 }
 
@@ -4625,47 +4616,38 @@
                             submitButton.disabled = true;
                         }
 
-                        // Check if we should show the modal (for all trackers except Feature Request and DPT)
-                        if (!isFeatureRequest && !isDPT) {
-                            // Show the success modal
-                            this.showSuccessModal(ticketData);
+                        // Use original flow for all templates - direct redirect
+                        // Show notification
+                        this.client.interface.trigger("showNotify", {
+                            type: "success",
+                            message: `Tracker ticket #${ticketData.id} created successfully!`
+                        }).catch(err => console.error("Error showing notification:", err));
 
-                            // Send Teams notification in background
-                            this.sendTeamsNotification(ticketData);
-                        } else {
-                            // For Feature Request and DPT, use original flow
-                            // Show notification
-                            this.client.interface.trigger("showNotify", {
-                                type: "success",
-                                message: `Tracker ticket #${ticketData.id} created successfully!`
-                            }).catch(err => console.error("Error showing notification:", err));
+                        // Send Teams notification
+                        this.sendTeamsNotification(ticketData);
 
-                            // Send Teams notification
-                            this.sendTeamsNotification(ticketData);
+                        // Get the Freshdesk subdomain and automatically open the ticket in a new tab
+                        this.client.iparams.get("freshdesk_subdomain").then(iparams => {
+                            const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
+                            const ticketUrl = `https://${subdomain}.freshdesk.com/a/tickets/${ticketData.id}`;
 
-                            // Get the Freshdesk subdomain and automatically open the ticket in a new tab
-                            this.client.iparams.get("freshdesk_subdomain").then(iparams => {
-                                const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
-                                const ticketUrl = `https://${subdomain}.freshdesk.com/a/tickets/${ticketData.id}`;
+                            // Open in a new tab
+                            window.open(ticketUrl, '_blank');
 
-                                // Open in a new tab
-                                window.open(ticketUrl, '_blank');
+                            // Return to template selector after a short delay
+                            setTimeout(() => {
+                                window.location.href = 'template-selector.html';
+                            }, 1500);
+                        }).catch((error) => {
+                            console.error("Error getting subdomain:", error);
+                            // Fallback to generic URL
+                            window.open(`https://freshdesk.com/a/tickets/${ticketData.id}`, '_blank');
 
-                                // Return to template selector after a short delay
-                                setTimeout(() => {
-                                    window.location.href = 'template-selector.html';
-                                }, 1500);
-                            }).catch((error) => {
-                                console.error("Error getting subdomain:", error);
-                                // Fallback to generic URL
-                                window.open(`https://freshdesk.com/a/tickets/${ticketData.id}`, '_blank');
-
-                                // Return to template selector after a short delay
-                                setTimeout(() => {
-                                    window.location.href = 'template-selector.html';
-                                }, 1500);
-                            });
-                        }
+                            // Return to template selector after a short delay
+                            setTimeout(() => {
+                                window.location.href = 'template-selector.html';
+                            }, 1500);
+                        });
                     })
                     .catch(error => {
                         console.error('Error during post-creation tasks:', error);
@@ -4681,27 +4663,20 @@
                         // Send Teams notification even if attachments failed
                         this.sendTeamsNotification(ticketData);
 
-                        // Check if we should show the modal
-                        if (!isFeatureRequest && !isDPT) {
-                            // Show the success modal even if attachments failed
-                            this.showSuccessModal(ticketData);
-                        } else {
-                            // For Feature Request and DPT, use original flow
-                            // Still open the ticket
-                            this.client.iparams.get("freshdesk_subdomain").then(iparams => {
-                                const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
-                                const ticketUrl = `https://${subdomain}.freshdesk.com/a/tickets/${ticketData.id}`;
-                                window.open(ticketUrl, '_blank');
+                        // Use original flow for all templates - still open the ticket
+                        this.client.iparams.get("freshdesk_subdomain").then(iparams => {
+                            const subdomain = iparams.freshdesk_subdomain.replace(/\.freshdesk\.com$/i, '');
+                            const ticketUrl = `https://${subdomain}.freshdesk.com/a/tickets/${ticketData.id}`;
+                            window.open(ticketUrl, '_blank');
 
-                                // Return to template selector after a short delay
-                                setTimeout(() => {
-                                    window.location.href = 'template-selector.html';
-                                }, 1500);
-                            }).catch(() => {
-                                window.open(`https://freshdesk.com/a/tickets/${ticketData.id}`, '_blank');
-                                setTimeout(() => window.location.href = 'template-selector.html', 1500);
-                            });
-                        }
+                            // Return to template selector after a short delay
+                            setTimeout(() => {
+                                window.location.href = 'template-selector.html';
+                            }, 1500);
+                        }).catch(() => {
+                            window.open(`https://freshdesk.com/a/tickets/${ticketData.id}`, '_blank');
+                            setTimeout(() => window.location.href = 'template-selector.html', 1500);
+                        });
                     });
             }
 
@@ -4918,58 +4893,143 @@
             // Fallback method for copying to clipboard
             fallbackCopyToClipboard(text) {
                 try {
-                    // Create a temporary textarea element
-                    const textArea = document.createElement('textarea');
-                    textArea.value = text;
-                    textArea.style.position = 'fixed';
-                    textArea.style.top = '0';
-                    textArea.style.left = '0';
-                    textArea.style.width = '2em';
-                    textArea.style.height = '2em';
-                    textArea.style.padding = '0';
-                    textArea.style.border = 'none';
-                    textArea.style.outline = 'none';
-                    textArea.style.boxShadow = 'none';
-                    textArea.style.background = 'transparent';
+                    // First, try a more direct approach with a temporary input
+                    const tempInput = document.createElement('input');
+                    tempInput.value = text;
+                    tempInput.style.position = 'absolute';
+                    tempInput.style.left = '-9999px';
+                    tempInput.style.top = '0';
+                    tempInput.setAttribute('readonly', '');
 
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
+                    document.body.appendChild(tempInput);
 
-                    const successful = document.execCommand('copy');
-                    document.body.removeChild(textArea);
+                    // Select the text
+                    tempInput.select();
+                    tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+                    let successful = false;
+
+                    try {
+                        successful = document.execCommand('copy');
+                    } catch (err) {
+                        console.error('execCommand copy failed:', err);
+                    }
+
+                    document.body.removeChild(tempInput);
 
                     if (successful) {
                         console.log('Subject line copied to clipboard using fallback method');
 
-                        // Show Freshdesk notification
+                        // Show success notification
                         if (this.client) {
                             this.client.interface.trigger("showNotify", {
                                 type: "success",
                                 message: "Subject line copied to clipboard!"
                             }).catch(err => console.error("Error showing clipboard notification:", err));
                         }
-                    } else {
-                        console.error('Fallback copy failed');
-
-                        // Show error notification
-                        if (this.client) {
-                            this.client.interface.trigger("showNotify", {
-                                type: "danger",
-                                message: "Failed to copy subject line to clipboard"
-                            }).catch(err => console.error("Error showing error notification:", err));
-                        }
+                        return;
                     }
+
+                    // If that didn't work, show the text in a modal for manual copying
+                    this.showManualCopyModal(text);
+
                 } catch (error) {
-                    console.error('Fallback copy to clipboard failed:', error);
+                    console.error('All copy methods failed:', error);
 
-                    // Show error notification
-                    if (this.client) {
-                        this.client.interface.trigger("showNotify", {
-                            type: "danger",
-                            message: "Failed to copy subject line to clipboard"
-                        }).catch(err => console.error("Error showing error notification:", err));
+                    // As a last resort, show the text for manual copying
+                    this.showManualCopyModal(text);
+                }
+            }
+
+            // Show a modal with the text for manual copying
+            showManualCopyModal(text) {
+                // Create modal backdrop
+                const backdrop = document.createElement('div');
+                backdrop.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    z-index: 10000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                `;
+
+                // Create modal
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    background: white;
+                    border-radius: 8px;
+                    padding: 25px;
+                    max-width: 500px;
+                    width: 100%;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                `;
+
+                // Escape the text for safe HTML insertion
+                const escapedText = text.replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+
+                modal.innerHTML = `
+                    <h3 style="margin: 0 0 15px 0; color: #2c3e50;">Copy Subject Line</h3>
+                    <p style="color: #7f8c8d; margin-bottom: 15px;">Due to browser restrictions, please manually copy the text below:</p>
+                    <textarea id="manualCopyText" style="
+                        width: 100%;
+                        min-height: 80px;
+                        padding: 10px;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        font-family: inherit;
+                        font-size: 14px;
+                        resize: vertical;
+                    " readonly>${escapedText}</textarea>
+                    <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <small style="color: #95a5a6;">Press Ctrl+C (or Cmd+C on Mac) to copy</small>
+                        <button id="closeManualCopyModal" style="
+                            background: #0ba87d;
+                            color: white;
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-size: 14px;
+                        ">Close</button>
+                    </div>
+                `;
+
+                backdrop.appendChild(modal);
+                document.body.appendChild(backdrop);
+
+                // Select the text automatically
+                const textArea = document.getElementById('manualCopyText');
+                textArea.focus();
+                textArea.select();
+
+                // Close button handler
+                document.getElementById('closeManualCopyModal').addEventListener('click', () => {
+                    document.body.removeChild(backdrop);
+                });
+
+                // Also close on backdrop click
+                backdrop.addEventListener('click', (e) => {
+                    if (e.target === backdrop) {
+                        document.body.removeChild(backdrop);
                     }
+                });
+
+                // Show notification
+                if (this.client) {
+                    this.client.interface.trigger("showNotify", {
+                        type: "info",
+                        message: "Please manually copy the selected text"
+                    }).catch(err => console.error("Error showing notification:", err));
                 }
             }
 
@@ -5073,30 +5133,124 @@
                 document.body.appendChild(backdrop);
 
                 // Set up event handlers
-                document.getElementById('copyAndOpenTeams').addEventListener('click', () => {
+                // Store reference to 'this' to maintain context in event handlers
+                const self = this;
+
+                document.getElementById('copyAndOpenTeams').addEventListener('click', function (event) {
+                    // Ensure we're in a user-initiated context
+                    event.preventDefault();
+                    event.stopPropagation();
+
                     // Copy subject to clipboard
                     if (ticketData.subject) {
-                        navigator.clipboard.writeText(ticketData.subject).then(() => {
-                            console.log('Subject line copied to clipboard');
-                        }).catch(err => {
-                            console.error('Failed to copy subject line:', err);
-                            this.fallbackCopyToClipboard(ticketData.subject);
-                        });
+                        console.log('Attempting to copy subject to clipboard:', ticketData.subject);
+
+                        // Try a synchronous approach first since we're in a direct user event
+                        try {
+                            // Create a temporary input element
+                            const tempInput = document.createElement('input');
+                            tempInput.value = ticketData.subject;
+                            tempInput.style.cssText = 'position: absolute; left: -9999px; top: 0;';
+                            tempInput.setAttribute('readonly', '');
+
+                            // Add to DOM, select, copy, and remove
+                            document.body.appendChild(tempInput);
+                            tempInput.select();
+                            tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+                            const copySuccess = document.execCommand('copy');
+                            document.body.removeChild(tempInput);
+
+                            if (copySuccess) {
+                                console.log('Subject line copied successfully using execCommand');
+                                if (self.client) {
+                                    self.client.interface.trigger("showNotify", {
+                                        type: "success",
+                                        message: "Subject line copied to clipboard!"
+                                    }).catch(err => console.error("Error showing notification:", err));
+                                }
+                            } else {
+                                throw new Error('execCommand copy returned false');
+                            }
+                        } catch (err) {
+                            console.error('Direct copy failed:', err);
+
+                            // Try navigator.clipboard as a fallback
+                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                                navigator.clipboard.writeText(ticketData.subject)
+                                    .then(() => {
+                                        console.log('Subject line copied using navigator.clipboard');
+                                        if (self.client) {
+                                            self.client.interface.trigger("showNotify", {
+                                                type: "success",
+                                                message: "Subject line copied to clipboard!"
+                                            }).catch(err => console.error("Error showing notification:", err));
+                                        }
+                                    })
+                                    .catch(clipErr => {
+                                        console.error('navigator.clipboard failed:', clipErr);
+                                        self.fallbackCopyToClipboard(ticketData.subject);
+                                    });
+                            } else {
+                                self.fallbackCopyToClipboard(ticketData.subject);
+                            }
+                        }
+                    } else {
+                        console.error('No subject available to copy');
                     }
 
-                    // Open Teams application
-                    window.open('msteams://');
+                    // Open Teams to specific channel
+                    try {
+                        // Open Teams directly to the Trackers channel using deep link
+                        const teamsChannelUrl = 'https://teams.microsoft.com/l/channel/19%3Af1874abf42e24c87b7e8fb77501dc961%40thread.tacv2/Trackers?groupId=69cabed4-27d6-4cb7-86de-9c9587c27232&tenantId=a5664b12-8494-4eee-b975-baccc4670e27';
+
+                        // Since Teams deep links don't support pre-filling content directly,
+                        // we'll show a notification reminding the user to paste the copied subject
+                        if (self.client) {
+                            self.client.interface.trigger("showNotify", {
+                                type: "info",
+                                message: "Opening Teams channel. Please paste the copied subject line (Ctrl+V or Cmd+V)."
+                            }).catch(err => console.error("Error showing Teams notification:", err));
+                        }
+
+                        // Open the Teams channel
+                        window.open(teamsChannelUrl, '_blank');
+                        console.log('Teams Trackers channel opened');
+
+                    } catch (err) {
+                        console.error('Failed to open Teams channel:', err);
+
+                        // Fallback: Try the mailto approach with channel email
+                        try {
+                            const channelEmail = '7b7647c8.benchmarkeducation.com@amer.teams.ms';
+                            const encodedSubject = encodeURIComponent(ticketData.subject);
+                            const teamsMailtoUrl = `mailto:${channelEmail}?subject=${encodedSubject}`;
+
+                            window.open(teamsMailtoUrl, '_blank');
+                            console.log('Teams channel opened via mailto (fallback)');
+                        } catch (mailtoErr) {
+                            console.error('Mailto fallback also failed:', mailtoErr);
+
+                            // Last resort: open Teams generically
+                            try {
+                                window.open('msteams://');
+                                console.log('Opened Teams application (final fallback)');
+                            } catch (finalErr) {
+                                console.error('Failed to open Teams at all:', finalErr);
+                            }
+                        }
+                    }
 
                     // Continue to tracker after a short delay
                     setTimeout(() => {
                         document.body.removeChild(backdrop);
-                        this.openTrackerAndReturn(ticketData);
+                        self.openTrackerAndReturn(ticketData);
                     }, 500);
                 });
 
                 document.getElementById('continueToTracker').addEventListener('click', () => {
                     document.body.removeChild(backdrop);
-                    this.openTrackerAndReturn(ticketData);
+                    self.openTrackerAndReturn(ticketData);
                 });
             }
 
@@ -5284,6 +5438,80 @@
                         console.log(`Using districtDropdownValue as fallback for district field: ${formData.districtDropdownValue}`);
                     }
 
+                    // Populate cf_summary_or_issue_description based on tracker type
+                    const templatesUsingSummary = ['dpt', 'help-article', 'sim-achievement-levels', 'sedcust', 'assembly', 'assembly-rollover'];
+                    const templatesUsingIssueDescription = ['sim-assignment', 'sim-assessment-reports', 'sim-fsa', 'sim-library-view', 'sim-orr', 'sim-plan-teach', 'sim-reading-log', 'sim-dashboard'];
+
+                    console.log(`DEBUG: Checking for summary/issue description for tracker type: ${this.trackerType}`);
+                    console.log(`DEBUG: Form data keys:`, Object.keys(formData));
+
+                    let summaryOrIssueContent = '';
+
+                    if (templatesUsingSummary.includes(this.trackerType)) {
+                        // Look for summary field (could be 'summary', 'summaryContent', or 'issueSummary')
+                        console.log(`DEBUG: Looking for 'summary' field. Value:`, formData.summary);
+                        console.log(`DEBUG: Looking for 'summaryContent' field. Value:`, formData.summaryContent);
+                        console.log(`DEBUG: Looking for 'issueSummary' field. Value:`, formData.issueSummary);
+
+                        // Check for issueSummary FIRST (used in SEDCUST template)
+                        if (formData.issueSummary) {
+                            summaryOrIssueContent = formData.issueSummary;
+                            console.log(`DEBUG: Found content in issueSummary field`);
+                        } else if (formData.summary) {
+                            summaryOrIssueContent = formData.summary;
+                            console.log(`DEBUG: Found content in summary field`);
+                        } else if (formData.summaryContent) {
+                            summaryOrIssueContent = formData.summaryContent;
+                            console.log(`DEBUG: Found content in summaryContent field`);
+                        }
+                        console.log(`Using Summary content for cf_summary_or_issue_description from template: ${this.trackerType}`);
+                    } else if (templatesUsingIssueDescription.includes(this.trackerType)) {
+                        // Look for issue description field (could be 'issue', 'issueDetails', or 'issueDescription')
+                        console.log(`DEBUG: Looking for 'issue' field. Value:`, formData.issue);
+                        console.log(`DEBUG: Looking for 'issueDetails' field. Value:`, formData.issueDetails);
+                        console.log(`DEBUG: Looking for 'issueDescription' field. Value:`, formData.issueDescription);
+
+                        // Check for issueDetails FIRST (used in SIM ORR template)
+                        if (formData.issueDetails) {
+                            summaryOrIssueContent = formData.issueDetails;
+                            console.log(`DEBUG: Found content in issueDetails field`);
+                        } else if (formData.issue) {
+                            summaryOrIssueContent = formData.issue;
+                            console.log(`DEBUG: Found content in issue field`);
+                        } else if (formData.issueDescription) {
+                            summaryOrIssueContent = formData.issueDescription;
+                            console.log(`DEBUG: Found content in issueDescription field`);
+                        }
+                        console.log(`Using Issue Description content for cf_summary_or_issue_description from template: ${this.trackerType}`);
+                    }
+
+                    console.log(`DEBUG: summaryOrIssueContent value:`, summaryOrIssueContent);
+
+                    // Ensure ticketData.custom_fields exists
+                    if (!ticketData.custom_fields) {
+                        ticketData.custom_fields = {};
+                        console.log(`DEBUG: Created custom_fields object on ticketData`);
+                    }
+
+                    if (summaryOrIssueContent) {
+                        // Strip HTML tags to get plain text (optional - you can keep HTML if needed)
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = summaryOrIssueContent;
+                        const plainTextContent = tempDiv.textContent || tempDiv.innerText || '';
+
+                        ticketData.custom_fields.cf_summary_or_issue_description = plainTextContent.trim();
+                        console.log(`Set cf_summary_or_issue_description for ${this.trackerType} template: ${plainTextContent.substring(0, 100)}...`);
+                        console.log(`DEBUG: ticketData.custom_fields after setting:`, ticketData.custom_fields);
+                    } else {
+                        console.log(`No summary or issue description found for template: ${this.trackerType}`);
+                        console.log(`DEBUG: formData.summary = ${formData.summary}`);
+                        console.log(`DEBUG: formData.summaryContent = ${formData.summaryContent}`);
+                        console.log(`DEBUG: formData.issueSummary = ${formData.issueSummary}`);
+                        console.log(`DEBUG: formData.issue = ${formData.issue}`);
+                        console.log(`DEBUG: formData.issueDetails = ${formData.issueDetails}`);
+                        console.log(`DEBUG: formData.issueDescription = ${formData.issueDescription}`);
+                    }
+
                     // Add group if selected
                     if (formData.groupField && formData.groupField !== '') {
                         const groupId = parseInt(formData.groupField, 10);
@@ -5369,10 +5597,13 @@
 
                     // VIP tag handling removed as per requirements
 
+                    // Always ensure basicTicketData has custom_fields object
+                    if (!basicTicketData.custom_fields) {
+                        basicTicketData.custom_fields = {};
+                    }
+
                     // Add custom fields if we have them in the source ticket
                     if (sourceTicketData && sourceTicketData.custom_fields) {
-                        basicTicketData.custom_fields = {};
-
                         // Copy specific custom fields from source ticket
                         const customFieldsToPreserve = [
                             'cf_account_manager',
@@ -5391,14 +5622,22 @@
                                 basicTicketData.custom_fields[field] = sourceTicketData.custom_fields[field];
                             }
                         });
+                    }
 
-                        // Add district field if available
-                        if (formData.districtField) {
-                            basicTicketData.custom_fields.cf_district509811 = String(formData.districtField);
-                        }
-                        else if (formData.districtName) {
-                            basicTicketData.custom_fields.cf_district509811 = String(formData.districtName);
-                        }
+                    // Add district field if available
+                    if (formData.districtField) {
+                        basicTicketData.custom_fields.cf_district509811 = String(formData.districtField);
+                    }
+                    else if (formData.districtName) {
+                        basicTicketData.custom_fields.cf_district509811 = String(formData.districtName);
+                    }
+
+                    // Copy the cf_summary_or_issue_description field if it was set
+                    if (ticketData.custom_fields && ticketData.custom_fields.cf_summary_or_issue_description) {
+                        basicTicketData.custom_fields.cf_summary_or_issue_description = ticketData.custom_fields.cf_summary_or_issue_description;
+                        console.log(`DEBUG: Copying cf_summary_or_issue_description to basicTicketData: ${ticketData.custom_fields.cf_summary_or_issue_description.substring(0, 100)}...`);
+                    } else {
+                        console.log('DEBUG: cf_summary_or_issue_description was not set on ticketData.custom_fields');
                     }
 
                     // Log the basic ticket data
@@ -5442,6 +5681,12 @@
                     }
 
                     this.handleTicketCreationSuccess(responseData);
+
+                    // Add "related to ###" tag to source tickets
+                    if (relatedTicketIds.length > 0 && responseData.id) {
+                        console.log(`Adding "related to ${responseData.id}" tag to source tickets`);
+                        this.addRelatedToTagToSourceTickets(relatedTicketIds, responseData.id);
+                    }
                 } catch (error) {
                     console.error('Error creating ticket:', error);
                     // Try to extract the specific field causing the error
@@ -5642,6 +5887,66 @@
                 }
 
                 return formData;
+            }
+
+            // Add method to update source tickets with "related to ###" tag
+            async addRelatedToTagToSourceTickets(sourceTicketIds, newTicketId) {
+                console.log(`Starting to add "related to ${newTicketId}" tag to source tickets:`, sourceTicketIds);
+
+                for (const sourceTicketId of sourceTicketIds) {
+                    try {
+                        // First get the current ticket details to retrieve existing tags
+                        const response = await this.client.request.invokeTemplate("getTicketDetails", {
+                            context: { ticketId: sourceTicketId }
+                        });
+
+                        if (response && response.response) {
+                            const ticketDetails = JSON.parse(response.response);
+
+                            // Get existing tags and add the new one if it doesn't exist
+                            let tags = ticketDetails.tags || [];
+
+                            // Convert to array if it's not already
+                            if (!Array.isArray(tags)) {
+                                tags = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+                            }
+
+                            // Create the "related to ###" tag
+                            const relatedToTag = `related to ${newTicketId}`;
+
+                            // Check if tag already exists
+                            if (!tags.includes(relatedToTag)) {
+                                tags.push(relatedToTag);
+
+                                // Prepare data for update
+                                const updateData = {
+                                    tags: tags
+                                };
+
+                                try {
+                                    // Update the source ticket with new tags
+                                    console.log(`Updating source ticket ${sourceTicketId} with tag "${relatedToTag}"`);
+                                    await this.client.request.invokeTemplate("updateTicket", {
+                                        context: {
+                                            ticketId: sourceTicketId
+                                        },
+                                        body: JSON.stringify(updateData)
+                                    });
+
+                                    console.log(`Successfully added "${relatedToTag}" tag to source ticket ${sourceTicketId}`);
+                                } catch (updateError) {
+                                    console.error(`Error updating source ticket ${sourceTicketId}:`, updateError);
+                                    // Continue with other tickets even if this one fails
+                                }
+                            } else {
+                                console.log(`Source ticket ${sourceTicketId} already has "${relatedToTag}" tag`);
+                            }
+                        }
+                    } catch (error) {
+                        console.error(`Error processing source ticket ${sourceTicketId}:`, error);
+                        // Continue with other tickets even if one fails
+                    }
+                }
             }
 
             // Add this method to handle HAR file uploads
