@@ -4,6 +4,7 @@
 // - populateApplicationName, populateDistrictState, populateVIPStatus from app/utils/fieldPopulators.js
 // - setupCustomVersionInput, setupCustomVersionStateInput, getVersionValue, getVersionStateValue from app/utils/versionFieldHandlers.js
 // - TemplateBase from app/utils/templateBase.js
+// - DemoDataHelper from app/utils/demoDataHelper.js
 
 module.exports = {
     title: "Assembly Tracker",
@@ -410,6 +411,15 @@ module.exports = {
 
             // Execute the update
             updateSourceTicketTags();
+        }
+
+        // Add demo data functionality
+        const demoDataHelper = new DemoDataHelper();
+        const demoButton = demoDataHelper.addDemoDataButton();
+        if (demoButton) {
+            demoButton.addEventListener('click', () => {
+                demoDataHelper.fillDemoData(module.exports);
+            });
         }
     }
 }; 

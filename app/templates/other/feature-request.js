@@ -4,6 +4,7 @@
 // - populateApplicationName, populateDistrictState, populateVIPStatus from app/utils/fieldPopulators.js
 // - setupCustomVersionInput, setupCustomVersionStateInput, getVersionValue, getVersionStateValue from app/utils/versionFieldHandlers.js
 // - TemplateBase from app/utils/templateBase.js
+// - DemoDataHelper from app/utils/demoDataHelper.js
 
 module.exports = {
     title: "Feature Request Tracker",
@@ -472,5 +473,14 @@ module.exports = {
 
         // Schedule another sync after a small delay to ensure fields are populated
         setTimeout(syncFeatureRequestFields, 500);
+
+        // Add demo data functionality
+        const demoDataHelper = new DemoDataHelper();
+        const demoButton = demoDataHelper.addDemoDataButton();
+        if (demoButton) {
+            demoButton.addEventListener('click', () => {
+                demoDataHelper.fillDemoData(module.exports);
+            });
+        }
     }
 };

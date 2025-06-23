@@ -4,6 +4,7 @@
 // - populateApplicationName, populateDistrictState from app/utils/fieldPopulators.js
 // - setupCustomVersionInput, setupCustomVersionStateInput, getVersionValue, getVersionStateValue from app/utils/versionFieldHandlers.js
 // - TemplateBase from app/utils/templateBase.js
+// - DemoDataHelper from app/utils/demoDataHelper.js
 
 module.exports = {
     title: "SIM Achievement Levels Tracker",
@@ -150,6 +151,15 @@ module.exports = {
             window.trackerApp.setupSmartsheetUploader();
         } else {
             console.warn("TrackerApp or setupSmartsheetUploader not available");
+        }
+
+        // Add demo data functionality
+        const demoDataHelper = new DemoDataHelper();
+        const demoButton = demoDataHelper.addDemoDataButton();
+        if (demoButton) {
+            demoButton.addEventListener('click', () => {
+                demoDataHelper.fillDemoData(module.exports);
+            });
         }
     }
 };
