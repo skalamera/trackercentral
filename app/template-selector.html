@@ -569,43 +569,88 @@
                     const loadTrackerConfig = () => {
                         loadedCount++;
                         if (loadedCount === utilityScripts.length) {
-                            // All utilities loaded, now load tracker config
-                            const script = document.createElement('script');
-                            script.src = 'tracker-config.js';
-                            script.onload = () => {
-                                // Now we can access the DraftManager
-                                if (window.draftManager) {
-                                    const drafts = window.draftManager.getDraftsArray();
-                                    console.log(`Found ${drafts.length} drafts`);
+                            // All utilities loaded, now set up template environment
+                            window.TRACKER_CONFIGS_FROM_TEMPLATES = {};
+                            if (typeof module === 'undefined') {
+                                window.module = { exports: {} };
+                            }
 
-                                    if (drafts.length === 0) {
-                                        myDraftsSection.style.display = 'none';
-                                        return;
-                                    }
+                            // Template files to load
+                            const templateFiles = [
+                                { key: 'assembly-rollover', path: 'templates/assembly/assembly-rollover.js' },
+                                { key: 'assembly', path: 'templates/assembly/assembly.js' },
+                                { key: 'sedcust', path: 'templates/sedcust/sedcust.js' },
+                                { key: 'sim-assignment', path: 'templates/sim/assignment.js' },
+                                { key: 'sim-assessment-reports', path: 'templates/sim/assessment-reports.js' },
+                                { key: 'sim-achievement-levels', path: 'templates/sim/achievement-levels.js' },
+                                { key: 'sim-fsa', path: 'templates/sim/fsa.js' },
+                                { key: 'sim-library-view', path: 'templates/sim/library-view.js' },
+                                { key: 'sim-orr', path: 'templates/sim/orr.js' },
+                                { key: 'sim-plan-teach', path: 'templates/sim/plan-teach.js' },
+                                { key: 'sim-reading-log', path: 'templates/sim/reading-log.js' },
+                                { key: 'sim-dashboard', path: 'templates/sim/dashboard.js' },
+                                { key: 'feature-request', path: 'templates/other/feature-request.js' },
+                                { key: 'dpt', path: 'templates/other/dpt.js' },
+                                { key: 'timeout-extension', path: 'templates/other/timeout-extension.js' },
+                                { key: 'help-article', path: 'templates/other/help-article.js' }
+                            ];
 
-                                    // Show drafts section
-                                    myDraftsSection.style.display = 'block';
+                            let templatesLoaded = 0;
+                            const loadAllTemplatesAndTrackerConfig = () => {
+                                templatesLoaded++;
+                                if (templatesLoaded === templateFiles.length) {
+                                    // All templates loaded, now load tracker config
+                                    const script = document.createElement('script');
+                                    script.src = 'tracker-config.js';
+                                    script.onload = () => {
+                                        // Now we can access the DraftManager
+                                        if (window.draftManager) {
+                                            const drafts = window.draftManager.getDraftsArray();
+                                            console.log(`Found ${drafts.length} drafts`);
 
-                                    // Update the count badge
-                                    if (draftsTotalCount) {
-                                        draftsTotalCount.textContent = drafts.length;
-                                    }
+                                            if (drafts.length === 0) {
+                                                myDraftsSection.style.display = 'none';
+                                                return;
+                                            }
 
-                                    // Default to collapsed if there are drafts (but you can change this)
-                                    // Since there are drafts, we'll leave it expanded by default
-                                    // If you want it collapsed by default even with drafts, uncomment the next lines:
-                                    // myDraftsSection.classList.add('collapsed');
-                                    // document.getElementById('draftsToggle').innerHTML = '<i class="fas fa-chevron-right"></i>';
+                                            // Show drafts section
+                                            myDraftsSection.style.display = 'block';
 
-                                    // Populate drafts list
-                                    draftsList.innerHTML = '';
-                                    drafts.forEach(draft => {
-                                        const draftElement = createDraftElement(draft);
-                                        draftsList.appendChild(draftElement);
-                                    });
+                                            // Update the count badge
+                                            if (draftsTotalCount) {
+                                                draftsTotalCount.textContent = drafts.length;
+                                            }
+
+                                            // Default to collapsed if there are drafts (but you can change this)
+                                            // Since there are drafts, we'll leave it expanded by default
+                                            // If you want it collapsed by default even with drafts, uncomment the next lines:
+                                            // myDraftsSection.classList.add('collapsed');
+                                            // document.getElementById('draftsToggle').innerHTML = '<i class="fas fa-chevron-right"></i>';
+
+                                            // Populate drafts list
+                                            draftsList.innerHTML = '';
+                                            drafts.forEach(draft => {
+                                                const draftElement = createDraftElement(draft);
+                                                draftsList.appendChild(draftElement);
+                                            });
+                                        }
+                                    };
+                                    document.head.appendChild(script);
                                 }
                             };
-                            document.head.appendChild(script);
+
+                            // Load all template files
+                            templateFiles.forEach(template => {
+                                const tempScript = document.createElement('script');
+                                tempScript.src = template.path;
+                                tempScript.onload = function () {
+                                    // Capture the module.exports value for this template
+                                    window.TRACKER_CONFIGS_FROM_TEMPLATES[template.key] = module.exports;
+                                    module.exports = {}; // Reset for next template
+                                    loadAllTemplatesAndTrackerConfig();
+                                };
+                                document.head.appendChild(tempScript);
+                            });
                         }
                     };
 

@@ -91,6 +91,23 @@ class TrackerApp {
                 type: "Incident"
             };
 
+            // For SEDCUST template: If VIP is "Yes", set priority to 4 (Urgent)
+            console.log(`Checking VIP priority override - trackerType: "${this.trackerType}", isVIP value: "${formData.isVIP}"`);
+
+            // Additional debug for all form data fields
+            if (this.trackerType === 'sedcust') {
+                console.log('SEDCUST form data keys:', Object.keys(formData));
+                console.log('SEDCUST priority before override:', basicTicketData.priority);
+                console.log('SEDCUST isVIP field value:', formData.isVIP);
+            }
+
+            if (this.trackerType === 'sedcust' && formData.isVIP === 'Yes') {
+                basicTicketData.priority = 4;
+                console.log("SEDCUST VIP detected - setting priority to Urgent (4)");
+            } else if (this.trackerType === 'sedcust') {
+                console.log("SEDCUST but not VIP - keeping priority as is");
+            }
+
             // ADDED LOGGING: Log email and subject
             console.log("Creating ticket with:", {
                 email: basicTicketData.email,
@@ -307,6 +324,10 @@ class TrackerApp {
             const element = formElements[i];
             if (element.name && element.name !== '') {
                 formData[element.name] = element.value;
+            }
+            // Also collect by ID if no name is set
+            else if (element.id && element.id !== '' && !formData[element.id]) {
+                formData[element.id] = element.value;
             }
         }
 

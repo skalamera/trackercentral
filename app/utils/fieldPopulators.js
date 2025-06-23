@@ -159,10 +159,54 @@ async function populateDistrictState() {
     }
 }
 
+/**
+ * Populate VIP Status field based on ticket data
+ */
+function populateVIPStatus() {
+    console.log("Attempting to populate VIP Status field");
+
+    // Check if we have access to the window.trackerApp
+    if (!window.trackerApp || !window.trackerApp.ticketData) {
+        console.warn("Cannot populate VIP Status: trackerApp not available");
+        return;
+    }
+
+    const { isVip } = window.trackerApp.ticketData;
+    console.log("Source ticket VIP status:", isVip);
+
+    // Find the isVIP field
+    const isVIPField = document.getElementById('isVIP');
+    if (!isVIPField) {
+        console.warn("Cannot populate VIP Status: isVIP field not found");
+        return;
+    }
+
+    // Always set the VIP status based on ticket data
+    const previousValue = isVIPField.value;
+
+    // Set the VIP status
+    if (isVip === true) {
+        isVIPField.value = "Yes";
+        console.log(`VIP Status field set to: Yes (previous value was: ${previousValue})`);
+    } else {
+        isVIPField.value = "No";
+        console.log(`VIP Status field set to: No (previous value was: ${previousValue})`);
+    }
+
+    // Trigger change event to update subject line
+    // Add a small delay to ensure the value is properly set
+    setTimeout(() => {
+        const event = new Event('change', { bubbles: true });
+        isVIPField.dispatchEvent(event);
+        console.log("VIP Status change event dispatched");
+    }, 100);
+}
+
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         populateApplicationName,
-        populateDistrictState
+        populateDistrictState,
+        populateVIPStatus
     };
 } 

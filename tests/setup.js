@@ -62,6 +62,10 @@ global.getVersionStateValue = jest.fn().mockReturnValue('');
 global.setupClearFormattingButton = jest.fn();
 global.addFormatButtonToQuillDefaults = jest.fn();
 
+// Load TemplateBase class
+const TemplateBase = require('../app/utils/templateBase');
+global.TemplateBase = TemplateBase;
+
 // Export the TRACKER_CONFIGS mock for tests that need to mock it
 module.exports = {
     mockTrackerConfig: () => ({

@@ -21,7 +21,224 @@
     <script src="utils/templateBase.js"></script>
     <script src="utils/subjectLineFormatter.js"></script>
 
-    <!-- Load tracker configuration -->
+    <!-- Load template configurations -->
+    <script>
+        // Load templates for browser environment
+        // Individual templates will populate this object
+        window.TRACKER_CONFIGS_FROM_TEMPLATES = {};
+
+        // Helper to make module.exports work in browser
+        if (typeof module === 'undefined') {
+            window.module = { exports: {} };
+        }
+    </script>
+    <!-- Load each template individually -->
+    <script>
+        // Assembly templates
+        (function () {
+            const module = { exports: {} };
+
+            // Load assembly-rollover
+            fetch('templates/assembly/assembly-rollover.js')
+                .then(r => r.text())
+                .then(text => {
+                    eval(text);
+                    window.TRACKER_CONFIGS_FROM_TEMPLATES['assembly-rollover'] = module.exports;
+                });
+
+            // Load assembly
+            fetch('templates/assembly/assembly.js')
+                .then(r => r.text())
+                .then(text => {
+                    eval(text);
+                    window.TRACKER_CONFIGS_FROM_TEMPLATES['assembly'] = module.exports;
+                });
+
+            // Load sedcust
+            fetch('templates/sedcust/sedcust.js')
+                .then(r => r.text())
+                .then(text => {
+                    eval(text);
+                    window.TRACKER_CONFIGS_FROM_TEMPLATES['sedcust'] = module.exports;
+                });
+
+            // Load SIM templates
+            const simTemplates = ['assignment', 'assessment-reports', 'achievement-levels', 'fsa',
+                'library-view', 'orr', 'plan-teach', 'reading-log', 'dashboard'];
+            simTemplates.forEach(name => {
+                fetch(`templates/sim/${name}.js`)
+                    .then(r => r.text())
+                    .then(text => {
+                        eval(text);
+                        window.TRACKER_CONFIGS_FROM_TEMPLATES[`sim-${name}`] = module.exports;
+                    });
+            });
+
+            // Load other templates
+            const otherTemplates = ['feature-request', 'dpt', 'timeout-extension', 'help-article'];
+            otherTemplates.forEach(name => {
+                fetch(`templates/other/${name}.js`)
+                    .then(r => r.text())
+                    .then(text => {
+                        eval(text);
+                        window.TRACKER_CONFIGS_FROM_TEMPLATES[name] = module.exports;
+                    });
+            });
+        })();
+    </script>
+
+    <!-- Initialize template container for browser environment -->
+    <script>
+        // Create global container for templates
+        window.TRACKER_CONFIGS_FROM_TEMPLATES = {};
+    </script>
+
+    <!-- Load all template modules individually -->
+    <!-- Assembly Rollover -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/assembly/assembly-rollover.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['assembly-rollover'] = module.exports;
+    </script>
+
+    <!-- Assembly -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/assembly/assembly.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['assembly'] = module.exports;
+    </script>
+
+    <!-- SEDCUST -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/sedcust/sedcust.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['sedcust'] = module.exports;
+    </script>
+
+    <!-- SIM Assignment -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/sim/assignment.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-assignment'] = module.exports;
+    </script>
+
+    <!-- SIM Assessment Reports -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/sim/assessment-reports.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-assessment-reports'] = module.exports;
+    </script>
+
+    <!-- SIM Achievement Levels -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/sim/achievement-levels.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-achievement-levels'] = module.exports;
+    </script>
+
+    <!-- SIM FSA -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/sim/fsa.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-fsa'] = module.exports;
+    </script>
+
+    <!-- SIM Library View -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/sim/library-view.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-library-view'] = module.exports;
+    </script>
+
+    <!-- SIM ORR -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/sim/orr.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-orr'] = module.exports;
+    </script>
+
+    <!-- SIM Plan & Teach -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/sim/plan-teach.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-plan-teach'] = module.exports;
+    </script>
+
+    <!-- SIM Reading Log -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/sim/reading-log.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-reading-log'] = module.exports;
+    </script>
+
+    <!-- SIM Dashboard -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/sim/dashboard.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-dashboard'] = module.exports;
+    </script>
+
+    <!-- Feature Request -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/other/feature-request.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['feature-request'] = module.exports;
+    </script>
+
+    <!-- DPT -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/other/dpt.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['dpt'] = module.exports;
+    </script>
+
+    <!-- Timeout Extension -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/other/timeout-extension.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['timeout-extension'] = module.exports;
+    </script>
+
+    <!-- Help Article -->
+    <script>
+        window.module = { exports: {} };
+    </script>
+    <script src="templates/other/help-article.js"></script>
+    <script>
+        window.TRACKER_CONFIGS_FROM_TEMPLATES['help-article'] = module.exports;
+    </script>
+
+    <!-- Load tracker configuration (which now uses the loaded templates) -->
     <script src="tracker-config.js"></script>
     <style>
         div.card-header {
@@ -334,49 +551,66 @@
         }
 
         // Initialize the app when page fully loads
-        document.onreadystatechange = function () {
-            if (document.readyState === "complete") {
-                console.log("Dynamic tracker template initializing...");
-                // Get the tracker type from URL parameters
-                const urlParams = new URLSearchParams(window.location.search);
-                const trackerType = urlParams.get('type') || 'blank';
+        function initializeTracker() {
+            console.log("Dynamic tracker template initializing...");
 
-                // Store tracker type in hidden field
-                document.getElementById('trackerType').value = trackerType;
-
-                // Log the tracker type
-                console.log("Loading tracker template:", trackerType);
-
-                // Extra logging for assembly trackers
-                if (trackerType === 'assembly' || trackerType === 'assembly-rollover') {
-                    console.log(`This is an ASSEMBLY tracker (${trackerType}). Source tickets will be tagged with "ESCALATED TO ASSEMBLY"`);
-                }
-
-                // Get the config for this tracker type
-                const config = TRACKER_CONFIGS[trackerType] || {
-                    title: "Blank Tracker",
-                    icon: "fa-file",
-                    description: "Generic tracker template",
-                    sections: []
-                };
-
-                // If this is the SIM Assignment template, ensure there's no attachments card
-                if (trackerType === 'sim-assignment') {
-                    // Filter out any attachments section that might have been added
-                    config.sections = config.sections.filter(section => section.id !== 'attachments');
-                }
-
-                // Set the page title
-                document.getElementById('trackerTitle').innerHTML = `<i class="fas ${config.icon} mr-2"></i> ${config.title}`;
-                document.title = config.title;
-
-                // Build dynamic sections based on configuration
-                buildDynamicSections(config);
-
-                // Initialize the app
-                initializeTrackerApp(trackerType, config);
+            // Check if TRACKER_CONFIGS is available
+            if (typeof TRACKER_CONFIGS === 'undefined') {
+                console.log("TRACKER_CONFIGS not available yet, waiting...");
+                setTimeout(initializeTracker, 100);
+                return;
             }
-        };
+
+            // Get the tracker type from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const trackerType = urlParams.get('type') || 'blank';
+
+            // Store tracker type in hidden field
+            document.getElementById('trackerType').value = trackerType;
+
+            // Log the tracker type
+            console.log("Loading tracker template:", trackerType);
+
+            // Extra logging for assembly trackers
+            if (trackerType === 'assembly' || trackerType === 'assembly-rollover') {
+                console.log(`This is an ASSEMBLY tracker (${trackerType}). Source tickets will be tagged with "ESCALATED TO ASSEMBLY"`);
+            }
+
+            // Get the config for this tracker type
+            const config = TRACKER_CONFIGS[trackerType] || {
+                title: "Blank Tracker",
+                icon: "fa-file",
+                description: "Generic tracker template",
+                sections: []
+            };
+
+            // If this is the SIM Assignment template, ensure there's no attachments card
+            if (trackerType === 'sim-assignment') {
+                // Filter out any attachments section that might have been added
+                config.sections = config.sections.filter(section => section.id !== 'attachments');
+            }
+
+            // Set the page title
+            document.getElementById('trackerTitle').innerHTML = `<i class="fas ${config.icon} mr-2"></i> ${config.title}`;
+            document.title = config.title;
+
+            // Build dynamic sections based on configuration
+            buildDynamicSections(config);
+
+            // Initialize the app
+            initializeTrackerApp(trackerType, config);
+        }
+
+        // Wait for document to be ready, then start initialization
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+            // Document is already ready
+            setTimeout(initializeTracker, 100);
+        } else {
+            // Wait for document to be ready
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(initializeTracker, 100);
+            });
+        }
 
         function buildDynamicSections(config) {
             const container = document.getElementById('dynamicSections');
