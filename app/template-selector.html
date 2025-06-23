@@ -555,43 +555,49 @@
                 }
 
                 try {
-                    // Load tracker config first
-                    const script = document.createElement('script');
-                    script.src = 'tracker-config.js';
-                    script.onload = () => {
-                        // Now we can access the DraftManager
-                        if (window.draftManager) {
-                            const drafts = window.draftManager.getDraftsArray();
-                            console.log(`Found ${drafts.length} drafts`);
+                    // Load utilities first
+                    const formatDateScript = document.createElement('script');
+                    formatDateScript.src = 'utils/formatDate.js';
+                    formatDateScript.onload = () => {
+                        // Then load tracker config
+                        const script = document.createElement('script');
+                        script.src = 'tracker-config.js';
+                        script.onload = () => {
+                            // Now we can access the DraftManager
+                            if (window.draftManager) {
+                                const drafts = window.draftManager.getDraftsArray();
+                                console.log(`Found ${drafts.length} drafts`);
 
-                            if (drafts.length === 0) {
-                                myDraftsSection.style.display = 'none';
-                                return;
+                                if (drafts.length === 0) {
+                                    myDraftsSection.style.display = 'none';
+                                    return;
+                                }
+
+                                // Show drafts section
+                                myDraftsSection.style.display = 'block';
+
+                                // Update the count badge
+                                if (draftsTotalCount) {
+                                    draftsTotalCount.textContent = drafts.length;
+                                }
+
+                                // Default to collapsed if there are drafts (but you can change this)
+                                // Since there are drafts, we'll leave it expanded by default
+                                // If you want it collapsed by default even with drafts, uncomment the next lines:
+                                // myDraftsSection.classList.add('collapsed');
+                                // document.getElementById('draftsToggle').innerHTML = '<i class="fas fa-chevron-right"></i>';
+
+                                // Populate drafts list
+                                draftsList.innerHTML = '';
+                                drafts.forEach(draft => {
+                                    const draftElement = createDraftElement(draft);
+                                    draftsList.appendChild(draftElement);
+                                });
                             }
-
-                            // Show drafts section
-                            myDraftsSection.style.display = 'block';
-
-                            // Update the count badge
-                            if (draftsTotalCount) {
-                                draftsTotalCount.textContent = drafts.length;
-                            }
-
-                            // Default to collapsed if there are drafts (but you can change this)
-                            // Since there are drafts, we'll leave it expanded by default
-                            // If you want it collapsed by default even with drafts, uncomment the next lines:
-                            // myDraftsSection.classList.add('collapsed');
-                            // document.getElementById('draftsToggle').innerHTML = '<i class="fas fa-chevron-right"></i>';
-
-                            // Populate drafts list
-                            draftsList.innerHTML = '';
-                            drafts.forEach(draft => {
-                                const draftElement = createDraftElement(draft);
-                                draftsList.appendChild(draftElement);
-                            });
-                        }
+                        };
+                        document.head.appendChild(script);
                     };
-                    document.head.appendChild(script);
+                    document.head.appendChild(formatDateScript);
                 } catch (error) {
                     console.error('Error loading drafts:', error);
                 }
