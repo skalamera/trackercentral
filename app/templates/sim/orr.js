@@ -326,14 +326,18 @@ module.exports = {
 
         // Add demo data functionality
         const demoDataHelper = new DemoDataHelper();
-        const demoButton = demoDataHelper.addDemoDataButton();
-        if (demoButton) {
-            // Store reference to this template configuration
-            const templateConfig = window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-orr'] || module.exports;
-            demoButton.addEventListener('click', () => {
-                console.log('Demo button clicked for SIM ORR template');
-                demoDataHelper.fillDemoData(templateConfig);
-            });
-        }
+
+        // Handle async addDemoDataButton
+        (async () => {
+            const demoButton = await demoDataHelper.addDemoDataButton();
+            if (demoButton) {
+                // Store reference to this template configuration
+                const templateConfig = window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-orr'] || module.exports;
+                demoButton.addEventListener('click', () => {
+                    console.log('Demo button clicked for sim-orr template');
+                    demoDataHelper.fillDemoData(templateConfig);
+                });
+            }
+        })();
     }
 };

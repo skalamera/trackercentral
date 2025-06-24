@@ -413,8 +413,49 @@ class DemoDataHelper {
     /**
      * Create and add demo data button to template
      */
-    addDemoDataButton(containerId = 'templateContainer') {
+    async addDemoDataButton(containerId = 'templateContainer') {
         console.log('[DemoDataHelper] Adding demo data button...');
+
+        // Check if the current user is authorized to see the demo button
+        try {
+            // Get the client from window.trackerApp or app.initialized
+            let client;
+            if (window.trackerApp && window.trackerApp.client) {
+                client = window.trackerApp.client;
+            } else if (typeof app !== 'undefined' && app.initialized) {
+                client = await app.initialized();
+            } else {
+                console.log('[DemoDataHelper] No client available, cannot check user authorization');
+                return null;
+            }
+
+            // Get logged in user data
+            const userData = await client.data.get("loggedInUser");
+            console.log('[DemoDataHelper] Current user data:', userData);
+
+            // Check if user is Steve Skalamera (by name or ID)
+            const authorizedUserId = 67036373043;
+            const authorizedUserName = "Steve Skalamera";
+
+            if (!userData || !userData.loggedInUser) {
+                console.log('[DemoDataHelper] No user data available');
+                return null;
+            }
+
+            const currentUser = userData.loggedInUser;
+            const isAuthorized = currentUser.id === authorizedUserId ||
+                currentUser.name === authorizedUserName;
+
+            if (!isAuthorized) {
+                console.log('[DemoDataHelper] User not authorized to see demo button');
+                return null;
+            }
+
+            console.log('[DemoDataHelper] User authorized, creating demo button');
+        } catch (error) {
+            console.error('[DemoDataHelper] Error checking user authorization:', error);
+            return null;
+        }
 
         // Check if button already exists
         if (document.getElementById('demoDataButton')) {

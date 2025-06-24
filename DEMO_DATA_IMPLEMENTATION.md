@@ -1,7 +1,20 @@
-# Demo Data Implementation Summary
+# Demo Data Implementation
+
+This document outlines the implementation of the demo data functionality for Tracker Central templates.
 
 ## Overview
-A comprehensive demo data system has been implemented across all templates in the `/app/templates` directory to enable quick and easy testing by filling in all form fields with realistic demo data.
+
+The demo data functionality allows authorized users to quickly populate form fields with sample data for testing purposes. This feature is restricted to specific authorized users for security reasons.
+
+## User Authorization
+
+The demo button is only visible to authorized users. Currently authorized:
+- **Name:** Steve Skalamera
+- **User ID:** 67036373043
+
+The authorization check is performed using the Freshworks API to get the logged-in user's information.
+
+## Components
 
 ## Implementation Details
 
@@ -88,12 +101,19 @@ Each template's `onLoad` function includes:
 ```javascript
 // Add demo data functionality
 const demoDataHelper = new DemoDataHelper();
-const demoButton = demoDataHelper.addDemoDataButton();
-if (demoButton) {
-    demoButton.addEventListener('click', () => {
-        demoDataHelper.fillDemoData(module.exports);
-    });
-}
+
+// Handle async addDemoDataButton
+(async () => {
+    const demoButton = await demoDataHelper.addDemoDataButton();
+    if (demoButton) {
+        // Store reference to this template configuration
+        const templateConfig = window.TRACKER_CONFIGS_FROM_TEMPLATES['template-name'] || module.exports;
+        demoButton.addEventListener('click', () => {
+            console.log('Demo button clicked for template-name template');
+            demoDataHelper.fillDemoData(templateConfig);
+        });
+    }
+})();
 ```
 
 ### Event Handling
