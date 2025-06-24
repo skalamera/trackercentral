@@ -516,8 +516,11 @@ module.exports = {
             const demoDataHelper = new DemoDataHelper();
             const demoButton = demoDataHelper.addDemoDataButton();
             if (demoButton) {
-                demoButton.addEventListener('click', () => {
-                    demoDataHelper.fillDemoData(module.exports);
+            // Store reference to this template configuration
+            const templateConfig = window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-assessment-reports'] || module.exports;
+            demoButton.addEventListener('click', () => {
+                    console.log('Demo button clicked for sim-assessment-reports template');
+                demoDataHelper.fillDemoData(templateConfig);
                 });
             }
         }

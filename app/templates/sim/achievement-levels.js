@@ -67,14 +67,15 @@ module.exports = {
                     placeholder: "Ex: <a href='https://onboarding-production.benchmarkuniverse.com/85066/dashboard' target='_blank'>https://onboarding-production.benchmarkuniverse.com/85066/dashboard</a>"
                 },
                 {
-                    id: "districtName", type: "text", label: "District Name", required: true,
+                    id: "districtNameDesc", type: "text", label: "District Name", required: true,
                     hint: "Auto-populates from original ticket and is uneditable.",
                     readOnly: true
                 },
                 {
-                    id: "districtState", type: "text", label: "District State", required: true,
+                    id: "districtStateDesc", type: "text", label: "District State", required: true,
                     hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located.<br>Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field, be sure to only use the state abbreviation.",
-                    placeholder: "Ex: FL"
+                    placeholder: "Ex: FL",
+                    readOnly: true
                 },
                 {
                     id: "dateRequested", type: "date", label: "Date Issue Reported", required: true,
@@ -109,8 +110,8 @@ module.exports = {
         description += `Username: ${fields.username || ''}<br>`;
         description += `Role: ${fields.userRole || ''}<br>`;
         description += `Realm (BURC Link): ${fields.realm || ''}<br>`;
-        description += `District Name: ${fields.districtName || ''}<br>`;
-        description += `District State: ${fields.districtState || ''}<br>`;
+        description += `District Name: ${fields.districtNameDesc || fields.districtName || ''}<br>`;
+        description += `District State: ${fields.districtStateDesc || fields.districtState || ''}<br>`;
         description += `Date Requested By Customer: ${formatDate(fields.dateRequested) || ''}<br>`;
         description += '<div style="margin-bottom: 20px;"></div>';
 
@@ -131,6 +132,45 @@ module.exports = {
 
         // Auto-populate district state
         populateDistrictState();
+
+        // Function to sync District Name and State from subject to description section
+        function syncDistrictFields() {
+            const subjectDistrictName = document.getElementById('districtName');
+            const descDistrictName = document.getElementById('districtNameDesc');
+            const subjectDistrictState = document.getElementById('districtState');
+            const descDistrictState = document.getElementById('districtStateDesc');
+
+            if (subjectDistrictName && descDistrictName) {
+                descDistrictName.value = subjectDistrictName.value;
+                console.log("Synced District Name to description section:", subjectDistrictName.value);
+            }
+
+            if (subjectDistrictState && descDistrictState) {
+                descDistrictState.value = subjectDistrictState.value;
+                console.log("Synced District State to description section:", subjectDistrictState.value);
+            }
+        }
+
+        // Set up event listeners for district field syncing
+        const districtNameField = document.getElementById('districtName');
+        const districtStateField = document.getElementById('districtState');
+
+        if (districtNameField) {
+            districtNameField.addEventListener('input', syncDistrictFields);
+            districtNameField.addEventListener('change', syncDistrictFields);
+        }
+
+        if (districtStateField) {
+            districtStateField.addEventListener('input', syncDistrictFields);
+            districtStateField.addEventListener('change', syncDistrictFields);
+        }
+
+        // Initial sync
+        syncDistrictFields();
+
+        // Also sync after a delay to ensure fields are populated from ticket data
+        setTimeout(syncDistrictFields, 500);
+        setTimeout(syncDistrictFields, 1000);
 
         // Initialize TemplateBase for subject line formatting
         const templateBase = new TemplateBase({
@@ -157,8 +197,11 @@ module.exports = {
         const demoDataHelper = new DemoDataHelper();
         const demoButton = demoDataHelper.addDemoDataButton();
         if (demoButton) {
+            // Store reference to this template configuration
+            const templateConfig = window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-achievement-levels'] || module.exports;
             demoButton.addEventListener('click', () => {
-                demoDataHelper.fillDemoData(module.exports);
+                console.log('Demo button clicked for sim-achievement-levels template');
+                demoDataHelper.fillDemoData(templateConfig);
             });
         }
     }

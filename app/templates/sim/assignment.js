@@ -375,8 +375,11 @@ module.exports = {
         const demoDataHelper = new DemoDataHelper();
         const demoButton = demoDataHelper.addDemoDataButton();
         if (demoButton) {
+            // Store reference to this template configuration
+            const templateConfig = window.TRACKER_CONFIGS_FROM_TEMPLATES['sim-assignment'] || module.exports;
             demoButton.addEventListener('click', () => {
-                demoDataHelper.fillDemoData(module.exports);
+                console.log('Demo button clicked for sim-assignment template');
+                demoDataHelper.fillDemoData(templateConfig);
             });
         }
     }

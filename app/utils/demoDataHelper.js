@@ -18,11 +18,11 @@ class DemoDataHelper {
             realm: "msemail",
             schoolName: "Thomas Jefferson Elementary",
             xcode: "X98765",
-            resource: "TRS",
-            resourceName: "TRS",
-            specificIssue: "Unit 5 Assessment Not Loading",
-            shortDescription: "Unable to Access Digital Resources",
-            shortDescriptionDetails: "Unable to Access Digital Resources",
+            resource: "ORR: Reading History",
+            resourceName: "Bookshelves",
+            specificIssue: "Student's Status Not Updating",
+            shortDescription: "Option to Select Whole Class to Share Bookshelves",
+            shortDescriptionDetails: "Option to Select Whole Class to Share Bookshelves",
             path: "G3>U5>W1>L15",
             pathField: "Advance -c2022 > TRS: G3>U5>W1>L15",
             gradesImpacted: "Grade 3",
@@ -32,13 +32,16 @@ class DemoDataHelper {
             studentInternalId: "12345678",
             BURCLink: "https://onboarding-production.benchmarkuniverse.com/85066/dashboard",
             customer_email: "jane.smith@fairfaxschools.org",
-            
+            assignmentId: "https://msemail.benchmarkuniverse.com/?#assignments/11569615",
+            harFileReason: "Not applicable for this test scenario",
+
             // Rich text fields
             issueDescription: "<p>Students are unable to access the Unit 5 assessment in the TRS. When clicking on the assessment link, the page loads indefinitely without displaying content. This is affecting all students in Grade 3.</p>",
-            stepsToReproduce: "<p>1. Log into student account<br>2. Navigate to TRS<br>3. Click on Grade 3<br>4. Select Unit 5<br>5. Click on Week 1 Assessment<br>6. Page fails to load</p>",
-            expectedResults: "<p>The Unit 5 assessment should load properly and display all questions for students to complete within the expected timeframe.</p>",
+            issueDetails: "<p>A student's status will not update even though they have submitted the ORR. The reading history shows incomplete status despite the student completing the oral reading exercise.</p>",
+            stepsToReproduce: "<p>1. Teacher dashboard<br>2. ORR<br>3. Click on student Jane Doe<br>4. Select Passage<br>5. Select \"No\" for microphone<br>6. Select \"next\" for passage, retell, comprehension, analysis, and summary<br>7. Submit ORR<br>8. Status remains incomplete</p>",
+            expectedResults: "<p>After submitting the ORR, the student's status should update from incomplete to complete in the reading history.</p>",
             actualResults: "<p>The assessment page shows a loading spinner indefinitely and never displays the actual assessment content. Students cannot proceed with their work.</p>",
-            additionalDetails: "<p>This issue started occurring on Monday morning and affects approximately 150 students across 6 different classes. Teachers have tried refreshing browsers and using different devices with the same result.</p>",
+            additionalDetails: "<p>User reports \"It would be extremely helpful if we had the option to select a class to share a bookshelf with, rather than having to select student by student.\"<br><br>This would save significant time when setting up classroom resources and would allow teachers to quickly share collections with all students at once.</p>",
             screenshotsDescription: "<p>Screenshots of the loading error have been attached showing the stuck loading state.</p>",
             summary: "<p>Students cannot access Grade 3 Unit 5 assessment in TRS - page loads indefinitely affecting 150+ students across multiple classes.</p>",
             summaryContent: "<p>Fairfax County Public Schools is requesting custom achievement levels.</p>",
@@ -46,7 +49,7 @@ class DemoDataHelper {
             issueDetails: "<p>Multiple teachers have reported that their Grade 3 students cannot access the Unit 5 Week 1 assessment. The issue appears to be system-wide affecting all classes using this specific assessment.</p>",
             components: "<p>TRS (Teacher Resource System) - eAssessment component</p>",
             subscriptionCodes: "<p>BEC Benchmark Advance 2022 (National Edition) Gr. 3 Classroom Digital<br>BEC Benchmark Advance 2022 (Virginia Edition) Gr. 3 Student Digital</p>",
-            
+
             // Select field options
             isVIP: "No",
             version: "2.75",
@@ -55,7 +58,28 @@ class DemoDataHelper {
             hasMultipleXcodes: "No",
             impactScope: "Both Teacher and Student",
             impactType: "Digital Only",
-            team: "SIM (Colleen Baker)"
+            team: "SIM (Colleen Baker)",
+
+            // Assembly specific
+            userType: "Digital Only",
+            programImpacted: "Reading",
+
+            // Additional fields
+            helpArticleName: "How to Use Oral Reading Records",
+            issue: "Session Timeout Extension Request",
+            timeoutLength: "8 Hours",
+            resourceXcode: "X14569",
+            resourceTitle: "Unit 5 Assessment (Gr. 2)",
+            summaryContent: "<p>Please see the BL Xcode removal request below.</p>",
+            effectiveDate: this.getTodayDate(),
+            assemblyCode: "X12345, X56789",
+
+            // Handle duplicate field IDs by populating both
+            districtNameDesc: "Fairfax County Public Schools",
+            districtStateDesc: "VA",
+
+            // Feature request specific field
+            applicationDetails: "Advance -c2022 • 2.75 Virginia"
         };
     }
 
@@ -82,7 +106,7 @@ class DemoDataHelper {
             case 'select':
                 return this.getSelectDemo(options);
             case 'richtext':
-                return "<p>Demo content for testing purposes - this field contains sample data to help with form validation and testing.</p>";
+                return this.getRichTextDemo(fieldId);
             default:
                 return "";
         }
@@ -92,7 +116,7 @@ class DemoDataHelper {
         const demos = {
             default: "Demo Text Value",
             districtName: "Sample School District",
-            schoolName: "Demo Elementary School", 
+            schoolName: "Demo Elementary School",
             username: "demo.user",
             name: "Demo User",
             xcode: "X12345",
@@ -105,7 +129,7 @@ class DemoDataHelper {
     getSelectDemo(options) {
         if (options && options.length > 1) {
             // Skip empty first option and loading options
-            const validOptions = options.filter(opt => 
+            const validOptions = options.filter(opt =>
                 opt && opt !== "" && opt !== "-- Loading from settings --"
             );
             if (validOptions.length > 0) {
@@ -115,16 +139,49 @@ class DemoDataHelper {
         return "";
     }
 
+    getRichTextDemo(fieldId) {
+        // Field-specific rich text content
+        const richTextDemos = {
+            issueDetails: this.demoData.issueDetails,
+            stepsToReproduce: this.demoData.stepsToReproduce,
+            expectedResults: this.demoData.expectedResults,
+            actualResults: this.demoData.actualResults,
+            additionalDetails: this.demoData.additionalDetails,
+            screenshotsDescription: this.demoData.screenshotsDescription,
+            summary: this.demoData.summary,
+            summaryContent: this.demoData.summaryContent,
+            issueSummary: this.demoData.issueSummary,
+            components: this.demoData.components,
+            subscriptionCodes: this.demoData.subscriptionCodes,
+
+            // Default content for fields not in demoData
+            scenario: "<p>1. Teacher logs into the system<br>2. Navigates to assessments section<br>3. Attempts to create custom assessment<br>4. System displays error message</p>",
+            featureDescription: "<p>Add ability to duplicate existing assessments with modifications. This would save significant time for teachers who need to create similar assessments for different classes.</p>",
+            businessCase: "<p>Teachers spend 30+ minutes recreating similar assessments. This feature would reduce that to 5 minutes, improving teacher efficiency and satisfaction.</p>",
+            default: "<p>This is sample content for testing purposes. Please replace with actual issue details.</p>"
+        };
+
+        return richTextDemos[fieldId] || richTextDemos.default;
+    }
+
     /**
      * Fill all form fields with demo data
      */
     fillDemoData(template) {
-        console.log("Filling demo data for template:", template.title);
-        
-        if (!template.sections) {
-            console.warn("Template has no sections to populate");
+        console.log("Filling demo data for template:", template);
+
+        if (!template || !template.sections) {
+            console.warn("Template has no sections to populate:", template);
             return;
         }
+
+        console.log(`Starting demo data fill for template: ${template.title || 'Unknown'}`);
+
+        // Small delay to ensure Quill editors are initialized
+        setTimeout(() => this.doFillDemoData(template), 100);
+    }
+
+    doFillDemoData(template) {
 
         let fieldsPopulated = 0;
 
@@ -132,8 +189,25 @@ class DemoDataHelper {
             if (section.fields) {
                 section.fields.forEach(field => {
                     if (field.type === 'hidden') return; // Skip hidden fields
-                    
-                    const element = document.getElementById(field.id);
+
+                    // Special handling for checkboxes
+                    if (field.type === 'checkboxes') {
+                        try {
+                            this.populateCheckboxField(field);
+                            fieldsPopulated++;
+                        } catch (error) {
+                            console.error(`Error populating checkbox field ${field.id}:`, error);
+                        }
+                        return;
+                    }
+
+                    // For richtext fields, the actual textarea might be hidden
+                    let element = document.getElementById(field.id);
+                    if (!element && field.type === 'richtext') {
+                        // Try to find the textarea that might be hidden
+                        element = document.querySelector(`textarea[id="${field.id}"]`);
+                    }
+
                     if (!element) {
                         console.warn(`Field element not found: ${field.id}`);
                         return;
@@ -159,6 +233,47 @@ class DemoDataHelper {
 
         // Trigger any field change events to update dependent fields
         this.triggerFieldUpdates();
+
+        // Force update of Quill editors one more time after all fields are populated
+        setTimeout(() => {
+            if (window.trackerApp && window.trackerApp.quillEditors) {
+                Object.entries(window.trackerApp.quillEditors).forEach(([fieldId, quill]) => {
+                    // Ensure the textarea value is synced with Quill content
+                    const textarea = document.getElementById(fieldId);
+                    if (textarea && textarea.value) {
+                        quill.emitter.emit('text-change');
+                    }
+                });
+            }
+        }, 200);
+    }
+
+    populateCheckboxField(field) {
+        if (field.id === 'userRole') {
+            const teachersCheckbox = document.querySelector('input[type="checkbox"][id="teachers"]');
+            if (teachersCheckbox) {
+                teachersCheckbox.checked = true;
+                teachersCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
+                console.log('✓ Checked Teachers checkbox for userRole');
+
+                // Trigger subject line update for SIM templates
+                if (window.trackerApp && window.trackerApp.updateSimAssignmentSubject) {
+                    setTimeout(() => window.trackerApp.updateSimAssignmentSubject(), 50);
+                }
+            } else {
+                console.warn('Teachers checkbox not found for userRole');
+            }
+        } else if (field.options && field.options.length > 0) {
+            // For other checkbox groups, check the first option
+            const firstOption = field.options[0];
+            const checkbox = document.querySelector(`input[type="checkbox"][id="${firstOption.id}"]`) ||
+                document.querySelector(`input[name="${field.id}"][value="${firstOption.id}"]`);
+            if (checkbox) {
+                checkbox.checked = true;
+                checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+                console.log(`✓ Checked checkbox for field: ${field.id}`);
+            }
+        }
     }
 
     populateField(field, element) {
@@ -191,29 +306,62 @@ class DemoDataHelper {
                 }
                 break;
 
-            case 'checkboxes':
-                if (field.options && field.options.length > 0) {
-                    // Check the first checkbox option
-                    const firstCheckbox = document.querySelector(`input[name="${field.id}"][value="${field.options[0].id}"]`);
-                    if (firstCheckbox) {
-                        firstCheckbox.checked = true;
-                        firstCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
-                    }
-                }
-                break;
+
 
             case 'richtext':
-                // Handle Quill editor
-                const quillContainer = element.closest('.ql-container');
-                if (quillContainer && window.Quill) {
-                    const quill = quillContainer.__quill || window.quillInstances?.[field.id];
-                    if (quill) {
+                console.log(`Processing richtext field: ${field.id}`);
+
+                // First try to get Quill from trackerApp
+                if (window.trackerApp && window.trackerApp.quillEditors) {
+                    console.log('Available Quill editors:', Object.keys(window.trackerApp.quillEditors));
+
+                    if (window.trackerApp.quillEditors[field.id]) {
+                        const quill = window.trackerApp.quillEditors[field.id];
                         const demoContent = this.getDemoValue(field.id, field.type);
+
+                        console.log(`Found Quill editor for ${field.id}, setting content:`, demoContent.substring(0, 50) + '...');
+
+                        // Set content in Quill editor
                         quill.root.innerHTML = demoContent;
-                        quill.history.clear();
+
+                        // Also update the hidden textarea that stores the value
+                        element.value = demoContent;
+
+                        // Trigger Quill's text-change event to update the textarea
+                        quill.emitter.emit('text-change');
+
+                        console.log(`✓ Populated Quill editor for field: ${field.id}`);
+                    } else {
+                        console.log(`Quill editor not found in trackerApp for field: ${field.id}`);
+                        // Try alternative methods...
+                        const editorElement = document.getElementById(`${field.id}Editor`);
+                        if (editorElement) {
+                            const qlEditor = editorElement.querySelector('.ql-editor');
+                            if (qlEditor) {
+                                const demoContent = this.getDemoValue(field.id, field.type);
+                                qlEditor.innerHTML = demoContent;
+
+                                // Update the hidden textarea
+                                element.value = demoContent;
+                                element.dispatchEvent(new Event('input', { bubbles: true }));
+
+                                console.log(`✓ Populated Quill editor via DOM for field: ${field.id}`);
+                            } else {
+                                console.warn(`Could not find Quill editor DOM for field: ${field.id}`);
+                                // Fallback to textarea
+                                element.value = this.getDemoValue(field.id, field.type);
+                                element.dispatchEvent(new Event('input', { bubbles: true }));
+                            }
+                        } else {
+                            console.warn(`No editor element found with ID: ${field.id}Editor`);
+                            // Fallback to textarea
+                            element.value = this.getDemoValue(field.id, field.type);
+                            element.dispatchEvent(new Event('input', { bubbles: true }));
+                        }
                     }
                 } else {
-                    // Fallback for regular textarea
+                    console.warn('window.trackerApp or quillEditors not available');
+                    // Fallback to textarea
                     element.value = this.getDemoValue(field.id, field.type);
                     element.dispatchEvent(new Event('input', { bubbles: true }));
                 }
@@ -230,7 +378,7 @@ class DemoDataHelper {
             // Trigger common update events
             const updateEvents = ['input', 'change'];
             const commonFields = ['districtName', 'districtState', 'application', 'version', 'versionState'];
-            
+
             commonFields.forEach(fieldId => {
                 const element = document.getElementById(fieldId);
                 if (element) {
@@ -244,6 +392,21 @@ class DemoDataHelper {
             if (window.templateBase && typeof window.templateBase.updateSubjectLine === 'function') {
                 window.templateBase.updateSubjectLine();
             }
+
+            // Also trigger subject line update through TemplateBase instances
+            if (window.TemplateBase) {
+                // Find any active template base instances and update their subject lines
+                document.querySelectorAll('[id$="formattedSubject"]').forEach(subjectField => {
+                    // Trigger change events on key fields to update subject line
+                    ['districtName', 'districtState', 'application', 'specificIssue'].forEach(fieldId => {
+                        const field = document.getElementById(fieldId);
+                        if (field) {
+                            field.dispatchEvent(new Event('input', { bubbles: true }));
+                            field.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    });
+                });
+            }
         }, 100);
     }
 
@@ -251,11 +414,12 @@ class DemoDataHelper {
      * Create and add demo data button to template
      */
     addDemoDataButton(containerId = 'templateContainer') {
-        const container = document.getElementById(containerId) || document.body;
-        
+        console.log('[DemoDataHelper] Adding demo data button...');
+
         // Check if button already exists
         if (document.getElementById('demoDataButton')) {
-            return;
+            console.log('[DemoDataHelper] Demo button already exists');
+            return document.getElementById('demoDataButton');
         }
 
         const button = document.createElement('button');
@@ -265,7 +429,7 @@ class DemoDataHelper {
         button.title = 'Fill all fields with demo data for testing';
         button.style.cssText = `
             position: fixed;
-            top: 20px;
+            top: 70px;
             right: 20px;
             z-index: 9999;
             background-color: #6c757d;
@@ -290,7 +454,19 @@ class DemoDataHelper {
             button.style.borderColor = '#6c757d';
         });
 
-        container.appendChild(button);
+        // Ensure DOM is ready before appending
+        if (document.body) {
+            document.body.appendChild(button);
+            console.log('[DemoDataHelper] Demo button added to page');
+        } else {
+            // If body not ready, wait for DOM
+            console.log('[DemoDataHelper] Waiting for DOM to be ready...');
+            document.addEventListener('DOMContentLoaded', () => {
+                document.body.appendChild(button);
+                console.log('[DemoDataHelper] Demo button added to page after DOM ready');
+            });
+        }
+
         return button;
     }
 }

@@ -184,7 +184,7 @@ class TemplateBase {
 
         // Get values from all defined fields
         if (this.fields && Object.keys(this.fields).length > 0) {
-            Object.entries(this.fields).forEach(([fieldName, fieldId]) => {
+            Object.entries(this.fields).forEach(([fieldName]) => {
                 values[fieldName] = this.getFieldValue(fieldName);
             });
         }
@@ -358,7 +358,6 @@ class TemplateBase {
      * Pattern: VIP * District Name • District State | DPT • Customized eAssessments - District Admin
      */
     formatDPTSubjectLine() {
-        const parts = [];
         const isVIP = this.getFieldValue('isVIP') === 'Yes';
         const districtName = this.getFieldValue('districtName');
         const districtState = this.getFieldValue('districtState');
@@ -392,7 +391,6 @@ class TemplateBase {
      * Pattern: VIP * District Name • District State | Issue or Standard District Name • District State | Issue
      */
     formatTimeoutExtensionSubjectLine() {
-        const parts = [];
         const isVIP = this.getFieldValue('isVIP') === 'Yes';
         const districtName = this.getFieldValue('districtName');
         const districtState = this.getFieldValue('districtState');
@@ -487,7 +485,7 @@ class TemplateBase {
 
     /**
      * Format Assembly subject line
-     * Pattern: Xcode (indicate if more than one) | VIP or Standard | Program Name • Variation National / State | Specific issue: grades impacted
+     * Pattern: Xcode (indicate if more than one) | [VIP if applicable] | Program Name • Variation National / State | Specific issue: grades impacted
      */
     formatAssemblySubjectLine() {
         const parts = [];
@@ -507,8 +505,10 @@ class TemplateBase {
         }
         if (xcodePart) parts.push(xcodePart);
 
-        // Second part: VIP or Standard (just the word, no district name)
-        parts.push(isVIP ? 'VIP' : 'Standard');
+        // Second part: Only add VIP if it's true, omit entirely if not VIP
+        if (isVIP) {
+            parts.push('VIP');
+        }
 
         // Third part: Program Name • Version State/National
         let programPart = application || '';
@@ -532,7 +532,7 @@ class TemplateBase {
 
     /**
      * Format Assembly Rollover subject line
-     * Pattern: VIP|Standard District Name • District State | Assembly Rollover
+     * Pattern: [VIP] District Name • District State | Assembly Rollover
      */
     formatAssemblyRolloverSubjectLine() {
         const parts = [];
@@ -540,14 +540,14 @@ class TemplateBase {
         const districtName = this.getFieldValue('districtName');
         const districtState = this.getFieldValue('districtState');
 
-        // Build district part with VIP/Standard prefix
+        // Build district part with VIP prefix only if VIP is true
         let districtPart = '';
         if (districtName && districtState) {
-            districtPart = isVIP ? `VIP ${districtName} • ${districtState}` : `Standard ${districtName} • ${districtState}`;
+            districtPart = isVIP ? `VIP ${districtName} • ${districtState}` : `${districtName} • ${districtState}`;
         } else if (districtName) {
-            districtPart = isVIP ? `VIP ${districtName}` : `Standard ${districtName}`;
+            districtPart = isVIP ? `VIP ${districtName}` : districtName;
         } else if (districtState) {
-            districtPart = isVIP ? `VIP ${districtState}` : `Standard ${districtState}`;
+            districtPart = isVIP ? `VIP ${districtState}` : districtState;
         }
 
         if (districtPart) parts.push(districtPart);
@@ -590,7 +590,6 @@ class TemplateBase {
      * Pattern: VIP* District Name • District State | Custom Achievement Levels or District Name • District State | Custom Achievement Levels
      */
     formatSIMAchievementLevelsSubjectLine() {
-        const parts = [];
         const districtName = this.getFieldValue('districtName');
         const districtState = this.getFieldValue('districtState');
 

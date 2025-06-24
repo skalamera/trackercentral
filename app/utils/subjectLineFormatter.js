@@ -123,8 +123,6 @@ class SubjectLineFormatter {
      * Helper to format path-based resource info (for SEDCUST)
      */
     formatPathBasedResource(resource, path, specificIssue) {
-        const parts = [];
-
         if (resource && path && specificIssue) {
             return `${resource}: ${path} - ${specificIssue}`;
         } else if (resource && path) {

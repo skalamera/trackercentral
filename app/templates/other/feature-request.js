@@ -116,7 +116,7 @@ module.exports = {
                     type: "text",
                     label: "Formatted Subject Line",
                     required: false,
-                    hint: "This will auto-populate based on your submissions. Be sure to review for accuracy.<br>Naming convention: VIP or Standard District Name • District State (Abv) | Program Name • Variation National / State | Resource • Specific issue for user role<br>Ex: VIP * FAIRFAX CO SCHOOL DIST• VA | Advance -c2022 • 2.75 Virginia | Bookshelves: • Option to Select Whole Class to Share Bookshelves",
+                    hint: "This will auto-populate based on your submissions. Be sure to review for accuracy.<br>Naming convention: VIP or Standard District Name • District State (Abv) | Program Name • Variation National / State | Resource • Specific issue for user role<br>Ex: VIP * FAIRFAX CO SCHOOL DIST • VA | Advance -c2022 • 2.75 Virginia | Bookshelves • Option to Select Whole Class to Share Bookshelves for Teachers",
                     readOnly: true
                 }
             ]
@@ -392,26 +392,7 @@ module.exports = {
             return originalGetFieldValue(fieldName);
         };
 
-        // Override formatting to handle the `: •` separator in resource
-        const originalFormatSIMSubjectLine = templateBase.formatSIMSubjectLine.bind(templateBase);
-        templateBase.formatSIMSubjectLine = function () {
-            const parts = originalFormatSIMSubjectLine();
 
-            // Fix the resource part to use `: •` separator if needed
-            for (let i = 0; i < parts.length; i++) {
-                const part = parts[i];
-                if (part && part.includes('•') && (part.includes(this.getFieldValue('resource')))) {
-                    // Check if this is the resource part and fix separator
-                    const resourceName = this.getFieldValue('resource');
-                    const shortDescription = this.getFieldValue('specificIssue');
-                    if (resourceName && shortDescription && part.includes(resourceName) && part.includes(shortDescription)) {
-                        parts[i] = part.replace(`${resourceName} • ${shortDescription}`, `${resourceName}: • ${shortDescription}`);
-                    }
-                }
-            }
-
-            return parts;
-        };
 
         // Set default date for Date Requested field to today
         const dateRequestedField = document.getElementById('dateRequested');
@@ -478,8 +459,11 @@ module.exports = {
         const demoDataHelper = new DemoDataHelper();
         const demoButton = demoDataHelper.addDemoDataButton();
         if (demoButton) {
+            // Store reference to this template configuration
+            const templateConfig = window.TRACKER_CONFIGS_FROM_TEMPLATES['feature-request'] || module.exports;
             demoButton.addEventListener('click', () => {
-                demoDataHelper.fillDemoData(module.exports);
+                console.log('Demo button clicked for feature-request template');
+                demoDataHelper.fillDemoData(templateConfig);
             });
         }
     }
