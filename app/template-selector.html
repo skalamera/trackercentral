@@ -91,17 +91,52 @@
         }
 
         .independence-day-banner {
-            text-align: center;
-            padding: 15px;
-            background: linear-gradient(90deg, #b22234, #ffffff, #3c3b6e);
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             animation: fadeIn 1s ease-in;
+            overflow: hidden;
+            background: #001f3f;
+            /* Dark blue background as fallback */
+            position: relative;
+            /* Force hardware acceleration for smoother rendering */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+            /* Ensure proper clipping on WebKit browsers */
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            mask-image: radial-gradient(white, black);
+        }
+
+        /* Apply rounded corners directly to the image */
+        .independence-day-banner img {
+            border-radius: 15px;
+            display: block;
+            width: 100%;
+            height: auto;
+            /* Additional rendering optimization */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: smooth;
+            /* Prevent subpixel rendering issues */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            /* Ensure the image respects the container's clipping */
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Alternative approach: use pseudo-element for smoother corners */
+        .independence-day-banner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #001f3f;
+            border-radius: 15px;
+            pointer-events: none;
+            z-index: 2;
         }
 
         @keyframes fadeIn {
@@ -710,9 +745,8 @@
                     const banner = document.createElement('div');
                     banner.className = 'independence-day-banner';
                     banner.innerHTML = `
-                        <i class="fas fa-flag-usa"></i> 
-                        🎆 Happy Independence Day! 🎆 
-                        <i class="fas fa-flag-usa"></i>
+                        <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1751273879/4thofjulybanner_ojdk7n.svg" 
+                             alt="Happy Independence Day!">
                     `;
                     container.insertBefore(banner, container.firstChild);
                 }
