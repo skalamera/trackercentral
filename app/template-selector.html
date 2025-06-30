@@ -12,6 +12,129 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Freshdesk Tracker Templates</title>
     <style>
+        /* 4th of July Fireworks Animation */
+        .fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .firework {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: explode 1.5s ease-out forwards;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .spark {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: sparkle 1.2s ease-out forwards;
+            box-shadow: 0 0 8px currentColor, 0 0 15px currentColor;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translate(var(--x), var(--y)) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--x), var(--y)) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        /* Independence Day Theme - Dark night sky background */
+        .independence-day-theme {
+            background: linear-gradient(180deg, #001f3f 0%, #0a2540 50%, #1a3a52 100%);
+        }
+
+        .independence-day-theme .navbar {
+            background: linear-gradient(90deg, #b22234 0%, #ffffff 50%, #3c3b6e 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* White title for Independence Day theme */
+        .independence-day-theme .navbar-title {
+            color: #ffffff !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+            font-size: 1.8em;
+            background: none;
+            -webkit-text-fill-color: unset;
+        }
+
+        .independence-day-banner {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(90deg, #b22234, #ffffff, #3c3b6e);
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section headers for Independence Day theme (dark mode only) */
+        .independence-day-theme .template-group .group-header {
+            background: linear-gradient(135deg, rgba(178, 34, 52, 0.3) 0%, rgba(60, 59, 110, 0.3) 100%);
+            border-left: 4px solid #b22234;
+        }
+
+        .independence-day-theme .template-group:nth-child(even) .group-header {
+            background: linear-gradient(135deg, rgba(60, 59, 110, 0.3) 0%, rgba(178, 34, 52, 0.3) 100%);
+            border-left: 4px solid #3c3b6e;
+        }
+
+        /* Ensure all text in headers is visible */
+        .independence-day-theme .template-group .group-header h2,
+        .independence-day-theme .template-group .group-header .template-count,
+        .independence-day-theme .template-group .group-header .toggle-icon {
+            color: #ffffff !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
         /* Add these styles in the head section */
         .navbar-item {
             transition: all 0.3s ease;
@@ -52,10 +175,22 @@
         #themeToggleBtn .dark-mode-text {
             color: #12344D !important;
         }
+
+        /* Disabled theme toggle during Independence Day */
+        .independence-day-theme #themeToggleBtn[disabled] {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .independence-day-theme #themeToggleBtn[disabled] i,
+        .independence-day-theme #themeToggleBtn[disabled] span {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
     </style>
 </head>
 
 <body>
+    <div class="fireworks-container" id="fireworksContainer"></div>
     <div class="container">
         <!-- New Navbar -->
         <nav class="navbar">
@@ -366,6 +501,9 @@
                         // Initialize drafts toggle
                         initDraftsToggle();
 
+                        // Check and apply Independence Day theme
+                        checkIndependenceDayTheme();
+
                         // Get current ticket details
                         client.data.get("ticket").then(function (ticketData) {
                             console.log("Retrieved ticket data:", ticketData);
@@ -461,6 +599,12 @@
 
             // Toggle between light and dark mode
             function toggleTheme() {
+                // Check if Independence Day theme is active
+                if (document.body.classList.contains('independence-day-theme')) {
+                    console.log('Theme switching disabled during Independence Day celebration');
+                    return;
+                }
+
                 const currentTheme = document.documentElement.getAttribute('data-theme');
                 const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
@@ -490,6 +634,165 @@
                         themeToggleBtn.title = 'Switch to Dark Mode';
                     }
                 }
+            }
+
+            // Check and apply Independence Day theme
+            function checkIndependenceDayTheme() {
+                // Check if Independence Day theme is enabled in settings
+                client.db.get('independenceDayThemeEnabled')
+                    .then(function (themeSetting) {
+                        let isEnabled = false;
+
+                        if (themeSetting !== null && themeSetting !== undefined) {
+                            if (typeof themeSetting === 'boolean') {
+                                isEnabled = themeSetting;
+                            } else if (typeof themeSetting === 'object' && themeSetting.enabled !== undefined) {
+                                isEnabled = themeSetting.enabled;
+                            }
+                        }
+
+                        console.log('Independence Day theme enabled:', isEnabled);
+
+                        if (isEnabled) {
+                            // Save current theme preference before forcing dark mode
+                            const currentTheme = document.documentElement.getAttribute('data-theme');
+                            if (currentTheme !== 'dark') {
+                                localStorage.setItem('theme-before-july4', currentTheme);
+                            }
+
+                            // Force dark mode for Independence Day theme
+                            document.documentElement.setAttribute('data-theme', 'dark');
+                            updateThemeIcon('dark');
+
+                            // Disable theme toggle button
+                            const themeToggleBtn = document.getElementById('themeToggleBtn');
+                            if (themeToggleBtn) {
+                                themeToggleBtn.disabled = true;
+                                themeToggleBtn.style.opacity = '0.5';
+                                themeToggleBtn.style.cursor = 'not-allowed';
+                                themeToggleBtn.title = 'Theme switching disabled during Independence Day celebration';
+                            }
+
+                            applyIndependenceDayTheme();
+                        } else {
+                            // Restore previous theme preference if Independence Day theme is disabled
+                            const previousTheme = localStorage.getItem('theme-before-july4');
+                            if (previousTheme) {
+                                document.documentElement.setAttribute('data-theme', previousTheme);
+                                updateThemeIcon(previousTheme);
+                                localStorage.removeItem('theme-before-july4');
+                            }
+
+                            // Re-enable theme toggle button
+                            const themeToggleBtn = document.getElementById('themeToggleBtn');
+                            if (themeToggleBtn) {
+                                themeToggleBtn.disabled = false;
+                                themeToggleBtn.style.opacity = '1';
+                                themeToggleBtn.style.cursor = 'pointer';
+                                themeToggleBtn.title = 'Toggle Dark Mode';
+                            }
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Error checking Independence Day theme setting:', error);
+                        // Don't apply theme if there's an error
+                    });
+            }
+
+            // Apply Independence Day theme and start fireworks
+            function applyIndependenceDayTheme() {
+                // Add theme class to body
+                document.body.classList.add('independence-day-theme');
+
+                // Add Independence Day banner
+                const container = document.querySelector('.container');
+                if (container) {
+                    const banner = document.createElement('div');
+                    banner.className = 'independence-day-banner';
+                    banner.innerHTML = `
+                        <i class="fas fa-flag-usa"></i> 
+                        🎆 Happy Independence Day! 🎆 
+                        <i class="fas fa-flag-usa"></i>
+                    `;
+                    container.insertBefore(banner, container.firstChild);
+                }
+
+                // Start fireworks animation
+                startFireworks();
+            }
+
+            // Create fireworks animation
+            function startFireworks() {
+                const colors = ['#ff0000', '#ffffff', '#0000ff', '#ffd700', '#ff69b4', '#00ff00'];
+                const fireworksContainer = document.getElementById('fireworksContainer');
+
+                if (!fireworksContainer) return;
+
+                // Create fireworks periodically
+                function createFirework() {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * (window.innerHeight * 0.6) + 50; // Upper 60% of screen, offset from top
+
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.left = x + 'px';
+                    firework.style.top = y + 'px';
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    firework.style.backgroundColor = color;
+                    firework.style.color = color;
+
+                    fireworksContainer.appendChild(firework);
+
+                    // Create explosion effect
+                    setTimeout(() => {
+                        // Create more sparks for bigger explosion
+                        for (let i = 0; i < 35; i++) {
+                            const spark = document.createElement('div');
+                            spark.className = 'spark';
+                            spark.style.left = x + 'px';
+                            spark.style.top = y + 'px';
+                            const sparkColor = colors[Math.floor(Math.random() * colors.length)];
+                            spark.style.backgroundColor = sparkColor;
+                            spark.style.color = sparkColor;
+
+                            // Random direction for each spark
+                            const angle = (Math.PI * 2 * i) / 35;
+                            const velocity = 80 + Math.random() * 150; // Increased velocity for bigger explosion
+                            const vx = Math.cos(angle) * velocity + (Math.random() - 0.5) * 40;
+                            const vy = Math.sin(angle) * velocity + (Math.random() - 0.5) * 40;
+
+                            spark.style.setProperty('--x', vx + 'px');
+                            spark.style.setProperty('--y', vy + 'px');
+
+                            fireworksContainer.appendChild(spark);
+
+                            // Remove spark after animation
+                            setTimeout(() => {
+                                spark.remove();
+                            }, 1200);
+                        }
+
+                        // Remove the original firework
+                        firework.remove();
+                    }, 300);
+                }
+
+                // Create initial burst of fireworks
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(createFirework, i * 150);
+                }
+
+                // Continue creating fireworks periodically with varied timing
+                setInterval(() => {
+                    createFirework();
+                    // Sometimes create multiple fireworks at once
+                    if (Math.random() > 0.6) {
+                        setTimeout(createFirework, 200);
+                    }
+                    if (Math.random() > 0.8) {
+                        setTimeout(createFirework, 400);
+                    }
+                }, 1500);
             }
 
             // Function to set up handlers without ticket data
@@ -874,8 +1177,9 @@
                 // Store trackers globally for the View All functionality
                 window.todayTrackers = trackers;
 
-                // Set the date
-                const formattedDate = new Date(date).toLocaleDateString('en-US', {
+                // Set the date - always use current date for "Today's Trackers"
+                const today = new Date();
+                const formattedDate = today.toLocaleDateString('en-US', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',

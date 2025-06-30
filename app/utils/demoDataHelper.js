@@ -396,7 +396,7 @@ class DemoDataHelper {
             // Also trigger subject line update through TemplateBase instances
             if (window.TemplateBase) {
                 // Find any active template base instances and update their subject lines
-                document.querySelectorAll('[id$="formattedSubject"]').forEach(subjectField => {
+                document.querySelectorAll('[id$="formattedSubject"]').forEach(() => {
                     // Trigger change events on key fields to update subject line
                     ['districtName', 'districtState', 'application', 'specificIssue'].forEach(fieldId => {
                         const field = document.getElementById(fieldId);
@@ -413,7 +413,7 @@ class DemoDataHelper {
     /**
      * Create and add demo data button to template
      */
-    async addDemoDataButton(containerId = 'templateContainer') {
+    async addDemoDataButton() {
         console.log('[DemoDataHelper] Adding demo data button...');
 
         // Check if the current user is authorized to see the demo button

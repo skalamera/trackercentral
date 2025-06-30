@@ -589,6 +589,36 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Theme Settings Section -->
+            <div class="settings-section">
+                <div class="section-header" onclick="toggleSection('theme-settings-section')">
+                    <h2><i class="fas fa-palette"></i> Theme Settings</h2>
+                    <div style="display: flex; align-items: center;">
+                        <span class="section-summary" id="theme-settings-summary"></span>
+                        <i class="fas fa-chevron-down collapse-icon collapsed" id="theme-settings-section-icon"></i>
+                    </div>
+                </div>
+                <div class="section-content collapsed" id="theme-settings-section">
+                    <p>Manage special theme settings for the application</p>
+
+                    <div style="margin-top: 15px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="independenceDayThemeToggle"
+                                style="width: 20px; height: 20px; cursor: pointer;">
+                            <span style="font-size: 16px; color: var(--text-color);">
+                                <i class="fas fa-flag-usa" style="color: #b22234; margin-right: 8px;"></i>
+                                Enable Independence Day Theme (4th of July Fireworks)
+                            </span>
+                        </label>
+                        <p
+                            style="margin-top: 10px; margin-left: 30px; font-size: 14px; color: var(--text-color); opacity: 0.8;">
+                            When enabled, displays patriotic colors and fireworks animation on the template selector
+                            page.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- SEDCUST SETTINGS -->
@@ -881,6 +911,11 @@
                         return JSON.parse(localValues);
                     }
                     return null;
+                }),
+                client.db.get('independenceDayThemeEnabled').catch(error => {
+                    console.error("Error loading Independence Day theme setting from Freshdesk DB:", error);
+                    // Default to disabled
+                    return { enabled: false };
                 })
             ]).then(function (results) {
                 const storedVersionValues = results[0];
@@ -889,6 +924,7 @@
                 const storedResourceValues = results[3];
                 const storedSimResourceValues = results[4];
                 const storedAllResourcesValues = results[5];
+                const storedIndependenceDayTheme = results[6];
 
                 let versionValues = [];
                 let locationValues = [];
@@ -1204,6 +1240,22 @@
                     }
                     teamsCheckbox.checked = isEnabled;
                     console.log("Loaded Teams notification setting:", storedTeamsNotification, "-> enabled:", isEnabled);
+                }
+
+                // Set Independence Day theme checkbox
+                const independenceDayCheckbox = document.getElementById('independenceDayThemeToggle');
+                if (independenceDayCheckbox) {
+                    // Handle both boolean and object formats for backward compatibility
+                    let isEnabled = false; // Default to disabled
+                    if (storedIndependenceDayTheme !== null && storedIndependenceDayTheme !== undefined) {
+                        if (typeof storedIndependenceDayTheme === 'boolean') {
+                            isEnabled = storedIndependenceDayTheme;
+                        } else if (typeof storedIndependenceDayTheme === 'object' && storedIndependenceDayTheme.enabled !== undefined) {
+                            isEnabled = storedIndependenceDayTheme.enabled;
+                        }
+                    }
+                    independenceDayCheckbox.checked = isEnabled;
+                    console.log("Loaded Independence Day theme setting:", storedIndependenceDayTheme, "-> enabled:", isEnabled);
                 }
 
                 // Render the dropdown values to the UI
@@ -2052,23 +2104,44 @@
 
         // Function to save all changes
         function saveChanges() {
+            // Array to store all save promises
+            const savePromises = [];
+
             // Save Teams notification setting
             const teamsCheckbox = document.getElementById('teamsNotificationEnabled');
             if (teamsCheckbox) {
                 const isEnabled = teamsCheckbox.checked;
                 const settingObject = { enabled: isEnabled };
-                client.db.set('teamsNotificationEnabled', settingObject)
-                    .then(() => {
-                        console.log(`Teams notification setting saved: ${isEnabled}`);
-                        showStatus("All changes have been saved to Freshdesk App storage and will be reflected for all users", true);
-                    })
-                    .catch(error => {
-                        console.error("Error saving Teams notification setting:", error);
-                        showStatus("Failed to save Teams notification setting. Other changes may have been saved.", false);
-                    });
-            } else {
-                showStatus("All changes have been saved to Freshdesk App storage and will be reflected for all users", true);
+                savePromises.push(
+                    client.db.set('teamsNotificationEnabled', settingObject)
+                        .then(() => {
+                            console.log(`Teams notification setting saved: ${isEnabled}`);
+                        })
+                );
             }
+
+            // Save Independence Day theme setting
+            const independenceDayCheckbox = document.getElementById('independenceDayThemeToggle');
+            if (independenceDayCheckbox) {
+                const isEnabled = independenceDayCheckbox.checked;
+                const settingObject = { enabled: isEnabled };
+                savePromises.push(
+                    client.db.set('independenceDayThemeEnabled', settingObject)
+                        .then(() => {
+                            console.log(`Independence Day theme setting saved: ${isEnabled}`);
+                        })
+                );
+            }
+
+            // Wait for all saves to complete
+            Promise.all(savePromises)
+                .then(() => {
+                    showStatus("All changes have been saved to Freshdesk App storage and will be reflected for all users", true);
+                })
+                .catch(error => {
+                    console.error("Error saving settings:", error);
+                    showStatus("Failed to save some settings. Please try again.", false);
+                });
         }
 
         // Function to show status message
@@ -2159,6 +2232,14 @@
             const teamsCheckbox = document.getElementById('teamsNotificationEnabled');
             if (teamsCheckbox) {
                 teamsCheckbox.addEventListener('change', function () {
+                    updateSectionSummaries();
+                });
+            }
+
+            // Independence Day theme checkbox change event
+            const independenceDayCheckbox = document.getElementById('independenceDayThemeToggle');
+            if (independenceDayCheckbox) {
+                independenceDayCheckbox.addEventListener('change', function () {
                     updateSectionSummaries();
                 });
             }
@@ -2552,6 +2633,13 @@
             const teamsSummary = document.getElementById('teams-summary');
             if (teamsSummary && teamsCheckbox) {
                 teamsSummary.textContent = teamsCheckbox.checked ? '(Enabled)' : '(Disabled)';
+            }
+
+            // Update Independence Day theme summary
+            const independenceDayCheckbox = document.getElementById('independenceDayThemeToggle');
+            const themeSummary = document.getElementById('theme-settings-summary');
+            if (themeSummary && independenceDayCheckbox) {
+                themeSummary.textContent = independenceDayCheckbox.checked ? '(Independence Day Enabled)' : '(Default Theme)';
             }
         }
 

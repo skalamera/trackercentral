@@ -735,9 +735,17 @@
 
                 // If this is a field that needs custom values, trigger the lookup after rendering
                 if (needsCustomValues) {
-                    // Use setTimeout to ensure the DOM is ready
+                    // Use setTimeout to ensure the DOM is ready and TrackerApp is initialized
                     setTimeout(() => {
-                        getCustomDropdownValues(field.id);
+                        // Check if trackerApp exists before calling the function
+                        if (window.trackerApp && window.trackerApp.client) {
+                            getCustomDropdownValues(field.id);
+                        } else {
+                            // If not ready yet, try again later
+                            setTimeout(() => {
+                                getCustomDropdownValues(field.id);
+                            }, 1000);
+                        }
                     }, 100);
                 }
             });
@@ -1006,6 +1014,9 @@
             async init() {
                 try {
                     console.log('Initializing TrackerApp');
+
+                    // XLSX loading removed - now generating text reports instead
+
                     await this.initClient();
 
                     // Move debugDistrictFields to the end
@@ -4841,7 +4852,17 @@
                 // Check for HAR file in all SIM templates
                 const hasHarFile = this.trackerType.startsWith('sim-') && this.harFile;
 
+                console.log('Checking for attachments to upload:', {
+                    hasScreenshots,
+                    screenshotCount: this.aggregatedScreenshotFiles ? this.aggregatedScreenshotFiles.length : 0,
+                    hasHarFile,
+                    harFileName: this.harFile ? this.harFile.name : 'No HAR file',
+                    trackerType: this.trackerType,
+                    shouldUploadAttachments: hasScreenshots || hasHarFile
+                });
+
                 if (hasScreenshots || hasHarFile) {
+                    console.log('Adding attachments upload task for ticket:', ticketData.id);
                     processingTasks.push(this.addAttachmentsAsNote(ticketData.id));
                 }
 
@@ -6607,6 +6628,8 @@
             // Add a new method specifically for handling HAR file inputs
             handleHarFileInputChange(e) {
                 const file = e.target.files[0];
+                console.log('HAR file input changed, file:', file ? file.name : 'No file');
+
                 if (!file) return;
 
                 // Use the unique preview container ID
@@ -6671,80 +6694,80 @@
                         thumbnail.className = 'screenshot-thumbnail har-preview-container' + (!isValidHar ? ' invalid-har' : '');
                         thumbnail.style.width = '100%';
                         thumbnail.style.maxWidth = '100%';
-                        thumbnail.style.backgroundColor = '#f8f9fa';
+                        thumbnail.style.backgroundColor = 'var(--card-bg, #f8f9fa)';
                         thumbnail.style.borderRadius = '5px';
                         thumbnail.style.padding = '15px';
-                        thumbnail.style.border = '1px solid #dee2e6';
-                        thumbnail.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+                        thumbnail.style.border = '1px solid var(--card-border, #dee2e6)';
+                        thumbnail.style.boxShadow = '0 1px 3px var(--shadow-color, rgba(0,0,0,0.1))';
 
                         // Create thumbnail content with enhanced styling
                         if (isValidHar) {
                             thumbnail.innerHTML = `
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                                     <div style="display: flex; align-items: center; max-width: 85%;">
-                                        <div class="file-preview" style="margin-right: 10px; background-color: #e9ecef; padding: 10px; border-radius: 5px; display: flex; justify-content: center; align-items: center; width: 40px; height: 40px;">
-                                            <i class="fas fa-file-code" style="font-size: 20px; color: #2C3E50;"></i>
+                                        <div class="file-preview" style="margin-right: 10px; background-color: var(--hover-bg, #e9ecef); padding: 10px; border-radius: 5px; display: flex; justify-content: center; align-items: center; width: 40px; height: 40px;">
+                                            <i class="fas fa-file-code" style="font-size: 20px; color: var(--heading-color, #2C3E50);"></i>
                                         </div>
                                         <div style="overflow: hidden;">
-                                            <div class="screenshot-filename" style="font-weight: bold; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: initial; word-break: break-word;">${file.name}</div>
-                                            <div style="font-size: 12px; color: #666; text-align: center;">${harAnalysis.date || 'Unknown date'} · ${this.formatFileSize(file.size)}</div>
+                                            <div class="screenshot-filename" style="font-weight: bold; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: initial; word-break: break-word; color: var(--text-color, #333);">${file.name}</div>
+                                            <div style="font-size: 12px; color: var(--secondary-text, #666); text-align: center;">${harAnalysis.date || 'Unknown date'} · ${this.formatFileSize(file.size)}</div>
                                         </div>
                                     </div>
                                     <div class="har-remove" data-filename="${file.name}" style="cursor: pointer; font-size: 20px; color: #dc3545; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; border-radius: 50%; background-color: #f8d7da; margin-left: 10px;">×</div>
                                 </div>
 
-                                <div style="background-color: white; border-radius: 4px; padding: 15px; border: 1px solid #eee; margin-bottom: 15px;">
-                                    <h4 style="margin-top: 0; margin-bottom: 10px; color: #2C3E50; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">HAR File Overview</h4>
+                                <div style="background-color: var(--input-bg, white); border-radius: 4px; padding: 15px; border: 1px solid var(--input-border, #eee); margin-bottom: 15px;">
+                                    <h4 style="margin-top: 0; margin-bottom: 10px; color: var(--heading-color, #2C3E50); font-size: 16px; border-bottom: 1px solid var(--input-border, #eee); padding-bottom: 5px;">HAR File Overview</h4>
                                     
                                     <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
-                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 18px; font-weight: bold;">${harAnalysis.totalRequests}</div>
-                                            <div style="font-size: 11px; color: #666;">Total Requests</div>
+                                        <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
+                                            <div style="font-size: 18px; font-weight: bold; color: var(--text-color, #333);">${harAnalysis.totalRequests}</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Total Requests</div>
                                         </div>
                                         
-                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 18px; font-weight: bold; color: ${harAnalysis.errorCount > 0 ? '#dc3545' : '#333'};">${harAnalysis.errorCount}</div>
-                                            <div style="font-size: 11px; color: #666;">Errors</div>
+                                        <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
+                                            <div style="font-size: 18px; font-weight: bold; color: ${harAnalysis.errorCount > 0 ? '#dc3545' : 'var(--text-color, #333)'};">${harAnalysis.errorCount}</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Errors</div>
                                         </div>
                                         
-                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 18px; font-weight: bold; color: ${harAnalysis.redirectCount > 0 ? '#007bff' : '#333'};">${harAnalysis.redirectCount}</div>
-                                            <div style="font-size: 11px; color: #666;">Redirects</div>
+                                        <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
+                                            <div style="font-size: 18px; font-weight: bold; color: ${harAnalysis.redirectCount > 0 ? '#007bff' : 'var(--text-color, #333)'};">${harAnalysis.redirectCount}</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Redirects</div>
                                         </div>
                                         
-                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-                                            <div style="font-size: 18px; font-weight: bold; color: ${harAnalysis.slowRequests && harAnalysis.slowRequests.length > 0 ? '#fd7e14' : '#333'};">${harAnalysis.slowRequests ? harAnalysis.slowRequests.length : 0}</div>
-                                            <div style="font-size: 11px; color: #666;">Slow Requests</div>
+                                        <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
+                                            <div style="font-size: 18px; font-weight: bold; color: ${harAnalysis.slowRequests && harAnalysis.slowRequests.length > 0 ? '#fd7e14' : 'var(--text-color, #333)'};">${harAnalysis.slowRequests ? harAnalysis.slowRequests.length : 0}</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Slow Requests</div>
                                         </div>
                                         
                                         ${harAnalysis.whitelistIssues && harAnalysis.whitelistIssues.count > 0 ? `
-                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                        <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
                                             <div style="font-size: 18px; font-weight: bold; color: #dc3545;">${harAnalysis.whitelistIssues.count}</div>
-                                            <div style="font-size: 11px; color: #666;">Possible Whitelist Issues</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Possible Whitelist Issues</div>
                                         </div>
                                         ` : ''}
                                         
                                         ${harAnalysis.browserErrors && harAnalysis.browserErrors.count > 0 ? `
-                                        <div style="flex: 1; background-color: #f8f9fa; border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                        <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
                                             <div style="font-size: 18px; font-weight: bold; color: #dc3545;">${harAnalysis.browserErrors.count}</div>
-                                            <div style="font-size: 11px; color: #666;">Browser Errors</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Browser Errors</div>
                                         </div>
                                         ` : ''}
                                     </div>
                                     
                                     <div style="display: flex; flex-wrap: wrap; gap: 10px;">
                                         <div style="flex: 1; min-width: 120px;">
-                                            <div style="font-size: 12px;"><strong>Browser:</strong> ${harAnalysis.browser}</div>
-                                            <div style="font-size: 12px;"><strong>Avg Response:</strong> ${Math.round(harAnalysis.avgResponseTime)}ms</div>
+                                            <div style="font-size: 12px; color: var(--text-color, #333);"><strong>Browser:</strong> ${harAnalysis.browser}</div>
+                                            <div style="font-size: 12px; color: var(--text-color, #333);"><strong>Avg Response:</strong> ${Math.round(harAnalysis.avgResponseTime)}ms</div>
                                         </div>
                                         <div style="flex: 1; min-width: 120px;">
-                                            <div style="font-size: 12px;"><strong>Total Size:</strong> ${this.formatFileSize(harAnalysis.totalSize)}</div>
-                                            <div style="font-size: 12px;"><strong>Total Time:</strong> ${Math.round(harAnalysis.totalRequestTime)}ms</div>
+                                            <div style="font-size: 12px; color: var(--text-color, #333);"><strong>Total Size:</strong> ${this.formatFileSize(harAnalysis.totalSize)}</div>
+                                            <div style="font-size: 12px; color: var(--text-color, #333);"><strong>Total Time:</strong> ${Math.round(harAnalysis.totalRequestTime)}ms</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div style="font-size: 12px; color: #666; text-align: center;">
+                                <div style="font-size: 12px; color: var(--secondary-text, #666); text-align: center;">
                                     <i class="fas fa-info-circle"></i> A detailed HAR analysis report will be included with the ticket
                                 </div>
                             `;
@@ -6753,12 +6776,12 @@
                             thumbnail.innerHTML = `
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                                     <div style="display: flex; align-items: center; max-width: 85%;">
-                                        <div class="file-preview" style="margin-right: 10px; background-color: #e9ecef; padding: 10px; border-radius: 5px; display: flex; justify-content: center; align-items: center; width: 40px; height: 40px;">
-                                            <i class="fas fa-file-code" style="font-size: 20px; color: #2C3E50;"></i>
+                                        <div class="file-preview" style="margin-right: 10px; background-color: var(--hover-bg, #e9ecef); padding: 10px; border-radius: 5px; display: flex; justify-content: center; align-items: center; width: 40px; height: 40px;">
+                                            <i class="fas fa-file-code" style="font-size: 20px; color: var(--heading-color, #2C3E50);"></i>
                                         </div>
                                         <div style="overflow: hidden;">
-                                            <div class="screenshot-filename" style="font-weight: bold; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: initial; word-break: break-word;">${file.name}</div>
-                                            <div style="font-size: 12px; color: #666; text-align: center;">${this.formatFileSize(file.size)}</div>
+                                            <div class="screenshot-filename" style="font-weight: bold; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: initial; word-break: break-word; color: var(--text-color, #333);">${file.name}</div>
+                                            <div style="font-size: 12px; color: var(--secondary-text, #666); text-align: center;">${this.formatFileSize(file.size)}</div>
                                         </div>
                                     </div>
                                     <div class="har-remove" data-filename="${file.name}" style="cursor: pointer; font-size: 20px; color: #dc3545; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; border-radius: 50%; background-color: #f8d7da; margin-left: 10px;">×</div>
@@ -7383,6 +7406,15 @@
                 const hasScreenshots = this.aggregatedScreenshotFiles && this.aggregatedScreenshotFiles.length > 0;
                 const hasHarFile = this.trackerType.startsWith('sim-') && this.harFile;
 
+                console.log('addAttachmentsAsNote called:', {
+                    ticketId,
+                    hasScreenshots,
+                    screenshotCount: this.aggregatedScreenshotFiles ? this.aggregatedScreenshotFiles.length : 0,
+                    hasHarFile,
+                    harFileName: this.harFile ? this.harFile.name : 'No HAR file',
+                    trackerType: this.trackerType
+                });
+
                 if (!hasScreenshots && !hasHarFile) {
                     return Promise.resolve(); // Nothing to do
                 }
@@ -7409,6 +7441,7 @@
                     // Handle HAR file separately if present (as a private note)
                     if (hasHarFile) {
                         console.log('Processing HAR file separately:', this.harFile.name);
+                        console.log('HAR file analysis available:', !!this.harFileAnalysis);
                         if (loadingText && !hasScreenshots) {
                             loadingText.textContent = `Preparing HAR file attachment...`;
                         }
@@ -7468,23 +7501,59 @@
                         const analysis = this.harFileAnalysis;
                         const fileName = files[0].name;
 
+                        console.log('Processing HAR file analysis for Excel generation:', {
+                            fileName: fileName,
+                            analysisAvailable: !!this.harFileAnalysis,
+                            totalRequests: this.harFileAnalysis.totalRequests
+                        });
+
                         // Get total errors (client + server errors + browser errors)
                         const totalErrors = (analysis.statusCodes.clientError.count || 0) +
                             (analysis.statusCodes.serverError.count || 0) +
                             (analysis.browserErrors && analysis.browserErrors.count || 0);
 
-                        // Create a styled HAR analysis note with title, red error count, and note about PDF
-                        noteBody = `
+                        // Create initial note body
+                        let initialNoteBody = `
 <div style="font-weight: bold; color: #2C3E50;">HAR File Analysis</div>
-<div style="font-weight: bold; color: ${totalErrors > 0 ? '#dc3545' : '#333'};">Errors Identified: ${totalErrors}</div>
-<div style="margin-top: 8px; font-size: 12px; color: #666;">View the complete analysis details in the attached Excel report.</div>`;
+<div style="font-weight: bold; color: ${totalErrors > 0 ? '#dc3545' : '#333'};">Errors Identified: ${totalErrors}</div>`;
 
                         // Generate Excel report with full analysis and get the file object
-                        const excelFile = await this.generateHarAnalysisExcel(analysis, fileName);
+                        try {
+                            console.log('Attempting to generate analysis report...');
+                            const reportFile = await this.generateHarAnalysisReport(analysis, fileName);
 
-                        // Add the Excel file to the files array if it was successfully created
-                        if (excelFile) {
-                            files.push(excelFile);
+                            // Add the report file to the files array if it was successfully created
+                            if (reportFile) {
+                                files.push(reportFile);
+                                const fileType = reportFile.name.endsWith('.xlsx') ? 'Excel' : 'text summary';
+                                console.log(`${fileType} report generated and added to attachments, files count:`, files.length);
+
+                                // Update note body based on file type
+                                if (reportFile.name.endsWith('.xlsx')) {
+                                    noteBody = initialNoteBody + `
+<div style="margin-top: 8px; font-size: 12px; color: #666;">Excel analysis report is attached.</div>`;
+                                } else {
+                                    noteBody = initialNoteBody + `
+<div style="margin-top: 8px; font-size: 12px; color: #666;">Text summary is attached. Use the HAR File Analyzer sidebar app for a detailed Excel report.</div>`;
+                                }
+                            } else {
+                                console.warn('Report file generation returned null');
+                                // Update note body to indicate generation failed
+                                noteBody = initialNoteBody + `
+<div style="margin-top: 8px; font-size: 12px; color: #666;">Analysis report could not be generated. Use the HAR File Analyzer sidebar app in this ticket to generate the report.</div>`;
+                            }
+                        } catch (excelError) {
+                            console.error('Failed to generate analysis report:', excelError);
+                            // Continue without the report file - the HAR file will still be attached
+
+                            // Update the note body to indicate generation failed
+                            noteBody = initialNoteBody + `
+<div style="margin-top: 8px; font-size: 12px; color: #666;">Analysis report could not be generated. The HAR file is attached for manual analysis.</div>`;
+                        }
+                    } else {
+                        // No HAR analysis available, just set the basic note body
+                        if (!noteBody) {
+                            noteBody = 'HAR file attached';
                         }
                     }
 
@@ -7634,8 +7703,10 @@
                 return html;
             }
 
-            // New method to generate a PDF report of the HAR file analysis
-            async generateHarAnalysisExcel(analysis, fileName) {
+            // DISABLED: This was attempting to generate a PDF but was incorrectly named and has a bug at the end
+            // It tries to use XLSX.write(wb, ...) but wb is never defined
+            // The correct Excel generation method is below
+            async generateHarAnalysisPDF_DISABLED(analysis, fileName) {
                 try {
                     // Include jsPDF library if not already included
                     if (!window.jspdf) {
@@ -8946,206 +9017,171 @@
                 return '';
             }
 
-            async generateHarAnalysisExcel(analysis, fileName) {
+            async generateHarAnalysisReport(analysis, fileName) {
+                console.log('generateHarAnalysisReport called with:', {
+                    fileName,
+                    analysisAvailable: !!analysis,
+                    totalRequests: analysis ? analysis.totalRequests : 0
+                });
+
                 try {
-                    // Include SheetJS library if not already included
-                    if (!window.XLSX) {
-                        await new Promise((resolve, reject) => {
-                            const script = document.createElement('script');
-                            script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
-                            script.onload = resolve;
-                            script.onerror = reject;
-                            document.head.appendChild(script);
-                        });
-                    }
+                    console.log('Creating detailed text report instead of Excel');
 
-                    // Create a workbook with multiple sheets
-                    const wb = window.XLSX.utils.book_new();
+                    // Create a comprehensive text report with all analysis details
+                    let textReport = `HAR ANALYSIS DETAILED REPORT
+========================================
+Generated: ${new Date().toLocaleString()}
+File: ${fileName}
+Date: ${analysis.date || 'Unknown'}
 
-                    // Add summary sheet
-                    const summaryData = [
-                        ['HAR Analysis Summary'],
-                        [],
-                        ['Metric', 'Value'],
-                        ['Total Requests', analysis.totalRequests || 0],
-                        ['Successful Requests', analysis.statusCodes.success.count || 0],
-                        ['Redirects', analysis.statusCodes.redirect.count || 0],
-                        ['Client Errors', analysis.statusCodes.clientError.count || 0],
-                        ['Server Errors', analysis.statusCodes.serverError.count || 0],
-                        ['Browser-Level Errors', analysis.browserErrors ? analysis.browserErrors.count : 0],
-                        ['Possible Whitelist Issues', analysis.whitelistIssues ? analysis.whitelistIssues.count : 0],
-                        ['Total Issues', (analysis.statusCodes.clientError.count || 0) +
-                            (analysis.statusCodes.serverError.count || 0) +
-                            (analysis.statusCodes.redirect.count || 0) +
-                            (analysis.browserErrors ? analysis.browserErrors.count : 0)],
-                        ['Average Response Time (ms)', Math.round(analysis.avgResponseTime || 0)],
-                        ['Slow Requests', analysis.slowRequests ? analysis.slowRequests.length : 0],
-                        ['Total Size', this.formatFileSize(analysis.totalSize || 0)],
-                        ['Browser', analysis.browser || 'Unknown']
-                    ];
+SUMMARY
+========================================
+Total Requests: ${analysis.totalRequests || 0}
+Successful Requests (2xx): ${analysis.statusCodes.success.count || 0}
+Redirects (3xx): ${analysis.statusCodes.redirect.count || 0}
+Client Errors (4xx): ${analysis.statusCodes.clientError.count || 0}
+Server Errors (5xx): ${analysis.statusCodes.serverError.count || 0}
+Browser-Level Errors: ${analysis.browserErrors ? analysis.browserErrors.count : 0}
+Possible Whitelist Issues: ${analysis.whitelistIssues ? analysis.whitelistIssues.count : 0}
+Total Issues: ${(analysis.statusCodes.clientError.count || 0) + (analysis.statusCodes.serverError.count || 0) + (analysis.browserErrors ? analysis.browserErrors.count : 0) + (analysis.whitelistIssues ? analysis.whitelistIssues.count : 0)}
 
-                    const summaryWs = window.XLSX.utils.aoa_to_sheet(summaryData);
-                    window.XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
+PERFORMANCE METRICS
+========================================
+Average Response Time: ${Math.round(analysis.avgResponseTime || 0)}ms
+Max Response Time: ${Math.round(analysis.maxResponseTime.time || 0)}ms
+Total Request Time: ${Math.round(analysis.totalRequestTime || 0)}ms
+Slow Requests (>2s): ${analysis.slowRequests ? analysis.slowRequests.length : 0}
+Total Size: ${this.formatFileSize(analysis.totalSize || 0)}
+Browser: ${analysis.browser || 'Unknown'}
+`;
 
-                    // Add all requests sheet
-                    let allRequests = [];
-                    allRequests.push(['URL', 'Method', 'Status', 'Time (ms)', 'Size', 'Error']);
-
-                    // Combine all items from different status code categories
-                    let allItems = [];
-                    if (analysis.statusCodes) {
-                        if (analysis.statusCodes.success && analysis.statusCodes.success.items) {
-                            allItems = allItems.concat(analysis.statusCodes.success.items);
-                        }
-                        if (analysis.statusCodes.redirect && analysis.statusCodes.redirect.items) {
-                            allItems = allItems.concat(analysis.statusCodes.redirect.items);
-                        }
-                        if (analysis.statusCodes.clientError && analysis.statusCodes.clientError.items) {
-                            allItems = allItems.concat(analysis.statusCodes.clientError.items);
-                        }
-                        if (analysis.statusCodes.serverError && analysis.statusCodes.serverError.items) {
-                            allItems = allItems.concat(analysis.statusCodes.serverError.items);
-                        }
-                    }
-
-                    // Add all requests to the sheet
-                    allItems.forEach(item => {
-                        allRequests.push([
-                            item.url,
-                            item.method,
-                            item.status,
-                            item.time || 0,
-                            item.size ? this.formatFileSize(item.size) : '0 B',
-                            '' // No error for these standard requests
-                        ]);
-                    });
-
-                    const requestsWs = window.XLSX.utils.aoa_to_sheet(allRequests);
-                    window.XLSX.utils.book_append_sheet(wb, requestsWs, 'All Requests');
-
-                    // Add browser errors sheet if any
+                    // Add browser errors section if any
                     if (analysis.browserErrors && analysis.browserErrors.count > 0 && analysis.browserErrors.items.length > 0) {
-                        const browserErrorsData = [['URL', 'Method', 'Error Type']];
-                        analysis.browserErrors.items.forEach(item => {
-                            browserErrorsData.push([
-                                item.url,
-                                item.method || 'GET',
-                                item.error || 'Unknown Error'
-                            ]);
+                        textReport += `\n\nBROWSER-LEVEL ERRORS (${analysis.browserErrors.count})
+========================================\n`;
+                        analysis.browserErrors.items.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method || 'GET'} ${item.url}
+   Error: ${item.error || 'Unknown Error'}
+   ----------------------------------------\n`;
                         });
-                        const browserErrorsWs = window.XLSX.utils.aoa_to_sheet(browserErrorsData);
-                        window.XLSX.utils.book_append_sheet(wb, browserErrorsWs, 'Browser Errors');
                     }
 
-                    // Add client errors sheet if any
-                    const clientErrors = analysis.statusCodes.clientError.count || 0;
-                    if (clientErrors > 0) {
-                        const clientErrorsData = [['URL', 'Method', 'Status', 'Time (ms)']];
-                        analysis.statusCodes.clientError.items.forEach(item => {
-                            clientErrorsData.push([
-                                item.url,
-                                item.method,
-                                item.status,
-                                item.time || 0
-                            ]);
+                    // Add client errors section if any
+                    if (analysis.statusCodes.clientError.count > 0 && analysis.statusCodes.clientError.items) {
+                        textReport += `\n\nCLIENT ERRORS (4xx) - ${analysis.statusCodes.clientError.count} Total
+========================================\n`;
+                        analysis.statusCodes.clientError.items.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method} ${item.url}
+   Status: ${item.status}
+   Time: ${item.time || 0}ms
+   ----------------------------------------\n`;
                         });
-                        const clientErrorsWs = window.XLSX.utils.aoa_to_sheet(clientErrorsData);
-                        window.XLSX.utils.book_append_sheet(wb, clientErrorsWs, 'Client Errors');
                     }
 
-                    // Add server errors sheet if any
-                    const serverErrors = analysis.statusCodes.serverError.count || 0;
-                    if (serverErrors > 0) {
-                        const serverErrorsData = [['URL', 'Method', 'Status', 'Time (ms)']];
-                        analysis.statusCodes.serverError.items.forEach(item => {
-                            serverErrorsData.push([
-                                item.url,
-                                item.method,
-                                item.status,
-                                item.time || 0
-                            ]);
+                    // Add server errors section if any
+                    if (analysis.statusCodes.serverError.count > 0 && analysis.statusCodes.serverError.items) {
+                        textReport += `\n\nSERVER ERRORS (5xx) - ${analysis.statusCodes.serverError.count} Total
+========================================\n`;
+                        analysis.statusCodes.serverError.items.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method} ${item.url}
+   Status: ${item.status}
+   Time: ${item.time || 0}ms
+   ----------------------------------------\n`;
                         });
-                        const serverErrorsWs = window.XLSX.utils.aoa_to_sheet(serverErrorsData);
-                        window.XLSX.utils.book_append_sheet(wb, serverErrorsWs, 'Server Errors');
                     }
 
-                    // Add redirects sheet - always include this sheet
-                    const redirectsData = [['URL', 'Method', 'Status', 'Time (ms)', 'Redirect Target', 'Redirect Type']];
-
+                    // Add redirects section if any
                     if (analysis.statusCodes.redirect && analysis.statusCodes.redirect.count > 0 && analysis.statusCodes.redirect.items) {
-                        analysis.statusCodes.redirect.items.forEach(item => {
-                            redirectsData.push([
-                                item.url,
-                                item.method,
-                                item.status,
-                                item.time || 0,
-                                item.to || '',
-                                this.getRedirectTypeDescription(item.status)
-                            ]);
+                        textReport += `\n\nREDIRECTS (3xx) - ${analysis.statusCodes.redirect.count} Total
+========================================\n`;
+                        analysis.statusCodes.redirect.items.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method} ${item.url}
+   Status: ${item.status} (${this.getRedirectTypeDescription(item.status)})
+   Redirect To: ${item.to || 'Unknown'}
+   Time: ${item.time || 0}ms
+   ----------------------------------------\n`;
                         });
-                    } else {
-                        // Add an empty row if no redirects found
-                        redirectsData.push(['No redirects found', '-', '-', '-', '-', '-']);
                     }
 
-                    const redirectsWs = window.XLSX.utils.aoa_to_sheet(redirectsData);
-                    window.XLSX.utils.book_append_sheet(wb, redirectsWs, 'Redirects');
-
-                    // Add slow requests sheet if any
+                    // Add slow requests section if any
                     if (analysis.slowRequests && analysis.slowRequests.length > 0) {
-                        const slowRequestsData = [['URL', 'Method', 'Status', 'Time (ms)']];
-                        analysis.slowRequests.forEach(item => {
-                            slowRequestsData.push([
-                                item.url,
-                                item.method || '-',
-                                item.status || '-',
-                                item.time || 0
-                            ]);
+                        textReport += `\n\nSLOW REQUESTS (>2000ms) - ${analysis.slowRequests.length} Total
+========================================\n`;
+                        analysis.slowRequests.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method} ${item.url}
+   Time: ${item.time}
+   Status: ${item.status || 'Unknown'}
+   ----------------------------------------\n`;
                         });
-                        const slowRequestsWs = window.XLSX.utils.aoa_to_sheet(slowRequestsData);
-                        window.XLSX.utils.book_append_sheet(wb, slowRequestsWs, 'Slow Requests');
                     }
 
-                    // Add whitelist issues sheet if any
+                    // Add whitelist issues section if any
                     if (analysis.whitelistIssues && analysis.whitelistIssues.count > 0 && analysis.whitelistIssues.items.length > 0) {
-                        const whitelistIssuesData = [['URL', 'Method', 'Status', 'Error Type']];
-                        analysis.whitelistIssues.items.forEach(item => {
-                            whitelistIssuesData.push([
-                                item.url,
-                                item.method || 'GET',
-                                item.status || '-',
-                                item.error || 'Unknown Error'
-                            ]);
+                        textReport += `\n\nPOSSIBLE WHITELIST ISSUES - ${analysis.whitelistIssues.count} Total
+========================================
+These are requests to Benchmark domains that failed:
+\n`;
+                        analysis.whitelistIssues.items.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method || 'GET'} ${item.url}
+   Status: ${item.status || '-'}
+   Error: ${item.error || 'Unknown Error'}
+   ----------------------------------------\n`;
                         });
-                        const whitelistIssuesWs = window.XLSX.utils.aoa_to_sheet(whitelistIssuesData);
-                        window.XLSX.utils.book_append_sheet(wb, whitelistIssuesWs, 'Possible Whitelist Issues');
                     }
 
-                    // Generate Excel file
-                    const excelBlob = window.XLSX.write(wb, {
-                        bookType: 'xlsx',
-                        type: 'binary'
-                    });
-
-                    // Convert string to ArrayBuffer
-                    const buf = new ArrayBuffer(excelBlob.length);
-                    const view = new Uint8Array(buf);
-                    for (let i = 0; i < excelBlob.length; i++) {
-                        view[i] = excelBlob.charCodeAt(i) & 0xFF;
+                    // Add large responses section if any
+                    if (analysis.largeResponses && analysis.largeResponses.length > 0) {
+                        textReport += `\n\nLARGE RESPONSES (>1MB) - ${analysis.largeResponses.length} Total
+========================================\n`;
+                        analysis.largeResponses.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method} ${item.url}
+   Size: ${this.formatFileSize(item.size)}
+   ----------------------------------------\n`;
+                        });
                     }
 
-                    console.log("Excel report generated successfully");
+                    // Add content types breakdown
+                    if (analysis.contentTypes && Object.keys(analysis.contentTypes).length > 0) {
+                        textReport += `\n\nCONTENT TYPES BREAKDOWN
+========================================\n`;
+                        Object.entries(analysis.contentTypes).forEach(([type, count]) => {
+                            textReport += `${type}: ${count} requests\n`;
+                        });
+                    }
 
-                    // Return the Excel file as a File object
+                    textReport += `\n\nEND OF REPORT
+========================================`;
+
+                    // Create a text file with the comprehensive report
+                    const blob = new Blob([textReport], { type: 'text/plain' });
                     return new File(
-                        [buf],
-                        `HAR_Analysis_Report_${fileName.replace(/\.[^/.]+$/, '')}.xlsx`,
-                        { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
+                        [blob],
+                        `HAR_Analysis_Report_${fileName.replace(/\.[^/.]+$/, '')}.txt`,
+                        { type: 'text/plain' }
                     );
 
                 } catch (error) {
-                    console.error("Error generating Excel report:", error);
-                    return null;
+                    console.error("Error generating text report:", error);
+
+                    // Create a basic fallback report
+                    const basicReport = `HAR Analysis Report - Error
+============================
+An error occurred while generating the detailed report.
+File: ${fileName}
+
+Basic Information:
+Total Requests: ${analysis?.totalRequests || 'Unknown'}
+Date: ${analysis?.date || 'Unknown'}
+
+Error Details:
+${error.message || 'Unknown error'}`;
+
+                    const blob = new Blob([basicReport], { type: 'text/plain' });
+                    return new File(
+                        [blob],
+                        `HAR_Analysis_Error_${fileName.replace(/\.[^/.]+$/, '')}.txt`,
+                        { type: 'text/plain' }
+                    );
                 }
             }
 
