@@ -15,7 +15,9 @@
         "getAgentsInGroup": {},
         "getTicketFields": {},
         "getAllAgents": {},
-        "associateTickets": {}
+        "associateTickets": {},
+        "getTicketsByFilter": {},
+        "getAllTickets": {}
       },
       "serverless": {
         "ticket_with_attachments": {

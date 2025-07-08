@@ -182,6 +182,11 @@ module.exports = {
         // Initialize the template (sets up event listeners and formats subject)
         templateBase.initialize();
 
+        // Set up conditional validation for District State field
+        setTimeout(() => {
+            templateBase.setupConditionalValidation();
+        }, 100);
+
         // Set up clear formatting button for Quill editors
         setTimeout(setupClearFormattingButton, 500);
 

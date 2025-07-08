@@ -185,5 +185,27 @@
         "Content-Type": "application/json"
       }
     }
+  },
+  "getTicketsByFilter": {
+    "schema": {
+      "method": "GET",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
+      "path": "/api/v2/search/tickets?query=\"<%= context.filter %>\"&page=1",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "getAllTickets": {
+    "schema": {
+      "method": "GET",
+      "host": "<%= iparam.freshdesk_subdomain %>.freshdesk.com",
+      "path": "/api/v2/tickets",
+      "headers": {
+        "Authorization": "Basic <%= encode(iparam.freshdesk_api_key + ':X') %>",
+        "Content-Type": "application/json"
+      }
+    }
   }
 }

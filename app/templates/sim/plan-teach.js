@@ -375,10 +375,16 @@ module.exports = {
                 resource: 'resource',
                 specificIssue: 'specificIssue',
                 formattedSubject: 'formattedSubject'
-            }
+            },
+            requiredFields: ['districtName', 'districtState']
         });
 
         templateBase.initializeSubjectLineFormatting();
+
+        // Set up conditional validation for District State field
+        setTimeout(() => {
+            templateBase.setupConditionalValidation();
+        }, 100);
 
         // Schedule another update after a small delay to ensure fields are populated
         setTimeout(() => templateBase.updateSubjectLine(), 500);

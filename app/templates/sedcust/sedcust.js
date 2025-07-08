@@ -169,6 +169,10 @@ module.exports = {
                     hint: "Auto-populates from the subject details."
                 },
                 {
+                    id: "districtName", type: "text", label: "District Name", required: true,
+                    hint: "Auto-populates from original ticket."
+                },
+                {
                     id: "districtState", type: "text", label: "District State", required: true, placeholder: "e.g. FL",
                     hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate you should verify the company details of the district in FD."
                 },
@@ -423,11 +427,147 @@ module.exports = {
             templateName: 'sedcust',
             subjectLineFormat: 'sedcust',
             additionalFields: ['path'],
-            requiredFields: ['xcode', 'application', 'resource', 'path', 'specificIssue']
+            requiredFields: ['xcode', 'application', 'resource', 'path', 'specificIssue', 'districtName', 'districtState'],
+            fields: {
+                xcode: 'xcode',
+                application: 'application',
+                version: 'version',
+                versionState: 'versionState',
+                resource: 'resource',
+                path: 'path',
+                specificIssue: 'specificIssue',
+                districtName: 'districtName',
+                districtState: 'districtState',
+                isVIP: 'isVIP',
+                formattedSubject: 'formattedSubject'
+            }
         });
 
         // Initialize the template (sets up event listeners and formats subject)
         templateBase.initialize();
+
+        // Set up conditional validation for District State field
+        setTimeout(() => {
+            templateBase.setupConditionalValidation();
+        }, 100);
+
+        // Ensure email field is populated before form submission
+        function ensureEmailField() {
+            const emailField = document.getElementById('email');
+            if (!emailField) {
+                console.warn("SEDCUST: Email field not found");
+                return;
+            }
+
+            // If email field is empty, try to populate it
+            if (!emailField.value || !emailField.value.trim()) {
+                console.log("SEDCUST: Email field is empty, attempting to populate");
+
+                // Try to get email from logged-in user
+                if (window.trackerApp && window.trackerApp.client) {
+                    window.trackerApp.client.data.get("loggedInUser").then(userData => {
+                        if (userData && userData.loggedInUser && userData.loggedInUser.email) {
+                            emailField.value = userData.loggedInUser.email;
+                            console.log("SEDCUST: Populated email field from logged-in user:", userData.loggedInUser.email);
+                        }
+                    }).catch(err => {
+                        console.error("SEDCUST: Error getting logged-in user email:", err);
+                    });
+                }
+
+                // Also try to get from ticket data
+                if (window.trackerApp && window.trackerApp.ticketData && window.trackerApp.ticketData.requesterEmail) {
+                    emailField.value = window.trackerApp.ticketData.requesterEmail;
+                    console.log("SEDCUST: Populated email field from ticket data:", window.trackerApp.ticketData.requesterEmail);
+                }
+            }
+        }
+
+        // Call email field population
+        ensureEmailField();
+
+        // Also ensure email field is populated when form is about to be submitted
+        setTimeout(() => {
+            ensureEmailField();
+        }, 500);
+
+        // Add enhanced validation function for SEDCUST template
+        window.validateSedcustFields = function () {
+            console.log("SEDCUST: Starting enhanced field validation");
+            const errors = [];
+
+            // Check each required field individually
+            const requiredFields = ['xcode', 'application', 'resource', 'path', 'specificIssue', 'districtName', 'districtState'];
+
+            requiredFields.forEach(fieldName => {
+                const field = document.getElementById(fieldName);
+                if (!field) {
+                    errors.push(`Field element '${fieldName}' not found in DOM`);
+                    return;
+                }
+
+                const value = field.value ? field.value.trim() : '';
+                console.log(`SEDCUST: Validating field '${fieldName}' with value: "${value}"`);
+
+                // Special handling for districtState field
+                if (fieldName === 'districtState') {
+                    const districtNameField = document.getElementById('districtName');
+                    const districtNameValue = districtNameField ? districtNameField.value.trim() : '';
+
+                    // Skip validation if district name is "Benchmark Education Company"
+                    if (districtNameValue === 'Benchmark Education Company') {
+                        console.log(`SEDCUST: Skipping districtState validation because districtName is "Benchmark Education Company"`);
+                        return;
+                    }
+                }
+
+                if (!value) {
+                    errors.push(`Required field '${fieldName}' is empty`);
+                }
+            });
+
+            // Check for email field (required for ticket creation)
+            const emailField = document.getElementById('email');
+            if (!emailField || !emailField.value || !emailField.value.trim()) {
+                errors.push('Email field is required but missing or empty');
+            }
+
+            // Check for related tickets field
+            const relatedTicketsField = document.getElementById('relatedTickets');
+            if (!relatedTicketsField || !relatedTicketsField.value || !relatedTicketsField.value.trim()) {
+                errors.push('Related tickets field is required but missing or empty');
+            }
+
+            if (errors.length > 0) {
+                console.error("SEDCUST: Validation errors found:", errors);
+                return { isValid: false, errors: errors };
+            }
+
+            console.log("SEDCUST: All field validation passed");
+            return { isValid: true, errors: [] };
+        };
+
+        // Add a pre-submit validation hook
+        const originalSubmitHandler = document.getElementById('createTracker');
+        if (originalSubmitHandler) {
+            originalSubmitHandler.addEventListener('click', function (event) {
+                console.log("SEDCUST: Pre-submit validation triggered");
+
+                // Run our enhanced validation
+                const validation = window.validateSedcustFields();
+                if (!validation.isValid) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    const errorMessage = "SEDCUST validation failed:\n" + validation.errors.join('\n');
+                    console.error(errorMessage);
+                    alert(errorMessage);
+                    return false;
+                }
+
+                console.log("SEDCUST: Pre-submit validation passed");
+            }, true); // Use capture phase to run before other handlers
+        }
 
         // Try to get the source ticket ID from localStorage
         let sourceTicketId = null;

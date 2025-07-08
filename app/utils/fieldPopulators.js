@@ -147,15 +147,63 @@ async function populateDistrictState() {
                     districtStateField.dispatchEvent(event);
                 } else {
                     console.log("Company data doesn't contain state custom field");
+
+                    // Check if we need to populate from district name
+                    const districtNameField = document.getElementById('districtName');
+                    if (districtNameField && districtNameField.value) {
+                        console.log("Attempting to populate district state from district name pattern");
+
+                        // Try to extract state from district name if it follows common patterns
+                        const districtName = districtNameField.value.trim();
+                        const stateMatch = districtName.match(/\b([A-Z]{2})\b$/) || districtName.match(/\b(Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Hampshire|New Jersey|New Mexico|New York|North Carolina|North Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West Virginia|Wisconsin|Wyoming)\b/i);
+
+                        if (stateMatch) {
+                            const extractedState = stateMatch[1];
+                            console.log(`Extracted state from district name: ${extractedState}`);
+                            districtStateField.value = extractedState;
+
+                            // Trigger change event
+                            const event = new Event('input', { bubbles: true });
+                            districtStateField.dispatchEvent(event);
+                        } else {
+                            console.log("Could not extract state from district name pattern");
+                        }
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching company data:", error);
+
+                // Fallback: Set a default message or leave empty
+                console.log("Using fallback approach for district state");
             }
         } else {
             console.log("No company ID found in ticket data");
+
+            // Try to get district state from the source ticket custom fields
+            if (window.trackerApp && window.trackerApp.ticketData && window.trackerApp.ticketData.districtState) {
+                const stateValue = window.trackerApp.ticketData.districtState;
+                console.log(`Using district state from ticket data: ${stateValue}`);
+                districtStateField.value = stateValue;
+
+                // Trigger change event
+                const event = new Event('input', { bubbles: true });
+                districtStateField.dispatchEvent(event);
+            }
         }
     } catch (error) {
         console.error("Error in populateDistrictState:", error);
+
+        // Ensure we don't leave the field in an invalid state
+        const districtStateField = document.getElementById('districtState');
+        const districtNameField = document.getElementById('districtName');
+
+        if (districtStateField && districtNameField) {
+            // If district name is "Benchmark Education Company", clear the state field
+            if (districtNameField.value && districtNameField.value.trim() === 'Benchmark Education Company') {
+                districtStateField.value = '';
+                console.log("Cleared district state field for Benchmark Education Company");
+            }
+        }
     }
 }
 

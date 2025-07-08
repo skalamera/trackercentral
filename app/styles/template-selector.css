@@ -73,6 +73,7 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
+
 .navbar-menu {
     display: flex;
     gap: 20px;
@@ -907,14 +908,225 @@ div.templates-container {
     }
 }
 
+/* Carousel Container Styles */
+.tracker-widgets-carousel {
+    position: relative;
+    margin-bottom: 15px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    min-height: 145px;
+    /* Adjusted to accommodate fixed widget height */
+    display: block;
+    /* Default display - will be controlled by JavaScript */
+}
+
+.carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    /* Keep overflow hidden on container to hide slides off-screen */
+    min-height: 100px;
+    /* Adjusted to fit widget height */
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+    width: 100%;
+    /* Remove overflow hidden from track - it should be on container */
+    min-height: 100px;
+    /* Adjusted to fit widget height */
+}
+
+.carousel-slide {
+    flex: 0 0 100%;
+    /* Each slide takes full width */
+    min-width: 100%;
+    /* Ensure minimum width */
+    width: 100%;
+    /* Explicit width */
+    padding: 0 5px;
+    /* Use padding instead of margin for spacing */
+    box-sizing: border-box;
+    /* Include padding in width calculation */
+    min-height: 85px;
+    /* Match widget height */
+    opacity: 1;
+    /* Ensure all slides are visible by default */
+}
+
+.carousel-slide.active {
+    opacity: 1;
+}
+
+.carousel-nav {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s ease;
+    z-index: 20;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.carousel-nav:hover {
+    background-color: #45a049;
+    transform: scale(1.1);
+    /* Simple scale on hover */
+}
+
+.carousel-nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+[data-theme="dark"] .carousel-nav {
+    background-color: #4caf50;
+}
+
+[data-theme="dark"] .carousel-nav:hover {
+    background-color: #5cbf60;
+}
+
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+/* Navigation controls below carousel */
+.carousel-nav-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    margin-top: 20px;
+}
+
+.carousel-prev {
+    order: 1;
+}
+
+.carousel-next {
+    order: 2;
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background-color: #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-dot.active {
+    background-color: var(--secondary-color);
+}
+
+[data-theme="dark"] .carousel-dot {
+    background-color: #4a5568;
+}
+
+[data-theme="dark"] .carousel-dot.active {
+    background-color: #4caf50;
+}
+
 /* Updated Dashboard Styles for Collapsible Functionality */
 .tracker-counts-dashboard {
-    margin-bottom: 20px;
     background-color: var(--card-bg, #f8f9fa);
     border-radius: 8px;
-    padding: 20px;
+    padding: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--card-border, #e0e0e0);
+    overflow: visible;
+    /* Ensure content is not clipped */
+    height: 85px;
+    /* Fixed height to ensure all widgets are the same size */
+    min-height: 85px;
+    /* Minimum height as fallback */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Force all elements inside carousel slides to be visible */
+.carousel-slide * {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* IMPORTANT: Ensure dashboard content is visible in carousel */
+.carousel-slide .tracker-counts-dashboard {
+    background-color: #ffffff !important;
+    /* Force white background */
+    color: #333333 !important;
+    /* Force dark text */
+    display: block !important;
+    /* Force display */
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.carousel-slide .dashboard-header {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.carousel-slide .dashboard-header h3 {
+    color: #333333 !important;
+    /* Force dark text for headers */
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+}
+
+.carousel-slide .dashboard-date {
+    color: #666666 !important;
+    /* Force visible secondary text */
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
+}
+
+.carousel-slide .view-all-btn {
+    visibility: visible !important;
+    opacity: 1 !important;
+    background-color: #4caf50 !important;
+    display: inline-flex !important;
+}
+
+.carousel-slide .dashboard-count {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: inline-block !important;
+}
+
+/* Dark mode overrides for carousel widgets */
+[data-theme="dark"] .carousel-slide .tracker-counts-dashboard {
+    background-color: #1e2a35 !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .carousel-slide .dashboard-header h3 {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .carousel-slide .dashboard-date {
+    color: #a0a0a0 !important;
 }
 
 [data-theme="dark"] .tracker-counts-dashboard {
@@ -926,6 +1138,8 @@ div.templates-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
+    /* Minimum gap between items */
 }
 
 .dashboard-header h3 {
@@ -954,7 +1168,7 @@ div.templates-container {
     border-radius: 12px;
     font-size: 0.8rem;
     font-weight: normal;
-    margin-left: 8px;
+    margin-left: 6px;
 }
 
 [data-theme="dark"] .dashboard-count {
@@ -1042,6 +1256,55 @@ div.templates-container {
     color: #8a9ba8;
 }
 
+/* Simple Tracker Widget Styles */
+.simple-tracker-widget {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--card-border);
+    margin-bottom: 15px;
+    display: none;
+    /* Hidden by default - will be shown via JavaScript when classic view is selected */
+}
+
+.simple-widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.simple-widget-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.simple-widget-date {
+    display: block;
+    margin-top: 5px;
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+}
+
+/* Dark mode support for simple widget */
+[data-theme="dark"] .simple-tracker-widget {
+    background-color: #1e2a35;
+    border-color: #2c3e50;
+}
+
+[data-theme="dark"] .simple-widget-header h3 {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .simple-widget-date {
+    color: #a0a0a0;
+}
+
 /* Responsive design for dashboard */
 @media (max-width: 768px) {
     .dashboard-header {
@@ -1073,6 +1336,12 @@ div.templates-container {
     display: flex;
     gap: 10px;
     align-items: center;
+    flex-shrink: 0;
+    /* Prevent shrinking */
+    margin-left: auto;
+    /* Push to the right */
+    padding-left: 20px;
+    /* Add extra spacing from the count */
 }
 
 .view-all-btn {
@@ -1088,6 +1357,10 @@ div.templates-container {
     font-size: 0.9rem;
     font-weight: 500;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    /* Prevent text wrapping */
+    flex-shrink: 0;
+    /* Prevent button from shrinking */
 }
 
 .view-all-btn:hover {
@@ -1324,6 +1597,11 @@ div.templates-container {
     .dashboard-actions {
         flex-direction: column;
         gap: 5px;
+        margin-left: auto;
+        padding-left: 0;
+        /* Reset padding on mobile */
+        margin-top: 10px;
+        /* Add vertical spacing on mobile */
     }
 
     .view-all-btn {
@@ -1335,9 +1613,31 @@ div.templates-container {
         font-size: 1.2rem;
     }
 
+    /* Carousel mobile styles */
+    .carousel-nav {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
 
+    .carousel-container {
+        padding: 0 40px;
+        /* Adjust padding for mobile */
+    }
 
+    .carousel-slide {
+        flex: 0 0 100%;
+        /* Keep at 100% for proper translation */
+        padding: 0 5px;
+        /* Smaller padding on mobile */
+    }
 
+    .carousel-indicators {
+        margin-top: 12px;
+    }
 
-
+    .carousel-dot {
+        width: 8px;
+        height: 8px;
+    }
 }

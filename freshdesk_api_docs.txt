@@ -1,0 +1,290 @@
+List All Tickets
+get  /api/v2/tickets
+Use filters to view only specific tickets (those which match the criteria that you choose). By default, only tickets that have not been deleted or marked as spam will be returned, unless you use the 'deleted' filter.
+
+Note:
+1. By default, only tickets that have been created within the past 30 days will be returned. For older tickets, use the updated_since filter
+2. A maximum of 300 pages (30000 tickets) will be returned.
+3. When using filters, the query string must be URL encoded - see example
+4. Use 'include' to embed additional details in the response. Each include will consume an additional 2 credits. For example if you embed the stats information you will be charged a total of 3 API credits for the call.
+5. For accounts created after 2018-11-30, you will have to use include to get description.
+
+Filter by	Handle
+Predefined filters	/api/v2/tickets?filter=[filter_name]
+The various filters available are new_and_my_open, watching, spam, deleted.
+Requester	/api/v2/tickets?requester_id=[id]
+/api/v2/tickets?email=[requester_email]
+/api/v2/tickets?unique_external_id=[requester_unique_external_id]
+Example:
+/api/v2/tickets?email=superman@freshdesk.com
+/api/v2/tickets?email=bat%2Bman%40gmail.com   (URL encoded bat+man@gmail.com)
+Company ID	/api/v2/tickets?company_id=[id]
+Updated since	/api/v2/tickets?updated_since=2015-01-19T02:00:00Z
+Custom ticket views	Check out the Filter Tickets API
+Sort by	Handle
+created_at, due_by, updated_at, status	/api/v2/tickets?order_by=created_at
+Default sort order is created_at
+asc, desc	/api/v2/tickets?order_type=asc
+Default sort order type is desc
+Embed	Handle
+stats	/api/v2/tickets?include=stats
+Will return the ticket’s closed_at, resolved_at and first_responded_at time
+requester	/api/v2/tickets?include=requester
+Will return the requester's email, id, mobile, name, and phone.
+description	/api/v2/tickets?include=description
+Will return the ticket description and description_text.
+Sample code | Curl
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/tickets'
+Response
+[
+  {
+    "cc_emails" : ["user@cc.com", "user2@cc.com"],
+    "fwd_emails" : [ ],
+    "reply_cc_emails" : ["user@cc.com", "user2@cc.com"],
+    "fr_escalated" : false,
+    "spam" : false,
+    "email_config_id" : null,
+    "group_id" : 2,
+    "priority" : 1,
+    "requester_id" : 5,
+    "responder_id" : 1,
+    "source" : 2,
+    "status" : 2,
+    "subject" : "Please help",
+    "to_emails" : null,
+    "product_id" : null,
+    "id" : 18,
+    "type" : Lead,
+    "created_at" : "2015-08-17T12:02:50Z",
+    "updated_at" : "2015-08-17T12:02:51Z",
+    "due_by" : "2015-08-20T11:30:00Z",
+    "fr_due_by" : "2015-08-18T11:30:00Z",
+    "is_escalated" : false,
+    "custom_fields" : {
+      "category" : "Default"
+    }
+  },
+  {
+    "cc_emails" : [ ],
+    "fwd_emails" : [ ],
+    "reply_cc_emails" : [ ],
+    "fr_escalated" : false,
+    "spam" : false,
+    "email_config_id" : null,
+    "group_id" : null,
+    "priority" : 1,
+    "requester_id" : 1,
+    "responder_id" : null,
+    "source" : 2,
+    "status" : 2,
+    "subject" : "",
+    "to_emails" : null,
+    "product_id" : null,
+    "id" : 17,
+    "type" : null,
+    "created_at" : "2015-08-17T12:02:06Z",
+    "updated_at" : "2015-08-17T12:02:07Z",
+    "due_by" : "2015-08-20T11:30:00Z",
+    "fr_due_by" : "2015-08-18T11:30:00Z",
+    "is_escalated" : false,
+    "custom_fields" : {
+      "category" : null
+    }
+  }
+]
+EXPAND ↓
+Additional Examples
+1. Get the first page of a list of tickets, with the ticket description included for each ticket.
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/tickets?include=description'
+2. Get the first page of a list of tickets that are being watched by the agent whose credentials were used to make this API call.
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/tickets?filter=watching'
+3. Get the first page of a list of tickets from the specified requester. The tickets will be returned in the descending order of their priority i.e highest priority first.
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/tickets?requester_id=1230&order_by=status&order_type=desc'
+4. Get the second page (tickets from 11-20) of a list of all tickets.
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/tickets?per_page=10&page=2'
+5. Get the first page of a list of tickets that have shown any activity since the 17th of August, 2015.
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/tickets?updated_since=2015-08-17'
+6. Get the associated stats information along with the ticket response.
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/tickets?include=stats'
+7. Filter tickets based on the following requester email (super+man@gmail.com) which needs to be URL encoded.
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/tickets?email=super%2Bman%40gmail.com'
+Filter Tickets
+get  /api/v2/search/tickets?query=[query]
+Use custom ticket fields that you have created in your account to filter through the tickets and get a list of tickets matching the specified ticket fields.
+
+Format -    "(ticket_field:integer OR ticket_field:'string') AND ticket_field:boolean"
+Note:
+1. Archived tickets will not be included in the results
+2. The query must be URL encoded
+3. Query can be framed using the name of the ticket fields, which can be obtained from Ticket Fields endpoint. Ticket Fields are case sensitive
+4. Query string must be enclosed between a pair of double quotes and can have up to 512 characters
+5. Logical operators AND, OR along with parentheses () can be used to group conditions
+6. Relational operators greater than or equal to :> and less than or equal to :< can be used along with date fields and numeric fields
+7. Input for date fields should be in UTC Format
+8. The number of objects returned per page is 30 also the total count of the results will be returned along with the result
+9. To scroll through the pages add page parameter to the url. The page number starts with 1 and should not exceed 10
+10. To filter for fields with no values assigned, use the null keyword
+11. Please note that the updates will take a few minutes to get indexed, after which it will be available through API
+
+Supported Ticket Fields
+Field	Type	Description
+agent_id	integer	ID of the agent to whom the ticket has been assigned
+group_id	integer	ID of the group to which the ticket has been assigned
+priority	integer	Priority of the ticket
+status	integer	Status of the ticket
+tag	string	Tag that has been associated to the tickets
+type	string	Type of issue that has been associated to the tickets
+due_by	date	Date (YYYY-MM-DD) when the ticket is due to be resolved
+fr_due_by	date	Date (YYYY-MM-DD) when the first response is due
+created_at	date	Ticket creation date (YYYY-MM-DD)
+updated_at	date	Date (YYYY-MM-DD) when the ticket was last updated
+Custom Fields
+Single line text	string
+Number	integer
+Checkbox	boolean
+Dropdown	string
+Date	date beta
+Sample code | Curl
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="priority:3"'
+Response
+{
+  "total":49,
+  "results":[
+    {
+      "cc_emails":["clark.kent@kryptonspace.com"],
+      "fwd_emails":[ ],
+      "reply_cc_emails":[ ],
+      "fr_escalated":false,
+      "spam":false,
+      "email_config_id":17,
+      "group_id":156,
+      "priority":3,
+      "requester_id":6007738334,
+      "responder_id":6001263404,
+      "source":2,
+      "company_id":2,
+      "status":2,
+      "subject":"Sample Title",
+      "to_emails":null,
+      "product_id":null,
+      "id":47,
+      "type":null,
+      "due_by":"2016-02-23T16:00:00Z",
+      "fr_due_by":"2016-02-22T17:00:00Z",
+      "is_escalated":true,
+      "description":"<div>Sample description</div>",
+      "description_text":"Sample description",
+      "created_at":"2016-02-20T09:16:58Z",
+      "updated_at":"2016-02-23T16:14:57Z",
+      "custom_fields":{
+        "sector_no":7,
+        "locked":true
+      }
+    },
+    {
+      "cc_emails":["bruce.wayne@gothamdomain.com"],
+      "fwd_emails":[ ],
+      "reply_cc_emails":[ ],
+      "fr_escalated":true,
+      "spam":false,
+      "email_config_id":44,
+      "group_id":65,
+      "priority":3,
+      "requester_id":6007738334,
+      "responder_id":6001263404,
+      "source":2,
+      "company_id":33,
+      "status":2,
+      "subject":"New Title",
+      "to_emails":null,
+      "product_id":null,
+      "id":57,
+      "type":null,
+      "due_by":"2016-02-23T16:00:00Z",
+      "fr_due_by":"2016-02-22T17:00:00Z",
+      "is_escalated":true,
+      "description":"<div>New description</div>",
+      "description_text":"New description",
+      "created_at":"2016-02-20T16:15:10Z",
+      "updated_at":"2016-03-14T15:58:13Z",
+      "custom_fields":{
+        "sector_no":8,
+        "locked":true
+      }
+    },
+    ...
+    ...
+    ...
+    ...
+  ]
+}
+EXPAND ↓
+Additional Examples
+1. Get the list of Urgent and High priority tickets.
+    "priority:4 OR priority:3"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="priority:4%20OR%20priority:3"'
+2. Get the second page of Open and Pending tickets.
+    "status:3 OR status:4"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="status:3%20OR%20status:4"&page=2'
+3. Get the list of Urgent and High priority tickets in Open Status belong to the group_id 11.
+    "priority:>3 AND group_id:11 AND status:2"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="priority:>3%20AND%20group_id:11%20AND%20status:2"'
+4. Get the list of locked tickets belong to Finance or Marketing sector (Custom Fields: locked, sector).
+    "(cf_sector:'finance' OR cf_sector:'marketing') AND cf_locked:true"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="(cf_sector:%27finance%27%20OR%20cf_sector:%27marketing%27)%20AND%20cf_locked:true"'
+If you’re not getting a result for the above query, there’s a chance that the field might have been created recently or it has been moved to a new infrastructure. To query on these custom fields, use ‘custom_string’ instead of the actual field label.
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="custom_string: finance"'
+5. Get the list of Urgent and High priority tickets created on a particular day.
+    "priority:>3 AND created_at:'2017-01-01'"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="priority:>3%20AND%20created_at:%272017-01-01%27"'
+6. Get the list of tickets whose type is 'Question' or 'Problem' and response due on first week of October 2017.
+    "(type:'Question' OR type:'Problem') AND (due_by:>'2017-10-01' AND due_by:<'2017-10-07')"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="(type:%27Question%27%20OR%20type:%27Problem%27)%20AND%20(due_by:>%272017-10-01%27%20AND%20due_by:<%272017-10-07%27)"'
+7. Get the list of tickets whose type is 'Problem' and tagged with 'marketing'.
+    "type:'Problem' AND tag:'marketing'"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="type:%27Problem%27%20AND%20tag:%27marketing%27"'
+8. Get the list of tickets without any tag.
+    "tag:null"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="tag:null"'
+9. Get the list of urgent tickets whose type is undefined.
+    "type:null AND priority:4"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="type:null%20AND%20priority:4"'
+10. Get the list of urgent tickets assigned to agents whose ids are 2 and 3.
+    "(agent_id:2 OR agent_id:3) AND priority:4"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="(agent_id:2%20OR%20agent_id:3)%20AND%20priority:4"'
+11. Get the list of unassigned tickets
+    "agent_id:null"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="agent_id:null"'
+12. All unresolved tickets
+    "status:2 OR status:3 OR status:6 OR status:7"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="status:2%20OR%20status:3%20OR%20status:6%20OR%20status:7"'
+13. Get the list of tickets using a value in the single line text field.
+    "custom_string:theactualkeyword"
+
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="custom_string:theactualkeyword"'
+Using AND operator
+"custom_string:theactualkeywordone AND custom_string:theactualkeywordtwo"
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="custom_string:theactualkeywordone%20AND%20custom_string:theactualkeywordtwo"'
+Using OR operator
+"custom_string:theactualkeywordone OR custom_string:theactualkeywordtwo"
+curl -v -u yourapikey:X -X GET 'https://domain.freshdesk.com/api/v2/search/tickets?query="custom_string:theactualkeywordone%OR%20custom_string:theactualkeywordtwo"'

@@ -289,7 +289,7 @@ module.exports = {
             templateName: 'assembly',
             subjectLineFormat: 'assembly',
             additionalFields: ['hasMultipleXcodes', 'gradesImpacted'],
-            requiredFields: ['xcode', 'application', 'specificIssue', 'gradesImpacted'],
+            requiredFields: ['xcode', 'application', 'specificIssue', 'gradesImpacted', 'districtName', 'districtState'],
             fields: {
                 xcode: 'xcode',
                 hasMultipleXcodes: 'hasMultipleXcodes',
@@ -299,12 +299,19 @@ module.exports = {
                 versionState: 'versionState',
                 specificIssue: 'specificIssue',
                 gradesImpacted: 'gradesImpacted',
+                districtName: 'districtName',
+                districtState: 'districtState',
                 formattedSubject: 'formattedSubject'
             }
         });
 
         // Initialize the template (sets up event listeners and formats subject)
         templateBase.initializeSubjectLineFormatting();
+
+        // Set up conditional validation for District State field
+        setTimeout(() => {
+            templateBase.setupConditionalValidation();
+        }, 100);
 
         // Schedule initial subject line update after fields are populated
         setTimeout(() => templateBase.updateSubjectLine(), 500);

@@ -712,12 +712,17 @@ class TemplateBase {
     }
 
     /**
-     * Validate required fields
+     * Validate required fields with conditional validation support
      */
     validateFields() {
         const errors = [];
 
         this.requiredFields.forEach(fieldName => {
+            // Check if this field has conditional validation
+            if (this.shouldSkipFieldValidation(fieldName)) {
+                return; // Skip validation for this field
+            }
+
             const value = this.getFieldValue(fieldName);
 
             if (!value || (Array.isArray(value) && value.length === 0) || value.toString().trim() === '') {
@@ -732,6 +737,86 @@ class TemplateBase {
             isValid: errors.length === 0,
             errors: errors
         };
+    }
+
+    /**
+     * Check if field validation should be skipped based on conditions
+     */
+    shouldSkipFieldValidation(fieldName) {
+        // Special case for District State field when District Name is "Benchmark Education Company"
+        if (fieldName === 'districtState') {
+            const districtName = this.getFieldValue('districtName');
+            console.log(`TemplateBase: Checking districtState validation skip for districtName: "${districtName}"`);
+
+            if (districtName === 'Benchmark Education Company') {
+                console.log('TemplateBase: Skipping districtState validation for Benchmark Education Company');
+                return true; // Skip validation for District State
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Set up conditional validation for District State field
+     */
+    setupConditionalValidation() {
+        const districtNameField = document.getElementById('districtName');
+        const districtStateField = document.getElementById('districtState');
+
+        if (!districtNameField || !districtStateField) {
+            console.warn('District Name or District State field not found for conditional validation');
+            return;
+        }
+
+        // Function to update the required attribute based on District Name value
+        const updateDistrictStateRequired = () => {
+            const districtName = districtNameField.value ? districtNameField.value.trim() : '';
+            const isRequired = districtName !== 'Benchmark Education Company';
+
+            // Update the required attribute (with defensive programming for tests)
+            if (isRequired) {
+                if (typeof districtStateField.setAttribute === 'function') {
+                    districtStateField.setAttribute('required', 'required');
+                }
+                if (districtStateField.required !== undefined) {
+                    districtStateField.required = true;
+                }
+            } else {
+                if (typeof districtStateField.removeAttribute === 'function') {
+                    districtStateField.removeAttribute('required');
+                }
+                if (districtStateField.required !== undefined) {
+                    districtStateField.required = false;
+                }
+            }
+
+            // Update visual indicators (asterisk in label) using CSS class
+            const label = document.querySelector('label[for="districtState"]');
+            if (label && typeof label.classList !== 'undefined') {
+                if (isRequired) {
+                    label.classList.add('required-field');
+                } else {
+                    label.classList.remove('required-field');
+                }
+            }
+
+            console.log(`District State field ${isRequired ? 'required' : 'optional'} based on District Name: "${districtName}"`);
+        };
+
+        // Set up event listener for District Name field
+        if (typeof districtNameField.addEventListener === 'function') {
+            districtNameField.addEventListener('input', updateDistrictStateRequired);
+            districtNameField.addEventListener('change', updateDistrictStateRequired);
+
+            // Store reference for cleanup
+            this.eventListeners.push(
+                { element: districtNameField, type: 'input', handler: updateDistrictStateRequired },
+                { element: districtNameField, type: 'change', handler: updateDistrictStateRequired }
+            );
+        }
+
+        // Run initial check
+        updateDistrictStateRequired();
     }
 
     /**

@@ -234,6 +234,27 @@ class TrackerApp {
             } catch (apiError) {
                 console.error('API Error creating ticket:', apiError);
 
+                // Enhanced error logging for SEDCUST template
+                if (this.trackerType === 'sedcust') {
+                    console.error('SEDCUST: Enhanced error analysis starting...');
+
+                    // Log the exact data being sent
+                    console.error('SEDCUST: Basic ticket data sent to API:', JSON.stringify(basicTicketData, null, 2));
+
+                    // Check if our validation function exists and run it
+                    if (window.validateSedcustFields) {
+                        const validation = window.validateSedcustFields();
+                        if (!validation.isValid) {
+                            console.error('SEDCUST: Client-side validation would have failed:', validation.errors);
+                        } else {
+                            console.error('SEDCUST: Client-side validation passed, but API validation failed');
+                        }
+                    }
+
+                    // Log all form data for debugging
+                    console.error('SEDCUST: Form data at time of error:', Object.keys(formData).map(key => `${key}: "${formData[key]}"`));
+                }
+
                 // Detailed error logging
                 let errorDetails = "Unknown error";
                 try {
@@ -254,6 +275,18 @@ class TrackerApp {
                                 errorDetails = `Invalid field: ${invalidFieldError.field}`;
                             } else if (errorResponse.description) {
                                 errorDetails = errorResponse.description;
+                            } else {
+                                // Create a more helpful error message
+                                const errorMessages = errorResponse.errors.map(err => {
+                                    if (err.field && err.message) {
+                                        return `${err.field}: ${err.message}`;
+                                    } else if (err.code && err.message) {
+                                        return `${err.code}: ${err.message}`;
+                                    } else {
+                                        return JSON.stringify(err);
+                                    }
+                                });
+                                errorDetails = `Validation errors: ${errorMessages.join(', ')}`;
                             }
                         }
                     } else if (apiError.message) {
@@ -262,6 +295,11 @@ class TrackerApp {
                 } catch (parseError) {
                     console.error('Error parsing error response:', parseError);
                     errorDetails = "Error parsing API response";
+                }
+
+                // Add template-specific error guidance
+                if (this.trackerType === 'sedcust') {
+                    errorDetails += "\n\nFor SEDCUST template, please ensure all required fields are filled:\n- Xcode\n- Program Name\n- Resource\n- Path\n- Specific Issue\n- District Name\n- District State (unless District Name is 'Benchmark Education Company')\n- Related Tickets\n- Email";
                 }
 
                 throw new Error('Failed to create ticket: ' + errorDetails);

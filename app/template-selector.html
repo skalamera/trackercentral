@@ -221,6 +221,490 @@
         .independence-day-theme #themeToggleBtn[disabled] span {
             color: rgba(255, 255, 255, 0.5) !important;
         }
+
+        /* Tracker Details Modal */
+        .modal-controls {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+        }
+
+        .filter-sort-controls {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-control,
+        .sort-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-control label,
+        .sort-control label {
+            font-weight: 600;
+            color: var(--text-color);
+            white-space: nowrap;
+        }
+
+        .filter-control select,
+        .sort-control select {
+            padding: 6px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .tracker-item {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+
+        .tracker-item:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .tracker-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .tracker-item-details {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: var(--secondary-text);
+        }
+
+        .tracker-detail {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tracker-detail strong {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .tracker-status {
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: var(--status-bg, #e0e0e0);
+            color: var(--status-color, #333);
+        }
+
+        /* Status colors */
+        .status-open {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .status-pending {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .status-waiting {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .status-in-progress {
+            background-color: #9c27b0;
+            color: white;
+        }
+
+        .status-escalated {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .status-other {
+            background-color: #607d8b;
+            color: white;
+        }
+
+        /* Support Review Alert Button */
+        .view-all-btn.support-review-alert {
+            background: linear-gradient(135deg, #ff6b35, #ff8f00);
+            color: #fff;
+            font-weight: bold;
+            border: 2px solid #ff6b35;
+            box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
+            animation: pulseWarning 2s ease-in-out infinite;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .view-all-btn.support-review-alert:hover {
+            background: linear-gradient(135deg, #ff5722, #ff6f00);
+            color: #fff;
+            border-color: #ff5722;
+            box-shadow: 0 6px 12px rgba(255, 87, 34, 0.4);
+            transform: translateY(-1px);
+        }
+
+        [data-theme="dark"] .view-all-btn.support-review-alert {
+            background: linear-gradient(135deg, #ff7043, #ffa726);
+            color: #fff;
+            border-color: #ff7043;
+            box-shadow: 0 4px 8px rgba(255, 112, 67, 0.4);
+        }
+
+        [data-theme="dark"] .view-all-btn.support-review-alert:hover {
+            background: linear-gradient(135deg, #ff5722, #ff9800);
+            color: #fff;
+            border-color: #ff5722;
+            box-shadow: 0 6px 12px rgba(255, 87, 34, 0.5);
+        }
+
+        @keyframes pulseWarning {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+        }
+
+        /* Dark theme support review badge */
+        [data-theme="dark"] .support-review-badge {
+            background-color: #ffb300;
+            color: #000;
+        }
+
+        /* Tickets that need review highlighting */
+        .tracker-item.needs-review {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            box-shadow: 0 2px 4px rgba(255, 193, 7, 0.2);
+        }
+
+        [data-theme="dark"] .tracker-item.needs-review {
+            background-color: #2d2a1f;
+            border-left: 4px solid #ffb300;
+            box-shadow: 0 2px 4px rgba(255, 179, 0, 0.3);
+        }
+
+        .tracker-needs-review {
+            color: #ffc107;
+            margin-left: 8px;
+            font-size: 16px;
+            animation: pulseReview 2s ease-in-out infinite;
+        }
+
+        [data-theme="dark"] .tracker-needs-review {
+            color: #ffb300;
+        }
+
+        @keyframes pulseReview {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Widget Settings Container and Button */
+        .widget-settings-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .widget-settings-btn-main {
+            background: var(--hover-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 16px;
+            cursor: pointer;
+            color: var(--text-color);
+            font-size: 14px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .widget-settings-btn-main:hover {
+            background: var(--card-bg);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .widget-settings-btn-main i {
+            font-size: 16px;
+        }
+
+        /* New Badge Styles */
+        .new-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(238, 90, 36, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 2px 4px rgba(238, 90, 36, 0.3);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 2px 8px rgba(238, 90, 36, 0.5);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 2px 4px rgba(238, 90, 36, 0.3);
+            }
+        }
+
+        /* Adjust badge for dark mode */
+        [data-theme="dark"] .new-badge {
+            background: linear-gradient(135deg, #ff7979, #ff6348);
+            box-shadow: 0 2px 4px rgba(255, 99, 72, 0.4);
+        }
+
+        /* Widget Settings Modal */
+        .widget-settings-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .widget-settings-content {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        /* Dark mode modal background */
+        [data-theme="dark"] .widget-settings-content {
+            background: #1a202c;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .widget-settings-header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .widget-settings-header h3 {
+            margin: 0 0 10px 0;
+            color: var(--text-color);
+            font-size: 24px;
+        }
+
+        .widget-settings-header p {
+            margin: 0;
+            color: var(--secondary-text);
+            font-size: 14px;
+        }
+
+        .widget-option {
+            background: var(--hover-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .widget-option:hover {
+            border-color: #0ba87d;
+            box-shadow: 0 2px 8px rgba(11, 168, 125, 0.1);
+            transform: translateX(2px);
+        }
+
+        .widget-option.selected {
+            border-color: #0ba87d;
+            background: #e7f5ec;
+            box-shadow: 0 0 0 3px rgba(11, 168, 125, 0.2);
+        }
+
+        /* Dark mode specific for selected widget option */
+        [data-theme="dark"] .widget-option.selected {
+            background: #1a3a2e;
+            border-color: #4caf50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Add a checkmark for selected option */
+        .widget-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #0ba87d;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        [data-theme="dark"] .widget-option.selected::after {
+            background: #4caf50;
+        }
+
+        /* Dark mode specific for widget options */
+        [data-theme="dark"] .widget-option {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+
+        [data-theme="dark"] .widget-option:hover {
+            background: #374151;
+            border-color: #4caf50;
+        }
+
+        .widget-option-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .widget-option-title i {
+            color: #0ba87d;
+            font-size: 20px;
+        }
+
+        [data-theme="dark"] .widget-option-title i {
+            color: #4caf50;
+        }
+
+        .widget-option.selected .widget-option-title i {
+            color: #0ba87d;
+        }
+
+        [data-theme="dark"] .widget-option.selected .widget-option-title i {
+            color: #66bb6a;
+        }
+
+        .widget-option-description {
+            color: var(--secondary-text);
+            font-size: 14px;
+        }
+
+        .widget-settings-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .widget-settings-btn-action {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .widget-settings-btn-save {
+            background: #0ba87d;
+            color: white;
+        }
+
+        .widget-settings-btn-save:hover {
+            background: #098f65;
+        }
+
+        .widget-settings-btn-cancel {
+            background: var(--hover-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .widget-settings-btn-cancel:hover {
+            background: var(--card-bg);
+        }
+
+        /* Simple widget styles */
+        .simple-tracker-widget {
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .simple-widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .simple-widget-header h3 {
+            margin: 0;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .simple-widget-date {
+            color: var(--secondary-text);
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -244,6 +728,10 @@
                         <i class="fas fa-sliders-h"></i>
                         <span>Admin Settings</span>
                     </a>
+                    <a href="analytics.html" id="analyticsBtn" class="navbar-item" title="Analytics">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Analytics</span>
+                    </a>
                     <a href="https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000743925"
                         target="_blank" class="navbar-item" title="Tracker Central Docs">
                         <i class="fas fa-book-open"></i>
@@ -255,19 +743,148 @@
                     </button>
                 </div>
             </div>
-        </nav> <!-- DAILY TRACKER COUNTS DASHBOARD -->
-        <div id="trackerCountsDashboard" class="tracker-counts-dashboard" style="display: none;">
-            <div class="dashboard-header">
-                <div class="dashboard-title-row">
-                    <h3><i class="fas fa-chart-bar"></i> Today's Trackers <span id="trackerTotalCount"
-                            class="dashboard-count"></span></h3>
-                    <div class="dashboard-actions">
-                        <button class="view-all-btn" id="viewAllTrackersBtn" title="View all trackers">
-                            <i class="fas fa-list"></i> View All
-                        </button>
+        </nav>
+
+        <!-- WIDGET SETTINGS BUTTON (Always visible) -->
+        <div class="widget-settings-container">
+            <button class="widget-settings-btn-main" id="mainWidgetSettingsBtn" title="Switch View">
+                <i class="fas fa-exchange-alt"></i>
+                <span id="widgetButtonText">Classic View</span>
+            </button>
+        </div>
+
+        <!-- TRACKER WIDGETS CAROUSEL -->
+        <div id="trackerWidgetsCarousel" class="tracker-widgets-carousel">
+            <div class="carousel-container">
+                <div class="carousel-track">
+                    <!-- Today's Trackers Widget -->
+                    <div class="carousel-slide active" data-widget="today">
+                        <div class="tracker-counts-dashboard">
+                            <div class="dashboard-header">
+                                <div class="dashboard-title-row">
+                                    <h3><i class="fas fa-chart-bar"></i> Today's Trackers <span id="trackerTotalCount"
+                                            class="dashboard-count"></span></h3>
+                                    <div class="dashboard-actions">
+                                        <button class="view-all-btn" id="viewAllTrackersBtn" title="View all trackers">
+                                            <i class="fas fa-list"></i> View All
+                                        </button>
+                                    </div>
+                                </div>
+                                <span id="dashboardDate" class="dashboard-date"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- My Trackers Widget -->
+                    <div class="carousel-slide" data-widget="my">
+                        <div class="tracker-counts-dashboard">
+                            <div class="dashboard-header">
+                                <div class="dashboard-title-row">
+                                    <h3><i class="fas fa-user-tag"></i> My Trackers <span id="myTrackerCount"
+                                            class="dashboard-count"></span></h3>
+                                    <div class="dashboard-actions">
+                                        <button class="view-all-btn" id="viewMyTrackersBtn" title="View my trackers">
+                                            <i class="fas fa-list"></i> View All
+                                        </button>
+                                    </div>
+                                </div>
+                                <span class="dashboard-date">Unresolved trackers assigned to you</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Backlogged Widget -->
+                    <div class="carousel-slide" data-widget="backlog">
+                        <div class="tracker-counts-dashboard">
+                            <div class="dashboard-header">
+                                <div class="dashboard-title-row">
+                                    <h3><i class="fas fa-clock"></i> Backlogged <span id="backlogTrackerCount"
+                                            class="dashboard-count"></span></h3>
+                                    <div class="dashboard-actions">
+                                        <button class="view-all-btn" id="viewBacklogTrackersBtn"
+                                            title="View backlogged trackers">
+                                            <i class="fas fa-list"></i> View All
+                                        </button>
+                                    </div>
+                                </div>
+                                <span class="dashboard-date">Trackers in backlog status</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <span id="dashboardDate" class="dashboard-date"></span>
+            </div>
+
+            <!-- Navigation controls below carousel -->
+            <div class="carousel-nav-container">
+                <button class="carousel-nav carousel-prev" id="carouselPrev" aria-label="Previous widget">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-nav carousel-next" id="carouselNext" aria-label="Next widget">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Carousel indicators -->
+            <div class="carousel-indicators">
+                <button class="carousel-dot active" data-slide="0" aria-label="Go to Today's Trackers"></button>
+                <button class="carousel-dot" data-slide="1" aria-label="Go to My Trackers"></button>
+                <button class="carousel-dot" data-slide="2" aria-label="Go to Backlogged"></button>
+            </div>
+        </div>
+
+        <!-- SIMPLE TRACKER WIDGET (shown when user opts out of carousel) -->
+        <div id="simpleTrackerWidget" class="simple-tracker-widget" style="display: none;">
+            <div class="simple-widget-header">
+                <div>
+                    <h3><i class="fas fa-chart-bar"></i> Today's Trackers <span id="simpleTotalCount"
+                            class="dashboard-count"></span></h3>
+                    <span id="simpleDate" class="simple-widget-date"></span>
+                </div>
+                <div class="dashboard-actions">
+                    <button class="view-all-btn" id="simpleViewAllBtn" title="View all trackers">
+                        <i class="fas fa-list"></i> View All
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- WIDGET SETTINGS MODAL -->
+        <div id="widgetSettingsModal" class="widget-settings-modal">
+            <div class="widget-settings-content">
+                <div class="widget-settings-header">
+                    <h3>Widget Display Settings</h3>
+                    <p>Choose how you'd like to view your tracker widgets</p>
+                </div>
+
+                <div class="widget-options">
+                    <div class="widget-option selected" data-option="carousel">
+                        <div class="widget-option-title">
+                            <i class="fas fa-layer-group"></i>
+                            Carousel View (New)
+                        </div>
+                        <div class="widget-option-description">
+                            View all three widgets (Today's Trackers, My Trackers, and Backlogged) in an interactive
+                            carousel
+                        </div>
+                    </div>
+
+                    <div class="widget-option" data-option="classic">
+                        <div class="widget-option-title">
+                            <i class="fas fa-square"></i>
+                            Classic View
+                        </div>
+                        <div class="widget-option-description">
+                            Show only Today's Trackers widget in a simple, compact format
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget-settings-actions">
+                    <button class="widget-settings-btn-action widget-settings-btn-cancel"
+                        id="cancelWidgetSettings">Cancel</button>
+                    <button class="widget-settings-btn-action widget-settings-btn-save" id="saveWidgetSettings">Save
+                        Preference</button>
+                </div>
             </div>
         </div>
 
@@ -275,10 +892,48 @@
         <div id="trackerDetailsModal" class="tracker-modal" style="display: none;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-list"></i> Today's Trackers</h3>
+                    <h3 id="modalTitle"><i class="fas fa-list"></i> <span>Today's Trackers</span></h3>
                     <button class="modal-close" id="closeTrackerModal">&times;</button>
                 </div>
                 <div class="modal-body">
+                    <!-- Filter and Sort Controls -->
+                    <div id="modalControls" class="modal-controls" style="display: none;">
+                        <div class="filter-sort-controls">
+                            <div class="filter-control">
+                                <label for="statusFilter">Filter by Status:</label>
+                                <select id="statusFilter">
+                                    <option value="">All Statuses</option>
+                                    <option value="2">Open</option>
+                                    <option value="3">Pending</option>
+                                    <option value="6">Waiting on Customer</option>
+                                    <option value="8">Escalated</option>
+                                    <option value="9">Dev in Progress</option>
+                                    <option value="10">Waiting on Support</option>
+                                    <option value="11">Resubmitted</option>
+                                    <option value="14">Editorial in Progress</option>
+                                    <option value="15">Closed in JIRA</option>
+                                    <option value="22">Created in JIRA</option>
+                                    <option value="23">Follow-up Required</option>
+                                    <option value="25">Support Review</option>
+                                    <option value="26">On Hold</option>
+                                    <option value="29">Triage</option>
+                                    <option value="30">Pending Jira</option>
+                                    <option value="33">Bookings Meeting</option>
+                                    <option value="36">Awaiting Internal Review</option>
+                                    <option value="37">Support Ops Review</option>
+                                </select>
+                            </div>
+                            <div class="sort-control">
+                                <label for="sortBy">Sort by:</label>
+                                <select id="sortBy">
+                                    <option value="created_desc">Created Date (Newest First)</option>
+                                    <option value="created_asc">Created Date (Oldest First)</option>
+                                    <option value="updated_desc">Updated Date (Most Recent)</option>
+                                    <option value="updated_asc">Updated Date (Least Recent)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div id="trackerDetailsList" class="tracker-details-list">
                         <!-- Tracker details will be populated here -->
                     </div>
@@ -554,6 +1209,7 @@
                             setupTemplateHandlers();
                             initializeDrafts();
                             loadAndDisplayTrackerCounts();
+                            updateWidgetButtonText();
 
                         }).catch(function (error) {
                             console.error("Error getting ticket data:", error);
@@ -561,6 +1217,7 @@
                             checkAdminPermissions();
                             setupTemplateHandlers();
                             initializeDrafts();
+                            updateWidgetButtonText();
                         });
                     }).catch(function (error) {
                         console.error("Error initializing app:", error);
@@ -1172,6 +1829,29 @@
             window.loadDraft = loadDraft;
             window.deleteDraft = deleteDraft;
 
+            // Widget preference functions
+            function getWidgetPreference() {
+                return localStorage.getItem('trackerWidgetPreference') || 'carousel';
+            }
+
+            function setWidgetPreference(preference) {
+                localStorage.setItem('trackerWidgetPreference', preference);
+            }
+
+            // Update widget button text based on current preference
+            function updateWidgetButtonText() {
+                const buttonText = document.getElementById('widgetButtonText');
+                if (buttonText) {
+                    const currentPreference = getWidgetPreference();
+                    // Show the opposite of current preference (what they'll switch TO)
+                    if (currentPreference === 'carousel') {
+                        buttonText.textContent = 'Classic View';
+                    } else {
+                        buttonText.innerHTML = 'Carousel View <span class="new-badge">New</span>';
+                    }
+                }
+            }
+
             // Daily Tracker Counts Functions
             function loadAndDisplayTrackerCounts() {
                 console.log("Loading daily tracker counts");
@@ -1183,6 +1863,9 @@
 
                 const today = getTodayDateString();
                 const storageKey = `tracker-details-${today}`;
+
+                // Update widget button text
+                updateWidgetButtonText();
 
                 // Load today's tracker details from Freshdesk storage
                 client.db.get(storageKey)
@@ -1197,14 +1880,25 @@
                     });
             }
 
+            // Global variables for carousel
+            let currentSlide = 1;  // Start at middle widget (My Trackers)
+            const totalSlides = 3;
+
             function displayTrackerCounts(trackers, date) {
-                const dashboard = document.getElementById('trackerCountsDashboard');
+                const preference = getWidgetPreference();
+                const carousel = document.getElementById('trackerWidgetsCarousel');
+                const simpleWidget = document.getElementById('simpleTrackerWidget');
                 const dateElement = document.getElementById('dashboardDate');
                 const trackerTotalCount = document.getElementById('trackerTotalCount');
                 const viewAllBtn = document.getElementById('viewAllTrackersBtn');
 
-                if (!dashboard || !dateElement) {
-                    console.warn("Dashboard elements not found");
+                // Simple widget elements
+                const simpleDateElement = document.getElementById('simpleDate');
+                const simpleTotalCount = document.getElementById('simpleTotalCount');
+                const simpleViewAllBtn = document.getElementById('simpleViewAllBtn');
+
+                if (!carousel || !simpleWidget) {
+                    console.warn("Widget elements not found");
                     return;
                 }
 
@@ -1219,23 +1913,528 @@
                     month: 'long',
                     day: 'numeric'
                 });
-                dateElement.textContent = formattedDate;
 
                 // Calculate total count
                 const totalCount = trackers.length;
 
-                // Update the count badge
-                if (trackerTotalCount) {
-                    trackerTotalCount.textContent = totalCount;
+                // Show appropriate widget based on preference
+                if (preference === 'classic') {
+                    // Hide carousel, show simple widget
+                    carousel.style.display = 'none';
+                    simpleWidget.style.display = 'block';
+
+                    // Update simple widget elements
+                    if (simpleDateElement) simpleDateElement.textContent = formattedDate;
+                    if (simpleTotalCount) simpleTotalCount.textContent = totalCount;
+                    if (simpleViewAllBtn) {
+                        simpleViewAllBtn.style.display = totalCount > 0 ? 'inline-flex' : 'none';
+                    }
+                } else {
+                    // Show carousel, hide simple widget
+                    carousel.style.display = 'block';
+                    simpleWidget.style.display = 'none';
+
+                    // Update carousel elements
+                    if (dateElement) dateElement.textContent = formattedDate;
+                    if (trackerTotalCount) trackerTotalCount.textContent = totalCount;
+                    if (viewAllBtn) {
+                        viewAllBtn.style.display = totalCount > 0 ? 'inline-flex' : 'none';
+                    }
+
+                    // Load data for other widgets in carousel
+                    loadMyTrackers();
+                    loadBackloggedTrackers();
+
+                    // Initialize carousel
+                    initializeCarousel();
+                }
+            }
+
+            // Carousel Functions
+            function initializeCarousel() {
+                const prevBtn = document.getElementById('carouselPrev');
+                const nextBtn = document.getElementById('carouselNext');
+                const dots = document.querySelectorAll('.carousel-dot');
+
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', () => moveCarousel(-1));
                 }
 
-                // Show/hide View All button based on whether there are trackers
-                if (viewAllBtn) {
-                    viewAllBtn.style.display = totalCount > 0 ? 'inline-flex' : 'none';
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', () => moveCarousel(1));
                 }
 
-                // Show the dashboard
-                dashboard.style.display = 'block';
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => goToSlide(index));
+                });
+
+                // Update carousel state
+                updateCarousel();
+            }
+
+            function moveCarousel(direction) {
+                currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+                updateCarousel();
+            }
+
+            function goToSlide(index) {
+                currentSlide = index;
+                updateCarousel();
+            }
+
+            function updateCarousel() {
+                const track = document.querySelector('.carousel-track');
+                const slides = document.querySelectorAll('.carousel-slide');
+                const dots = document.querySelectorAll('.carousel-dot');
+
+                if (track) {
+                    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+                }
+
+                slides.forEach((slide, index) => {
+                    slide.classList.toggle('active', index === currentSlide);
+                });
+
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+            }
+
+            // Load My Trackers
+            async function loadMyTrackers() {
+                try {
+                    if (!window.client) {
+                        console.warn("Client not available for loading my trackers");
+                        return;
+                    }
+
+                    // Get logged in user
+                    const userData = await client.data.get("loggedInUser");
+                    if (!userData || !userData.loggedInUser) {
+                        console.warn("Could not get logged in user data");
+                        updateMyTrackersDisplay(0);
+                        return;
+                    }
+
+                    const userId = userData.loggedInUser.id;
+                    console.log("Loading trackers for user ID:", userId);
+
+                    // Convert userId to both string and number for comparison
+                    const userIdStr = String(userId);
+                    const userIdNum = parseInt(userId, 10);
+
+                    try {
+                        // Search for tickets assigned to current agent with unresolved statuses
+                        // Including all unresolved statuses except: 4 (Resolved), 5 (Closed), 27 (Backlog), 28 (Closed - No Resolution)
+                        const unresolved = [2, 3, 6, 8, 9, 10, 11, 14, 15, 22, 23, 25, 26, 29, 30, 33, 36, 37];
+                        const statusFilter = unresolved.map(s => `status:${s}`).join(' OR ');
+
+                        // Search ONLY for tracker tickets assigned to this agent
+                        // Add tag:tracker to the initial search to reduce results
+                        const filter = `agent_id:${userIdNum} AND tag:tracker AND (${statusFilter})`;
+                        console.log("Searching for My Trackers with filter:", filter);
+                        console.log("Status IDs included in search:", unresolved);
+
+                        // Get ALL tickets using pagination
+                        let allTickets = [];
+                        let page = 1;
+                        let hasMore = true;
+
+                        while (hasMore) {
+                            const requestContext = {
+                                filter: filter,
+                                page: page,
+                                per_page: 100 // Maximum allowed by Freshdesk
+                            };
+                            console.log(`Requesting page ${page} with per_page: ${requestContext.per_page}`);
+
+                            const response = await client.request.invokeTemplate("getTicketsByFilter", {
+                                context: requestContext
+                            });
+
+                            const data = JSON.parse(response.response);
+                            if (page === 1) {
+                                console.log("My Trackers API response structure:", data);
+                                console.log(`Total tickets available: ${data.total || 'unknown'}`);
+                            }
+
+                            // Handle different response formats from Freshdesk API
+                            let pageTickets = [];
+                            if (data && data.results && Array.isArray(data.results)) {
+                                pageTickets = data.results;
+                            } else if (data && data.tickets && Array.isArray(data.tickets)) {
+                                pageTickets = data.tickets;
+                            } else if (Array.isArray(data)) {
+                                pageTickets = data;
+                            }
+
+                            // Check for duplicates before adding
+                            const beforeCount = allTickets.length;
+                            const existingIds = new Set(allTickets.map(t => t.id));
+                            const newTickets = pageTickets.filter(ticket => !existingIds.has(ticket.id));
+                            const duplicatesOnPage = pageTickets.length - newTickets.length;
+
+                            allTickets = allTickets.concat(newTickets);
+                            console.log(`Page ${page}: Retrieved ${pageTickets.length} tickets (${newTickets.length} new, ${duplicatesOnPage} duplicates) - total so far: ${allTickets.length}`);
+
+                            // Check if there are more pages by comparing with total count
+                            const totalAvailable = data.total || allTickets.length;
+                            // Continue if we haven't fetched all tickets yet AND we got some tickets on this page
+                            hasMore = allTickets.length < totalAvailable && pageTickets.length > 0;
+
+                            page++;
+
+                            // Safety limit to prevent infinite loops (with 100 per page, 10 pages = 1000 tickets)
+                            if (page > 10) {
+                                console.warn("Reached page limit of 10 (1000 tickets), stopping pagination");
+                                hasMore = false;
+                            }
+                        }
+
+                        let tickets = allTickets;
+                        console.log(`Retrieved ${tickets.length} total tickets from all pages`);
+
+                        // Log ticket count only
+                        if (tickets.length > 0) {
+                            console.log(`Found ${tickets.length} tickets in search results`);
+                        }
+
+                        // First, let's analyze all tickets before filtering
+                        console.log("Analyzing all retrieved tickets before filtering:");
+                        const statusCounts = {};
+                        const tagCounts = {};
+                        let trackersWithoutTag = 0;
+
+                        tickets.forEach(ticket => {
+                            // Count statuses
+                            statusCounts[ticket.status] = (statusCounts[ticket.status] || 0) + 1;
+
+                            // Count tags
+                            if (ticket.tags && Array.isArray(ticket.tags)) {
+                                ticket.tags.forEach(tag => {
+                                    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                                });
+                            }
+
+                            // Check if subject contains "tracker" but no tag
+                            if (ticket.subject && ticket.subject.toLowerCase().includes('tracker') &&
+                                (!ticket.tags || !ticket.tags.some(tag => tag === 'tracker' || tag.startsWith('tracker-')))) {
+                                trackersWithoutTag++;
+                            }
+                        });
+
+                        console.log("Status distribution:", statusCounts);
+                        console.log("Tag distribution:", tagCounts);
+                        console.log("Tickets with 'tracker' in subject but no tracker tag:", trackersWithoutTag);
+
+                        // Filter for tracker tickets (already filtered by agent and status in the search)
+                        const trackerTickets = tickets.filter((ticket, index) => {
+                            // Check if it's a tracker ticket (has 'tracker' tag or tags starting with 'tracker-')
+                            const isTracker = ticket.tags && Array.isArray(ticket.tags) &&
+                                ticket.tags.some(tag => tag === 'tracker' || tag.startsWith('tracker-'));
+
+                            // Enhanced debug logging for ALL tickets to understand the assignment issue
+                            if (index < 10) {
+                                console.log(`Ticket ${index + 1}:`, {
+                                    id: ticket.id,
+                                    subject: ticket.subject.substring(0, 50) + '...',
+                                    status: ticket.status,
+                                    responder_id: ticket.responder_id,
+                                    agent_id: ticket.agent_id,
+                                    assignee_id: ticket.assignee_id,
+                                    requester_id: ticket.requester_id,
+                                    created_by: ticket.created_by,
+                                    tags: ticket.tags ? ticket.tags.join(', ') : 'No tags',
+                                    isTracker: isTracker
+                                });
+
+                                // Special warning if ticket is not assigned to the expected user
+                                if (ticket.responder_id != userIdNum && ticket.agent_id != userIdNum) {
+                                    console.warn(`⚠️ Ticket ${ticket.id} is NOT assigned to user ${userIdNum}!`,
+                                        `responder_id: ${ticket.responder_id}, agent_id: ${ticket.agent_id}`);
+                                }
+                            }
+
+                            return isTracker;
+                        });
+
+                        // Remove duplicates based on ticket ID
+                        const uniqueTrackers = [];
+                        const seenIds = new Set();
+                        const duplicateInfo = {};
+
+                        trackerTickets.forEach(ticket => {
+                            if (!seenIds.has(ticket.id)) {
+                                seenIds.add(ticket.id);
+                                uniqueTrackers.push(ticket);
+                            } else {
+                                // Track duplicate info
+                                duplicateInfo[ticket.id] = (duplicateInfo[ticket.id] || 1) + 1;
+                            }
+                        });
+
+                        window.myTrackers = uniqueTrackers;
+
+                        console.log(`Found ${trackerTickets.length} tracker tickets (${uniqueTrackers.length} unique) assigned to user ${userId}`);
+
+                        // Log duplicate information if any
+                        if (Object.keys(duplicateInfo).length > 0) {
+                            console.log('Duplicate tracker tickets found:', duplicateInfo);
+                        }
+
+                        // Log details of unique tracker tickets found
+                        console.log('Unique tracker tickets:');
+                        uniqueTrackers.forEach((ticket, index) => {
+                            console.log(`  ${index + 1}. #${ticket.id}: ${ticket.subject} (Status: ${ticket.status}, Tags: ${ticket.tags ? ticket.tags.join(', ') : 'None'})`);
+                        });
+                        updateMyTrackersDisplay(window.myTrackers.length);
+                    } catch (searchError) {
+                        console.error("Error with ticket search, trying alternate approach:", searchError);
+
+                        // Check if this is a field validation error
+                        if (searchError.response && searchError.response.includes("invalid_field")) {
+                            console.warn("The assignee_id field may not be supported in your Freshdesk instance. Trying alternative approaches...");
+                        }
+
+                        // If search fails, try getting all tracker tickets
+                        try {
+                            console.log("Trying simpler search for all tracker tickets...");
+                            const simpleResponse = await client.request.invokeTemplate("getTicketsByFilter", {
+                                context: {
+                                    filter: `tag:tracker`
+                                }
+                            });
+
+                            const data = JSON.parse(simpleResponse.response);
+                            console.log("Fallback API response structure:", data);
+
+                            // Handle different response formats from Freshdesk API
+                            let tickets = [];
+                            if (data && data.results && Array.isArray(data.results)) {
+                                tickets = data.results;
+                            } else if (data && data.tickets && Array.isArray(data.tickets)) {
+                                tickets = data.tickets;
+                            } else if (Array.isArray(data)) {
+                                tickets = data;
+                            }
+                            console.log(`Retrieved ${tickets.length} tickets from fallback search`);
+
+                            // Filter for tracker tickets assigned to user
+                            window.myTrackers = tickets.filter(ticket => {
+                                const hasTrackerTag = ticket.tags && Array.isArray(ticket.tags) &&
+                                    ticket.tags.some(tag => tag === 'tracker' || tag.startsWith('tracker-'));
+
+                                // TEMPORARY FIX: Also check for ESCALATED TO ASSEMBLY tag or specific patterns
+                                const hasEscalatedTag = ticket.tags && Array.isArray(ticket.tags) &&
+                                    ticket.tags.includes('ESCALATED TO ASSEMBLY');
+
+                                // Check if subject indicates it's a tracker
+                                const subjectPattern = ticket.subject && (
+                                    ticket.subject.includes(' | ') ||
+                                    ticket.subject.includes(' • ') ||
+                                    /\b(VIP\*?|SIM|SEDCUST|Assembly)\b/i.test(ticket.subject)
+                                );
+
+                                const isTracker = hasTrackerTag || (hasEscalatedTag && subjectPattern);
+                                // Check if assigned to current user
+                                const isAssignedToUser = ticket.agent_id === userIdNum ||
+                                    ticket.agent_id === userIdStr ||
+                                    ticket.responder_id === userIdNum ||
+                                    ticket.responder_id === userIdStr;
+                                // Check if unresolved - exclude status 4 (Resolved), 5 (Closed), 27 (Backlog), 28 (Closed-No Resolution)
+                                const resolvedStatuses = [4, 5, 27, 28];
+                                const isUnresolved = !resolvedStatuses.includes(ticket.status);
+
+                                return isTracker && isAssignedToUser && isUnresolved;
+                            });
+
+                            updateMyTrackersDisplay(window.myTrackers.length);
+                        } catch (fallbackError) {
+                            console.error("Fallback search also failed:", fallbackError);
+
+                            // Final fallback: Try getting tickets directly without search
+                            try {
+                                console.log("Attempting to get tickets without search filter...");
+                                // Try to get all tickets, or at least first page
+                                const allTicketsResponse = await client.request.invokeTemplate("getAllTickets", {
+                                    context: {}
+                                });
+
+                                const data = JSON.parse(allTicketsResponse.response);
+                                console.log("All tickets response structure:", data);
+
+                                let tickets = [];
+                                if (data && data.results && Array.isArray(data.results)) {
+                                    tickets = data.results;
+                                } else if (data && data.tickets && Array.isArray(data.tickets)) {
+                                    tickets = data.tickets;
+                                } else if (Array.isArray(data)) {
+                                    tickets = data;
+                                }
+
+                                // Filter client-side for user's tracker tickets
+                                window.myTrackers = tickets.filter(ticket => {
+                                    const isTracker = ticket.tags && Array.isArray(ticket.tags) &&
+                                        ticket.tags.some(tag => tag === 'tracker' || tag.startsWith('tracker-'));
+                                    const isAssignedToUser = ticket.agent_id === userIdNum ||
+                                        ticket.agent_id === userIdStr ||
+                                        ticket.responder_id === userIdNum ||
+                                        ticket.responder_id === userIdStr;
+                                    // Check if unresolved - exclude status 4 (Resolved), 5 (Closed), 27 (Backlog), 28 (Closed-No Resolution)
+                                    const resolvedStatuses = [4, 5, 27, 28];
+                                    const isUnresolved = !resolvedStatuses.includes(ticket.status);
+                                    return isTracker && isAssignedToUser && isUnresolved;
+                                });
+
+                                console.log(`Found ${window.myTrackers.length} tracker tickets for user after client-side filtering`);
+                                updateMyTrackersDisplay(window.myTrackers.length);
+                            } catch (allTicketsError) {
+                                console.error("Failed to get tickets without search:", allTicketsError);
+                                window.myTrackers = [];
+                                updateMyTrackersDisplay(0);
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error loading my trackers:", error);
+                    window.myTrackers = [];
+                    updateMyTrackersDisplay(0);
+                }
+            }
+
+            function updateMyTrackersDisplay(count) {
+                const myTrackerCount = document.getElementById('myTrackerCount');
+                const viewMyTrackersBtn = document.getElementById('viewMyTrackersBtn');
+
+                if (myTrackerCount) {
+                    myTrackerCount.textContent = count;
+                }
+
+                if (viewMyTrackersBtn && count > 0) {
+                    // Check if any trackers have Support Review status (25 or 15)
+                    const supportReviewCount = (window.myTrackers || []).filter(ticket =>
+                        ticket.status === 25 || ticket.status === 15
+                    ).length;
+
+                    if (supportReviewCount > 0) {
+                        // Replace button content with support review alert
+                        viewMyTrackersBtn.className = 'view-all-btn support-review-alert';
+                        viewMyTrackersBtn.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${supportReviewCount} Need Review`;
+                        viewMyTrackersBtn.title = `${supportReviewCount} ticket${supportReviewCount > 1 ? 's' : ''} need${supportReviewCount === 1 ? 's' : ''} review - Click to view`;
+                    } else {
+                        // Reset to normal View All button
+                        viewMyTrackersBtn.className = 'view-all-btn';
+                        viewMyTrackersBtn.innerHTML = '<i class="fas fa-list"></i> View All';
+                        viewMyTrackersBtn.title = 'View my trackers';
+                    }
+
+                    viewMyTrackersBtn.style.display = 'inline-flex';
+                } else if (viewMyTrackersBtn) {
+                    viewMyTrackersBtn.style.display = 'none';
+                }
+            }
+
+            // Load Backlogged
+            async function loadBackloggedTrackers() {
+                try {
+                    if (!window.client) {
+                        console.warn("Client not available for loading backlogged trackers");
+                        return;
+                    }
+
+                    try {
+                        // Try to search for tracker tickets with backlog status (27)
+                        // Search for trackers with status 27
+                        const filter = `tag:tracker AND status:27`;
+                        console.log("Searching for Backlogged with filter:", filter);
+
+                        const response = await client.request.invokeTemplate("getTicketsByFilter", {
+                            context: {
+                                filter: filter
+                            }
+                        });
+
+                        const data = JSON.parse(response.response);
+                        console.log("Backlogged API response structure:", data);
+
+                        // Handle different response formats from Freshdesk API
+                        let tickets = [];
+                        if (data && data.results && Array.isArray(data.results)) {
+                            tickets = data.results;
+                        } else if (data && data.tickets && Array.isArray(data.tickets)) {
+                            tickets = data.tickets;
+                        } else if (Array.isArray(data)) {
+                            tickets = data;
+                        }
+                        console.log(`Retrieved ${tickets.length} tickets from backlog search`);
+
+
+
+                        // The API already filtered for tracker tickets with status 27
+                        window.backloggedTrackers = tickets;
+
+                        console.log(`Found ${window.backloggedTrackers.length} backlogged tracker tickets`);
+                        updateBackloggedTrackersDisplay(window.backloggedTrackers.length);
+                    } catch (searchError) {
+                        console.error("Error searching for backlogged trackers:", searchError);
+
+                        // Try a simpler search for just status 27
+                        try {
+                            console.log("Trying simpler search for status 27 tickets...");
+                            const simpleResponse = await client.request.invokeTemplate("getTicketsByFilter", {
+                                context: {
+                                    filter: `status:27`
+                                }
+                            });
+
+                            const data = JSON.parse(simpleResponse.response);
+                            console.log("Simple backlog search response structure:", data);
+
+                            // Handle different response formats
+                            let tickets = [];
+                            if (data && data.results && Array.isArray(data.results)) {
+                                tickets = data.results;
+                            } else if (data && data.tickets && Array.isArray(data.tickets)) {
+                                tickets = data.tickets;
+                            } else if (Array.isArray(data)) {
+                                tickets = data;
+                            }
+
+                            // Filter for tracker tickets
+                            window.backloggedTrackers = tickets.filter(ticket => {
+                                return ticket.tags && Array.isArray(ticket.tags) &&
+                                    ticket.tags.some(tag => tag === 'tracker' || tag.startsWith('tracker-'));
+                            });
+
+                            console.log(`Found ${window.backloggedTrackers.length} backlogged tracker tickets from simple search`);
+                            updateBackloggedTrackersDisplay(window.backloggedTrackers.length);
+                        } catch (fallbackError) {
+                            console.error("Simple backlog search also failed:", fallbackError);
+
+                            // If the search fails (possibly due to custom status 27 not existing),
+                            // we'll just show 0 backlogged trackers
+                            window.backloggedTrackers = [];
+                            updateBackloggedTrackersDisplay(0);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error loading backlogged trackers:", error);
+                    window.backloggedTrackers = [];
+                    updateBackloggedTrackersDisplay(0);
+                }
+            }
+
+            function updateBackloggedTrackersDisplay(count) {
+                const backlogTrackerCount = document.getElementById('backlogTrackerCount');
+                const viewBacklogTrackersBtn = document.getElementById('viewBacklogTrackersBtn');
+
+                if (backlogTrackerCount) {
+                    backlogTrackerCount.textContent = count;
+                }
+
+                if (viewBacklogTrackersBtn) {
+                    viewBacklogTrackersBtn.style.display = count > 0 ? 'inline-flex' : 'none';
+                }
             }
 
             function getTemplateInfo() {
@@ -1333,7 +2532,6 @@
 
             // Manual test function for debugging
             function testTrackerCount() {
-                console.log("[DEBUG] Testing tracker count functionality");
                 incrementTrackerCount('sedcust', '12345', 'Test District | SEDCUST Content Issue');
                 setTimeout(() => {
                     loadAndDisplayTrackerCounts();
@@ -1342,6 +2540,110 @@
 
             // Make test function globally accessible
             window.testTrackerCount = testTrackerCount;
+
+            // Debug function to find all tracker tickets for current user regardless of status
+            async function debugFindAllMyTrackers() {
+                try {
+                    console.log("DEBUG: Finding ALL tracker tickets for current user...");
+
+                    const userData = await client.data.get("loggedInUser");
+                    const userId = userData.loggedInUser.id;
+                    const userIdNum = parseInt(userId, 10);
+
+                    // Search for ALL tickets assigned to user (no status filter)
+                    const filter = `agent_id:${userIdNum}`;
+                    console.log("DEBUG: Searching with filter:", filter);
+
+                    // Get ALL tickets using pagination
+                    let allTickets = [];
+                    let page = 1;
+                    let hasMore = true;
+
+                    while (hasMore) {
+                        const response = await client.request.invokeTemplate("getTicketsByFilter", {
+                            context: {
+                                filter: filter,
+                                page: page,
+                                per_page: 100 // Maximum allowed by Freshdesk
+                            }
+                        });
+
+                        const data = JSON.parse(response.response);
+                        if (page === 1) {
+                            console.log(`DEBUG: Total tickets available: ${data.total || 'unknown'}`);
+                        }
+
+                        let pageTickets = [];
+                        if (data && data.results && Array.isArray(data.results)) {
+                            pageTickets = data.results;
+                        } else if (data && data.tickets && Array.isArray(data.tickets)) {
+                            pageTickets = data.tickets;
+                        } else if (Array.isArray(data)) {
+                            pageTickets = data;
+                        }
+
+                        allTickets = allTickets.concat(pageTickets);
+                        console.log(`DEBUG: Page ${page}: Retrieved ${pageTickets.length} tickets`);
+
+                        // Check if there are more pages by comparing with total count
+                        const totalAvailable = data.total || allTickets.length;
+                        // Continue if we haven't fetched all tickets yet AND we got some tickets on this page
+                        hasMore = allTickets.length < totalAvailable && pageTickets.length > 0;
+
+                        page++;
+
+                        if (page > 10) {
+                            console.warn("DEBUG: Reached page limit of 10 (1000 tickets)");
+                            hasMore = false;
+                        }
+                    }
+
+                    let tickets = allTickets;
+                    console.log(`DEBUG: Found ${tickets.length} total tickets for user`);
+
+                    // Now filter for tracker tickets and analyze statuses
+                    const trackerTickets = tickets.filter(ticket => {
+                        return ticket.tags && Array.isArray(ticket.tags) &&
+                            ticket.tags.some(tag => tag === 'tracker' || tag.startsWith('tracker-'));
+                    });
+
+                    console.log(`DEBUG: Found ${trackerTickets.length} tracker tickets total`);
+
+                    // Analyze status distribution of tracker tickets
+                    const statusDistribution = {};
+                    trackerTickets.forEach(ticket => {
+                        const status = ticket.status;
+                        if (!statusDistribution[status]) {
+                            statusDistribution[status] = { count: 0, tickets: [] };
+                        }
+                        statusDistribution[status].count++;
+                        statusDistribution[status].tickets.push({
+                            id: ticket.id,
+                            subject: ticket.subject
+                        });
+                    });
+
+                    console.log("DEBUG: Tracker tickets by status:", statusDistribution);
+
+                    // Show which statuses are missing from the unresolved list
+                    const unresolved = [2, 3, 6, 8, 9, 10, 11, 14, 15, 22, 23, 25, 26, 29, 30, 33, 36, 37];
+                    const missingStatuses = Object.keys(statusDistribution)
+                        .map(s => parseInt(s))
+                        .filter(s => !unresolved.includes(s) && s !== 4 && s !== 5 && s !== 27 && s !== 28);
+
+                    if (missingStatuses.length > 0) {
+                        console.log("DEBUG: Missing status IDs that should be added to unresolved list:", missingStatuses);
+                        console.log("DEBUG: Add these status IDs to the 'unresolved' array in loadMyTrackers function");
+                    }
+
+                    return trackerTickets;
+                } catch (error) {
+                    console.error("DEBUG: Error in debugFindAllMyTrackers:", error);
+                }
+            }
+
+            // Make debug function globally accessible
+            window.debugFindAllMyTrackers = debugFindAllMyTrackers;
 
             // Function to select a template and navigate to the dynamic template
             function selectTemplate(templateType) {
@@ -1648,9 +2950,11 @@
             });
 
             // Function to show tracker details modal
-            function showTrackerDetails() {
+            function showTrackerDetails(widgetType = 'today') {
                 const modal = document.getElementById('trackerDetailsModal');
                 const detailsList = document.getElementById('trackerDetailsList');
+                const modalTitleSpan = document.querySelector('#modalTitle span');
+                const modalControls = document.getElementById('modalControls');
 
                 if (!modal || !detailsList) {
                     console.error('Modal elements not found');
@@ -1660,71 +2964,304 @@
                 // Clear existing content
                 detailsList.innerHTML = '';
 
-                // Get today's trackers
-                const trackers = window.todayTrackers || [];
+                // Show/hide controls based on widget type
+                if (modalControls) {
+                    modalControls.style.display = widgetType === 'my' ? 'block' : 'none';
+                }
 
-                if (trackers.length === 0) {
-                    detailsList.innerHTML = '<div class="no-trackers">No trackers created today.</div>';
-                } else {
-                    // Group trackers by template type
-                    const trackersByTemplate = {};
-                    trackers.forEach(tracker => {
-                        if (!trackersByTemplate[tracker.templateType]) {
-                            trackersByTemplate[tracker.templateType] = [];
-                        }
-                        trackersByTemplate[tracker.templateType].push(tracker);
-                    });
+                // Get trackers based on widget type
+                let trackers = [];
+                let noTrackersMessage = '';
 
-                    // Get template info for display
-                    const templateInfo = getTemplateInfo();
+                switch (widgetType) {
+                    case 'today':
+                        trackers = window.todayTrackers || [];
+                        modalTitleSpan.textContent = "Today's Trackers";
+                        noTrackersMessage = 'No trackers created today.';
+                        break;
+                    case 'my':
+                        trackers = window.myTrackers || [];
+                        modalTitleSpan.textContent = 'My Trackers';
+                        noTrackersMessage = 'No unresolved trackers assigned to you.';
+                        break;
+                    case 'backlog':
+                        trackers = window.backloggedTrackers || [];
+                        modalTitleSpan.textContent = 'Backlogged';
+                        noTrackersMessage = 'No trackers in backlog status.';
+                        break;
+                }
 
-                    // Create sections for each template type
-                    Object.entries(trackersByTemplate).forEach(([templateType, templateTrackers]) => {
-                        const info = templateInfo[templateType];
-                        if (info) {
-                            const section = document.createElement('div');
-                            section.className = 'tracker-template-section';
+                // Store original trackers and widget type for filtering/sorting
+                window.modalTrackers = trackers;
+                window.currentWidgetType = widgetType;
 
-                            const sectionHeader = document.createElement('h4');
-                            sectionHeader.className = 'tracker-section-header';
-                            sectionHeader.innerHTML = `<i class="${info.icon}"></i> ${info.name}`;
-                            section.appendChild(sectionHeader);
+                // Display trackers
+                displayTrackers(trackers, widgetType, noTrackersMessage);
 
-                            const trackerList = document.createElement('div');
-                            trackerList.className = 'tracker-list';
-
-                            templateTrackers.forEach(tracker => {
-                                const trackerItem = document.createElement('div');
-                                trackerItem.className = 'tracker-item';
-
-                                const timestamp = new Date(tracker.timestamp).toLocaleTimeString([], {
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                });
-
-                                trackerItem.innerHTML = `
-                                    <div class="tracker-id">
-                                        <a href="https://techsupport.benchmarkeducation.com/a/tickets/${tracker.id}" 
-                                           target="_blank" 
-                                           class="tracker-link">
-                                            #${tracker.id}
-                                        </a>
-                                        <span class="tracker-time">${timestamp}</span>
-                                    </div>
-                                    <div class="tracker-subject">${tracker.subject}</div>
-                                `;
-
-                                trackerList.appendChild(trackerItem);
-                            });
-
-                            section.appendChild(trackerList);
-                            detailsList.appendChild(section);
-                        }
-                    });
+                // Set up filter and sort event listeners
+                if (widgetType === 'my') {
+                    setupFilterAndSort();
                 }
 
                 // Show the modal
                 modal.style.display = 'flex';
+            }
+
+            // Function to display trackers in the modal
+            function displayTrackers(trackers, widgetType, noTrackersMessage) {
+                const detailsList = document.getElementById('trackerDetailsList');
+                detailsList.innerHTML = '';
+
+                if (trackers.length === 0) {
+                    detailsList.innerHTML = `<div class="no-trackers">${noTrackersMessage}</div>`;
+                } else {
+                    // Sort trackers to show tickets that need review first
+                    if (widgetType === 'my') {
+                        trackers = [...trackers].sort((a, b) => {
+                            // Check if tickets need review (status 25 or 15)
+                            const aNeedsReview = a.status === 25 || a.status === 15;
+                            const bNeedsReview = b.status === 25 || b.status === 15;
+
+                            // If one needs review and the other doesn't, prioritize the one that needs review
+                            if (aNeedsReview && !bNeedsReview) return -1;
+                            if (!aNeedsReview && bNeedsReview) return 1;
+
+                            // Default sort by created date (newest first) for same review status
+                            return new Date(b.created_at) - new Date(a.created_at);
+                        });
+                    }
+                    // For today's trackers, group by template type
+                    if (widgetType === 'today') {
+                        const trackersByTemplate = {};
+                        trackers.forEach(tracker => {
+                            if (!trackersByTemplate[tracker.templateType]) {
+                                trackersByTemplate[tracker.templateType] = [];
+                            }
+                            trackersByTemplate[tracker.templateType].push(tracker);
+                        });
+
+                        // Get template info for display
+                        const templateInfo = getTemplateInfo();
+
+                        // Create sections for each template type
+                        Object.entries(trackersByTemplate).forEach(([templateType, templateTrackers]) => {
+                            const info = templateInfo[templateType];
+                            if (info) {
+                                const section = document.createElement('div');
+                                section.className = 'tracker-template-section';
+
+                                const sectionHeader = document.createElement('h4');
+                                sectionHeader.className = 'tracker-section-header';
+                                sectionHeader.innerHTML = `<i class="${info.icon}"></i> ${info.name}`;
+                                section.appendChild(sectionHeader);
+
+                                const trackerList = document.createElement('div');
+                                trackerList.className = 'tracker-list';
+
+                                templateTrackers.forEach(tracker => {
+                                    const trackerItem = createTrackerItem(tracker);
+                                    trackerList.appendChild(trackerItem);
+                                });
+
+                                section.appendChild(trackerList);
+                                detailsList.appendChild(section);
+                            }
+                        });
+                    } else {
+                        // For my trackers and backlog, show all in one list
+                        const section = document.createElement('div');
+                        section.className = 'tracker-template-section';
+
+                        const trackerList = document.createElement('div');
+                        trackerList.className = 'tracker-list';
+
+                        trackers.forEach(tracker => {
+                            const trackerItem = createTrackerItem(tracker, widgetType === 'my');
+                            trackerList.appendChild(trackerItem);
+                        });
+
+                        section.appendChild(trackerList);
+                        detailsList.appendChild(section);
+                    }
+                }
+            }
+
+            // Function to set up filter and sort event listeners
+            function setupFilterAndSort() {
+                const statusFilter = document.getElementById('statusFilter');
+                const sortBy = document.getElementById('sortBy');
+
+                if (statusFilter) {
+                    statusFilter.removeEventListener('change', handleFilterSort);
+                    statusFilter.addEventListener('change', handleFilterSort);
+                }
+
+                if (sortBy) {
+                    sortBy.removeEventListener('change', handleFilterSort);
+                    sortBy.addEventListener('change', handleFilterSort);
+                }
+            }
+
+            // Function to handle filtering and sorting
+            function handleFilterSort() {
+                const statusFilter = document.getElementById('statusFilter');
+                const sortBy = document.getElementById('sortBy');
+
+                let filteredTrackers = [...window.modalTrackers];
+
+                // Apply status filter
+                if (statusFilter && statusFilter.value) {
+                    filteredTrackers = filteredTrackers.filter(tracker =>
+                        tracker.status == statusFilter.value
+                    );
+                }
+
+                // Apply sorting with priority for tickets that need review
+                filteredTrackers.sort((a, b) => {
+                    // Check if tickets need review (status 25 or 15)
+                    const aNeedsReview = a.status === 25 || a.status === 15;
+                    const bNeedsReview = b.status === 25 || b.status === 15;
+
+                    // If one needs review and the other doesn't, prioritize the one that needs review
+                    if (aNeedsReview && !bNeedsReview) return -1;
+                    if (!aNeedsReview && bNeedsReview) return 1;
+
+                    // If both have the same review status, apply the selected sort criteria
+                    if (sortBy && sortBy.value) {
+                        switch (sortBy.value) {
+                            case 'created_asc':
+                                return new Date(a.created_at) - new Date(b.created_at);
+                            case 'created_desc':
+                                return new Date(b.created_at) - new Date(a.created_at);
+                            case 'updated_asc':
+                                return new Date(a.updated_at) - new Date(b.updated_at);
+                            case 'updated_desc':
+                                return new Date(b.updated_at) - new Date(a.updated_at);
+                            default:
+                                return 0;
+                        }
+                    }
+
+                    // Default sort by created date (newest first) if no sort is selected
+                    return new Date(b.created_at) - new Date(a.created_at);
+                });
+
+                // Display filtered and sorted trackers
+                displayTrackers(filteredTrackers, window.currentWidgetType,
+                    filteredTrackers.length === 0 ? 'No trackers match the selected filters.' : '');
+            }
+
+            // Helper function to create tracker item
+            function createTrackerItem(tracker, showDetails = false) {
+                const trackerItem = document.createElement('div');
+                trackerItem.className = 'tracker-item';
+
+                const timestamp = tracker.timestamp ?
+                    new Date(tracker.timestamp).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }) : '';
+
+                const ticketUrl = tracker.id ?
+                    `https://techsupport.benchmarkeducation.com/a/tickets/${tracker.id}` :
+                    '#';
+
+                // Get status text and class
+                const statusInfo = getStatusInfo(tracker.status);
+
+                // Format dates
+                const createdDate = tracker.created_at ?
+                    new Date(tracker.created_at).toLocaleDateString() : 'N/A';
+                const updatedDate = tracker.updated_at ?
+                    new Date(tracker.updated_at).toLocaleDateString() : 'N/A';
+
+                // Get district name from custom fields
+                const districtName = tracker.custom_fields && tracker.custom_fields.cf_district509811 ?
+                    tracker.custom_fields.cf_district509811 : 'N/A';
+
+                // Check if this is a Support Review ticket
+                const needsReview = tracker.status === 25 || tracker.status === 15;
+
+                // Add highlighting class if ticket needs review
+                if (needsReview) {
+                    trackerItem.classList.add('needs-review');
+                }
+
+                if (showDetails) {
+                    // Detailed view for My Trackers
+                    trackerItem.innerHTML = `
+                        <div class="tracker-item-header">
+                            <div class="tracker-id">
+                                <a href="${ticketUrl}" 
+                                   target="_blank" 
+                                   class="tracker-link">
+                                    #${tracker.id || 'N/A'}
+                                </a>
+                                ${timestamp ? `<span class="tracker-time">${timestamp}</span>` : ''}
+                                ${needsReview ? '<span class="tracker-needs-review" title="This ticket needs review"><i class="fas fa-exclamation-circle"></i></span>' : ''}
+                            </div>
+                            <span class="tracker-status ${statusInfo.className}">${statusInfo.text}</span>
+                        </div>
+                        <div class="tracker-subject">${tracker.subject || 'No subject'}</div>
+                        <div class="tracker-item-details">
+                            <div class="tracker-detail">
+                                <strong>District:</strong> ${districtName}
+                            </div>
+                            <div class="tracker-detail">
+                                <strong>Created:</strong> ${createdDate}
+                            </div>
+                            <div class="tracker-detail">
+                                <strong>Updated:</strong> ${updatedDate}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Simple view for other widgets
+                    trackerItem.innerHTML = `
+                        <div class="tracker-id">
+                            <a href="${ticketUrl}" 
+                               target="_blank" 
+                               class="tracker-link">
+                                #${tracker.id || 'N/A'}
+                            </a>
+                            ${timestamp ? `<span class="tracker-time">${timestamp}</span>` : ''}
+                            ${needsReview && window.currentWidgetType === 'my' ? '<span class="tracker-needs-review" title="This ticket needs review"><i class="fas fa-exclamation-circle"></i></span>' : ''}
+                        </div>
+                        <div class="tracker-subject">${tracker.subject || 'No subject'}</div>
+                    `;
+                }
+
+                return trackerItem;
+            }
+
+            // Helper function to get status info
+            function getStatusInfo(statusId) {
+                const statusMap = {
+                    2: { text: 'Open', className: 'status-open' },
+                    3: { text: 'Pending', className: 'status-pending' },
+                    4: { text: 'Resolved', className: 'status-other' },
+                    5: { text: 'Closed', className: 'status-other' },
+                    6: { text: 'Waiting on Customer', className: 'status-waiting' },
+                    8: { text: 'Escalated', className: 'status-escalated' },
+                    9: { text: 'Dev in Progress', className: 'status-in-progress' },
+                    10: { text: 'Waiting on Support', className: 'status-waiting' },
+                    11: { text: 'Resubmitted', className: 'status-in-progress' },
+                    14: { text: 'Editorial in Progress', className: 'status-in-progress' },
+                    15: { text: 'Closed in JIRA', className: 'status-pending' },
+                    22: { text: 'Created in JIRA', className: 'status-escalated' },
+                    23: { text: 'Follow-up Required', className: 'status-pending' },
+                    25: { text: 'Support Review', className: 'status-pending' },
+                    26: { text: 'On Hold', className: 'status-waiting' },
+                    27: { text: 'Backlog', className: 'status-other' },
+                    28: { text: 'Closed - No Resolution', className: 'status-other' },
+                    29: { text: 'Triage', className: 'status-pending' },
+                    30: { text: 'Pending Jira', className: 'status-pending' },
+                    33: { text: 'Bookings Meeting', className: 'status-pending' },
+                    36: { text: 'Awaiting Internal Review', className: 'status-pending' },
+                    37: { text: 'Support Ops Review', className: 'status-pending' }
+                };
+
+                return statusMap[statusId] || { text: 'Unknown', className: 'status-other' };
             }
 
             // Function to close tracker details modal
@@ -1738,11 +3275,21 @@
             // Set up event listeners for View All and modal close
             document.addEventListener('DOMContentLoaded', function () {
                 const viewAllBtn = document.getElementById('viewAllTrackersBtn');
+                const viewMyTrackersBtn = document.getElementById('viewMyTrackersBtn');
+                const viewBacklogTrackersBtn = document.getElementById('viewBacklogTrackersBtn');
                 const closeModalBtn = document.getElementById('closeTrackerModal');
                 const modal = document.getElementById('trackerDetailsModal');
 
                 if (viewAllBtn) {
-                    viewAllBtn.addEventListener('click', showTrackerDetails);
+                    viewAllBtn.addEventListener('click', () => showTrackerDetails('today'));
+                }
+
+                if (viewMyTrackersBtn) {
+                    viewMyTrackersBtn.addEventListener('click', () => showTrackerDetails('my'));
+                }
+
+                if (viewBacklogTrackersBtn) {
+                    viewBacklogTrackersBtn.addEventListener('click', () => showTrackerDetails('backlog'));
                 }
 
                 if (closeModalBtn) {
@@ -1756,6 +3303,93 @@
                             closeTrackerDetails();
                         }
                     });
+                }
+
+                // Widget Settings Modal Handlers
+                const mainWidgetSettingsBtn = document.getElementById('mainWidgetSettingsBtn');
+                const widgetSettingsModal = document.getElementById('widgetSettingsModal');
+                const widgetOptions = document.querySelectorAll('.widget-option');
+                const saveWidgetSettingsBtn = document.getElementById('saveWidgetSettings');
+                const cancelWidgetSettingsBtn = document.getElementById('cancelWidgetSettings');
+                const simpleViewAllBtn = document.getElementById('simpleViewAllBtn');
+
+                // Open widget settings modal
+                function openWidgetSettings() {
+                    if (widgetSettingsModal) {
+                        widgetSettingsModal.style.display = 'flex';
+
+                        // Set current preference as selected
+                        const currentPreference = getWidgetPreference();
+                        widgetOptions.forEach(option => {
+                            const optionType = option.getAttribute('data-option');
+                            option.classList.toggle('selected', optionType === currentPreference);
+                        });
+                    }
+                }
+
+                // Close widget settings modal
+                function closeWidgetSettings() {
+                    if (widgetSettingsModal) {
+                        widgetSettingsModal.style.display = 'none';
+                    }
+                }
+
+                // Widget settings button clicks - now toggles directly
+                if (mainWidgetSettingsBtn) {
+                    mainWidgetSettingsBtn.addEventListener('click', function () {
+                        // Get current preference
+                        const currentPreference = getWidgetPreference();
+                        // Toggle to opposite preference
+                        const newPreference = currentPreference === 'carousel' ? 'classic' : 'carousel';
+                        // Save new preference
+                        setWidgetPreference(newPreference);
+                        // Reload page to apply changes
+                        window.location.reload();
+                    });
+                }
+
+                // Widget option selection
+                widgetOptions.forEach(option => {
+                    option.addEventListener('click', function () {
+                        // Remove selected class from all options
+                        widgetOptions.forEach(opt => opt.classList.remove('selected'));
+                        // Add selected class to clicked option
+                        this.classList.add('selected');
+                    });
+                });
+
+                // Save widget settings
+                if (saveWidgetSettingsBtn) {
+                    saveWidgetSettingsBtn.addEventListener('click', function () {
+                        const selectedOption = document.querySelector('.widget-option.selected');
+                        if (selectedOption) {
+                            const preference = selectedOption.getAttribute('data-option');
+                            setWidgetPreference(preference);
+                            closeWidgetSettings();
+
+                            // Reload the page to apply new preference
+                            window.location.reload();
+                        }
+                    });
+                }
+
+                // Cancel widget settings
+                if (cancelWidgetSettingsBtn) {
+                    cancelWidgetSettingsBtn.addEventListener('click', closeWidgetSettings);
+                }
+
+                // Close modal when clicking outside
+                if (widgetSettingsModal) {
+                    widgetSettingsModal.addEventListener('click', function (e) {
+                        if (e.target === widgetSettingsModal) {
+                            closeWidgetSettings();
+                        }
+                    });
+                }
+
+                // Simple widget View All button
+                if (simpleViewAllBtn) {
+                    simpleViewAllBtn.addEventListener('click', () => showTrackerDetails('today'));
                 }
             });
         </script>

@@ -440,6 +440,11 @@ module.exports = {
         // Initialize the template (sets up event listeners and formats subject)
         templateBase.initializeSubjectLineFormatting();
 
+        // Set up conditional validation for District State field
+        setTimeout(() => {
+            templateBase.setupConditionalValidation();
+        }, 100);
+
         // Schedule initial subject line update after fields are populated
         setTimeout(() => templateBase.updateSubjectLine(), 500);
 
