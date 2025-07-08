@@ -542,8 +542,14 @@ class TrackerApp {
     updateSedcustSubject() {
         const xcodeValue = document.getElementById('xcode')?.value || '';
         const applicationValue = document.getElementById('application')?.value || '';
-        const versionValue = document.getElementById('version')?.value || '';
-        const stateNationalValue = document.getElementById('versionState')?.value || '';
+        const versionField = document.getElementById('version');
+        const versionValue = versionField && versionField.value === "Other" && versionField.hasAttribute('data-custom-value')
+            ? versionField.getAttribute('data-custom-value')
+            : versionField?.value || '';
+        const versionStateField = document.getElementById('versionState');
+        const stateNationalValue = versionStateField && versionStateField.value === "Other" && versionStateField.hasAttribute('data-custom-value')
+            ? versionStateField.getAttribute('data-custom-value')
+            : versionStateField?.value || '';
         const resourcePathValue = document.getElementById('resourcePath')?.value || '';
         const specificIssueValue = document.getElementById('specificIssue')?.value || '';
         const isVIP = document.getElementById('isVIP')?.value || 'No';

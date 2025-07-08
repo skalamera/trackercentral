@@ -146,6 +146,10 @@ function setupCustomVersionStateInput() {
                     // Trigger change event for subject line update
                     const event = new Event('change', { bubbles: true });
                     versionStateSelect.dispatchEvent(event);
+
+                    // Also trigger input event for any listeners that might be listening for that
+                    const inputEvent = new Event('input', { bubbles: true });
+                    versionStateSelect.dispatchEvent(inputEvent);
                 });
 
                 // Append elements to container
@@ -207,4 +211,12 @@ if (typeof module !== 'undefined' && module.exports) {
         getVersionValue,
         getVersionStateValue
     };
+}
+
+// Also make functions available globally in browser environment
+if (typeof window !== 'undefined') {
+    window.setupCustomVersionInput = setupCustomVersionInput;
+    window.setupCustomVersionStateInput = setupCustomVersionStateInput;
+    window.getVersionValue = getVersionValue;
+    window.getVersionStateValue = getVersionStateValue;
 } 

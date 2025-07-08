@@ -451,6 +451,13 @@ class TemplateBase {
         const xcode = this.getFieldValue('xcode');
         const specificIssue = this.getFieldValue('specificIssue');
 
+        // Debug logging for versionState
+        console.log(`[SEDCUST] versionState value: "${versionState}", field.value: "${document.getElementById('versionState')?.value}"`);
+        if (document.getElementById('versionState')?.value === 'Other') {
+            console.log(`[SEDCUST] Custom state input value: "${document.getElementById('customVersionState')?.value}"`);
+            console.log(`[SEDCUST] data-custom-value attribute: "${document.getElementById('versionState')?.getAttribute('data-custom-value')}"`);
+        }
+
         // First part: VIP/Standard District Name • District State
         let districtPart = '';
         if (districtName && districtState) {
