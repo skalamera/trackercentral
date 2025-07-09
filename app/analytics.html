@@ -608,6 +608,22 @@
                 </div>
             </div>
         </div>
+
+        <!-- Backlogged Trackers Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <div>
+                    <h2 class="chart-title">Backlogged Trackers Over Time</h2>
+                    <p class="chart-subtitle" id="backlogChartSubtitle">Trackers in backlog status</p>
+                </div>
+            </div>
+            <div class="bar-chart" id="backlogChart">
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Loading backlog data...</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Tooltip -->
@@ -731,6 +747,7 @@
         // Load analytics data from Freshdesk storage (same method as Today's Trackers widget)
         function loadAnalyticsData() {
             showLoading();
+            showBacklogLoading();
 
             // Use the global currentTimeRange variable, but fall back to DOM if not set
             const timeRange = currentTimeRange || document.getElementById('timeRange').value;
@@ -739,9 +756,11 @@
             if (timeRange === 'today') {
                 // For today, use the same method as Today's Trackers widget
                 loadTodayTrackers();
+                loadTodayBackloggedTrackers();
             } else {
                 // For date ranges, load data from multiple days
                 loadDateRangeTrackers(timeRange);
+                loadDateRangeBackloggedTrackers(timeRange);
             }
         }
 
@@ -823,6 +842,87 @@
                 String(date.getDate()).padStart(2, '0');
         }
 
+        // Load today's backlogged trackers
+        function loadTodayBackloggedTrackers() {
+            if (!window.client) {
+                console.warn("Client not available for loading backlogged trackers");
+                processBacklogData([], 'today');
+                return;
+            }
+
+            client.request.invokeTemplate("getTicketsByFilter", {
+                context: {
+                    filter: `tag:tracker AND status:27`
+                }
+            }).then(function (response) {
+                const data = JSON.parse(response.response);
+                console.log("Today's backlog API response:", data);
+
+                // Handle different response formats
+                let tickets = [];
+                if (data && data.results && Array.isArray(data.results)) {
+                    tickets = data.results;
+                } else if (data && data.tickets && Array.isArray(data.tickets)) {
+                    tickets = data.tickets;
+                } else if (Array.isArray(data)) {
+                    tickets = data;
+                }
+
+                console.log(`Found ${tickets.length} backlogged tracker tickets today`);
+                processBacklogData(tickets, 'today');
+            }).catch(function (error) {
+                console.error("Error loading today's backlogged trackers:", error);
+                processBacklogData([], 'today');
+            });
+        }
+
+        // Load backlogged trackers for a date range
+        function loadDateRangeBackloggedTrackers(timeRange) {
+            if (!window.client) {
+                console.warn("Client not available for loading backlogged trackers");
+                processBacklogData([], timeRange);
+                return;
+            }
+
+            const days = parseInt(timeRange);
+            console.log(`Loading backlogged trackers for the last ${days} days`);
+
+            client.request.invokeTemplate("getTicketsByFilter", {
+                context: {
+                    filter: `tag:tracker AND status:27`
+                }
+            }).then(function (response) {
+                const data = JSON.parse(response.response);
+                console.log("Date range backlog API response:", data);
+
+                // Handle different response formats
+                let tickets = [];
+                if (data && data.results && Array.isArray(data.results)) {
+                    tickets = data.results;
+                } else if (data && data.tickets && Array.isArray(data.tickets)) {
+                    tickets = data.tickets;
+                } else if (Array.isArray(data)) {
+                    tickets = data;
+                }
+
+                // Filter tickets within the date range
+                const cutoffDate = new Date();
+                cutoffDate.setDate(cutoffDate.getDate() - days);
+
+                const filteredTickets = tickets.filter(ticket => {
+                    if (!ticket.created_at) return false;
+                    const ticketDate = new Date(ticket.created_at);
+                    return ticketDate >= cutoffDate;
+                });
+
+                console.log(`Found ${filteredTickets.length} backlogged tracker tickets in the last ${days} days`);
+                processBacklogData(filteredTickets, timeRange);
+            }).catch(function (error) {
+                console.error("Error loading date range backlogged trackers:", error);
+                processBacklogData([], timeRange);
+            });
+        }
+
 
 
         // Process analytics data and update the UI
@@ -864,6 +964,74 @@
 
             console.log(`Setting currentData:`, currentData);
             updateUI();
+        }
+
+        // Process backlog data and update the backlog chart
+        function processBacklogData(backlogTickets, timeRange) {
+            console.log(`Processing ${backlogTickets.length} backlogged trackers`);
+
+            // Group by template type
+            const backlogByTemplate = {};
+            Object.keys(TEMPLATE_CONFIG).forEach(template => {
+                backlogByTemplate[template] = 0;
+            });
+
+            // Count backlogged trackers by template type (using tags to determine template)
+            backlogTickets.forEach(ticket => {
+                let templateType = null;
+
+                // Try to determine template type from tags
+                if (ticket.tags && Array.isArray(ticket.tags)) {
+                    for (const tag of ticket.tags) {
+                        if (tag.startsWith('tracker-')) {
+                            templateType = tag.replace('tracker-', '');
+                            break;
+                        }
+                    }
+                }
+
+                // If we couldn't determine from tags, try to guess from subject
+                if (!templateType && ticket.subject) {
+                    const subject = ticket.subject.toLowerCase();
+                    if (subject.includes('assembly')) {
+                        templateType = subject.includes('rollover') ? 'assembly-rollover' : 'assembly';
+                    } else if (subject.includes('sedcust')) {
+                        templateType = 'sedcust';
+                    } else if (subject.includes('sim')) {
+                        if (subject.includes('fsa')) templateType = 'sim-fsa';
+                        else if (subject.includes('assignment')) templateType = 'sim-assignment';
+                        else if (subject.includes('report')) templateType = 'sim-assessment-reports';
+                        else if (subject.includes('achievement')) templateType = 'sim-achievement-levels';
+                        else if (subject.includes('library')) templateType = 'sim-library-view';
+                        else if (subject.includes('orr')) templateType = 'sim-orr';
+                        else if (subject.includes('plan')) templateType = 'sim-plan-teach';
+                        else if (subject.includes('reading')) templateType = 'sim-reading-log';
+                        else if (subject.includes('dashboard')) templateType = 'sim-dashboard';
+                        else templateType = 'sim-other';
+                    } else if (subject.includes('dpt')) {
+                        templateType = 'dpt';
+                    } else if (subject.includes('feature')) {
+                        templateType = 'feature-request';
+                    } else if (subject.includes('help')) {
+                        templateType = 'help-article';
+                    } else if (subject.includes('timeout')) {
+                        templateType = 'timeout-extension';
+                    }
+                }
+
+                if (templateType && backlogByTemplate.hasOwnProperty(templateType)) {
+                    backlogByTemplate[templateType]++;
+                } else {
+                    // Add to a generic "other" category if we can't classify
+                    if (!backlogByTemplate['other']) {
+                        backlogByTemplate['other'] = 0;
+                    }
+                    backlogByTemplate['other']++;
+                }
+            });
+
+            // Update backlog chart
+            updateBacklogChart(backlogByTemplate, backlogTickets.length, timeRange);
         }
 
         // Update the UI with analytics data
@@ -994,6 +1162,59 @@
             subtitle.textContent = text;
         }
 
+        // Update backlog chart
+        function updateBacklogChart(backlogByTemplate, totalBacklog, timeRange) {
+            const backlogChart = document.getElementById('backlogChart');
+            const backlogSubtitle = document.getElementById('backlogChartSubtitle');
+
+            // Update subtitle
+            if (backlogSubtitle) {
+                if (timeRange === 'today') {
+                    backlogSubtitle.textContent = `${totalBacklog} backlogged tracker${totalBacklog !== 1 ? 's' : ''} currently`;
+                } else {
+                    backlogSubtitle.textContent = `${totalBacklog} backlogged tracker${totalBacklog !== 1 ? 's' : ''} created in the last ${timeRange} days`;
+                }
+            }
+
+            // Sort templates by count (descending)
+            const sortedTemplates = Object.entries(backlogByTemplate)
+                .sort(([, a], [, b]) => b - a)
+                .filter(([, count]) => count > 0); // Only show templates with backlog
+
+            if (sortedTemplates.length === 0) {
+                backlogChart.innerHTML = `
+                    <div class="no-data-message">
+                        <i class="fas fa-clock"></i>
+                        <p>No backlogged trackers found for the selected time range.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const maxCount = Math.max(...sortedTemplates.map(([, count]) => count));
+
+            let chartHTML = '';
+            sortedTemplates.forEach(([template, count]) => {
+                const percentage = totalBacklog > 0 ? (count / maxCount) * 100 : 0;
+                const config = TEMPLATE_CONFIG[template];
+                const templateName = config ? config.name : template;
+
+                chartHTML += `
+                    <div class="bar-row">
+                        <div class="bar-label" title="${templateName}">${templateName}</div>
+                        <div class="bar-container">
+                            <div class="bar-fill template-${template}" style="width: ${percentage}%; background: linear-gradient(90deg, #ff6b6b, #ee5a24);">
+                                <span class="bar-value">${count}</span>
+                            </div>
+                        </div>
+                        <div class="bar-count">${count}</div>
+                    </div>
+                `;
+            });
+
+            backlogChart.innerHTML = chartHTML;
+        }
+
         // Show loading state
         function showLoading() {
             const barChart = document.getElementById('barChart');
@@ -1009,6 +1230,17 @@
             document.getElementById('dailyAverage').textContent = '-';
             document.getElementById('mostUsedTemplate').textContent = '-';
             document.getElementById('activeTemplates').textContent = '-';
+        }
+
+        // Show backlog loading state
+        function showBacklogLoading() {
+            const backlogChart = document.getElementById('backlogChart');
+            backlogChart.innerHTML = `
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Loading backlog data...</p>
+                </div>
+            `;
         }
 
         // Show error message

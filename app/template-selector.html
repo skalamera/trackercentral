@@ -793,24 +793,7 @@
                         </div>
                     </div>
 
-                    <!-- Backlogged Widget -->
-                    <div class="carousel-slide" data-widget="backlog">
-                        <div class="tracker-counts-dashboard">
-                            <div class="dashboard-header">
-                                <div class="dashboard-title-row">
-                                    <h3><i class="fas fa-clock"></i> Backlogged <span id="backlogTrackerCount"
-                                            class="dashboard-count"></span></h3>
-                                    <div class="dashboard-actions">
-                                        <button class="view-all-btn" id="viewBacklogTrackersBtn"
-                                            title="View backlogged trackers">
-                                            <i class="fas fa-list"></i> View All
-                                        </button>
-                                    </div>
-                                </div>
-                                <span class="dashboard-date">Trackers in backlog status</span>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
 
@@ -828,7 +811,6 @@
             <div class="carousel-indicators">
                 <button class="carousel-dot active" data-slide="0" aria-label="Go to Today's Trackers"></button>
                 <button class="carousel-dot" data-slide="1" aria-label="Go to My Trackers"></button>
-                <button class="carousel-dot" data-slide="2" aria-label="Go to Backlogged"></button>
             </div>
         </div>
 
@@ -1881,8 +1863,8 @@
             }
 
             // Global variables for carousel
-            let currentSlide = 1;  // Start at middle widget (My Trackers)
-            const totalSlides = 3;
+            let currentSlide = 0;  // Start at first widget (Today's Trackers)
+            const totalSlides = 2;
 
             function displayTrackerCounts(trackers, date) {
                 const preference = getWidgetPreference();
@@ -1943,7 +1925,6 @@
 
                     // Load data for other widgets in carousel
                     loadMyTrackers();
-                    loadBackloggedTrackers();
 
                     // Initialize carousel
                     initializeCarousel();
@@ -2334,108 +2315,7 @@
                 }
             }
 
-            // Load Backlogged
-            async function loadBackloggedTrackers() {
-                try {
-                    if (!window.client) {
-                        console.warn("Client not available for loading backlogged trackers");
-                        return;
-                    }
 
-                    try {
-                        // Try to search for tracker tickets with backlog status (27)
-                        // Search for trackers with status 27
-                        const filter = `tag:tracker AND status:27`;
-                        console.log("Searching for Backlogged with filter:", filter);
-
-                        const response = await client.request.invokeTemplate("getTicketsByFilter", {
-                            context: {
-                                filter: filter
-                            }
-                        });
-
-                        const data = JSON.parse(response.response);
-                        console.log("Backlogged API response structure:", data);
-
-                        // Handle different response formats from Freshdesk API
-                        let tickets = [];
-                        if (data && data.results && Array.isArray(data.results)) {
-                            tickets = data.results;
-                        } else if (data && data.tickets && Array.isArray(data.tickets)) {
-                            tickets = data.tickets;
-                        } else if (Array.isArray(data)) {
-                            tickets = data;
-                        }
-                        console.log(`Retrieved ${tickets.length} tickets from backlog search`);
-
-
-
-                        // The API already filtered for tracker tickets with status 27
-                        window.backloggedTrackers = tickets;
-
-                        console.log(`Found ${window.backloggedTrackers.length} backlogged tracker tickets`);
-                        updateBackloggedTrackersDisplay(window.backloggedTrackers.length);
-                    } catch (searchError) {
-                        console.error("Error searching for backlogged trackers:", searchError);
-
-                        // Try a simpler search for just status 27
-                        try {
-                            console.log("Trying simpler search for status 27 tickets...");
-                            const simpleResponse = await client.request.invokeTemplate("getTicketsByFilter", {
-                                context: {
-                                    filter: `status:27`
-                                }
-                            });
-
-                            const data = JSON.parse(simpleResponse.response);
-                            console.log("Simple backlog search response structure:", data);
-
-                            // Handle different response formats
-                            let tickets = [];
-                            if (data && data.results && Array.isArray(data.results)) {
-                                tickets = data.results;
-                            } else if (data && data.tickets && Array.isArray(data.tickets)) {
-                                tickets = data.tickets;
-                            } else if (Array.isArray(data)) {
-                                tickets = data;
-                            }
-
-                            // Filter for tracker tickets
-                            window.backloggedTrackers = tickets.filter(ticket => {
-                                return ticket.tags && Array.isArray(ticket.tags) &&
-                                    ticket.tags.some(tag => tag === 'tracker' || tag.startsWith('tracker-'));
-                            });
-
-                            console.log(`Found ${window.backloggedTrackers.length} backlogged tracker tickets from simple search`);
-                            updateBackloggedTrackersDisplay(window.backloggedTrackers.length);
-                        } catch (fallbackError) {
-                            console.error("Simple backlog search also failed:", fallbackError);
-
-                            // If the search fails (possibly due to custom status 27 not existing),
-                            // we'll just show 0 backlogged trackers
-                            window.backloggedTrackers = [];
-                            updateBackloggedTrackersDisplay(0);
-                        }
-                    }
-                } catch (error) {
-                    console.error("Error loading backlogged trackers:", error);
-                    window.backloggedTrackers = [];
-                    updateBackloggedTrackersDisplay(0);
-                }
-            }
-
-            function updateBackloggedTrackersDisplay(count) {
-                const backlogTrackerCount = document.getElementById('backlogTrackerCount');
-                const viewBacklogTrackersBtn = document.getElementById('viewBacklogTrackersBtn');
-
-                if (backlogTrackerCount) {
-                    backlogTrackerCount.textContent = count;
-                }
-
-                if (viewBacklogTrackersBtn) {
-                    viewBacklogTrackersBtn.style.display = count > 0 ? 'inline-flex' : 'none';
-                }
-            }
 
             function getTemplateInfo() {
                 return {
@@ -2984,11 +2864,7 @@
                         modalTitleSpan.textContent = 'My Trackers';
                         noTrackersMessage = 'No unresolved trackers assigned to you.';
                         break;
-                    case 'backlog':
-                        trackers = window.backloggedTrackers || [];
-                        modalTitleSpan.textContent = 'Backlogged';
-                        noTrackersMessage = 'No trackers in backlog status.';
-                        break;
+
                 }
 
                 // Store original trackers and widget type for filtering/sorting
@@ -3276,7 +3152,7 @@
             document.addEventListener('DOMContentLoaded', function () {
                 const viewAllBtn = document.getElementById('viewAllTrackersBtn');
                 const viewMyTrackersBtn = document.getElementById('viewMyTrackersBtn');
-                const viewBacklogTrackersBtn = document.getElementById('viewBacklogTrackersBtn');
+
                 const closeModalBtn = document.getElementById('closeTrackerModal');
                 const modal = document.getElementById('trackerDetailsModal');
 
@@ -3288,9 +3164,7 @@
                     viewMyTrackersBtn.addEventListener('click', () => showTrackerDetails('my'));
                 }
 
-                if (viewBacklogTrackersBtn) {
-                    viewBacklogTrackersBtn.addEventListener('click', () => showTrackerDetails('backlog'));
-                }
+
 
                 if (closeModalBtn) {
                     closeModalBtn.addEventListener('click', closeTrackerDetails);
