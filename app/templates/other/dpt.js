@@ -25,7 +25,7 @@ module.exports = {
                     hint: "Auto-populates from original ticket. If not, choose yes if the District is VIP and No if it is not. You can review the <a href='https://benchmarkeducationcompany.freshdesk.com/a/solutions/articles/67000739842' target='_blank'>VIP list</a> if you are unsure, but the original ticket should indicate if the user's district is VIP. Note: You should only have to update for exceptions such as a Sales Rep submitting a ticket on behalf of a VIP district. If you are unsure, ask. These fields affect reports and need to be accurate. TYIA!"
                 },
                 { id: "districtName", type: "text", label: "District Name", required: true, hint: "Auto-populates from original ticket." },
-                { id: "districtState", type: "text", label: "District State", required: true, placeholder: "VA", hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field be sure to only use state abbreviation." },
+                { id: "districtState", type: "text", label: "District State", required: false, placeholder: "VA", hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field be sure to only use state abbreviation." },
                 {
                     id: "userRole",
                     type: "text",
@@ -51,7 +51,7 @@ module.exports = {
                     hint: "Auto-populates with default text. You can modify as needed."
                 },
                 { id: "districtNameField", type: "text", label: "District name", required: true, hint: "Auto-populates from subject details." },
-                { id: "districtStateSummary", type: "text", label: "District State", required: true, hint: "Auto-populates from subject details." },
+                { id: "districtStateSummary", type: "text", label: "District State", required: false, hint: "Auto-populates from subject details." },
                 { id: "districtBUID", type: "text", label: "District BU ID", required: true, hint: "Paste the district's BU ID. Ex: 75896", placeholder: "Ex: 75896" }
             ]
         },
@@ -313,10 +313,7 @@ module.exports = {
         // Initialize the template (sets up event listeners and formats subject)
         templateBase.initializeSubjectLineFormatting();
 
-        // Set up conditional validation for District State field
-        setTimeout(() => {
-            templateBase.setupConditionalValidation();
-        }, 100);
+
 
         // Schedule initial subject line update after fields are populated
         setTimeout(() => templateBase.updateSubjectLine(), 500);

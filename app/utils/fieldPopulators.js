@@ -193,17 +193,8 @@ async function populateDistrictState() {
     } catch (error) {
         console.error("Error in populateDistrictState:", error);
 
-        // Ensure we don't leave the field in an invalid state
-        const districtStateField = document.getElementById('districtState');
-        const districtNameField = document.getElementById('districtName');
-
-        if (districtStateField && districtNameField) {
-            // If district name is "Benchmark Education Company", clear the state field
-            if (districtNameField.value && districtNameField.value.trim() === 'Benchmark Education Company') {
-                districtStateField.value = '';
-                console.log("Cleared district state field for Benchmark Education Company");
-            }
-        }
+        // Log the error but don't clear the field
+        console.log("Error in populateDistrictState, field value will remain unchanged");
     }
 }
 

@@ -71,7 +71,7 @@ module.exports = {
                 { id: "issue", type: "richtext", label: "Issue", required: true, hint: "Describe in detail the issue as reported by the user.<br><br>You can insert exactly what the user reports in their submitted ticket if needed for clarification. However, only do so if it is clear and helpful.<br><br>Ex: User reports \"I tried opening Unit 7 workbook for Kindergarten and the link did not work last week or today. Today, I went into open it from the online Benchmark Curriculum and the workbook is not on the site.\"" },
                 { id: "districtName", type: "text", label: "District Name", required: true, hint: "Auto-populates from original ticket." },
                 { id: "schoolName", type: "text", label: "School Name", required: true, hint: "Paste the school name the user is associated to.<br>Ex: Maple Elementary School" },
-                { id: "districtState", type: "text", label: "District State", required: true, placeholder: "Ex: FL", hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located.<br>Ex: FL<br>Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field, be sure to only use the state abbreviation." },
+                { id: "districtState", type: "text", label: "District State", required: false, placeholder: "Ex: FL", hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located.<br>Ex: FL<br>Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field, be sure to only use the state abbreviation." },
                 { id: "program", type: "text", label: "Program Impacted", required: true, hint: "Auto-populates from the subject details<br>Ex: Advance -c2022 • 2.75 Virginia" },
                 { id: "dateReported", type: "date", label: "Date Issue Reported By User", required: true, placeholder: "Ex: 06/05/2025", hint: "Select the date the user reported the issue.<br>Ex: 06/05/2025" },
                 { id: "subscriptionCodes", type: "richtext", label: "Subscription Codes Customer Is Onboarded With", required: true, hint: "Enter or upload the subscriptions the impacted school/district has.<br>- To upload a file, click on the image icon > click on the file > click open.<br>- Ex: BEC Benchmark Advance 2022 (National Edition) Gr. K Classroom Digital<br>- Note: to upload a file, see step 7." },
@@ -308,10 +308,7 @@ module.exports = {
         // Initialize the template (sets up event listeners and formats subject)
         templateBase.initializeSubjectLineFormatting();
 
-        // Set up conditional validation for District State field
-        setTimeout(() => {
-            templateBase.setupConditionalValidation();
-        }, 100);
+
 
         // Schedule initial subject line update after fields are populated
         setTimeout(() => templateBase.updateSubjectLine(), 500);

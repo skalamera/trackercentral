@@ -26,7 +26,7 @@ module.exports = {
                 },
                 { id: "districtName", type: "text", label: "District Name", required: true, hint: "Auto-populates from original ticket." },
                 {
-                    id: "districtState", type: "text", label: "District State", required: true, placeholder: "Ex: FL",
+                    id: "districtState", type: "text", label: "District State", required: false, placeholder: "Ex: FL",
                     hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field be sure to only use state abbreviation."
                 },
                 { id: "application", type: "text", label: "Program Name", required: true, placeholder: "Ex: Advance -c2022", hint: "Auto-populates from the original ticket." },
@@ -317,10 +317,7 @@ module.exports = {
 
         templateBase.initializeSubjectLineFormatting();
 
-        // Set up conditional validation for District State field
-        setTimeout(() => {
-            templateBase.setupConditionalValidation();
-        }, 100);
+
 
         // Schedule another update after a small delay to ensure fields are populated
         setTimeout(() => templateBase.updateSubjectLine(), 500);

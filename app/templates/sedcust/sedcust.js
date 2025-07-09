@@ -173,7 +173,7 @@ module.exports = {
                     hint: "Auto-populates from original ticket."
                 },
                 {
-                    id: "districtState", type: "text", label: "District State", required: true, placeholder: "e.g. FL",
+                    id: "districtState", type: "text", label: "District State", required: false, placeholder: "e.g. FL",
                     hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate you should verify the company details of the district in FD."
                 },
                 {
@@ -427,7 +427,7 @@ module.exports = {
             templateName: 'sedcust',
             subjectLineFormat: 'sedcust',
             additionalFields: ['path'],
-            requiredFields: ['xcode', 'application', 'resource', 'path', 'specificIssue', 'districtName', 'districtState'],
+            requiredFields: ['xcode', 'application', 'resource', 'path', 'specificIssue', 'districtName'],
             fields: {
                 xcode: 'xcode',
                 application: 'application',
@@ -445,11 +445,6 @@ module.exports = {
 
         // Initialize the template (sets up event listeners and formats subject)
         templateBase.initialize();
-
-        // Set up conditional validation for District State field
-        setTimeout(() => {
-            templateBase.setupConditionalValidation();
-        }, 100);
 
         // Ensure email field is populated before form submission
         function ensureEmailField() {
@@ -497,7 +492,7 @@ module.exports = {
             const errors = [];
 
             // Check each required field individually
-            const requiredFields = ['xcode', 'application', 'resource', 'path', 'specificIssue', 'districtName', 'districtState'];
+            const requiredFields = ['xcode', 'application', 'resource', 'path', 'specificIssue', 'districtName'];
 
             requiredFields.forEach(fieldName => {
                 const field = document.getElementById(fieldName);
@@ -508,18 +503,6 @@ module.exports = {
 
                 const value = field.value ? field.value.trim() : '';
                 console.log(`SEDCUST: Validating field '${fieldName}' with value: "${value}"`);
-
-                // Special handling for districtState field
-                if (fieldName === 'districtState') {
-                    const districtNameField = document.getElementById('districtName');
-                    const districtNameValue = districtNameField ? districtNameField.value.trim() : '';
-
-                    // Skip validation if district name is "Benchmark Education Company"
-                    if (districtNameValue === 'Benchmark Education Company') {
-                        console.log(`SEDCUST: Skipping districtState validation because districtName is "Benchmark Education Company"`);
-                        return;
-                    }
-                }
 
                 if (!value) {
                     errors.push(`Required field '${fieldName}' is empty`);

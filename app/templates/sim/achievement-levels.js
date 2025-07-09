@@ -28,7 +28,7 @@ module.exports = {
                     id: "districtState",
                     type: "text",
                     label: "District State",
-                    required: true,
+                    required: false,
                     placeholder: "Ex: VA",
                     hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located. Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field, be sure to only use the state abbreviation."
                 },
@@ -72,7 +72,7 @@ module.exports = {
                     readOnly: true
                 },
                 {
-                    id: "districtStateDesc", type: "text", label: "District State", required: true,
+                    id: "districtStateDesc", type: "text", label: "District State", required: false,
                     hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located.<br>Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field, be sure to only use the state abbreviation.",
                     placeholder: "Ex: FL",
                     readOnly: true
@@ -176,16 +176,13 @@ module.exports = {
         const templateBase = new TemplateBase({
             templateName: 'sim-achievement-levels',
             subjectLineFormat: 'sim-achievement-levels',
-            requiredFields: ['districtName', 'districtState']
+            requiredFields: ['districtName']
         });
 
         // Initialize the template (sets up event listeners and formats subject)
         templateBase.initialize();
 
-        // Set up conditional validation for District State field
-        setTimeout(() => {
-            templateBase.setupConditionalValidation();
-        }, 100);
+
 
         // Set up clear formatting button for Quill editors
         setTimeout(setupClearFormattingButton, 500);

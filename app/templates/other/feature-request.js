@@ -35,7 +35,7 @@ module.exports = {
                     id: "districtState",
                     type: "text",
                     label: "District State",
-                    required: true,
+                    required: false,
                     placeholder: "Ex: VA",
                     hint: "Auto-populates from the original ticket. If not, enter the state abbreviation for the state where the district is located.<br>Note: If the state does not auto-populate, you should verify the company details of the district in FD. Additionally, if you are populating this field be sure to only use state abbreviation."
                 },
@@ -364,7 +364,7 @@ module.exports = {
             subjectLineFormat: 'sim', // Uses SIM format for subject lines
             additionalFields: ['resourceName', 'shortDescription'],
             checkboxGroups: ['userRole'],
-            requiredFields: ['districtName', 'districtState', 'application', 'resourceName', 'shortDescription'],
+            requiredFields: ['districtName', 'application', 'resourceName', 'shortDescription'],
             fields: {
                 isVIP: 'isVIP',
                 districtName: 'districtName',
@@ -440,10 +440,7 @@ module.exports = {
         // Initialize the template (sets up event listeners and formats subject)
         templateBase.initializeSubjectLineFormatting();
 
-        // Set up conditional validation for District State field
-        setTimeout(() => {
-            templateBase.setupConditionalValidation();
-        }, 100);
+
 
         // Schedule initial subject line update after fields are populated
         setTimeout(() => templateBase.updateSubjectLine(), 500);
