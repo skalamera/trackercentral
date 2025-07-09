@@ -150,7 +150,7 @@ class TemplateBase {
 
         // Fallback to local implementation
         const versionField = document.getElementById(this.fields.version || 'version');
-        const customInput = document.getElementById('customVersionInput');
+        const customInput = document.getElementById('customVersion');
         if (customInput && versionField?.value === 'Other') {
             return customInput.value || 'Other';
         }
@@ -169,7 +169,7 @@ class TemplateBase {
 
         // Fallback to local implementation
         const versionStateField = document.getElementById(this.fields.versionState || 'versionState');
-        const customInput = document.getElementById('customVersionStateInput');
+        const customInput = document.getElementById('customVersionState');
         if (customInput && versionStateField?.value === 'Other') {
             return customInput.value || 'Other';
         }

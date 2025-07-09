@@ -561,7 +561,24 @@ module.exports = {
 
                     const errorMessage = "SEDCUST validation failed:\n" + validation.errors.join('\n');
                     console.error(errorMessage);
-                    alert(errorMessage);
+
+                    // Use Freshworks notification if available, otherwise show in console
+                    if (window.client && window.client.interface && window.client.interface.trigger) {
+                        window.client.interface.trigger("showNotify", {
+                            type: "danger",
+                            message: "Validation failed: " + validation.errors.join(', ')
+                        }).catch(function (error) {
+                            console.error("Failed to show notification:", error);
+                        });
+                    }
+
+                    // Also try to show inline error message
+                    const errorContainer = document.getElementById('error-container');
+                    if (errorContainer) {
+                        errorContainer.innerHTML = `<div class="alert alert-danger">${errorMessage.replace(/\n/g, '<br>')}</div>`;
+                        errorContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+
                     return false;
                 }
 
