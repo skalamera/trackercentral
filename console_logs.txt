@@ -1,0 +1,1601 @@
+Loading and displaying My Trackers
+06:01:44.140 template-selector.html?appId=123456789:4386 Loading and displaying My Trackers
+06:01:44.146 template-selector.html?appId=123456789:2819 Loading trackers for user ID: 67031011668
+06:01:44.146 template-selector.html?appId=123456789:2834 Searching for My Trackers with filter: agent_id:67031011668 AND tag:tracker AND (status:2 OR status:3 OR status:6 OR status:8 OR status:9 OR status:10 OR status:11 OR status:14 OR status:15 OR status:22 OR status:23 OR status:25 OR status:26 OR status:29 OR status:30 OR status:33 OR status:36 OR status:37)
+06:01:44.146 template-selector.html?appId=123456789:2835 Status IDs included in search: (18) [2, 3, 6, 8, 9, 10, 11, 14, 15, 22, 23, 25, 26, 29, 30, 33, 36, 37]
+06:01:44.146 template-selector.html?appId=123456789:2844 Requesting page 1 for My Trackers
+06:01:44.147 template-selector.html?appId=123456789:2819 Loading trackers for user ID: 67031011668
+06:01:44.147 template-selector.html?appId=123456789:2834 Searching for My Trackers with filter: agent_id:67031011668 AND tag:tracker AND (status:2 OR status:3 OR status:6 OR status:8 OR status:9 OR status:10 OR status:11 OR status:14 OR status:15 OR status:22 OR status:23 OR status:25 OR status:26 OR status:29 OR status:30 OR status:33 OR status:36 OR status:37)
+06:01:44.147 template-selector.html?appId=123456789:2835 Status IDs included in search: (18) [2, 3, 6, 8, 9, 10, 11, 14, 15, 22, 23, 25, 26, 29, 30, 33, 36, 37]
+06:01:44.147 template-selector.html?appId=123456789:2844 Requesting page 1 for My Trackers
+1006:01:46.308 XHR finished loading: POST "<URL>".
+06:01:44.817 template-selector.html?appId=123456789:2854 API response status: 200
+06:01:44.818 template-selector.html?appId=123456789:2858 My Trackers API response structure: {results: Array(30), total: 135}
+06:01:44.818 template-selector.html?appId=123456789:2859 Total tickets available: 135
+06:01:44.818 template-selector.html?appId=123456789:2879 Page 1: Retrieved 30 tickets (30 new, 0 duplicates) - total so far: 30
+06:01:44.818 template-selector.html?appId=123456789:2887 Pagination status: {hasMoreByCount: true, totalAvailable: 135, currentTotal: 30, pageIsEmpty: false, gotNewTickets: true}
+06:01:44.818 template-selector.html?appId=123456789:2844 Requesting page 2 for My Trackers
+06:01:44.843 template-selector.html?appId=123456789:2854 API response status: 200
+06:01:44.844 template-selector.html?appId=123456789:2858 My Trackers API response structure: {results: Array(30), total: 135}
+06:01:44.844 template-selector.html?appId=123456789:2859 Total tickets available: 135
+06:01:44.844 template-selector.html?appId=123456789:2879 Page 1: Retrieved 30 tickets (30 new, 0 duplicates) - total so far: 30
+06:01:44.844 template-selector.html?appId=123456789:2887 Pagination status: {hasMoreByCount: true, totalAvailable: 135, currentTotal: 30, pageIsEmpty: false, gotNewTickets: true}
+06:01:44.844 template-selector.html?appId=123456789:2844 Requesting page 2 for My Trackers
+06:01:45.560 template-selector.html?appId=123456789:2854 API response status: 200
+06:01:45.561 template-selector.html?appId=123456789:2879 Page 2: Retrieved 30 tickets (30 new, 0 duplicates) - total so far: 60
+06:01:45.561 template-selector.html?appId=123456789:2887 Pagination status: {hasMoreByCount: true, totalAvailable: 135, currentTotal: 60, pageIsEmpty: false, gotNewTickets: true}
+06:01:45.561 template-selector.html?appId=123456789:2844 Requesting page 3 for My Trackers
+06:01:45.638 template-selector.html?appId=123456789:2854 API response status: 200
+06:01:45.638 template-selector.html?appId=123456789:2879 Page 2: Retrieved 30 tickets (30 new, 0 duplicates) - total so far: 60
+06:01:45.638 template-selector.html?appId=123456789:2887 Pagination status: {hasMoreByCount: true, totalAvailable: 135, currentTotal: 60, pageIsEmpty: false, gotNewTickets: true}
+06:01:45.639 template-selector.html?appId=123456789:2844 Requesting page 3 for My Trackers
+06:01:46.110 heap.js:2 Fetch finished loading: POST "https://c.us.heap-api.com/api/capture/v2/track".
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+Promise.then
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+Promise.then
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+06:01:46.308 template-selector.html?appId=123456789:2854 API response status: 200
+06:01:46.308 template-selector.html?appId=123456789:2879 Page 3: Retrieved 30 tickets (30 new, 0 duplicates) - total so far: 90
+06:01:46.308 template-selector.html?appId=123456789:2887 Pagination status: {hasMoreByCount: true, totalAvailable: 135, currentTotal: 90, pageIsEmpty: false, gotNewTickets: true}
+06:01:46.309 template-selector.html?appId=123456789:2844 Requesting page 4 for My Trackers
+06:01:46.801 template-selector.html?appId=123456789:2854 API response status: 200
+06:01:46.803 template-selector.html?appId=123456789:2879 Page 3: Retrieved 30 tickets (30 new, 0 duplicates) - total so far: 90
+06:01:46.803 template-selector.html?appId=123456789:2887 Pagination status: {hasMoreByCount: true, totalAvailable: 135, currentTotal: 90, pageIsEmpty: false, gotNewTickets: true}
+06:01:46.803 template-selector.html?appId=123456789:2844 Requesting page 4 for My Trackers
+06:01:47.365 template-selector.html?appId=123456789:2854 API response status: 200
+06:01:47.365 template-selector.html?appId=123456789:2879 Page 4: Retrieved 30 tickets (30 new, 0 duplicates) - total so far: 120
+06:01:47.366 template-selector.html?appId=123456789:2887 Pagination status: {hasMoreByCount: true, totalAvailable: 135, currentTotal: 120, pageIsEmpty: false, gotNewTickets: true}
+06:01:47.366 template-selector.html?appId=123456789:2844 Requesting page 5 for My Trackers
+06:01:47.458 template-selector.html?appId=123456789:2854 API response status: 200
+06:01:47.459 template-selector.html?appId=123456789:2879 Page 4: Retrieved 30 tickets (30 new, 0 duplicates) - total so far: 120
+06:01:47.459 template-selector.html?appId=123456789:2887 Pagination status: {hasMoreByCount: true, totalAvailable: 135, currentTotal: 120, pageIsEmpty: false, gotNewTickets: true}
+06:01:47.459 template-selector.html?appId=123456789:2844 Requesting page 5 for My Trackers
+06:01:47.861 template-selector.html?appId=123456789:2854 API response status: 200
+06:01:47.862 template-selector.html?appId=123456789:2879 Page 5: Retrieved 15 tickets (15 new, 0 duplicates) - total so far: 135
+06:01:47.862 template-selector.html?appId=123456789:2887 Pagination status: {hasMoreByCount: false, totalAvailable: 135, currentTotal: 135, pageIsEmpty: false, gotNewTickets: true}
+06:01:47.862 template-selector.html?appId=123456789:2945 Retrieved 135 total tickets from all pages
+06:01:47.862 template-selector.html?appId=123456789:2949 Found 135 tickets in search results
+06:01:47.862 template-selector.html?appId=123456789:2953 Analyzing all retrieved tickets before filtering:
+06:01:47.862 template-selector.html?appId=123456789:2976 Status distribution: {8: 8, 9: 1, 11: 4, 14: 50, 15: 1, 22: 71}
+06:01:47.862 template-selector.html?appId=123456789:2977 Tag distribution: {tracker-sedcust: 9, tracker: 135, internal: 86, jirareview: 18, test: 53, …}
+06:01:47.862 template-selector.html?appId=123456789:2978 Tickets with 'tracker' in subject but no tracker tag: 0
+06:01:47.862 template-selector.html?appId=123456789:2988 Ticket 1: {id: 308819, subject: 'X97545 | Advance - c2022 • 2.75 National | TRS: G2...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:47.862 template-selector.html?appId=123456789:2988 Ticket 2: {id: 308624, subject: 'Benchmark Education Company | Not Program Specific...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:47.862 template-selector.html?appId=123456789:2988 Ticket 3: {id: 308474, subject: 'X78206 | Advance - c2022 • 2.75 California Advance...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:47.862 template-selector.html?appId=123456789:2988 Ticket 4: {id: 308281, subject: 'X104815 | Advance - c2022 • 2.75 Ohio | Reproducib...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:47.863 template-selector.html?appId=123456789:2988 Ticket 5: {id: 308174, subject: 'Rockdale CPS | Benchmark Advnace c2022 | General i...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:47.863 template-selector.html?appId=123456789:2988 Ticket 6: {id: 308112, subject: 'X106256 | Advance Florida c2026 • 2.8 Florida | TR...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:47.863 template-selector.html?appId=123456789:2988 Ticket 7: {id: 308108, subject: 'X123213 | Adelante - c2023 • 2.75 California Adela...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:47.863 template-selector.html?appId=123456789:2988 Ticket 8: {id: 308050, subject: 'X98086 | Advance - c2022 • 2.75 California Advance...', status: 14, responder_id: 67031011668, agent_id: undefined, …}
+06:01:47.863 template-selector.html?appId=123456789:2988 Ticket 9: {id: 307834, subject: 'X98089 | Benchmark Advance - c2022 - Gr. K > Unit ...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:47.863 template-selector.html?appId=123456789:2988 Ticket 10: {id: 307702, subject: 'Woodburn Public School District 103 |Benchmark Ade...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:47.863 template-selector.html?appId=123456789:3028 Found 135 tracker tickets (135 unique) assigned to user 67031011668
+06:01:47.863 template-selector.html?appId=123456789:3036 Unique tracker tickets:
+06:01:47.863 template-selector.html?appId=123456789:3038   1. #308819: X97545 | Advance - c2022 • 2.75 National | TRS: G2 > U1 > TRS > Additional Resources > Small Group Text for Reteaching Strategies and Skills - Access Denied Error Message (Status: 22, Tags: tracker-sedcust, tracker, internal, jirareview, test, SEDCUST-5897)
+06:01:47.863 template-selector.html?appId=123456789:3038   2. #308624: Benchmark Education Company | Not Program Specific | Bookshelves • Unable to Share with Another User at the Same School for Teachers (Status: 22, Tags: tracker-sim-dashboard, tracker, internal, jirareview, test, SIM-2502)
+06:01:47.863 template-selector.html?appId=123456789:3038   3. #308474: X78206 | Advance - c2022 • 2.75 California Advance | Texts for Close Reading: Advance - c2022 > G6 > U1 > Texts for Close Reading > Unit 1 Relationships in Nature (Gr. 6) - Error Code (Status: 22, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5869)
+06:01:47.863 template-selector.html?appId=123456789:3038   4. #308281: X104815 | Advance - c2022 • 2.75 Ohio | Reproducible Assessments: G5 > U1 > W1 - Assessment missing (Status: 22, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5853)
+06:01:47.863 template-selector.html?appId=123456789:3038   5. #308174: Rockdale CPS | Benchmark Advnace c2022 | General inquiry regarding Science/Social Study Correlations (Status: 22, Tags: tracker, internal, test, SEDCUST-5848)
+06:01:47.863 template-selector.html?appId=123456789:3038   6. #308112: X106256 | Advance Florida c2026 • 2.8 Florida | TRS: Gr.1 > Foundations and Routines Grade 1 - Missing BLM (Status: 22, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5847)
+06:01:47.863 template-selector.html?appId=123456789:3038   7. #308108: X123213 | Adelante - c2023 • 2.75 California Adelante | Handwriting: Recurso de caligrafía cursiva (Gr. 3-5) - Printing Issue (Status: 22, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5846)
+06:01:47.863 template-selector.html?appId=123456789:3038   8. #308050: X98086 | Advance - c2022 • 2.75 California Advance | TRS: GK>U6>Additional Resources - Incorrect Phonics Cumulative Assessment (Status: 14, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5845)
+06:01:47.863 template-selector.html?appId=123456789:3038   9. #307834: X98089 | Benchmark Advance - c2022 - Gr. K > Unit 9 > Week 1 > TRS > Teacher's Resource System Unit 9 (Gr. K) > Day 5 > Lesson 2 > Print Mismatch/Rationale Needed (Status: 22, Tags: tracker, internal, test, SEDCUST-5843)
+06:01:47.863 template-selector.html?appId=123456789:3038   10. #307702: Woodburn Public School District 103 |Benchmark Adelante c2023 | Gr. 3 > launch Unit > Missing "Es mi derecho" (Status: 22, Tags: tracker, internal, jirareview, test, SEDCUST-5842)
+06:01:47.863 template-selector.html?appId=123456789:3038   11. #307536: X123199 | Benchmark Advance FL C2026 | Request of adding an empty handwriting practice page (Status: 15, Tags: tracker, internal, test, SEDCUST-5839)
+06:01:47.863 template-selector.html?appId=123456789:3038   12. #307529: MKTGOPS-1119- X40178 (Multiple) | BAdelante • California Adelante | Missing Adelante Grammar and Spelling Activity Books: All Grades (Status: 8, Tags: tracker-assembly, tracker, internal)
+06:01:47.863 template-selector.html?appId=123456789:3038   13. #307414: X123203| Benchmark Advance Florida c2026 > Handwriting > Cursive Practice Pages (Gr. 3-5) > Cursive Letter Practice Pages > Letter S & Letter L -  Incorrect Links for Cursive Letters "S" and "L" on Grades 3–5 Practice Pages (Status: 14, Tags: tracker, jirareview, test, SEDCUST-5838)
+06:01:47.863 template-selector.html?appId=123456789:3038   14. #307301: Multiple Xcodes | Express | Reproducible Assessment & eAssessment: Gr. 1 and 4 > Interim Assessment 1 & Unit 1 and 2: Rubrics are different (Status: 22, Tags: tracker, internal, test, SEDCUST-5836)
+06:01:47.863 template-selector.html?appId=123456789:3038   15. #306943: X78652 (Multiple) | Standard | Advance -c2022 • 2.75 | Unit 1 Word Study Practice Text e-Book Missing from Library: Grade 6 (Status: 8, Tags: tracker-assembly, tracker, internal, jirareview)
+06:01:47.863 template-selector.html?appId=123456789:3038   16. #306889: X97541| Benchmark Advance - c2022 | TRS: Gr. 1 > U7 > W2 > D1 > L1 - Broken hyperlink for the Lesson Slides (Status: 22, Tags: tracker, internal, test, SEDCUST-5829)
+06:01:47.863 template-selector.html?appId=123456789:3038   17. #306861: X89684 | Benchmark Adelante - c2023 | Guía de apoyo del programa is missing (Status: 8, Tags: tracker, internal)
+06:01:47.863 template-selector.html?appId=123456789:3038   18. #306736: Subject: X81802 | BAdelante c2023 | TRS: Gr. 1 > U1  > Wk 2 >  D 1-5 >  L 3 : Mentor Text Link Broken (Status: 22, Tags: tracker, internal, test, SEDCUST-5822)
+06:01:47.863 template-selector.html?appId=123456789:3038   19. #306689: Benchmark Education | Express - 1:1 feature missing (Status: 22, Tags: tracker, internal, test, SIM-2494)
+06:01:47.863 template-selector.html?appId=123456789:3038   20. #306688: VIP * FAIRFAX CO PUBLIC SCHOOL DIST | Reports | Assessment Reports - CSVs - Add TestIDs to Assessment CSV for Teachers, Admin (Status: 22, Tags: tracker-feature-request, tracker, internal)
+06:01:47.863 template-selector.html?appId=123456789:3038   21. #306359: X17065 | BAdelante: California 2017 | Reproducible Assessments: Gr. K > Evaluaciones destrezas fundamentales > Parte 2: Evaluación destrezas fundamentales > Lecciones de intervenci ́on niveladas>  No clear path with lessons and books to use (Status: 22, Tags: tracker, internal, test, SEDCUST-5815)
+06:01:47.863 template-selector.html?appId=123456789:3038   22. #306169: X52114 (multiple) | Adelanted -c2023 • 2.75 National | Multiple TGs for Small Group eBooks: K-6 (Status: 8, Tags: tracker-assembly, tracker, internal, jirareview)
+06:01:47.863 template-selector.html?appId=123456789:3038   23. #306101: Benchmark Advance c2022 | GA Standard correlation Font issue from the Georgia Website (Status: 22, Tags: tracker, internal, test, SEDCUST-5808)
+06:01:47.863 template-selector.html?appId=123456789:3038   24. #306028: X98416 | BA-c2022>G3>Launch>Review and Routines (Gr. 3) - Day 10 & 11 - Missing Thick and Thin Questions Chart – Day 10 (Status: 22, Tags: tracker, test, SEDCUST-5804)
+06:01:47.863 template-selector.html?appId=123456789:3038   25. #305759: X106200 | Advance -c2022 • 2.75 Wisconsin | BAdvance - c2022 | eAssessments > G1 > Interim Assessment 4 > Q28 - Audio does not match assessment question (Status: 14, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5799)
+06:01:47.863 template-selector.html?appId=123456789:3038   26. #305722: X60640 | BAdvance - c2022 | Practice > Grammar and Spelling Activity Book Answer Key (Gr. 3) >Unit 8 > Week 3 > Subject-Verb Agreement; Coordinating and Subordinating Conjunctions; Diphthongs > Pages 114-115 - Missing Questions of Grammar/Spelling Book. (Status: 14, Tags: tracker, test, SEDCUST-5797)
+06:01:47.863 template-selector.html?appId=123456789:3038   27. #305698: X12240 | BAdelante - c2023 | Fonética K-1 Láminas de trabajo : Gr. K > Cards and Manipulatives - Need new workmats loaded (Status: 22, Tags: tracker, internal, test, SEDCUST-5796)
+06:01:47.863 template-selector.html?appId=123456789:3038   28. #305469: X69809 | Benchmark Adelante - c2023 | Sing, Swing, and Learn Unit Songs > G1 > U9 > En el mercado de San José - Incorrect Title in Unit 9 Song (Status: 14, Tags: tracker, test, SEDCUST-5788)
+06:01:47.863 template-selector.html?appId=123456789:3038   29. #305302: X88113 | B Adl - c2023 - Grade 3 > Word study resource > Recurso para fonética y estudio de palabras (Grado 3) > Unidad 9 > Semana 1 > Semana 1 Lecciones Adelante 3rd Unit 9 Digital Word Study Formatting Issue (Status: 22, Tags: tracker, test, SEDCUST-5784)
+06:01:47.864 template-selector.html?appId=123456789:3038   30. #305296: X60685 | VIP | BAdvance - c2022 | G3 > Comprehension Intervention (Gr. 3) > Click Print Icon - XML Error (Status: 14, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5783)
+06:01:47.864 template-selector.html?appId=123456789:3038   31. #305066: X83514, & X60642 | HOUSTON COUNTY SCHOOLS | Benchmark Advance c2022 -  Gr. 5 > Unit 2 > Week 2 > Practice > Grammar and Spelling Activity Book Answer Key > Unit 2 > Week 2 > Grammar resources should be available for week 2 (Status: 22, Tags: tracker, internal, test, SEDCUST-5776)
+06:01:47.864 template-selector.html?appId=123456789:3038   32. #304819: X86488, X86493, X86498, X86503, X86508 | STA Literacy Solutions | My Reader: Gr. 2 > U1-U5 > Print - "Print to PDF" option missing. (Status: 14, Tags: tracker, internal, test, SEDCUST-5770)
+06:01:47.864 template-selector.html?appId=123456789:3038   33. #304780: X97545 | Adv -c2022 | TRS > G2 > U1 > Components at a Glance - Missing references to Dynamite Dec. and Phoncs SG Instruction (Status: 22, Tags: tracker, internal, test, SEDCUST-5769)
+06:01:47.864 template-selector.html?appId=123456789:3038   34. #304606: X50318 | Anaheim Elementary School District | Benchmark Taller de fonetica > Grade 1 > Unit 10> Week 1 > Day 1> Toda la clase > Conciencia fonológica: Identificar sílabas con hiatos > Mismatch between phonological awareness activity (Status: 22, Tags: tracker, internal, jirareview, test, SEDCUST-5759)
+06:01:47.864 template-selector.html?appId=123456789:3038   35. #304508: X97536 | Benchmark Advance -c2022 | Teacher's Resource System Unit 2 (Gr. 1) > G1 > U2 >W2 > Weekly Resource > Comprehensive Literacy Planner,  Teacher's Resource System Unit 2 (Gr. 1) >G1 > U2 >W2 > Day 1 & Day 2 – Wrong Story Assigned for Days 1–4 (Status: 22, Tags: tracker, test, SEDCUST-5754)
+06:01:47.864 template-selector.html?appId=123456789:3038   36. #304373: X73369 | Waukesha School District | Benchmark Adelante - c2023 - Gr. 5 > unit 9 > Additional Materials Bank(4) > G5U9 Banco de materiales adicionales > Semana 1 > L3 Presentación multimedia modelo is not opening (Status: 14, Tags: tracker, internal, test, SEDCUST-5746)
+06:01:47.864 template-selector.html?appId=123456789:3038   37. #304329: X63725 | Benchmark Adelante - c2023 | G1 > U8 > Evaluación Unidad 8 G1 - Enable Audio option is unavailable (Status: 14, Tags: tracker, internal, test, SEDCUST-5745)
+06:01:47.864 template-selector.html?appId=123456789:3038   38. #304226: X98089 | BAdvance - c2022 | TRS : Gr K >U9 >W1 >D1 >L3 -  Wrong Sound Card (Status: 14, Tags: tracker, jirareview, test, SEDCUST-5738)
+06:01:47.864 template-selector.html?appId=123456789:3038   39. #304127: X106200 | Benchmark Advance-c2022 > G1 > Assessments > Interim Assessment 4 (WI) > Add to assignment - Audio enable/disable feature is missing (Status: 14, Tags: tracker, test, SEDCUST-5725)
+06:01:47.864 template-selector.html?appId=123456789:3038   40. #303964: X50909 | BAdelante c2023 > Resource Library > G1 > Mentor Read-Alouds and Extended Reads>Estatuas y monumentos - Page 10 Content Not Displaying (Status: 14, Tags: tracker, test, SEDCUST-5724)
+06:01:47.864 template-selector.html?appId=123456789:3038   41. #303725: X98089 | BAdv. - c2022 | TRS: Gr. K > U9 > W2 > D1 > L2 - Link for letter A song is missing (Status: 14, Tags: tracker, internal, test, SEDCUST-5710)
+06:01:47.864 template-selector.html?appId=123456789:3038   42. #303656: X97541 | BAdvance - c2022 | TRS: Gr. 1 > U7 > Wk 3 > D1 > L3- No Vocabulary Chart (Status: 22, Tags: tracker, internal, test, SEDCUST-5700)
+06:01:47.864 template-selector.html?appId=123456789:3038   43. #303499: Advance c2022 | All Grade Levels Writing Rubrics - Information Needed (Status: 22, Tags: tracker, internal, test, SEDCUST-5691)
+06:01:47.864 template-selector.html?appId=123456789:3038   44. #303480: X60640  | BAdvance c2022  | Grammar and Spelling Activity Book  : Gr. 3 > U8 > W2 > Hard and Soft G > Q10 - Line Missing (Status: 14, Tags: tracker, internal, test, SEDCUST-5692)
+06:01:47.864 template-selector.html?appId=123456789:3038   45. #303374: X64623 | Benchmark Adelante - c2023 | Evaluaciones Semanales y de la unidad: Gr. K > U10 > Reproducible Assessments > Evaluación de la Unidad 10 > Pg. 191 - items missing for numbers 6-15 (Status: 22, Tags: tracker, internal, test, SEDCUST-5688)
+06:01:47.864 template-selector.html?appId=123456789:3038   46. #303350: X85058, X81699| BAdvance - c2022 >High-Frequency Word Videos> SHOWS 83 in total Grade 1 shows 72, Benchmark Advance 2022 Program Support Guide> Skills Development > Grade 1 Scope & Sequence - Incomplete Coverage of High Frequency Word Videos in BA 2.75 (Status: 22, Tags: tracker, test, SEDCUST-5686)
+06:01:47.864 template-selector.html?appId=123456789:3038   47. #303190: X78471| BAdvance - c2022> Build Reflect write eNotebook> G6 > U8 - Missing "Print to PDF" Option in Grade 6 Unit 8 Build Reflect Write eNotebook (Status: 14, Tags: tracker, test, SEDCUST-5681)
+06:01:47.864 template-selector.html?appId=123456789:3038   48. #303188: X60640 | Spooner Area School District | Benchmark Advance c2022 - Practice > Gr.2 > Unit 8 > Week 2 > Practice > Grammar and Spelling Activity Book Answer Key > Missing Underline antecedent (Status: 14, Tags: tracker, internal, test, SEDCUST-5679)
+06:01:47.864 template-selector.html?appId=123456789:3038   49. #303164: X78746 | BAdvance c2022>G5>U7>TRS>W2>L-12 - Missing "Apply for Understanding" Section in 5th Grade Unit 7 Week 2 Lesson 12 (Status: 14, Tags: tracker, test, SEDCUST-5678)
+06:01:47.864 template-selector.html?appId=123456789:3038   50. #303082: X96189, X96137 | BAdvance c2026> Nigozis’s Story > Click three dots, Benchmark Advance c2026> Red in the Face > Click three dots - Incorrect Display of Letter Levels on TEQC Cards in Digital Versions. (Status: 22, Tags: tracker, test, SEDCUST-5675)
+06:01:47.864 template-selector.html?appId=123456789:3038   51. #303060: Adelante c2023 | Fluency Assessment Next Steps > G1 - Information Needed (Status: 22, Tags: tracker, internal, test, SEDCUST-5674)
+06:01:47.864 template-selector.html?appId=123456789:3038   52. #302923: X65324 | Benchmark Advance Florida | High Frequency Videos - Gr. 1 > Unit 8 > Week 3 > Missing High Frequency Videos (Status: 22, Tags: tracker, internal, test, SEDCUST-5669)
+06:01:47.864 template-selector.html?appId=123456789:3038   53. #302853: X97549  | BAdvance Florida | TRS: Gr. 2 > U5 > W1 > D3 > L10- Author's Purpose Anchor Chart missing (Status: 22, Tags: tracker, internal, test, SEDCUST-5662)
+06:01:47.864 template-selector.html?appId=123456789:3038   54. #302624: X83513 | BA c2022>G5> U1 >W1>L4 - Typo in Grade 5, Unit 1, Lesson 4 – “Sav-” Instead of “Save” (Status: 14, Tags: tracker, jirareview, test, SEDCUST-5655)
+06:01:47.864 template-selector.html?appId=123456789:3038   55. #302586: X12454 | BA - c2022 | Knowledge-Building Topic Libraries> Clean Up! Our Earth Day Project> Pages 5, 14 and the back cover have Zach’s name spelled with an H,page 11 - Content Error in “Clean Up! Our Earth Day Project”-Name Spelling Inconsistency (Status: 14, Tags: tracker, jirareview, test, SEDCUST-5653)
+06:01:47.864 template-selector.html?appId=123456789:3038   56. #302577: X40070 | BA c2018> Writing and Language Handbook (Gr. 3)>Opinion Mini-Lessons>page4> “Hoe-Down” > Can not find this play - Missing Tech Support for Writing and Language Handbook Lessons (Status: 22, Tags: tracker, jirareview, test, SEDCUST-5652)
+06:01:47.864 template-selector.html?appId=123456789:3038   57. #302454: X101156, X95504, X95540, X95546, X95467, & X75056 | Edina Public Schools | Benchmark Advance - c2022 - Articulation Videos or the Phonics & Letter Songs > Letter Songs and Articulation Videos > Incorrect Pronunciations (Status: 22, Tags: tracker, internal, jirareview, test, SEDCUST-5638)
+06:01:47.864 template-selector.html?appId=123456789:3038   58. #302346: X97578, X97549, X98084 | BA c2022>(Gr.5-U4, Gr.2-U5, Gr.K-U4) > TRS > Printable Version - Missing Printable Options for Teacher Resources (Status: 22, Tags: tracker, test, SEDCUST-5631)
+06:01:47.864 template-selector.html?appId=123456789:3038   59. #302166: X51774 | Benchmark Advance Florida | Eco Hero Book crashed the Benchmark App when open on Ipad (Status: 14, Tags: tracker, internal, SEDCUST-5617)
+06:01:47.864 template-selector.html?appId=123456789:3038   60. #301656: VIP X85591 | Benchmark Phonics>Assessment and Screener Handbook>Phonological Awareness Assessment>Phonological Awareness Assessment Next Steps- Scoring Language Concern – Phonological Awareness Assessment (K–1) (Status: 11, Tags: tracker, SEDCUST-5602)
+06:01:47.864 template-selector.html?appId=123456789:3038   61. #301534: X83481 | Benchmark Advance c2022 | TRS -  Gr. 1 > unit 9 > Week 3 > Day 3 > Lesson 3 > Focus Skill: Vowel Diphthong > Direction is not matching with the picture (Status: 22, Tags: tracker, internal, SEDCUST-5594)
+06:01:47.864 template-selector.html?appId=123456789:3038   62. #301474: 4,500+ eBook Library | Please Provide Rationale | PUTNAM CO SCHOOL DISTRICT (FL) (Status: 22, Tags: tracker, internal, SEDCUST-5591)
+06:01:47.864 template-selector.html?appId=123456789:3038   63. #301316: X60682 | Benchmark Advance Florida | Intervention - Gr. 5 > Comprehension Intervention (Gr. 5) > Blackline Master 21 > Content Concern (Status: 14, Tags: tracker, internal, SEDCUST-5585)
+06:01:47.864 template-selector.html?appId=123456789:3038   64. #301030: X49375 | BAdvance Florida > GK K > U-1, 4,9,10 and > Gr. 1 units 1-10 > Should not have "Print to PDF" option (Status: 22, Tags: tracker, SEDCUST-5577)
+06:01:47.864 template-selector.html?appId=123456789:3038   65. #300898: X68354 | Benchmark Advance c2021 | Additional Materials Bank: G3 > U7 > W3 > L4 > Close Reading Question - Incorrect Content (Status: 14, Tags: tracker, internal, jirareview, SEDCUST-5572)
+06:01:47.864 template-selector.html?appId=123456789:3038   66. #300842: X79781 | G6>U8> G6U8 Additional Materials Bank> Unit 8 Video -  Mentor Multimedia Presentation Link Not Working – Request for Copy (Status: 14, Tags: tracker, SEDCUST-5565)
+06:01:47.864 template-selector.html?appId=123456789:3038   67. #300799: X53964 | Adelante CA | G5 > U6 > W2 > Assessments > Unidad 6 Semana 2 Evaluación (Gr. 5) > Q1-10 - Should The Passages Have Audio? (Status: 22, Tags: tracker-sedcust, TESTING, tracker, internal, SEDCUST-5558)
+06:01:47.864 template-selector.html?appId=123456789:3038   68. #300267: Phonics & Word Study Workshop | Phonics Skills Songs > Long u - Information Needed (Status: 22, Tags: tracker, internal, SEDCUST-5532)
+06:01:47.864 template-selector.html?appId=123456789:3038   69. #300265: X3759 | Benchmark Advance c2018 | TRS: G2 > U7 >  W1 > D5 > Review and Assess Compound Words  > Phonics and Word Study > Dear Diary - Incorrect Hyperlink (Status: 14, Tags: tracker, internal, jirareview, SEDCUST-5553)
+06:01:47.864 template-selector.html?appId=123456789:3038   70. #299730: X97581 | Advance -c2022 | TRS: G5 > U7  - Print Version Button Unavailable (Status: 22, Tags: tracker, internal, SEDCUST-5507)
+06:01:47.864 template-selector.html?appId=123456789:3038   71. #299554: X87713 | Steps to Advance Literacy Solutions | G2 > U6 > TRS > P13 | Missing Full-Page Sample Responses (Status: 22, Tags: tracker, SEDCUST-5504)
+06:01:47.864 template-selector.html?appId=123456789:3038   72. #299508: X78455 | BAdvance-c2022 | B-R-Wr e-Notebook: G3 > U10 > B-R-Wr e-Notebk - No Print to PDF (Status: 22, Tags: tracker, internal, SEDCUST-5502)
+06:01:47.864 template-selector.html?appId=123456789:3038   73. #299479: X98028 | Benchmark Adelante - c2023 | TRS: Grade 2 > Unit 7 > W1 > D3 > L10 & W1 > D4 > L14 - Non-Functional Hyperlinks (Status: 11, Tags: tracker, SEDCUST-5501)
+06:01:47.865 template-selector.html?appId=123456789:3038   74. #299246: Benchmark Education Company | Benchmark Advance - c2022 > Unit 1 Assessment (Gr. 4)- AI grading Question (Status: 22, Tags: tracker, internal, SEDCUST-5491)
+06:01:47.865 template-selector.html?appId=123456789:3038   75. #298663: VIP | X65349 >BAFL >Weekly Assessment> G2 >U7>W1> Q4 | Incorrect Answer in Lindbergh Passage Assessment  (Status: 22, Tags: tracker, SEDCUST-5441)
+06:01:47.865 template-selector.html?appId=123456789:3038   76. #298175: X65565 | Benchmark Advance c2021 | Assessment - G 2> U 8 > W 1 > A > Unit 8 Assessment (Gr. 2) - Audio listening Issue with Question 5 Referencing Question 12 in Unit 8 Week 3 Test (Status: 22, Tags: tracker, SEDCUST-5403)
+06:01:47.865 template-selector.html?appId=123456789:3038   77. #297701: VIP | X104467, X75570 | BAdvance - c2022 | ML Glossary | G1 > U5 - Errors in Grade 1 Unit 5 Portuguese ML Glossary (Status: 14, Tags: tracker, SEDCUST-5364)
+06:01:47.865 template-selector.html?appId=123456789:3038   78. #297593: X97540 and X104468 | BAdvance - c2022 | TRS and Multilingual Glossary > Gr1 > U6 >Inconsistent Use of Vocabulary Words (Status: 14, Tags: tracker, internal, jirareview, SEDCUST-5389)
+06:01:47.865 template-selector.html?appId=123456789:3038   79. #296889: X97571 > BA -c2022 >TRS> Gr 4 >U7 >W1 | Comprehensive Literacy Planner is blank (Status: 14, Tags: tracker, jirareview, SEDCUST-5323)
+06:01:47.865 template-selector.html?appId=123456789:3038   80. #296803: X64510 > BADL c2022 > Gr1 > U5 > Whole Group TRS > Sistema de recursos para maestros| Missing print button (Status: 22, Tags: tracker, SEDCUST-5313)
+06:01:47.865 template-selector.html?appId=123456789:3038   81. #296697: X78290 >BADL c2023 > GK > Fundamentos y Rutinas Banco de materiales adicionales | letter "F" link is not working. (Status: 14, Tags: tracker, SEDCUST-5307)
+06:01:47.865 template-selector.html?appId=123456789:3038   82. #296610: X87724/ X83499 | Steps to Advance>Gr3>TRS>U7>W3>Sugar on the snow | BAdvance>Gr3>TRS>U7>W3>Sarah and the Chickens (Status: 22, Tags: tracker, internal, SEDCUST-5300)
+06:01:47.865 template-selector.html?appId=123456789:3038   83. #296412: VIP | Chula Vista ESD | Inquiry regarding Proficiency Level (Status: 22, Tags: tracker, internal, SEDCUST-5290)
+06:01:47.865 template-selector.html?appId=123456789:3038   84. #296112: X97588 | BA – c2022 | G6 > U4 >TRS > Print to PDF option missing (Status: 22, Tags: tracker, SEDCUST-5262)
+06:01:47.865 template-selector.html?appId=123456789:3038   85. #295667: CLARKSVILLE-MONTGOMERY CSD | Assessment | Unit Test Conversion chart location (Status: 22, Tags: tracker, internal, SEDCUST-5234)
+06:01:47.865 template-selector.html?appId=123456789:3038   86. #295453: X65135 | Benchmark Advance - c2022 > Gr. 2 > Unit 5 > Assessment > Custom - Unit 5 Assessment (Gr. 2) > Question 8 > Difficult Question (Status: 22, Tags: tracker, internal, jirareview, SEDCUST-5225)
+06:01:47.865 template-selector.html?appId=123456789:3038   87. #294763: X64550: BADL c2022 > Gr3 > TRS > U5 > W1>L14 | Incorrect List of Coordinating Conjunctions in Spanish (Status: 14, Tags: tracker, SEDCUST-5192)
+06:01:47.865 template-selector.html?appId=123456789:3038   88. #294762: X107998 > BA -c2022 >TRS > Grade 4 > Unit 4 > Print to PDF option missing. (Status: 14, Tags: tracker, SEDCUST-5194)
+06:01:47.865 template-selector.html?appId=123456789:3038   89. #294556: Ready To Advance | Plan & Teach shows incorrect Grade (Status: 22, Tags: tracker, internal, jirareview, SEDCUST-5246)
+06:01:47.865 template-selector.html?appId=123456789:3038   90. #294287: X83479 | Benchmark Advance c2022 | TRS | G1 >U7>W2 - Correction Needed: "Timeline" Spelling (Rational Feedback) (Status: 22, Tags: tracker, internal, SEDCUST-5180)
+06:01:47.865 template-selector.html?appId=123456789:3038   91. #294279: X83506  | B Adv c2022 > G4 > U4 > TRS | Missing Answer Key for Unit 4 it is showing Unit 3 (Status: 14, Tags: tracker, SEDCUST-5181)
+06:01:47.865 template-selector.html?appId=123456789:3038   92. #293731: X62795 | Adelante -c2023 | G5 > U4 >Gramática y Ortografía > Clave de Respuestas > Ortografía > Page 6 of PDF (página 90, #2,3,6,11) | Incorrect Grammar (Status: 14, Tags: tracker, internal, SEDCUST-5157)
+06:01:47.865 template-selector.html?appId=123456789:3038   93. #293536: X83496>BA c2022>TRS> G3>U4>W1,W2 > Misalignment Between Grammar Lessons and Worksheets (Status: 14, Tags: tracker, SEDCUST-5146)
+06:01:47.865 template-selector.html?appId=123456789:3038   94. #292690: X68845 | Ready to Advance Texas Edition | TRS | U5>W3>Transition activities > Movement - Unable to Locate "Wind Listening Clip". (Status: 14, Tags: tracker, SEDCUST-5115)
+06:01:47.865 template-selector.html?appId=123456789:3038   95. #288942: Oakland remove old BA (Status: 22, Tags: tracker, internal, SIM-2098)
+06:01:47.865 template-selector.html?appId=123456789:3038   96. #288941: CLONE - Benchmark Advance c2022GrKU2, 6, 7, and 10 decodables Print to PDF button Missing (Status: 22, Tags: tracker, internal, SEDCUST-4879, SEDCUST-5569)
+06:01:47.865 template-selector.html?appId=123456789:3038   97. #288281: X75639 | Adelante c2022 |  G1 > U4 | Managing your Independent Reading Program is in English (Status: 14, Tags: tracker, internal, SEDCUST-5017)
+06:01:47.865 template-selector.html?appId=123456789:3038   98. #287983: Advance -c2022 & -c2022 (IL) | Plan and Teach | G5 U1 Day 2 | Missing standards (Status: 22, Tags: tracker, internal, plan&teach, SEDCUST-4963)
+06:01:47.865 template-selector.html?appId=123456789:3038   99. #286789: CHEATHAM CO SD | Benchmark Advance c2021 (TN) | Standards missing within STA Gr.K>U3 Assessment (Status: 11, Tags: tracker, internal, SIM-2132, SEDCUST-5363)
+06:01:47.865 template-selector.html?appId=123456789:3038   100. #286692: X50934, X50944, X50946, X50942, X50950, X50948, X50938, X50936 | Benchmark Adelante - c2023 - Missing Books Under Knowledge Building Library: All Grades (Status: 8, Tags: tracker, internal, ESCALATED TO ASSEMBLY)
+06:01:47.865 template-selector.html?appId=123456789:3038   101. #286658: X91833 | Advance -c2022 | Grade K Unit 1 Lap Book - Missing Page for the Aplhabet Train (Status: 11, Tags: tracker, internal, SEDCUST-4884, SEDCUST-5560)
+06:01:47.865 template-selector.html?appId=123456789:3038   102. #286364: X80246:BA-FL>Gr.5>U3>Grammar and Spelling Activity Book answer missing from word bank (Status: 14, Tags: tracker, internal, SEDCUST-4880)
+06:01:47.865 template-selector.html?appId=123456789:3038   103. #286294: X97537 - Error Message When Opening Decodable Texts (Status: 22, Tags: tracker, SEDCUST-4898, SEDCUST-5201)
+06:01:47.865 template-selector.html?appId=123456789:3038   104. #286241: SO#99679 - remove licenses (Status: 22, Tags: tracker, internal, SIM-2106)
+06:01:47.865 template-selector.html?appId=123456789:3038   105. #285953: X49342 Mismatch in Benchmark Phonics Decodable Readers (Status: 14, Tags: tracker, SEDCUST-4843)
+06:01:47.865 template-selector.html?appId=123456789:3038   106. #283958: X83526 | Content Issue | Benchmark Advance c2022 | G6 U4 W2 | TRS | Washington ESD 6 (AZ) (Status: 14, Tags: tracker, internal, SEDCUST-4831)
+06:01:47.865 template-selector.html?appId=123456789:3038   107. #283937: X103911 & X60586 BAdelante-c2023GKU3W1 broken hyperlink (Status: 14, Tags: tracker, internal, plan&teach, SEDCUST-4755)
+06:01:47.865 template-selector.html?appId=123456789:3038   108. #283586: X67486 & X67885 BA c2021 (NC) G1 U2 W1 test; Standards DO NOT ALIGN - Digital vs Reproducible (Status: 22, Tags: tracker, internal, SIM-2126, SEDCUST-4904, SEDCUST-4819)
+06:01:47.865 template-selector.html?appId=123456789:3038   109. #283191: Adelante - c2023>Gr. 2>Build-Reflect-Write eNotebook Answer Key missing (Status: 22, Tags: tracker, internal, SEDCUST-4746)
+06:01:47.865 template-selector.html?appId=123456789:3038   110. #283035: Adelante 2.5Mod is missing the Scope and Sequence from the Program Review Section (Status: 8, Tags: tracker, internal, ESCALATED TO ASSEMBLY)
+06:01:47.865 template-selector.html?appId=123456789:3038   111. #282921: X56214>Benchmark Taller de fonética y estudio de palabras> G2>U2>W1>D2 >ePocket chart missing syllables (Status: 14, Tags: tracker, SEDCUST-4720)
+06:01:47.865 template-selector.html?appId=123456789:3038   112. #282261: Topeka USD 501 District (KS) - Data Discrepancy & Incorrect Data in Single Test Analysis Report (Status: 22, Tags: tracker, internal, SIM-1954, SIM-1987, SIM-1989)
+06:01:47.865 template-selector.html?appId=123456789:3038   113. #282191: Edina Public School Noval Study Resource Missing (Status: 8, Tags: tracker, internal, state, ESCALATED TO ASSEMBLY)
+06:01:47.865 template-selector.html?appId=123456789:3038   114. #281704: X87611, X87802: Steps to Advance>Gr.4>U1 Assessment CCSS (Status: 8, Tags: tracker, internal, ESCALATED TO ASSEMBLY)
+06:01:47.865 template-selector.html?appId=123456789:3038   115. #281375: X98407 > Benchmark Advance - c2022 > Gr. K and 1 > Assessment > Text should be highlighted (Status: 22, Tags: tracker, internal, SEDCUST-4667)
+06:01:47.865 template-selector.html?appId=123456789:3038   116. #280920: X78730 Discrepancies in Time Recommendations for Lessons in Plan and Teach Resource (BA 2022) (Status: 14, Tags: tracker, plan&teach, SEDCUST-4664)
+06:01:47.865 template-selector.html?appId=123456789:3038   117. #276383: Soledad USD (CA) Removal Of Older BA Version (Status: 22, Tags: tracker, internal, SIM-1963)
+06:01:47.865 template-selector.html?appId=123456789:3038   118. #275717: Foundational Skills Validity and Reliability Information (Status: 22, Tags: tracker, internal, SEDCUST-4653)
+06:01:47.865 template-selector.html?appId=123456789:3038   119. #275336: X64584 X79235 Benchmark Adelante c2022 G5U2 Content Issue (Status: 14, Tags: tracker, internal, SEDCUST-4651, state)
+06:01:47.865 template-selector.html?appId=123456789:3038   120. #274138: Chromebook White Blank Screen Issue after Clever login (Status: 9, Tags: tracker, internal, SIM-1876, state)
+06:01:47.865 template-selector.html?appId=123456789:3038   121. #272028: X71979 | Destreza: diptongos con a: ai, ay, au (G2U2W1D1) typo for por que (Status: 14, Tags: tracker, internal, SEDCUST-4554)
+06:01:47.865 template-selector.html?appId=123456789:3038   122. #271101: Cedarburg SD requested permanent removal of the data from TA (Status: 22, Tags: tracker, internal, SIM-1824)
+06:01:47.865 template-selector.html?appId=123456789:3038   123. #268554: Incorrect Multilingual Glossary - Gr 2 (Status: 14, Tags: tracker, internal, SEDCUST-4527)
+06:01:47.865 template-selector.html?appId=123456789:3038   124. #265183: High Readability adjusted grading scale? (Status: 22, Tags: tracker, internal, SEDCUST-4518)
+06:01:47.865 template-selector.html?appId=123456789:3038   125. #259464: Distance Learning Student Activities hyperlinks broken or non existent? (Status: 14, Tags: tracker, SEDCUST-4497)
+06:01:47.865 template-selector.html?appId=123456789:3038   126. #255678: X98087| Benchmark Advance - c2022> Grade K >Unit 7>Week 2>Day 1>Lesson 2| Incorrect Picture (Status: 22, Tags: SEDCUST-4454, tracker)
+06:01:47.865 template-selector.html?appId=123456789:3038   127. #255515: X91946:Benchmark English>Level6> book 3> presentation> unit 4 - error opening presentation (Status: 22, Tags: SEDCUST-4451, tracker)
+06:01:47.865 template-selector.html?appId=123456789:3038   128. #248650: X87544: Errors in Grade 2 Volume 1 Express MLG (Status: 14, Tags: SEDCUST-4400, tracker)
+06:01:47.865 template-selector.html?appId=123456789:3038   129. #241051: X97541 Correction Request for Recommended Trade Book Title (Status: 14, Tags: SEDCUST-4260, tracker)
+06:01:47.866 template-selector.html?appId=123456789:3038   130. #240828: Errors on Phonological Awareness Assessment - FOREST LAKE IND SCH DIST 831 (MN) (Status: 14, Tags: SEDCUST-4301, tracker)
+06:01:47.866 template-selector.html?appId=123456789:3038   131. #235746: X83302 : Benchmark Phonics Error > Benchmark Phonics > Gr 1 > Unit 4 > TRS > Phonics mini lessons > Week 3 > Day 1. (Status: 14, Tags: SEDCUST-4084, tracker)
+06:01:47.866 template-selector.html?appId=123456789:3038   132. #226344: X80307: PD Training: Curriculum Resources>Phonics Intervention Training>Phonics Intervention FAQ's>Time Stamp 2:06- Confusing Content (Status: 14, Tags: SEDCUST-3889, tracker)
+06:01:47.866 template-selector.html?appId=123456789:3038   133. #201934: X69413 to X69418 Question about Program support resources (Status: 22, Tags: SEDCUST-3673, tracker)
+06:01:47.866 template-selector.html?appId=123456789:3038   134. #83834: X83477 - BA c2022 (National) -> Grade 1, Unit 5 -> TRS -> Week 2, the Focus Skill is long O o_el but in the print manual it's U /u/ (Status: 22, Tags: SEDCUST-2403, tracker)
+06:01:47.866 template-selector.html?appId=123456789:3038   135. #3365: X44374: Benchmark Adelante Error - Interactive Learning Games (Status: 22, Tags: SEDCUST-1813, tracker)
+06:01:47.882 template-selector.html?appId=123456789:4558 Setting up inline filter and sort...
+06:01:47.882 template-selector.html?appId=123456789:4565 Elements found: {statusFilter: true, groupBy: true, sortBy: true, clearFiltersBtn: true}
+06:01:47.882 template-selector.html?appId=123456789:4575 Status filter event listener added
+06:01:47.882 template-selector.html?appId=123456789:4583 Group by event listener added
+06:01:47.882 template-selector.html?appId=123456789:4591 Sort by event listener added
+06:01:47.882 template-selector.html?appId=123456789:4599 Clear filters event listener added
+06:01:48.000 template-selector.html?appId=123456789:2854 API response status: 200
+06:01:48.001 template-selector.html?appId=123456789:2879 Page 5: Retrieved 15 tickets (15 new, 0 duplicates) - total so far: 135
+06:01:48.001 template-selector.html?appId=123456789:2887 Pagination status: {hasMoreByCount: false, totalAvailable: 135, currentTotal: 135, pageIsEmpty: false, gotNewTickets: true}
+06:01:48.001 template-selector.html?appId=123456789:2945 Retrieved 135 total tickets from all pages
+06:01:48.001 template-selector.html?appId=123456789:2949 Found 135 tickets in search results
+06:01:48.001 template-selector.html?appId=123456789:2953 Analyzing all retrieved tickets before filtering:
+06:01:48.001 template-selector.html?appId=123456789:2976 Status distribution: {8: 8, 9: 1, 11: 4, 14: 50, 15: 1, 22: 71}
+06:01:48.001 template-selector.html?appId=123456789:2977 Tag distribution: {tracker-sedcust: 9, tracker: 135, internal: 86, jirareview: 18, test: 53, …}
+06:01:48.001 template-selector.html?appId=123456789:2978 Tickets with 'tracker' in subject but no tracker tag: 0
+06:01:48.001 template-selector.html?appId=123456789:2988 Ticket 1: {id: 308819, subject: 'X97545 | Advance - c2022 • 2.75 National | TRS: G2...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:48.001 template-selector.html?appId=123456789:2988 Ticket 2: {id: 308624, subject: 'Benchmark Education Company | Not Program Specific...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:48.001 template-selector.html?appId=123456789:2988 Ticket 3: {id: 308474, subject: 'X78206 | Advance - c2022 • 2.75 California Advance...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:48.001 template-selector.html?appId=123456789:2988 Ticket 4: {id: 308281, subject: 'X104815 | Advance - c2022 • 2.75 Ohio | Reproducib...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:48.001 template-selector.html?appId=123456789:2988 Ticket 5: {id: 308174, subject: 'Rockdale CPS | Benchmark Advnace c2022 | General i...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:48.001 template-selector.html?appId=123456789:2988 Ticket 6: {id: 308112, subject: 'X106256 | Advance Florida c2026 • 2.8 Florida | TR...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:48.001 template-selector.html?appId=123456789:2988 Ticket 7: {id: 308108, subject: 'X123213 | Adelante - c2023 • 2.75 California Adela...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:48.001 template-selector.html?appId=123456789:2988 Ticket 8: {id: 308050, subject: 'X98086 | Advance - c2022 • 2.75 California Advance...', status: 14, responder_id: 67031011668, agent_id: undefined, …}
+06:01:48.001 template-selector.html?appId=123456789:2988 Ticket 9: {id: 307834, subject: 'X98089 | Benchmark Advance - c2022 - Gr. K > Unit ...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:48.001 template-selector.html?appId=123456789:2988 Ticket 10: {id: 307702, subject: 'Woodburn Public School District 103 |Benchmark Ade...', status: 22, responder_id: 67031011668, agent_id: undefined, …}
+06:01:48.002 template-selector.html?appId=123456789:3028 Found 135 tracker tickets (135 unique) assigned to user 67031011668
+06:01:48.002 template-selector.html?appId=123456789:3036 Unique tracker tickets:
+06:01:48.002 template-selector.html?appId=123456789:3038   1. #308819: X97545 | Advance - c2022 • 2.75 National | TRS: G2 > U1 > TRS > Additional Resources > Small Group Text for Reteaching Strategies and Skills - Access Denied Error Message (Status: 22, Tags: tracker-sedcust, tracker, internal, jirareview, test, SEDCUST-5897)
+06:01:48.002 template-selector.html?appId=123456789:3038   2. #308624: Benchmark Education Company | Not Program Specific | Bookshelves • Unable to Share with Another User at the Same School for Teachers (Status: 22, Tags: tracker-sim-dashboard, tracker, internal, jirareview, test, SIM-2502)
+06:01:48.002 template-selector.html?appId=123456789:3038   3. #308474: X78206 | Advance - c2022 • 2.75 California Advance | Texts for Close Reading: Advance - c2022 > G6 > U1 > Texts for Close Reading > Unit 1 Relationships in Nature (Gr. 6) - Error Code (Status: 22, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5869)
+06:01:48.002 template-selector.html?appId=123456789:3038   4. #308281: X104815 | Advance - c2022 • 2.75 Ohio | Reproducible Assessments: G5 > U1 > W1 - Assessment missing (Status: 22, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5853)
+06:01:48.002 template-selector.html?appId=123456789:3038   5. #308174: Rockdale CPS | Benchmark Advnace c2022 | General inquiry regarding Science/Social Study Correlations (Status: 22, Tags: tracker, internal, test, SEDCUST-5848)
+06:01:48.002 template-selector.html?appId=123456789:3038   6. #308112: X106256 | Advance Florida c2026 • 2.8 Florida | TRS: Gr.1 > Foundations and Routines Grade 1 - Missing BLM (Status: 22, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5847)
+06:01:48.002 template-selector.html?appId=123456789:3038   7. #308108: X123213 | Adelante - c2023 • 2.75 California Adelante | Handwriting: Recurso de caligrafía cursiva (Gr. 3-5) - Printing Issue (Status: 22, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5846)
+06:01:48.002 template-selector.html?appId=123456789:3038   8. #308050: X98086 | Advance - c2022 • 2.75 California Advance | TRS: GK>U6>Additional Resources - Incorrect Phonics Cumulative Assessment (Status: 14, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5845)
+06:01:48.002 template-selector.html?appId=123456789:3038   9. #307834: X98089 | Benchmark Advance - c2022 - Gr. K > Unit 9 > Week 1 > TRS > Teacher's Resource System Unit 9 (Gr. K) > Day 5 > Lesson 2 > Print Mismatch/Rationale Needed (Status: 22, Tags: tracker, internal, test, SEDCUST-5843)
+06:01:48.002 template-selector.html?appId=123456789:3038   10. #307702: Woodburn Public School District 103 |Benchmark Adelante c2023 | Gr. 3 > launch Unit > Missing "Es mi derecho" (Status: 22, Tags: tracker, internal, jirareview, test, SEDCUST-5842)
+06:01:48.002 template-selector.html?appId=123456789:3038   11. #307536: X123199 | Benchmark Advance FL C2026 | Request of adding an empty handwriting practice page (Status: 15, Tags: tracker, internal, test, SEDCUST-5839)
+06:01:48.002 template-selector.html?appId=123456789:3038   12. #307529: MKTGOPS-1119- X40178 (Multiple) | BAdelante • California Adelante | Missing Adelante Grammar and Spelling Activity Books: All Grades (Status: 8, Tags: tracker-assembly, tracker, internal)
+06:01:48.002 template-selector.html?appId=123456789:3038   13. #307414: X123203| Benchmark Advance Florida c2026 > Handwriting > Cursive Practice Pages (Gr. 3-5) > Cursive Letter Practice Pages > Letter S & Letter L -  Incorrect Links for Cursive Letters "S" and "L" on Grades 3–5 Practice Pages (Status: 14, Tags: tracker, jirareview, test, SEDCUST-5838)
+06:01:48.002 template-selector.html?appId=123456789:3038   14. #307301: Multiple Xcodes | Express | Reproducible Assessment & eAssessment: Gr. 1 and 4 > Interim Assessment 1 & Unit 1 and 2: Rubrics are different (Status: 22, Tags: tracker, internal, test, SEDCUST-5836)
+06:01:48.002 template-selector.html?appId=123456789:3038   15. #306943: X78652 (Multiple) | Standard | Advance -c2022 • 2.75 | Unit 1 Word Study Practice Text e-Book Missing from Library: Grade 6 (Status: 8, Tags: tracker-assembly, tracker, internal, jirareview)
+06:01:48.002 template-selector.html?appId=123456789:3038   16. #306889: X97541| Benchmark Advance - c2022 | TRS: Gr. 1 > U7 > W2 > D1 > L1 - Broken hyperlink for the Lesson Slides (Status: 22, Tags: tracker, internal, test, SEDCUST-5829)
+06:01:48.002 template-selector.html?appId=123456789:3038   17. #306861: X89684 | Benchmark Adelante - c2023 | Guía de apoyo del programa is missing (Status: 8, Tags: tracker, internal)
+06:01:48.002 template-selector.html?appId=123456789:3038   18. #306736: Subject: X81802 | BAdelante c2023 | TRS: Gr. 1 > U1  > Wk 2 >  D 1-5 >  L 3 : Mentor Text Link Broken (Status: 22, Tags: tracker, internal, test, SEDCUST-5822)
+06:01:48.002 template-selector.html?appId=123456789:3038   19. #306689: Benchmark Education | Express - 1:1 feature missing (Status: 22, Tags: tracker, internal, test, SIM-2494)
+06:01:48.002 template-selector.html?appId=123456789:3038   20. #306688: VIP * FAIRFAX CO PUBLIC SCHOOL DIST | Reports | Assessment Reports - CSVs - Add TestIDs to Assessment CSV for Teachers, Admin (Status: 22, Tags: tracker-feature-request, tracker, internal)
+06:01:48.002 template-selector.html?appId=123456789:3038   21. #306359: X17065 | BAdelante: California 2017 | Reproducible Assessments: Gr. K > Evaluaciones destrezas fundamentales > Parte 2: Evaluación destrezas fundamentales > Lecciones de intervenci ́on niveladas>  No clear path with lessons and books to use (Status: 22, Tags: tracker, internal, test, SEDCUST-5815)
+06:01:48.002 template-selector.html?appId=123456789:3038   22. #306169: X52114 (multiple) | Adelanted -c2023 • 2.75 National | Multiple TGs for Small Group eBooks: K-6 (Status: 8, Tags: tracker-assembly, tracker, internal, jirareview)
+06:01:48.002 template-selector.html?appId=123456789:3038   23. #306101: Benchmark Advance c2022 | GA Standard correlation Font issue from the Georgia Website (Status: 22, Tags: tracker, internal, test, SEDCUST-5808)
+06:01:48.002 template-selector.html?appId=123456789:3038   24. #306028: X98416 | BA-c2022>G3>Launch>Review and Routines (Gr. 3) - Day 10 & 11 - Missing Thick and Thin Questions Chart – Day 10 (Status: 22, Tags: tracker, test, SEDCUST-5804)
+06:01:48.002 template-selector.html?appId=123456789:3038   25. #305759: X106200 | Advance -c2022 • 2.75 Wisconsin | BAdvance - c2022 | eAssessments > G1 > Interim Assessment 4 > Q28 - Audio does not match assessment question (Status: 14, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5799)
+06:01:48.002 template-selector.html?appId=123456789:3038   26. #305722: X60640 | BAdvance - c2022 | Practice > Grammar and Spelling Activity Book Answer Key (Gr. 3) >Unit 8 > Week 3 > Subject-Verb Agreement; Coordinating and Subordinating Conjunctions; Diphthongs > Pages 114-115 - Missing Questions of Grammar/Spelling Book. (Status: 14, Tags: tracker, test, SEDCUST-5797)
+06:01:48.002 template-selector.html?appId=123456789:3038   27. #305698: X12240 | BAdelante - c2023 | Fonética K-1 Láminas de trabajo : Gr. K > Cards and Manipulatives - Need new workmats loaded (Status: 22, Tags: tracker, internal, test, SEDCUST-5796)
+06:01:48.002 template-selector.html?appId=123456789:3038   28. #305469: X69809 | Benchmark Adelante - c2023 | Sing, Swing, and Learn Unit Songs > G1 > U9 > En el mercado de San José - Incorrect Title in Unit 9 Song (Status: 14, Tags: tracker, test, SEDCUST-5788)
+06:01:48.002 template-selector.html?appId=123456789:3038   29. #305302: X88113 | B Adl - c2023 - Grade 3 > Word study resource > Recurso para fonética y estudio de palabras (Grado 3) > Unidad 9 > Semana 1 > Semana 1 Lecciones Adelante 3rd Unit 9 Digital Word Study Formatting Issue (Status: 22, Tags: tracker, test, SEDCUST-5784)
+06:01:48.002 template-selector.html?appId=123456789:3038   30. #305296: X60685 | VIP | BAdvance - c2022 | G3 > Comprehension Intervention (Gr. 3) > Click Print Icon - XML Error (Status: 14, Tags: tracker-sedcust, tracker, internal, test, SEDCUST-5783)
+06:01:48.002 template-selector.html?appId=123456789:3038   31. #305066: X83514, & X60642 | HOUSTON COUNTY SCHOOLS | Benchmark Advance c2022 -  Gr. 5 > Unit 2 > Week 2 > Practice > Grammar and Spelling Activity Book Answer Key > Unit 2 > Week 2 > Grammar resources should be available for week 2 (Status: 22, Tags: tracker, internal, test, SEDCUST-5776)
+06:01:48.002 template-selector.html?appId=123456789:3038   32. #304819: X86488, X86493, X86498, X86503, X86508 | STA Literacy Solutions | My Reader: Gr. 2 > U1-U5 > Print - "Print to PDF" option missing. (Status: 14, Tags: tracker, internal, test, SEDCUST-5770)
+06:01:48.002 template-selector.html?appId=123456789:3038   33. #304780: X97545 | Adv -c2022 | TRS > G2 > U1 > Components at a Glance - Missing references to Dynamite Dec. and Phoncs SG Instruction (Status: 22, Tags: tracker, internal, test, SEDCUST-5769)
+06:01:48.002 template-selector.html?appId=123456789:3038   34. #304606: X50318 | Anaheim Elementary School District | Benchmark Taller de fonetica > Grade 1 > Unit 10> Week 1 > Day 1> Toda la clase > Conciencia fonológica: Identificar sílabas con hiatos > Mismatch between phonological awareness activity (Status: 22, Tags: tracker, internal, jirareview, test, SEDCUST-5759)
+06:01:48.002 template-selector.html?appId=123456789:3038   35. #304508: X97536 | Benchmark Advance -c2022 | Teacher's Resource System Unit 2 (Gr. 1) > G1 > U2 >W2 > Weekly Resource > Comprehensive Literacy Planner,  Teacher's Resource System Unit 2 (Gr. 1) >G1 > U2 >W2 > Day 1 & Day 2 – Wrong Story Assigned for Days 1–4 (Status: 22, Tags: tracker, test, SEDCUST-5754)
+06:01:48.002 template-selector.html?appId=123456789:3038   36. #304373: X73369 | Waukesha School District | Benchmark Adelante - c2023 - Gr. 5 > unit 9 > Additional Materials Bank(4) > G5U9 Banco de materiales adicionales > Semana 1 > L3 Presentación multimedia modelo is not opening (Status: 14, Tags: tracker, internal, test, SEDCUST-5746)
+06:01:48.002 template-selector.html?appId=123456789:3038   37. #304329: X63725 | Benchmark Adelante - c2023 | G1 > U8 > Evaluación Unidad 8 G1 - Enable Audio option is unavailable (Status: 14, Tags: tracker, internal, test, SEDCUST-5745)
+06:01:48.002 template-selector.html?appId=123456789:3038   38. #304226: X98089 | BAdvance - c2022 | TRS : Gr K >U9 >W1 >D1 >L3 -  Wrong Sound Card (Status: 14, Tags: tracker, jirareview, test, SEDCUST-5738)
+06:01:48.002 template-selector.html?appId=123456789:3038   39. #304127: X106200 | Benchmark Advance-c2022 > G1 > Assessments > Interim Assessment 4 (WI) > Add to assignment - Audio enable/disable feature is missing (Status: 14, Tags: tracker, test, SEDCUST-5725)
+06:01:48.002 template-selector.html?appId=123456789:3038   40. #303964: X50909 | BAdelante c2023 > Resource Library > G1 > Mentor Read-Alouds and Extended Reads>Estatuas y monumentos - Page 10 Content Not Displaying (Status: 14, Tags: tracker, test, SEDCUST-5724)
+06:01:48.002 template-selector.html?appId=123456789:3038   41. #303725: X98089 | BAdv. - c2022 | TRS: Gr. K > U9 > W2 > D1 > L2 - Link for letter A song is missing (Status: 14, Tags: tracker, internal, test, SEDCUST-5710)
+06:01:48.002 template-selector.html?appId=123456789:3038   42. #303656: X97541 | BAdvance - c2022 | TRS: Gr. 1 > U7 > Wk 3 > D1 > L3- No Vocabulary Chart (Status: 22, Tags: tracker, internal, test, SEDCUST-5700)
+06:01:48.002 template-selector.html?appId=123456789:3038   43. #303499: Advance c2022 | All Grade Levels Writing Rubrics - Information Needed (Status: 22, Tags: tracker, internal, test, SEDCUST-5691)
+06:01:48.002 template-selector.html?appId=123456789:3038   44. #303480: X60640  | BAdvance c2022  | Grammar and Spelling Activity Book  : Gr. 3 > U8 > W2 > Hard and Soft G > Q10 - Line Missing (Status: 14, Tags: tracker, internal, test, SEDCUST-5692)
+06:01:48.002 template-selector.html?appId=123456789:3038   45. #303374: X64623 | Benchmark Adelante - c2023 | Evaluaciones Semanales y de la unidad: Gr. K > U10 > Reproducible Assessments > Evaluación de la Unidad 10 > Pg. 191 - items missing for numbers 6-15 (Status: 22, Tags: tracker, internal, test, SEDCUST-5688)
+06:01:48.002 template-selector.html?appId=123456789:3038   46. #303350: X85058, X81699| BAdvance - c2022 >High-Frequency Word Videos> SHOWS 83 in total Grade 1 shows 72, Benchmark Advance 2022 Program Support Guide> Skills Development > Grade 1 Scope & Sequence - Incomplete Coverage of High Frequency Word Videos in BA 2.75 (Status: 22, Tags: tracker, test, SEDCUST-5686)
+06:01:48.002 template-selector.html?appId=123456789:3038   47. #303190: X78471| BAdvance - c2022> Build Reflect write eNotebook> G6 > U8 - Missing "Print to PDF" Option in Grade 6 Unit 8 Build Reflect Write eNotebook (Status: 14, Tags: tracker, test, SEDCUST-5681)
+06:01:48.002 template-selector.html?appId=123456789:3038   48. #303188: X60640 | Spooner Area School District | Benchmark Advance c2022 - Practice > Gr.2 > Unit 8 > Week 2 > Practice > Grammar and Spelling Activity Book Answer Key > Missing Underline antecedent (Status: 14, Tags: tracker, internal, test, SEDCUST-5679)
+06:01:48.002 template-selector.html?appId=123456789:3038   49. #303164: X78746 | BAdvance c2022>G5>U7>TRS>W2>L-12 - Missing "Apply for Understanding" Section in 5th Grade Unit 7 Week 2 Lesson 12 (Status: 14, Tags: tracker, test, SEDCUST-5678)
+06:01:48.002 template-selector.html?appId=123456789:3038   50. #303082: X96189, X96137 | BAdvance c2026> Nigozis’s Story > Click three dots, Benchmark Advance c2026> Red in the Face > Click three dots - Incorrect Display of Letter Levels on TEQC Cards in Digital Versions. (Status: 22, Tags: tracker, test, SEDCUST-5675)
+06:01:48.002 template-selector.html?appId=123456789:3038   51. #303060: Adelante c2023 | Fluency Assessment Next Steps > G1 - Information Needed (Status: 22, Tags: tracker, internal, test, SEDCUST-5674)
+06:01:48.003 template-selector.html?appId=123456789:3038   52. #302923: X65324 | Benchmark Advance Florida | High Frequency Videos - Gr. 1 > Unit 8 > Week 3 > Missing High Frequency Videos (Status: 22, Tags: tracker, internal, test, SEDCUST-5669)
+06:01:48.003 template-selector.html?appId=123456789:3038   53. #302853: X97549  | BAdvance Florida | TRS: Gr. 2 > U5 > W1 > D3 > L10- Author's Purpose Anchor Chart missing (Status: 22, Tags: tracker, internal, test, SEDCUST-5662)
+06:01:48.003 template-selector.html?appId=123456789:3038   54. #302624: X83513 | BA c2022>G5> U1 >W1>L4 - Typo in Grade 5, Unit 1, Lesson 4 – “Sav-” Instead of “Save” (Status: 14, Tags: tracker, jirareview, test, SEDCUST-5655)
+06:01:48.003 template-selector.html?appId=123456789:3038   55. #302586: X12454 | BA - c2022 | Knowledge-Building Topic Libraries> Clean Up! Our Earth Day Project> Pages 5, 14 and the back cover have Zach’s name spelled with an H,page 11 - Content Error in “Clean Up! Our Earth Day Project”-Name Spelling Inconsistency (Status: 14, Tags: tracker, jirareview, test, SEDCUST-5653)
+06:01:48.003 template-selector.html?appId=123456789:3038   56. #302577: X40070 | BA c2018> Writing and Language Handbook (Gr. 3)>Opinion Mini-Lessons>page4> “Hoe-Down” > Can not find this play - Missing Tech Support for Writing and Language Handbook Lessons (Status: 22, Tags: tracker, jirareview, test, SEDCUST-5652)
+06:01:48.003 template-selector.html?appId=123456789:3038   57. #302454: X101156, X95504, X95540, X95546, X95467, & X75056 | Edina Public Schools | Benchmark Advance - c2022 - Articulation Videos or the Phonics & Letter Songs > Letter Songs and Articulation Videos > Incorrect Pronunciations (Status: 22, Tags: tracker, internal, jirareview, test, SEDCUST-5638)
+06:01:48.003 template-selector.html?appId=123456789:3038   58. #302346: X97578, X97549, X98084 | BA c2022>(Gr.5-U4, Gr.2-U5, Gr.K-U4) > TRS > Printable Version - Missing Printable Options for Teacher Resources (Status: 22, Tags: tracker, test, SEDCUST-5631)
+06:01:48.003 template-selector.html?appId=123456789:3038   59. #302166: X51774 | Benchmark Advance Florida | Eco Hero Book crashed the Benchmark App when open on Ipad (Status: 14, Tags: tracker, internal, SEDCUST-5617)
+06:01:48.003 template-selector.html?appId=123456789:3038   60. #301656: VIP X85591 | Benchmark Phonics>Assessment and Screener Handbook>Phonological Awareness Assessment>Phonological Awareness Assessment Next Steps- Scoring Language Concern – Phonological Awareness Assessment (K–1) (Status: 11, Tags: tracker, SEDCUST-5602)
+06:01:48.003 template-selector.html?appId=123456789:3038   61. #301534: X83481 | Benchmark Advance c2022 | TRS -  Gr. 1 > unit 9 > Week 3 > Day 3 > Lesson 3 > Focus Skill: Vowel Diphthong > Direction is not matching with the picture (Status: 22, Tags: tracker, internal, SEDCUST-5594)
+06:01:48.003 template-selector.html?appId=123456789:3038   62. #301474: 4,500+ eBook Library | Please Provide Rationale | PUTNAM CO SCHOOL DISTRICT (FL) (Status: 22, Tags: tracker, internal, SEDCUST-5591)
+06:01:48.003 template-selector.html?appId=123456789:3038   63. #301316: X60682 | Benchmark Advance Florida | Intervention - Gr. 5 > Comprehension Intervention (Gr. 5) > Blackline Master 21 > Content Concern (Status: 14, Tags: tracker, internal, SEDCUST-5585)
+06:01:48.003 template-selector.html?appId=123456789:3038   64. #301030: X49375 | BAdvance Florida > GK K > U-1, 4,9,10 and > Gr. 1 units 1-10 > Should not have "Print to PDF" option (Status: 22, Tags: tracker, SEDCUST-5577)
+06:01:48.003 template-selector.html?appId=123456789:3038   65. #300898: X68354 | Benchmark Advance c2021 | Additional Materials Bank: G3 > U7 > W3 > L4 > Close Reading Question - Incorrect Content (Status: 14, Tags: tracker, internal, jirareview, SEDCUST-5572)
+06:01:48.003 template-selector.html?appId=123456789:3038   66. #300842: X79781 | G6>U8> G6U8 Additional Materials Bank> Unit 8 Video -  Mentor Multimedia Presentation Link Not Working – Request for Copy (Status: 14, Tags: tracker, SEDCUST-5565)
+06:01:48.003 template-selector.html?appId=123456789:3038   67. #300799: X53964 | Adelante CA | G5 > U6 > W2 > Assessments > Unidad 6 Semana 2 Evaluación (Gr. 5) > Q1-10 - Should The Passages Have Audio? (Status: 22, Tags: tracker-sedcust, TESTING, tracker, internal, SEDCUST-5558)
+06:01:48.003 template-selector.html?appId=123456789:3038   68. #300267: Phonics & Word Study Workshop | Phonics Skills Songs > Long u - Information Needed (Status: 22, Tags: tracker, internal, SEDCUST-5532)
+06:01:48.003 template-selector.html?appId=123456789:3038   69. #300265: X3759 | Benchmark Advance c2018 | TRS: G2 > U7 >  W1 > D5 > Review and Assess Compound Words  > Phonics and Word Study > Dear Diary - Incorrect Hyperlink (Status: 14, Tags: tracker, internal, jirareview, SEDCUST-5553)
+06:01:48.003 template-selector.html?appId=123456789:3038   70. #299730: X97581 | Advance -c2022 | TRS: G5 > U7  - Print Version Button Unavailable (Status: 22, Tags: tracker, internal, SEDCUST-5507)
+06:01:48.003 template-selector.html?appId=123456789:3038   71. #299554: X87713 | Steps to Advance Literacy Solutions | G2 > U6 > TRS > P13 | Missing Full-Page Sample Responses (Status: 22, Tags: tracker, SEDCUST-5504)
+06:01:48.003 template-selector.html?appId=123456789:3038   72. #299508: X78455 | BAdvance-c2022 | B-R-Wr e-Notebook: G3 > U10 > B-R-Wr e-Notebk - No Print to PDF (Status: 22, Tags: tracker, internal, SEDCUST-5502)
+06:01:48.003 template-selector.html?appId=123456789:3038   73. #299479: X98028 | Benchmark Adelante - c2023 | TRS: Grade 2 > Unit 7 > W1 > D3 > L10 & W1 > D4 > L14 - Non-Functional Hyperlinks (Status: 11, Tags: tracker, SEDCUST-5501)
+06:01:48.003 template-selector.html?appId=123456789:3038   74. #299246: Benchmark Education Company | Benchmark Advance - c2022 > Unit 1 Assessment (Gr. 4)- AI grading Question (Status: 22, Tags: tracker, internal, SEDCUST-5491)
+06:01:48.003 template-selector.html?appId=123456789:3038   75. #298663: VIP | X65349 >BAFL >Weekly Assessment> G2 >U7>W1> Q4 | Incorrect Answer in Lindbergh Passage Assessment  (Status: 22, Tags: tracker, SEDCUST-5441)
+06:01:48.003 template-selector.html?appId=123456789:3038   76. #298175: X65565 | Benchmark Advance c2021 | Assessment - G 2> U 8 > W 1 > A > Unit 8 Assessment (Gr. 2) - Audio listening Issue with Question 5 Referencing Question 12 in Unit 8 Week 3 Test (Status: 22, Tags: tracker, SEDCUST-5403)
+06:01:48.003 template-selector.html?appId=123456789:3038   77. #297701: VIP | X104467, X75570 | BAdvance - c2022 | ML Glossary | G1 > U5 - Errors in Grade 1 Unit 5 Portuguese ML Glossary (Status: 14, Tags: tracker, SEDCUST-5364)
+06:01:48.003 template-selector.html?appId=123456789:3038   78. #297593: X97540 and X104468 | BAdvance - c2022 | TRS and Multilingual Glossary > Gr1 > U6 >Inconsistent Use of Vocabulary Words (Status: 14, Tags: tracker, internal, jirareview, SEDCUST-5389)
+06:01:48.003 template-selector.html?appId=123456789:3038   79. #296889: X97571 > BA -c2022 >TRS> Gr 4 >U7 >W1 | Comprehensive Literacy Planner is blank (Status: 14, Tags: tracker, jirareview, SEDCUST-5323)
+06:01:48.003 template-selector.html?appId=123456789:3038   80. #296803: X64510 > BADL c2022 > Gr1 > U5 > Whole Group TRS > Sistema de recursos para maestros| Missing print button (Status: 22, Tags: tracker, SEDCUST-5313)
+06:01:48.003 template-selector.html?appId=123456789:3038   81. #296697: X78290 >BADL c2023 > GK > Fundamentos y Rutinas Banco de materiales adicionales | letter "F" link is not working. (Status: 14, Tags: tracker, SEDCUST-5307)
+06:01:48.003 template-selector.html?appId=123456789:3038   82. #296610: X87724/ X83499 | Steps to Advance>Gr3>TRS>U7>W3>Sugar on the snow | BAdvance>Gr3>TRS>U7>W3>Sarah and the Chickens (Status: 22, Tags: tracker, internal, SEDCUST-5300)
+06:01:48.003 template-selector.html?appId=123456789:3038   83. #296412: VIP | Chula Vista ESD | Inquiry regarding Proficiency Level (Status: 22, Tags: tracker, internal, SEDCUST-5290)
+06:01:48.003 template-selector.html?appId=123456789:3038   84. #296112: X97588 | BA – c2022 | G6 > U4 >TRS > Print to PDF option missing (Status: 22, Tags: tracker, SEDCUST-5262)
+06:01:48.003 template-selector.html?appId=123456789:3038   85. #295667: CLARKSVILLE-MONTGOMERY CSD | Assessment | Unit Test Conversion chart location (Status: 22, Tags: tracker, internal, SEDCUST-5234)
+06:01:48.003 template-selector.html?appId=123456789:3038   86. #295453: X65135 | Benchmark Advance - c2022 > Gr. 2 > Unit 5 > Assessment > Custom - Unit 5 Assessment (Gr. 2) > Question 8 > Difficult Question (Status: 22, Tags: tracker, internal, jirareview, SEDCUST-5225)
+06:01:48.003 template-selector.html?appId=123456789:3038   87. #294763: X64550: BADL c2022 > Gr3 > TRS > U5 > W1>L14 | Incorrect List of Coordinating Conjunctions in Spanish (Status: 14, Tags: tracker, SEDCUST-5192)
+06:01:48.003 template-selector.html?appId=123456789:3038   88. #294762: X107998 > BA -c2022 >TRS > Grade 4 > Unit 4 > Print to PDF option missing. (Status: 14, Tags: tracker, SEDCUST-5194)
+06:01:48.003 template-selector.html?appId=123456789:3038   89. #294556: Ready To Advance | Plan & Teach shows incorrect Grade (Status: 22, Tags: tracker, internal, jirareview, SEDCUST-5246)
+06:01:48.003 template-selector.html?appId=123456789:3038   90. #294287: X83479 | Benchmark Advance c2022 | TRS | G1 >U7>W2 - Correction Needed: "Timeline" Spelling (Rational Feedback) (Status: 22, Tags: tracker, internal, SEDCUST-5180)
+06:01:48.003 template-selector.html?appId=123456789:3038   91. #294279: X83506  | B Adv c2022 > G4 > U4 > TRS | Missing Answer Key for Unit 4 it is showing Unit 3 (Status: 14, Tags: tracker, SEDCUST-5181)
+06:01:48.003 template-selector.html?appId=123456789:3038   92. #293731: X62795 | Adelante -c2023 | G5 > U4 >Gramática y Ortografía > Clave de Respuestas > Ortografía > Page 6 of PDF (página 90, #2,3,6,11) | Incorrect Grammar (Status: 14, Tags: tracker, internal, SEDCUST-5157)
+06:01:48.003 template-selector.html?appId=123456789:3038   93. #293536: X83496>BA c2022>TRS> G3>U4>W1,W2 > Misalignment Between Grammar Lessons and Worksheets (Status: 14, Tags: tracker, SEDCUST-5146)
+06:01:48.003 template-selector.html?appId=123456789:3038   94. #292690: X68845 | Ready to Advance Texas Edition | TRS | U5>W3>Transition activities > Movement - Unable to Locate "Wind Listening Clip". (Status: 14, Tags: tracker, SEDCUST-5115)
+06:01:48.003 template-selector.html?appId=123456789:3038   95. #288942: Oakland remove old BA (Status: 22, Tags: tracker, internal, SIM-2098)
+06:01:48.003 template-selector.html?appId=123456789:3038   96. #288941: CLONE - Benchmark Advance c2022GrKU2, 6, 7, and 10 decodables Print to PDF button Missing (Status: 22, Tags: tracker, internal, SEDCUST-4879, SEDCUST-5569)
+06:01:48.003 template-selector.html?appId=123456789:3038   97. #288281: X75639 | Adelante c2022 |  G1 > U4 | Managing your Independent Reading Program is in English (Status: 14, Tags: tracker, internal, SEDCUST-5017)
+06:01:48.003 template-selector.html?appId=123456789:3038   98. #287983: Advance -c2022 & -c2022 (IL) | Plan and Teach | G5 U1 Day 2 | Missing standards (Status: 22, Tags: tracker, internal, plan&teach, SEDCUST-4963)
+06:01:48.003 template-selector.html?appId=123456789:3038   99. #286789: CHEATHAM CO SD | Benchmark Advance c2021 (TN) | Standards missing within STA Gr.K>U3 Assessment (Status: 11, Tags: tracker, internal, SIM-2132, SEDCUST-5363)
+06:01:48.003 template-selector.html?appId=123456789:3038   100. #286692: X50934, X50944, X50946, X50942, X50950, X50948, X50938, X50936 | Benchmark Adelante - c2023 - Missing Books Under Knowledge Building Library: All Grades (Status: 8, Tags: tracker, internal, ESCALATED TO ASSEMBLY)
+06:01:48.003 template-selector.html?appId=123456789:3038   101. #286658: X91833 | Advance -c2022 | Grade K Unit 1 Lap Book - Missing Page for the Aplhabet Train (Status: 11, Tags: tracker, internal, SEDCUST-4884, SEDCUST-5560)
+06:01:48.003 template-selector.html?appId=123456789:3038   102. #286364: X80246:BA-FL>Gr.5>U3>Grammar and Spelling Activity Book answer missing from word bank (Status: 14, Tags: tracker, internal, SEDCUST-4880)
+06:01:48.003 template-selector.html?appId=123456789:3038   103. #286294: X97537 - Error Message When Opening Decodable Texts (Status: 22, Tags: tracker, SEDCUST-4898, SEDCUST-5201)
+06:01:48.003 template-selector.html?appId=123456789:3038   104. #286241: SO#99679 - remove licenses (Status: 22, Tags: tracker, internal, SIM-2106)
+06:01:48.003 template-selector.html?appId=123456789:3038   105. #285953: X49342 Mismatch in Benchmark Phonics Decodable Readers (Status: 14, Tags: tracker, SEDCUST-4843)
+06:01:48.003 template-selector.html?appId=123456789:3038   106. #283958: X83526 | Content Issue | Benchmark Advance c2022 | G6 U4 W2 | TRS | Washington ESD 6 (AZ) (Status: 14, Tags: tracker, internal, SEDCUST-4831)
+06:01:48.003 template-selector.html?appId=123456789:3038   107. #283937: X103911 & X60586 BAdelante-c2023GKU3W1 broken hyperlink (Status: 14, Tags: tracker, internal, plan&teach, SEDCUST-4755)
+06:01:48.003 template-selector.html?appId=123456789:3038   108. #283586: X67486 & X67885 BA c2021 (NC) G1 U2 W1 test; Standards DO NOT ALIGN - Digital vs Reproducible (Status: 22, Tags: tracker, internal, SIM-2126, SEDCUST-4904, SEDCUST-4819)
+06:01:48.003 template-selector.html?appId=123456789:3038   109. #283191: Adelante - c2023>Gr. 2>Build-Reflect-Write eNotebook Answer Key missing (Status: 22, Tags: tracker, internal, SEDCUST-4746)
+06:01:48.003 template-selector.html?appId=123456789:3038   110. #283035: Adelante 2.5Mod is missing the Scope and Sequence from the Program Review Section (Status: 8, Tags: tracker, internal, ESCALATED TO ASSEMBLY)
+06:01:48.003 template-selector.html?appId=123456789:3038   111. #282921: X56214>Benchmark Taller de fonética y estudio de palabras> G2>U2>W1>D2 >ePocket chart missing syllables (Status: 14, Tags: tracker, SEDCUST-4720)
+06:01:48.004 template-selector.html?appId=123456789:3038   112. #282261: Topeka USD 501 District (KS) - Data Discrepancy & Incorrect Data in Single Test Analysis Report (Status: 22, Tags: tracker, internal, SIM-1954, SIM-1987, SIM-1989)
+06:01:48.004 template-selector.html?appId=123456789:3038   113. #282191: Edina Public School Noval Study Resource Missing (Status: 8, Tags: tracker, internal, state, ESCALATED TO ASSEMBLY)
+06:01:48.004 template-selector.html?appId=123456789:3038   114. #281704: X87611, X87802: Steps to Advance>Gr.4>U1 Assessment CCSS (Status: 8, Tags: tracker, internal, ESCALATED TO ASSEMBLY)
+06:01:48.004 template-selector.html?appId=123456789:3038   115. #281375: X98407 > Benchmark Advance - c2022 > Gr. K and 1 > Assessment > Text should be highlighted (Status: 22, Tags: tracker, internal, SEDCUST-4667)
+06:01:48.004 template-selector.html?appId=123456789:3038   116. #280920: X78730 Discrepancies in Time Recommendations for Lessons in Plan and Teach Resource (BA 2022) (Status: 14, Tags: tracker, plan&teach, SEDCUST-4664)
+06:01:48.004 template-selector.html?appId=123456789:3038   117. #276383: Soledad USD (CA) Removal Of Older BA Version (Status: 22, Tags: tracker, internal, SIM-1963)
+06:01:48.004 template-selector.html?appId=123456789:3038   118. #275717: Foundational Skills Validity and Reliability Information (Status: 22, Tags: tracker, internal, SEDCUST-4653)
+06:01:48.004 template-selector.html?appId=123456789:3038   119. #275336: X64584 X79235 Benchmark Adelante c2022 G5U2 Content Issue (Status: 14, Tags: tracker, internal, SEDCUST-4651, state)
+06:01:48.004 template-selector.html?appId=123456789:3038   120. #274138: Chromebook White Blank Screen Issue after Clever login (Status: 9, Tags: tracker, internal, SIM-1876, state)
+06:01:48.004 template-selector.html?appId=123456789:3038   121. #272028: X71979 | Destreza: diptongos con a: ai, ay, au (G2U2W1D1) typo for por que (Status: 14, Tags: tracker, internal, SEDCUST-4554)
+06:01:48.004 template-selector.html?appId=123456789:3038   122. #271101: Cedarburg SD requested permanent removal of the data from TA (Status: 22, Tags: tracker, internal, SIM-1824)
+06:01:48.004 template-selector.html?appId=123456789:3038   123. #268554: Incorrect Multilingual Glossary - Gr 2 (Status: 14, Tags: tracker, internal, SEDCUST-4527)
+06:01:48.004 template-selector.html?appId=123456789:3038   124. #265183: High Readability adjusted grading scale? (Status: 22, Tags: tracker, internal, SEDCUST-4518)
+06:01:48.004 template-selector.html?appId=123456789:3038   125. #259464: Distance Learning Student Activities hyperlinks broken or non existent? (Status: 14, Tags: tracker, SEDCUST-4497)
+06:01:48.004 template-selector.html?appId=123456789:3038   126. #255678: X98087| Benchmark Advance - c2022> Grade K >Unit 7>Week 2>Day 1>Lesson 2| Incorrect Picture (Status: 22, Tags: SEDCUST-4454, tracker)
+06:01:48.004 template-selector.html?appId=123456789:3038   127. #255515: X91946:Benchmark English>Level6> book 3> presentation> unit 4 - error opening presentation (Status: 22, Tags: SEDCUST-4451, tracker)
+06:01:48.004 template-selector.html?appId=123456789:3038   128. #248650: X87544: Errors in Grade 2 Volume 1 Express MLG (Status: 14, Tags: SEDCUST-4400, tracker)
+06:01:48.004 template-selector.html?appId=123456789:3038   129. #241051: X97541 Correction Request for Recommended Trade Book Title (Status: 14, Tags: SEDCUST-4260, tracker)
+06:01:48.004 template-selector.html?appId=123456789:3038   130. #240828: Errors on Phonological Awareness Assessment - FOREST LAKE IND SCH DIST 831 (MN) (Status: 14, Tags: SEDCUST-4301, tracker)
+06:01:48.004 template-selector.html?appId=123456789:3038   131. #235746: X83302 : Benchmark Phonics Error > Benchmark Phonics > Gr 1 > Unit 4 > TRS > Phonics mini lessons > Week 3 > Day 1. (Status: 14, Tags: SEDCUST-4084, tracker)
+06:01:48.004 template-selector.html?appId=123456789:3038   132. #226344: X80307: PD Training: Curriculum Resources>Phonics Intervention Training>Phonics Intervention FAQ's>Time Stamp 2:06- Confusing Content (Status: 14, Tags: SEDCUST-3889, tracker)
+06:01:48.004 template-selector.html?appId=123456789:3038   133. #201934: X69413 to X69418 Question about Program support resources (Status: 22, Tags: SEDCUST-3673, tracker)
+06:01:48.004 template-selector.html?appId=123456789:3038   134. #83834: X83477 - BA c2022 (National) -> Grade 1, Unit 5 -> TRS -> Week 2, the Focus Skill is long O o_el but in the print manual it's U /u/ (Status: 22, Tags: SEDCUST-2403, tracker)
+06:01:48.004 template-selector.html?appId=123456789:3038   135. #3365: X44374: Benchmark Adelante Error - Interactive Learning Games (Status: 22, Tags: SEDCUST-1813, tracker)
+06:01:48.027 template-selector.html?appId=123456789:4558 Setting up inline filter and sort...
+06:01:48.027 template-selector.html?appId=123456789:4565 Elements found: {statusFilter: true, groupBy: true, sortBy: true, clearFiltersBtn: true}
+06:01:48.027 template-selector.html?appId=123456789:4575 Status filter event listener added
+06:01:48.027 template-selector.html?appId=123456789:4583 Group by event listener added
+06:01:48.027 template-selector.html?appId=123456789:4591 Sort by event listener added
+06:01:48.027 template-selector.html?appId=123456789:4599 Clear filters event listener added
+06:01:49.175 heap.js:2 Fetch finished loading: POST "https://c.us.heap-api.com/api/capture/v2/track".
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+Promise.then
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+Promise.then
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+Promise.then
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2

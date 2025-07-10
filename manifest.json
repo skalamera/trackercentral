@@ -17,6 +17,7 @@
         "getAllAgents": {},
         "associateTickets": {},
         "getTicketsByFilter": {},
+        "getTicketsByFilterWithPage": {},
         "getAllTickets": {}
       },
       "serverless": {
