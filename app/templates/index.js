@@ -1,7 +1,7 @@
 // Export all template configurations
 
 // Assembly templates
-const assemblyRollover = require('./assembly/assembly-rollover');
+const assemblyRollover = require('./other/assembly-rollover');
 const assembly = require('./assembly/assembly');
 
 // SEDCUST templates  

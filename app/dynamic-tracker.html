@@ -40,7 +40,7 @@
             const module = { exports: {} };
 
             // Load assembly-rollover
-            fetch('templates/assembly/assembly-rollover.js')
+            fetch('templates/other/assembly-rollover.js')
                 .then(r => r.text())
                 .then(text => {
                     eval(text);
@@ -99,7 +99,7 @@
     <script>
         window.module = { exports: {} };
     </script>
-    <script src="templates/assembly/assembly-rollover.js"></script>
+    <script src="templates/other/assembly-rollover.js"></script>
     <script>
         window.TRACKER_CONFIGS_FROM_TEMPLATES['assembly-rollover'] = module.exports;
     </script>
@@ -573,8 +573,10 @@
             console.log("Loading tracker template:", trackerType);
 
             // Extra logging for assembly trackers
-            if (trackerType === 'assembly' || trackerType === 'assembly-rollover') {
+            if (trackerType === 'assembly') {
                 console.log(`This is an ASSEMBLY tracker (${trackerType}). Source tickets will be tagged with "ESCALATED TO ASSEMBLY"`);
+            } else if (trackerType === 'assembly-rollover') {
+                console.log(`This is an ASSEMBLY ROLLOVER tracker (${trackerType}). Source tickets will NOT be tagged automatically.`);
             }
 
             // Get the config for this tracker type
@@ -5953,8 +5955,8 @@
                     });
 
                     // Force this to run for tracker-type assembly regardless of how trackerType is stored internally
+                    // Note: assembly-rollover is excluded from automatic tagging
                     const isAssemblyType = this.trackerType === 'assembly' ||
-                        this.trackerType === 'assembly-rollover' ||
                         ticketData.tags.includes('tracker-assembly');
 
                     if (isAssemblyType && relatedTicketIds.length > 0) {

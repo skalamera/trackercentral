@@ -1,688 +1,399 @@
-heap.js:2 Fetch finished loading: POST "https://c.us.heap-api.com/api/capture/v2/track".
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-Promise.then
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-setTimeout
-value @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-06:39:37.237 template-selector.html:2299 Template selector initialized successfully
-06:39:37.240 template-selector.html:2322 Retrieved ticket data: {ticket: {…}}
-06:39:37.241 template-selector.html:2657 Initializing drafts system
-06:39:37.242 template-selector.html:2957 Loading daily tracker counts
-06:39:37.243 template-selector.html:4026 Checking admin permissions: {loggedInUser: {…}}
-06:39:37.243 template-selector.html:4033 User data structure: {"available":false,"org_agent_id":"423541076619981226","available_since":"2024-04-16T16:15:51.000Z","occasional":false,"is_assumed_user":false,"signature":"<div dir=\"ltr\"><p style=\"box-sizing: border-box; font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px;\"><span style=\"-webkit-font-smoothing: antialiased; box-sizing: border-box; font-size: 11pt;\"><span style=\"-webkit-font-smoothing: antialiased; box-sizing: border-box; font-size: 10.5pt; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Thank you,</span></span></p><p style=\"box-sizing: border-box; font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px;\"><span style=\"-webkit-font-smoothing: antialiased; box-sizing: border-box; font-size: 11pt;\"><span style=\"font-size: 10.5pt; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Steve Skalamera</span></span></p><p style=\"box-sizing: border-box; font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px;\"><span style=\"-webkit-font-smoothing: antialiased; box-sizing: border-box; font-size: 11pt;\"><span style=\"font-size: 10.5pt; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Tech Support Lead</span></span></p><p style=\"box-sizing: border-box; font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px;\"><a href=\"https://help.benchmarkuniverse.com/bubateacher/Content/Customer%20Support/About%20Customer%20Support.htm?__hstc=210865674.e1a47948cb08df9b55b08392586a04d6.1719862966144.1722971532817.1724079088855.10&amp;__hssc=210865674.2.1724079088855&amp;__hsfp=2112289063\" target=\"_blank\" style=\"font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px; text-align: initial; background-color: rgb(255, 255, 255);\" rel=\"noreferrer\">Contact Us</a></p><p style=\"box-sizing: border-box; font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px;\"><img src=\"https://res.cloudinary.com/doznvxtja/image/upload/v1724080109/Untitled_212_x_100_px_14_kiqldm.png\" style=\"font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px; text-align: initial;\"></p>\n</div>","ticket_scope":1,"latest_notes_first":true,"department_ids":[],"group_ids":[67000570680,67000570681,67000577995,67000578451,67000579439],"role_ids":[67000255947,67000255946],"abilities":["manage_canned_responses","view_admin","publish_solution","edit_topic","edit_conversation","manage_supervisor_rules","manage_account","forward_ticket","view_contacts","edit_time_entries","edit_ticket_properties","manage_solutions","edit_note","reply_ticket","manage_users","view_forums","manage_contacts","manage_scenario_automation_rules","delete_contact","manage_dispatch_rules","delete_ticket","manage_forums","view_time_entries","merge_or_split_ticket","view_reports","create_topic","view_solutions","delete_solution","delete_topic","export_tickets","edit_private_note","import_customers","export_customers","export_reports","create_solution_draft","view_social","manage_ticket_list_views","compose_email","manage_tags","manage_skills","manage_bots","manage_segments","manage_proactive_outreaches","edit_ticket_skill","manage_dashboard","view_analytics","create_tags","manage_freddy_answers","forums_admin_moderator","manage_ticket_templates","spam_ticket","manage_availability","manage_companies","delete_company"],"preferences":{"shortcuts_enabled":true,"shortcuts_mapping":[],"notification_timestamp":null,"show_onBoarding":true,"show_loyalty_upgrade":false,"show_monthly_to_annual_notification":false,"falcon_ui":false,"freshchat_token":"ba577835-0964-4072-8082-64761ed52c0e","undo_send":true,"focus_mode":false,"field_service":{"dismissed_sample_scheduling_dashboard":true},"collab_threads":{"list_sort_by":"created_at"},"in_app_chat_settings":{"reference_id":null,"restore_id":null},"custom_objects":{"dismissed_sample_data":true},"search_settings":{"tickets":{"include_subject":true,"include_description":true,"include_other_properties":true,"include_notes":true,"include_attachment_names":true,"spam":true}},"app_preferences":{"app_order":["requester-info","recent-sessions","aht-time-entries","time-entries","todo-list","Atlassian Jira Plus","Tracker Central","link-tickets","Submit Feature Request","HAR File Analyzer","Hide"],"hidden_apps":["add-child-tickets","add-service-tasks","time-entries","aht-time-entries","recent-sessions","Submit Feature Request"]}},"type":"support_agent","last_active_at":"2025-07-15T10:12:02.000Z","show_rr_toggle":false,"gdpr_admin_name":null,"contact":{"name":"Steve Skalamera","email":"sskalamera@benchmarkeducation.com","avatar":{"id":67102450446,"name":"QeIuVvp4l_E9YsjKq-LHdkXoL6ReA6MxBQ.jpg","content_type":"image/jpeg","size":18305,"created_at":"2024-06-05T19:24:29Z","updated_at":"2024-06-05T19:24:29Z","attachment_url":"https://s3.amazonaws.com/cdn.freshdesk.com/data/helpdesk/attachments/production/67102450446/original/QeIuVvp4l_E9YsjKq-LHdkXoL6ReA6MxBQ.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAS6FNSMY2XLZULJPI%2F20250715%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250715T101212Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=15d6d6eb19319fa88bb762fd408808f6edad55e374a87dac14d1c59ea574cc6c","thumb_url":"https://s3.amazonaws.com/cdn.freshdesk.com/data/helpdesk/attachments/production/67102450446/thumb/QeIuVvp4l_E9YsjKq-LHdkXoL6ReA6MxBQ.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAS6FNSMY2XLZULJPI%2F20250715%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250715T101212Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=b131c6b0615a52a5df8c4e2c20558aea52df149b813c7fca264f76af40b77a21"},"created_at":"2022-03-14T18:01:02.000Z","job_title":"Team Lead, Customer Tech Support","language":"en","mobile":null,"phone":null,"time_zone":"Eastern Time (US & Canada)","twitter_profile_status":null,"tags":[],"other_companies":[],"other_emails":[],"other_phone_numbers":[],"deleted":false,"is_agent":true,"active":true,"blocked":false,"deleted_agent":false,"has_email":false,"view_all_tickets":false,"custom_fields":null,"is_custom_fields_changed":false,"is_ucr_sync_failed":false,"devices":[],"id":"67036373043"},"contribution_group_ids":[],"verified_email":true,"anonymous":false,"deactivated":false,"addon_access_list":[],"collaborator_email_visibility":false,"created_at":"2022-03-14T18:01:02.000Z","updated_at":"2025-07-15T10:12:02.000Z","availability_control":"disabled","freshcaller_agent":false,"freshchat_agent":false,"availability":{},"id":67036373043}
-06:39:37.243 template-selector.html:4062 Admin detected by view_admin ability
-06:39:37.243 template-selector.html:4066 Admin access based on proper user permissions
-06:39:37.243 template-selector.html:4068 Final admin determination: true
-06:39:37.243 template-selector.html:4078 Admin button display set to inline-block
-06:39:37.262 template-selector.html:2467 Independence Day theme enabled: false
-06:39:37.280 vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:490 XHR finished loading: POST "http://localhost:10001/dprouter?product=freshdesk".
+Fetch finished loading: POST "<URL>".
+08:45:25.448 assembly-rollover.js:5224 Assembly Rollover: Stopped observing for summary editor
+08:45:25.449 assembly-rollover.js:5511 Assembly Rollover: Stopped observing for description section
+08:45:26.306 dynamic-tracker.html?type=assembly-rollover:1456 Create Tracker button clicked
+08:45:26.306 dynamic-tracker.html?type=assembly-rollover:3766 Form submitted
+08:45:26.306 dynamic-tracker.html?type=assembly-rollover:4143 Proceeding with form submission
+08:45:26.307 dynamic-tracker.html?type=assembly-rollover:4334 Form validation: Ensuring HIGH priority (3) for VIP ticket
+08:45:26.307 dynamic-tracker.html?type=assembly-rollover:4343 Keeping existing priority (3) as it's already HIGH or URGENT
+08:45:26.308 dynamic-tracker.html?type=assembly-rollover:4211 Form data: {summaryContent: '<p>Please see the BL Xcode removal request below.</p>', assemblyCodes: '<p>sdgsdf</p>', screenshotsDescription: '<p><br></p>', isVIP: 'No', districtName: 'Benchmark Education Company', …}
+08:45:26.308 dynamic-tracker.html?type=assembly-rollover:4376 Form data keys: (21) ['summaryContent', 'assemblyCodes', 'screenshotsDescription', 'isVIP', 'districtName', 'districtState', 'issue', 'formattedSubject', 'districtBURCLink', 'effectiveDate', 'screenshots', 'email', 'relatedTickets', 'priority', 'status', 'groupField', 'agentField', 'districtField', 'description', 'trackerType', 'districtDropdownValue']
+08:45:26.308 dynamic-tracker.html?type=assembly-rollover:4377 Screenshots description: <p><br></p>
+08:45:26.308 dynamic-tracker.html?type=assembly-rollover:4378 Steps to reproduce: undefined
+08:45:26.308 dynamic-tracker.html?type=assembly-rollover:4394 Successfully generated description using template's descriptionGenerator function
+08:45:26.308 dynamic-tracker.html?type=assembly-rollover:4216 Generated description: <div>Please see the BL Xcode removal request below.</div><div style="margin-bottom: 20px;"></div><div style="color: #000000"><span style="text-decoration: underline; background-color: #c1e9d9;">SUMMARY</span></div><div><p>Please see the BL Xcode removal request below.</p></div><div style="margin-bottom: 20px;"></div><div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">DESCRIPTION</span></div>District Name: Benchmark Education Company<br>District BURC Link: Demo Text Value<br>Effective Return Date: 07/15/2025<br>Assembly Codes To Be Removed:<br><p>sdgsdf</p>
+08:45:26.515 dynamic-tracker.html?type=assembly-rollover:5631 Retrieved source ticket data: {cc_emails: Array(0), fwd_emails: Array(0), reply_cc_emails: Array(0), ticket_cc_emails: Array(0), ticket_bcc_emails: Array(0), …}
+1408:45:28.157 XHR finished loading: POST "<URL>".
+08:45:26.733 dynamic-tracker.html?type=assembly-rollover:5644 Verified related ticket 306399 exists
+08:45:26.733 dynamic-tracker.html?type=assembly-rollover:4376 Form data keys: (21) ['summaryContent', 'assemblyCodes', 'screenshotsDescription', 'isVIP', 'districtName', 'districtState', 'issue', 'formattedSubject', 'districtBURCLink', 'effectiveDate', 'screenshots', 'email', 'relatedTickets', 'priority', 'status', 'groupField', 'agentField', 'districtField', 'description', 'trackerType', 'districtDropdownValue']
+08:45:26.733 dynamic-tracker.html?type=assembly-rollover:4377 Screenshots description: <p><br></p>
+08:45:26.733 dynamic-tracker.html?type=assembly-rollover:4378 Steps to reproduce: undefined
+08:45:26.733 dynamic-tracker.html?type=assembly-rollover:4394 Successfully generated description using template's descriptionGenerator function
+08:45:26.733 dynamic-tracker.html?type=assembly-rollover:5676 Tags set (without district name): ['tracker-assembly-rollover']
+08:45:26.733 dynamic-tracker.html?type=assembly-rollover:5683 Using source ticket priority: 3
+08:45:26.733 dynamic-tracker.html?type=assembly-rollover:5712 Copied custom field cf_account_manager from source ticket: Audrey Stumpp
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5712 Copied custom field cf_rvp from source ticket: Tosha Kirkham
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5712 Copied custom field cf_categorization from source ticket: Access Management
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5712 Copied custom field cf_subcategory from source ticket: New Access
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5712 Copied custom field cf_issue_detail from source ticket: BEC - Micro
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5712 Copied custom field cf_product_type from source ticket: Benchmark Advance
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5712 Copied custom field cf_product from source ticket: - c2022
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5712 Copied custom field cf_product_subsection from source ticket: null
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5712 Copied custom field cf_vip from source ticket: true
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5720 Set district field - cf_district509811: Benchmark Education Company
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5736 DEBUG: Checking for summary/issue description for tracker type: assembly-rollover
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5737 DEBUG: Form data keys: (21) ['summaryContent', 'assemblyCodes', 'screenshotsDescription', 'isVIP', 'districtName', 'districtState', 'issue', 'formattedSubject', 'districtBURCLink', 'effectiveDate', 'screenshots', 'email', 'relatedTickets', 'priority', 'status', 'groupField', 'agentField', 'districtField', 'description', 'trackerType', 'districtDropdownValue']
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5743 DEBUG: Looking for 'summary' field. Value: undefined
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5744 DEBUG: Looking for 'summaryContent' field. Value: <p>Please see the BL Xcode removal request below.</p>
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5745 DEBUG: Looking for 'issueSummary' field. Value: undefined
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5756 DEBUG: Found content in summaryContent field
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5758 Using Summary content for cf_summary_or_issue_description from template: assembly-rollover
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5779 DEBUG: summaryOrIssueContent value: <p>Please see the BL Xcode removal request below.</p>
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5794 Set cf_summary_or_issue_description for assembly-rollover template: Please see the BL Xcode removal request below....
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5795 DEBUG: ticketData.custom_fields after setting: {cf_account_manager: 'Audrey Stumpp', cf_rvp: 'Tosha Kirkham', cf_categorization: 'Access Management', cf_subcategory: 'New Access', cf_issue_detail: 'BEC - Micro', …}
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5824 Final check: Setting priority to HIGH (3) for VIP ticket
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5831 Keeping existing priority (3) as it's already HIGH or URGENT
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5836 Final ticket data to be sent: {
+  "email": "sskalamera@benchmarkeducation.com",
+  "subject": "Benchmark Education Company | Assembly Rollover",
+  "description": "<div>Please see the BL Xcode removal request below.</div><div style=\"margin-bottom: 20px;\"></div><div style=\"color: #000000\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">SUMMARY</span></div><div><p>Please see the BL Xcode removal request below.</p></div><div style=\"margin-bottom: 20px;\"></div><div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">DESCRIPTION</span></div>District Name: Benchmark Education Company<br>District BURC Link: Demo Text Value<br>Effective Return Date: 07/15/2025<br>Assembly Codes To Be Removed:<br><p>sdgsdf</p>",
+  "status": 2,
+  "priority": 3,
+  "tags": [
+    "tracker-assembly-rollover"
+  ],
+  "related_ticket_ids": [
+    306399
+  ],
+  "source": 101,
+  "custom_fields": {
+    "cf_account_manager": "Audrey Stumpp",
+    "cf_rvp": "Tosha Kirkham",
+    "cf_categorization": "Access Management",
+    "cf_subcategory": "New Access",
+    "cf_issue_detail": "BEC - Micro",
+    "cf_product_type": "Benchmark Advance",
+    "cf_product": "- c2022",
+    "cf_product_subsection": null,
+    "cf_vip": true,
+    "cf_district509811": "Benchmark Education Company",
+    "cf_summary_or_issue_description": "Please see the BL Xcode removal request below."
+  },
+  "type": "Incident",
+  "group_id": 67000396680
+}
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5840 Raw JSON body being sent to API: {"email":"sskalamera@benchmarkeducation.com","subject":"Benchmark Education Company | Assembly Rollover","description":"<div>Please see the BL Xcode removal request below.</div><div style=\"margin-bottom: 20px;\"></div><div style=\"color: #000000\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">SUMMARY</span></div><div><p>Please see the BL Xcode removal request below.</p></div><div style=\"margin-bottom: 20px;\"></div><div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">DESCRIPTION</span></div>District Name: Benchmark Education Company<br>District BURC Link: Demo Text Value<br>Effective Return Date: 07/15/2025<br>Assembly Codes To Be Removed:<br><p>sdgsdf</p>","status":2,"priority":3,"tags":["tracker-assembly-rollover"],"related_ticket_ids":[306399],"source":101,"custom_fields":{"cf_account_manager":"Audrey Stumpp","cf_rvp":"Tosha Kirkham","cf_categorization":"Access Management","cf_subcategory":"New Access","cf_issue_detail":"BEC - Micro","cf_product_type":"Benchmark Advance","cf_product":"- c2022","cf_product_subsection":null,"cf_vip":true,"cf_district509811":"Benchmark Education Company","cf_summary_or_issue_description":"Please see the BL Xcode removal request below."},"type":"Incident","group_id":67000396680}
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5929 DEBUG: Copying cf_summary_or_issue_description to basicTicketData: Please see the BL Xcode removal request below....
+08:45:26.734 dynamic-tracker.html?type=assembly-rollover:5935 Basic ticket data to send: {
+  "email": "sskalamera@benchmarkeducation.com",
+  "subject": "Benchmark Education Company | Assembly Rollover",
+  "description": "<div>Please see the BL Xcode removal request below.</div><div style=\"margin-bottom: 20px;\"></div><div style=\"color: #000000\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">SUMMARY</span></div><div><p>Please see the BL Xcode removal request below.</p></div><div style=\"margin-bottom: 20px;\"></div><div style=\"color: #000000;\"><span style=\"text-decoration: underline; background-color: #c1e9d9;\">DESCRIPTION</span></div>District Name: Benchmark Education Company<br>District BURC Link: Demo Text Value<br>Effective Return Date: 07/15/2025<br>Assembly Codes To Be Removed:<br><p>sdgsdf</p>",
+  "status": 2,
+  "priority": 3,
+  "source": 101,
+  "type": "Incident",
+  "related_ticket_ids": [
+    306399
+  ],
+  "group_id": 67000396680,
+  "tags": [
+    "tracker-assembly-rollover"
+  ],
+  "custom_fields": {
+    "cf_account_manager": "Audrey Stumpp",
+    "cf_rvp": "Tosha Kirkham",
+    "cf_categorization": "Access Management",
+    "cf_subcategory": "New Access",
+    "cf_issue_detail": "BEC - Micro",
+    "cf_product_type": "Benchmark Advance",
+    "cf_product": "- c2022",
+    "cf_product_subsection": null,
+    "cf_vip": true,
+    "cf_district509811": "Benchmark Education Company",
+    "cf_summary_or_issue_description": "Please see the BL Xcode removal request below."
+  }
+}
+08:45:27.520 dynamic-tracker.html?type=assembly-rollover:5942 Ticket created successfully, raw response: {"cc_emails":[],"fwd_emails":[],"reply_cc_emails":[],"ticket_cc_emails":[],"ticket_bcc_emails":[],"fr_escalated":false,"spam":false,"email_config_id":null,"group_id":67000396680,"priority":3,"requester_id":67036373043,"responder_id":null,"source":101,"company_id":null,"status":2,"subject":"Benchmark Education Company | Assembly Rollover","support_email":null,"to_emails":null,"product_id":null,"id":309761,"type":"Incident","due_by":null,"fr_due_by":null,"is_escalated":false,"description":"<div>Please see the BL Xcode removal request below.</div>\n<div style=\"margin-bottom: 20px\"></div>\n<div style=\"color: #000000\"><span style=\"text-decoration: underline; background-color: #c1e9d9\">SUMMARY</span></div>\n<div><div>Please see the BL Xcode removal request below.</div></div>\n<div style=\"margin-bottom: 20px\"></div>\n<div style=\"color: #000000\"><span style=\"text-decoration: underline; background-color: #c1e9d9\">DESCRIPTION</span></div>District Name: Benchmark Education Company<br>District BURC Link: Demo Text Value<br>Effective Return Date: 07/15/2025<br>Assembly Codes To Be Removed:<br><div>sdgsdf</div>","description_text":"Please see the BL Xcode removal request below.   SUMMARY   Please see the BL Xcode removal request below.    DESCRIPTION District Name: Benchmark Education Company District BURC Link: Demo Text Value Effective Return Date: 07/15/2025 Assembly Codes To Be Removed:  sdgsdf","custom_fields":{"cf_use_tech_admin_to_resolve":null,"cf_report_name":null,"cf_student":false,"cf_teacher":false,"cf_how_can_we_help":null,"cf_school":null,"cf_categorization":"Access Management","cf_subcategory":"New Access","cf_issue_detail":"BEC - Micro","cf_product_type":"Benchmark Advance","cf_product":"- c2022","cf_product_subsection":null,"cf_major_incident815139":false,"cf_associated_sales_order":null,"cf_associated_deal":null,"cf_realm":null,"cf_account_manager":"Audrey Stumpp","cf_district":null,"cf_purchase_order":null,"cf_vip":true,"cf_fsm_contact_name":null,"cf_district509811":"Benchmark Education Company","cf_fsm_phone_number":null,"cf_region":null,"cf_fsm_service_location":null,"cf_rvp":"Tosha Kirkham","cf_fsm_appointment_start_time":null,"cf_issue_type":null,"cf_fsm_appointment_end_time":null,"cf_affected_users_bu_role":null,"cf_school_admin":false,"cf_district_admin":false,"cf_path":null,"cf_internal":false,"cf_rostering_method":null,"cf_new_rostering_method":null,"cf_username":null,"cf_requested_date_of_completion":null,"cf_new_district_term_start_date":null,"cf_schools_to_be_updated":null,"cf_nameemail_of_contact_to_add":null,"cf_nameemail_of_contact_to_remove":null,"cf_bookings_meeting_date":null,"cf_nameemail_of_contact_to_update":null,"cf_kb_article_request":false,"cf_within_our_control":null,"cf_outside_our_control":null,"cf_meeting_date":null,"cf_old_subfill":false,"cf_tracker_resolved":false,"cf_current_lms_learning_management_system":null,"cf_test":null,"cf_what_type_of_support_do_you_need":null,"cf_sales_order_number":null,"cf_qa":false,"cf_csat_feedback_received":false,"cf_summary_or_issue_description":"Please see the BL Xcode removal request below.","cf_air":null,"cf_assembly_tracker_status":null},"created_at":"2025-07-15T12:45:24Z","updated_at":"2025-07-15T12:45:24Z","tags":["tracker-assembly-rollover"],"attachments":[],"structured_description":null,"internal_agent_id":null,"internal_group_id":null,"association_type":3,"associated_tickets_list":[306399],"nr_due_by":null,"nr_escalated":false}
+08:45:27.520 dynamic-tracker.html?type=assembly-rollover:5944 Parsed ticket data: {cc_emails: Array(0), fwd_emails: Array(0), reply_cc_emails: Array(0), ticket_cc_emails: Array(0), ticket_bcc_emails: Array(0), …}
+08:45:27.520 dynamic-tracker.html?type=assembly-rollover:5947 Checking conditions for tagging source ticket: {trackerType: 'assembly-rollover', isAssembly: false, isAssemblyRollover: true, relatedTicketIds: Array(1), hasRelatedTickets: true}
+08:45:27.520 dynamic-tracker.html?type=assembly-rollover:5964 Will attempt to add ESCALATED TO ASSEMBLY tag to source ticket 306399
+08:45:27.520 dynamic-tracker.html?type=assembly-rollover:8824 Adding "ESCALATED TO ASSEMBLY" tag to source ticket 306399
+08:45:27.520 dynamic-tracker.html?type=assembly-rollover:8833 Fetching ticket details for source ticket 306399
+08:45:27.738 dynamic-tracker.html?type=assembly-rollover:8849 Retrieved source ticket details, current tags: ['VIP']
+08:45:27.738 dynamic-tracker.html?type=assembly-rollover:8862 Tag not found, adding it now
+08:45:27.738 dynamic-tracker.html?type=assembly-rollover:8869 Updating source ticket with new tags: {tags: Array(2)}
+08:45:27.739 dynamic-tracker.html?type=assembly-rollover:8873 Updating source ticket 306399 tags using updateTicket template
+08:45:28.156 dynamic-tracker.html?type=assembly-rollover:8881 Source ticket update response: {status: 200, headers: {…}, response: '{"cc_emails":[],"fwd_emails":[],"reply_cc_emails":…","nr_due_by":null,"structured_description":null}', attempts: 1}
+08:45:28.156 dynamic-tracker.html?type=assembly-rollover:8882 Source ticket successfully tagged with ESCALATED TO ASSEMBLY
+08:45:28.550 dynamic-tracker.html?type=assembly-rollover:8895 Private note added to source ticket
+08:45:28.550 dynamic-tracker.html?type=assembly-rollover:4788 Ticket created successfully: {cc_emails: Array(0), fwd_emails: Array(0), reply_cc_emails: Array(0), ticket_cc_emails: Array(0), ticket_bcc_emails: Array(0), …}
+08:45:28.550 dynamic-tracker.html?type=assembly-rollover:4817 [Violation] Permissions policy violation: The Clipboard API has been blocked because of a permissions policy applied to the current document. See https://crbug.com/414348233 for more details.
+handleTicketCreationSuccess @ dynamic-tracker.html?type=assembly-rollover:4817
+createTicket @ dynamic-tracker.html?type=assembly-rollover:5974
+await in createTicket
+proceedWithSubmission @ dynamic-tracker.html?type=assembly-rollover:4219
+handleFormSubmit @ dynamic-tracker.html?type=assembly-rollover:3774
+(anonymous) @ dynamic-tracker.html?type=assembly-rollover:1457Understand this error
+08:45:28.550  [Violation] Permissions policy violation: The Clipboard API has been blocked because of a permissions policy applied to the current document. See https://crbug.com/414348233 for more details.
+handleTicketCreationSuccess @ dynamic-tracker.html:4817
+createTicket @ dynamic-tracker.html:5974
+await in createTicket
+proceedWithSubmission @ dynamic-tracker.html:4219
+handleFormSubmit @ dynamic-tracker.html:3774
+(anonymous) @ dynamic-tracker.html:1457Understand this error
+08:45:28.550 dynamic-tracker.html?type=assembly-rollover:4839 [TRACKER COUNT] Attempting to increment count for tracker type: assembly-rollover
+08:45:28.551 dynamic-tracker.html?type=assembly-rollover:4880 Checking for attachments to upload: {hasScreenshots: false, screenshotCount: 0, hasHarFile: false, harFileName: 'No HAR file', trackerType: 'assembly-rollover', …}
+08:45:28.551 dynamic-tracker.html?type=assembly-rollover:5978 Adding "related to 309761" tag to source tickets
+08:45:28.551 dynamic-tracker.html?type=assembly-rollover:6185 Starting to add "related to 309761" tag to source tickets: [306399]
+08:45:28.551 dynamic-tracker.html?type=assembly-rollover:4897 All post-creation tasks completed successfully
+08:45:28.551 dynamic-tracker.html?type=assembly-rollover:4826 Failed to copy subject line to clipboard: NotAllowedError: Failed to execute 'writeText' on 'Clipboard': The Clipboard API has been blocked because of a permissions policy applied to the current document. See https://crbug.com/414348233 for more details.
+    at TrackerApp.handleTicketCreationSuccess (dynamic-tracker.html?type=assembly-rollover:4817:45)
+    at TrackerApp.createTicket (dynamic-tracker.html?type=assembly-rollover:5974:26)
+(anonymous) @ dynamic-tracker.html?type=assembly-rollover:4826
+Promise.catch
+handleTicketCreationSuccess @ dynamic-tracker.html?type=assembly-rollover:4825
+createTicket @ dynamic-tracker.html?type=assembly-rollover:5974
+await in createTicket
+proceedWithSubmission @ dynamic-tracker.html?type=assembly-rollover:4219
+handleFormSubmit @ dynamic-tracker.html?type=assembly-rollover:3774
+(anonymous) @ dynamic-tracker.html?type=assembly-rollover:1457Understand this error
+08:45:28.553 dynamic-tracker.html?type=assembly-rollover:5212 Subject line copied to clipboard using fallback method
+08:45:28.553 vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25723 Requested Service is not available  InterfaceAPI
+overrideMethod @ hook.js:608
+channel.port1.onmessage @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25723Understand this error
+08:45:28.554 vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25723 Requested Service is not available  InterfaceAPI
+overrideMethod @ hook.js:608
+channel.port1.onmessage @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25723Understand this error
+08:45:28.573 dynamic-tracker.html?type=assembly-rollover:4856 [TRACKER COUNT] Creator email: sskalamera@benchmarkeducation.com
+08:45:28.573 dynamic-tracker.html?type=assembly-rollover:896 [TRACKER COUNT] Incrementing tracker count for template: assembly-rollover, ID: 309761, Subject: Benchmark Education Company | Assembly Rollover, Creator: sskalamera@benchmarkeducation.com
+08:45:28.573 dynamic-tracker.html?type=assembly-rollover:903 [TRACKER COUNT] Using client from window.trackerApp
+08:45:28.573 dynamic-tracker.html?type=assembly-rollover:930 [TRACKER COUNT] Using storage key: tracker-details-2025-07-15
+08:45:28.573 dynamic-tracker.html?type=assembly-rollover:4858 [TRACKER COUNT] Successfully called incrementTrackerCount for template: assembly-rollover, ID: 309761, Subject: Benchmark Education Company | Assembly Rollover, Creator: sskalamera@benchmarkeducation.com
+08:45:28.615 dynamic-tracker.html?type=assembly-rollover:4997 Teams notifications are disabled in admin settings, skipping
+08:45:28.634 dynamic-tracker.html?type=assembly-rollover:937 [TRACKER COUNT] Current trackers before adding: (3) [{…}, {…}, {…}]
+08:45:28.635 dynamic-tracker.html?type=assembly-rollover:948 [TRACKER COUNT] Updated tracker details for 2025-07-15: (4) [{…}, {…}, {…}, {…}]
+08:45:28.661 dynamic-tracker.html?type=assembly-rollover:977 [TRACKER COUNT] Successfully stored tracker details for assembly-rollover
+808:45:28.924 Fetch finished loading: GET "<URL>".
+08:45:29.716 dynamic-tracker.html?type=assembly-rollover:6219 Updating source ticket 306399 with tag "related to 309761"
+08:45:30.004 vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:490 XHR finished loading: GET "https://benchmarkeducationcompany.freshdesk.com/api/_/tickets?ids=306399%2C306399".
 send @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:490
 ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:467
-(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25709
+_ajaxRequest @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23488
+_ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23489
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23488
 (anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4696
 M @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4696
-process @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25709
-requestHandler @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25731
-channel.port1.onmessage @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25725
-06:39:37.320 vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:490 XHR finished loading: POST "http://localhost:10001/dprouter?product=freshdesk".
+ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23476
+ajax @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:217
+n @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:2839
+findMany @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:17451
+xe @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23101
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23267
+_flushPendingFetchForType @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23267
+flushAllPendingFetches @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23260
+invokeWithOnError @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4233
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4225
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4237
+_end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4291
+end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4252
+_runExpiredTimers @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4297
+setTimeout
+setTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4209
+_installTimerTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4303
+_reinstallTimerTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4301
+_later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4295
+later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4273
+e.later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:3298
+refreshTicketProperties @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9402
+_autoRefreshTicketUpdated @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9401
+_autoRefreshMessageHandler @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9388
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15543
+setTimeout
+_fireCallback @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15543
+_onEvent @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15554
+websocket.onmessage @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15490
+08:45:30.746 dynamic-tracker.html?type=assembly-rollover:6227 Successfully added "related to 309761" tag to source ticket 306399
+08:45:31.384 vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:490 XHR finished loading: GET "https://benchmarkeducationcompany.freshdesk.com/api/_/tickets/306399".
 send @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:490
 ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:467
-(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25709
+_ajaxRequest @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23488
+_ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23489
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23488
 (anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4696
 M @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4696
-process @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25709
-requestHandler @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25731
-channel.port1.onmessage @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:25725
-06:39:37.336 template-selector.html:2970 Loaded tracker details for 2025-07-15: {trackers: Array(2)}
-06:39:37.336 template-selector.html:2992 DEBUG: All tracker data before filtering: (2) [{…}, {…}]
-06:39:37.337 template-selector.html:2995 DEBUG: Checking tracker - ID: 309742, creatorEmail: "undefined", subject: Benchmark Education Company • VA | Assembly Rollover
-06:39:37.337 template-selector.html:2995 DEBUG: Checking tracker - ID: 309743, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company • VA | Assembly Rollover
-06:39:37.337 template-selector.html:2998 Excluding tracker created by sskalamera@benchmarkeducation.com: Benchmark Education Company • VA | Assembly Rollover
-06:39:37.337 template-selector.html:3003 Original trackers: 2, Filtered trackers: 1
-06:39:37.928 tracker-config.js:5834 TrackerApp or setupSmartsheetUploader not available
+ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23476
+ajax @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:217
+n @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:2839
+findRecord @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23448
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23253
+p @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4663
+E @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4675
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4683
+invokeWithOnError @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4233
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4225
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4237
+_end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4291
+end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4252
+_runExpiredTimers @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4297
+setTimeout
+setTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4209
+_installTimerTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4303
+_reinstallTimerTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4301
+_later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4295
+later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4273
+e.later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:3298
+refreshTicketProperties @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9402
+_autoRefreshTicketUpdated @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9401
+_autoRefreshMessageHandler @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9388
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15543
+setTimeout
+_fireCallback @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15543
+_onEvent @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15554
+websocket.onmessage @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15490
+08:45:32.234 vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:490 XHR finished loading: GET "https://benchmarkeducationcompany.freshdesk.com/api/_/tickets/306399".
+send @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:490
+ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:467
+_ajaxRequest @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23488
+_ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23489
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23488
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4696
+M @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4696
+ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23476
+ajax @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:217
+n @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:2839
+findRecord @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23448
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23253
+p @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4663
+E @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4675
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4683
+invokeWithOnError @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4233
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4225
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4237
+_end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4291
+end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4252
+_runExpiredTimers @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4297
+setTimeout
+setTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4209
+_installTimerTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4303
+_reinstallTimerTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4301
+_later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4295
+later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4273
+e.next @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:3298
+didRender @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:1868
+n @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:2839
+trigger @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:2991
+n @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:2839
+didUpdate @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:1662
+commit @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:3952
+commit @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:3959
+commit @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:1596
+_renderRoots @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:1709
+_renderRootsTransaction @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:1714
+_revalidate @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:1715
+invokeWithOnError @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4233
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4225
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4237
+_end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4291
+end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4252
+_run @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4292
+_join @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4291
+join @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4263
+f @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:3309
+l.success @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23479
+l @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:197
+fireWith @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:198
+k @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:479
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:489
+XMLHttpRequest.send
+send @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:490
+ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:467
+_ajaxRequest @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23488
+_ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23489
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23488
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4696
+M @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4696
+ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23476
+ajax @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:217
+n @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:2839
+findRecord @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23448
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23253
+p @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4663
+E @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4675
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4683
+invokeWithOnError @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4233
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4225
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4237
+_end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4291
+end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4252
+_runExpiredTimers @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4297
+setTimeout
+setTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4209
+_installTimerTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4303
+_reinstallTimerTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4301
+_later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4295
+later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4273
+e.later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:3298
+refreshTicketProperties @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9402
+_autoRefreshTicketUpdated @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9401
+_autoRefreshMessageHandler @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9388
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15543
+setTimeout
+_fireCallback @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15543
+_onEvent @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15554
+websocket.onmessage @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15490
+08:45:33.115 template-selector.html:2299 Template selector initialized successfully
+08:45:33.129 template-selector.html:2322 Retrieved ticket data: {ticket: {…}}
+08:45:33.130 template-selector.html:2657 Initializing drafts system
+08:45:33.131 template-selector.html:2957 Loading daily tracker counts
+08:45:33.131 template-selector.html:4026 Checking admin permissions: {loggedInUser: {…}}
+08:45:33.131 template-selector.html:4033 User data structure: {"available":false,"org_agent_id":"423541076619981226","available_since":"2024-04-16T16:15:51.000Z","occasional":false,"is_assumed_user":false,"signature":"<div dir=\"ltr\"><p style=\"box-sizing: border-box; font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px;\"><span style=\"-webkit-font-smoothing: antialiased; box-sizing: border-box; font-size: 11pt;\"><span style=\"-webkit-font-smoothing: antialiased; box-sizing: border-box; font-size: 10.5pt; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Thank you,</span></span></p><p style=\"box-sizing: border-box; font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px;\"><span style=\"-webkit-font-smoothing: antialiased; box-sizing: border-box; font-size: 11pt;\"><span style=\"font-size: 10.5pt; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Steve Skalamera</span></span></p><p style=\"box-sizing: border-box; font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px;\"><span style=\"-webkit-font-smoothing: antialiased; box-sizing: border-box; font-size: 11pt;\"><span style=\"font-size: 10.5pt; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Tech Support Lead</span></span></p><p style=\"box-sizing: border-box; font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px;\"><a href=\"https://help.benchmarkuniverse.com/bubateacher/Content/Customer%20Support/About%20Customer%20Support.htm?__hstc=210865674.e1a47948cb08df9b55b08392586a04d6.1719862966144.1722971532817.1724079088855.10&amp;__hssc=210865674.2.1724079088855&amp;__hsfp=2112289063\" target=\"_blank\" style=\"font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px; text-align: initial; background-color: rgb(255, 255, 255);\" rel=\"noreferrer\">Contact Us</a></p><p style=\"box-sizing: border-box; font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px;\"><img src=\"https://res.cloudinary.com/doznvxtja/image/upload/v1724080109/Untitled_212_x_100_px_14_kiqldm.png\" style=\"font-family: &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, sans-serif; font-size: 14px; text-align: initial;\"></p>\n</div>","ticket_scope":1,"latest_notes_first":true,"department_ids":[],"group_ids":[67000570680,67000570681,67000577995,67000578451,67000579439],"role_ids":[67000255947,67000255946],"abilities":["manage_canned_responses","view_admin","publish_solution","edit_topic","edit_conversation","manage_supervisor_rules","manage_account","forward_ticket","view_contacts","edit_time_entries","edit_ticket_properties","manage_solutions","edit_note","reply_ticket","manage_users","view_forums","manage_contacts","manage_scenario_automation_rules","delete_contact","manage_dispatch_rules","delete_ticket","manage_forums","view_time_entries","merge_or_split_ticket","view_reports","create_topic","view_solutions","delete_solution","delete_topic","export_tickets","edit_private_note","import_customers","export_customers","export_reports","create_solution_draft","view_social","manage_ticket_list_views","compose_email","manage_tags","manage_skills","manage_bots","manage_segments","manage_proactive_outreaches","edit_ticket_skill","manage_dashboard","view_analytics","create_tags","manage_freddy_answers","forums_admin_moderator","manage_ticket_templates","spam_ticket","manage_availability","manage_companies","delete_company"],"preferences":{"shortcuts_enabled":true,"shortcuts_mapping":[],"notification_timestamp":null,"show_onBoarding":true,"show_loyalty_upgrade":false,"show_monthly_to_annual_notification":false,"falcon_ui":false,"freshchat_token":"ba577835-0964-4072-8082-64761ed52c0e","undo_send":true,"focus_mode":false,"field_service":{"dismissed_sample_scheduling_dashboard":true},"collab_threads":{"list_sort_by":"created_at"},"in_app_chat_settings":{"reference_id":null,"restore_id":null},"custom_objects":{"dismissed_sample_data":true},"search_settings":{"tickets":{"include_subject":true,"include_description":true,"include_other_properties":true,"include_notes":true,"include_attachment_names":true,"spam":true}},"app_preferences":{"app_order":["requester-info","recent-sessions","aht-time-entries","time-entries","todo-list","Atlassian Jira Plus","Tracker Central","link-tickets","Submit Feature Request","HAR File Analyzer","Hide"],"hidden_apps":["add-child-tickets","add-service-tasks","time-entries","aht-time-entries","recent-sessions","Submit Feature Request"]}},"type":"support_agent","last_active_at":"2025-07-15T10:12:02.000Z","show_rr_toggle":false,"gdpr_admin_name":null,"contact":{"name":"Steve Skalamera","email":"sskalamera@benchmarkeducation.com","avatar":{"id":67102450446,"name":"QeIuVvp4l_E9YsjKq-LHdkXoL6ReA6MxBQ.jpg","content_type":"image/jpeg","size":18305,"created_at":"2024-06-05T19:24:29Z","updated_at":"2024-06-05T19:24:29Z","attachment_url":"https://s3.amazonaws.com/cdn.freshdesk.com/data/helpdesk/attachments/production/67102450446/original/QeIuVvp4l_E9YsjKq-LHdkXoL6ReA6MxBQ.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAS6FNSMY2XLZULJPI%2F20250715%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250715T120630Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=6c56b75d977b0846180ba42214dfad27e5f646f2182781dfcfa7a41731ee63d2","thumb_url":"https://s3.amazonaws.com/cdn.freshdesk.com/data/helpdesk/attachments/production/67102450446/thumb/QeIuVvp4l_E9YsjKq-LHdkXoL6ReA6MxBQ.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAS6FNSMY2XLZULJPI%2F20250715%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250715T120630Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=8e5d1a5611f8c511a859643cf9b3b290e1956bdb448fb455d51427cf1151692d"},"created_at":"2022-03-14T18:01:02.000Z","job_title":"Team Lead, Customer Tech Support","language":"en","mobile":null,"phone":null,"time_zone":"Eastern Time (US & Canada)","twitter_profile_status":null,"tags":[],"other_companies":[],"other_emails":[],"other_phone_numbers":[],"deleted":false,"is_agent":true,"active":true,"blocked":false,"deleted_agent":false,"has_email":false,"view_all_tickets":false,"custom_fields":null,"is_custom_fields_changed":false,"is_ucr_sync_failed":false,"devices":[],"id":"67036373043"},"contribution_group_ids":[],"verified_email":true,"anonymous":false,"deactivated":false,"addon_access_list":[],"collaborator_email_visibility":false,"created_at":"2022-03-14T18:01:02.000Z","updated_at":"2025-07-15T10:12:02.000Z","availability_control":"disabled","freshcaller_agent":false,"freshchat_agent":false,"availability":{},"id":67036373043}
+08:45:33.131 template-selector.html:4062 Admin detected by view_admin ability
+08:45:33.131 template-selector.html:4066 Admin access based on proper user permissions
+08:45:33.131 template-selector.html:4068 Final admin determination: true
+08:45:33.131 template-selector.html:4078 Admin button display set to inline-block
+08:45:33.166 template-selector.html:2467 Independence Day theme enabled: false
+08:45:33.276 template-selector.html:2970 Loaded tracker details for 2025-07-15: {trackers: Array(4)}
+08:45:33.276 template-selector.html:2992 DEBUG: All tracker data before filtering: (4) [{…}, {…}, {…}, {…}]
+08:45:33.276 template-selector.html:2995 DEBUG: Checking tracker - ID: 309742, creatorEmail: "undefined", subject: Benchmark Education Company • VA | Assembly Rollover
+08:45:33.276 template-selector.html:2995 DEBUG: Checking tracker - ID: 309743, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company • VA | Assembly Rollover
+08:45:33.276 template-selector.html:2998 Excluding tracker created by sskalamera@benchmarkeducation.com: Benchmark Education Company • VA | Assembly Rollover
+08:45:33.276 template-selector.html:2995 DEBUG: Checking tracker - ID: 309760, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company | Assembly Rollover
+08:45:33.276 template-selector.html:2998 Excluding tracker created by sskalamera@benchmarkeducation.com: Benchmark Education Company | Assembly Rollover
+08:45:33.276 template-selector.html:2995 DEBUG: Checking tracker - ID: 309761, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company | Assembly Rollover
+08:45:33.276 template-selector.html:2998 Excluding tracker created by sskalamera@benchmarkeducation.com: Benchmark Education Company | Assembly Rollover
+08:45:33.276 template-selector.html:3003 Original trackers: 4, Filtered trackers: 1
+08:45:34.424 tracker-config.js:5834 TrackerApp or setupSmartsheetUploader not available
 (anonymous) @ tracker-config.js:5834Understand this warning
-06:39:37.928 tracker-config.js:5905 Updated sim-assignment resource field to use dynamic loading
-06:39:37.928 tracker-config.js:5905 Updated sim-assessment-reports resource field to use dynamic loading
-06:39:37.928 tracker-config.js:5905 Updated sim-fsa resource field to use dynamic loading
-06:39:37.928 tracker-config.js:5905 Updated sim-library-view resource field to use dynamic loading
-06:39:37.928 tracker-config.js:5905 Updated sim-orr resource field to use dynamic loading
-06:39:37.929 template-selector.html:2724 Found 0 drafts
-06:39:39.440 formatDate.js:18 Fetch finished loading: POST "http://localhost:10001/iframe/coverage".
-(anonymous) @ formatDate.js:18
-setInterval
-(anonymous) @ formatDate.js:11
-(anonymous) @ formatDate.js:28
-06:39:39.874 heap.js:2 Fetch finished loading: POST "https://c.us.heap-api.com/api/capture/v2/track".
+08:45:34.424 tracker-config.js:5905 Updated sim-assignment resource field to use dynamic loading
+08:45:34.424 tracker-config.js:5905 Updated sim-assessment-reports resource field to use dynamic loading
+08:45:34.424 tracker-config.js:5905 Updated sim-fsa resource field to use dynamic loading
+08:45:34.424 tracker-config.js:5905 Updated sim-library-view resource field to use dynamic loading
+08:45:34.424 tracker-config.js:5905 Updated sim-orr resource field to use dynamic loading
+08:45:34.425 template-selector.html:2724 Found 0 drafts
+08:45:36.043 vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:490 XHR finished loading: GET "https://benchmarkeducationcompany.freshdesk.com/api/_/tickets/306399".
+send @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:490
+ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:467
+_ajaxRequest @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23488
+_ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23489
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23488
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4696
+M @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4696
+ajax @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23476
+ajax @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:217
+n @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:2839
+findRecord @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23448
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:23253
+p @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4663
+E @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4675
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4683
+invokeWithOnError @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4233
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4225
+flush @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4237
+_end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4291
+end @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4252
+_runExpiredTimers @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4297
+setTimeout
+setTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4209
+_installTimerTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4303
+_reinstallTimerTimeout @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4301
+_later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4295
+later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:4273
+e.later @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:3298
+refreshTicketProperties @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9402
+_autoRefreshTicketUpdated @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9401
+_autoRefreshMessageHandler @ freshdesk-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:9388
+(anonymous) @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15543
+setTimeout
+_fireCallback @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15543
+_onEvent @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15554
+websocket.onmessage @ vendor-5faf8daf4efce6f89debf3621cbdcb34c2a2b1ceb4c11a6ec74a94a31b8b383d.js:15490
