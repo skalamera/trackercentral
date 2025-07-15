@@ -1806,7 +1806,7 @@
                 <!-- ASSEMBLY GROUP -->
                 <div class="template-group">
                     <div class="group-header collapsed">
-                        <h2><i class="fas fa-tools"></i> ASSEMBLY <span class="template-count">2</span></h2>
+                        <h2><i class="fas fa-tools"></i> ASSEMBLY <span class="template-count">1</span></h2>
                         <i class="fas fa-chevron-down toggle-icon"></i>
                     </div>
                     <div class="templates-container collapsed">
@@ -1819,14 +1819,6 @@
                                 <div class="template-description">
                                     For issues regarding missing content or resource availability in the district's
                                     subscribed version </div>
-                            </div>
-                            <div class="template-item" data-template="assembly-rollover">
-                                <a href="#" class="template-link">
-                                    <i class="fas fa-sync-alt"></i> ROLLOVER
-
-                                </a>
-                                <div class="template-description">
-                                    For requests regarding removing legacy assembly codes from a district. </div>
                             </div>
                         </div>
                     </div>
@@ -1930,12 +1922,20 @@
                 <!-- OTHER TEMPLATE GROUP -->
                 <div class="template-group">
                     <div class="group-header collapsed">
-                        <h2><i class="fas fa-layer-group"></i> OTHER TEMPLATES <span class="template-count">4</span>
+                        <h2><i class="fas fa-layer-group"></i> OTHER TEMPLATES <span class="template-count">5</span>
                         </h2>
                         <i class="fas fa-chevron-down toggle-icon"></i>
                     </div>
                     <div class="templates-container collapsed">
                         <div class="template-list">
+                            <div class="template-item" data-template="assembly-rollover">
+                                <a href="#" class="template-link">
+                                    <i class="fas fa-sync-alt"></i> ASSEMBLY ROLLOVER
+
+                                </a>
+                                <div class="template-description">
+                                    For requests regarding removing legacy assembly codes from a district. </div>
+                            </div>
                             <div class="template-item" data-template="dpt">
                                 <a href="#" class="template-link">
                                     <i class="fas fa-file-alt"></i> DPT (CUSTOMIZED eASSESSMENT)
@@ -2987,8 +2987,23 @@
                     return;
                 }
 
-                // Store trackers globally for the View All functionality
-                window.todayTrackers = trackers;
+                // Filter out trackers created by sskalamera@benchmarkeducation.com
+                const EXCLUDED_EMAIL = 'sskalamera@benchmarkeducation.com';
+                console.log('DEBUG: All tracker data before filtering:', trackers);
+
+                const filteredTrackers = trackers.filter(tracker => {
+                    console.log(`DEBUG: Checking tracker - ID: ${tracker.id}, creatorEmail: "${tracker.creatorEmail}", subject: ${tracker.subject}`);
+                    const shouldExclude = tracker.creatorEmail === EXCLUDED_EMAIL;
+                    if (shouldExclude) {
+                        console.log(`Excluding tracker created by ${EXCLUDED_EMAIL}: ${tracker.subject}`);
+                    }
+                    return !shouldExclude;
+                });
+
+                console.log(`Original trackers: ${trackers.length}, Filtered trackers: ${filteredTrackers.length}`);
+
+                // Store filtered trackers globally for the View All functionality
+                window.todayTrackers = filteredTrackers;
 
                 // Set the date - always use current date for "Today's Trackers"
                 const today = new Date();
@@ -3000,7 +3015,7 @@
                 });
 
                 // Calculate total count
-                const totalCount = trackers.length;
+                const totalCount = filteredTrackers.length;
 
                 // Update widget elements
                 todaysTotalCount.textContent = totalCount;
@@ -3526,8 +3541,8 @@
             }
 
             // Function to increment tracker count (called from dynamic tracker)
-            function incrementTrackerCount(templateType, trackerId, subject) {
-                console.log(`Adding tracker details for template: ${templateType}, ID: ${trackerId}, Subject: ${subject}`);
+            function incrementTrackerCount(templateType, trackerId, subject, creatorEmail) {
+                console.log(`Adding tracker details for template: ${templateType}, ID: ${trackerId}, Subject: ${subject}, Creator: ${creatorEmail}`);
 
                 if (!window.client) {
                     console.warn("Client not available for storing tracker details");
@@ -3548,7 +3563,8 @@
                             id: trackerId,
                             subject: subject,
                             templateType: templateType,
-                            timestamp: new Date().toISOString()
+                            timestamp: new Date().toISOString(),
+                            creatorEmail: creatorEmail
                         });
 
                         console.log(`Updated tracker details for ${today}:`, trackers);
@@ -3565,7 +3581,8 @@
                                     id: trackerId,
                                     subject: subject,
                                     templateType: templateType,
-                                    timestamp: new Date().toISOString()
+                                    timestamp: new Date().toISOString(),
+                                    creatorEmail: creatorEmail
                                 }]
                             };
 
@@ -3591,7 +3608,7 @@
 
             // Manual test function for debugging
             function testTrackerCount() {
-                incrementTrackerCount('sedcust', '12345', 'Test District | SEDCUST Content Issue');
+                incrementTrackerCount('sedcust', '12345', 'Test District | SEDCUST Content Issue', 'test@example.com');
                 setTimeout(() => {
                     loadAndDisplayTrackerCounts();
                 }, 1000);

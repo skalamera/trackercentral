@@ -892,8 +892,8 @@
         }
 
         // Function to increment tracker count (called from TrackerApp)
-        function incrementTrackerCount(templateType, trackerId, subject) {
-            console.log(`[TRACKER COUNT] Incrementing tracker count for template: ${templateType}, ID: ${trackerId}, Subject: ${subject}`);
+        function incrementTrackerCount(templateType, trackerId, subject, creatorEmail) {
+            console.log(`[TRACKER COUNT] Incrementing tracker count for template: ${templateType}, ID: ${trackerId}, Subject: ${subject}, Creator: ${creatorEmail}`);
 
             // Try to get client from multiple sources
             let client = null;
@@ -941,7 +941,8 @@
                         id: trackerId,
                         subject: subject,
                         templateType: templateType,
-                        timestamp: new Date().toISOString()
+                        timestamp: new Date().toISOString(),
+                        creatorEmail: creatorEmail
                     });
 
                     console.log(`[TRACKER COUNT] Updated tracker details for ${today}:`, trackers);
@@ -958,7 +959,8 @@
                                 id: trackerId,
                                 subject: subject,
                                 templateType: templateType,
-                                timestamp: new Date().toISOString()
+                                timestamp: new Date().toISOString(),
+                                creatorEmail: creatorEmail
                             }]
                         };
 
@@ -4832,12 +4834,33 @@
                     }
                 }
 
-                // Increment the daily tracker count
+                // Increment the daily tracker count (with creator email)
                 try {
                     console.log(`[TRACKER COUNT] Attempting to increment count for tracker type: ${this.trackerType}`);
                     if (window.incrementTrackerCount && typeof window.incrementTrackerCount === 'function') {
-                        window.incrementTrackerCount(this.trackerType, ticketData.id, ticketData.subject);
-                        console.log(`[TRACKER COUNT] Successfully called incrementTrackerCount for template: ${this.trackerType}, ID: ${ticketData.id}, Subject: ${ticketData.subject}`);
+                        // Get current user's email to track who created this tracker
+                        this.client.data.get("loggedInUser").then(userData => {
+                            let creatorEmail = '';
+                            if (userData && userData.loggedInUser) {
+                                if (userData.loggedInUser.email) {
+                                    creatorEmail = userData.loggedInUser.email;
+                                } else if (userData.loggedInUser.contact && userData.loggedInUser.contact.email) {
+                                    creatorEmail = userData.loggedInUser.contact.email;
+                                } else if (userData.loggedInUser.primary_email) {
+                                    creatorEmail = userData.loggedInUser.primary_email;
+                                } else if (userData.loggedInUser.user && userData.loggedInUser.user.email) {
+                                    creatorEmail = userData.loggedInUser.user.email;
+                                }
+                            }
+
+                            console.log(`[TRACKER COUNT] Creator email: ${creatorEmail}`);
+                            window.incrementTrackerCount(this.trackerType, ticketData.id, ticketData.subject, creatorEmail);
+                            console.log(`[TRACKER COUNT] Successfully called incrementTrackerCount for template: ${this.trackerType}, ID: ${ticketData.id}, Subject: ${ticketData.subject}, Creator: ${creatorEmail}`);
+                        }).catch(error => {
+                            console.error('[TRACKER COUNT] Error getting logged in user:', error);
+                            // Call without email as fallback
+                            window.incrementTrackerCount(this.trackerType, ticketData.id, ticketData.subject, '');
+                        });
                     } else {
                         console.warn('[TRACKER COUNT] incrementTrackerCount function not available on window object');
                         console.log('[TRACKER COUNT] Available functions on window:', Object.keys(window).filter(key => key.includes('tracker') || key.includes('Count')));

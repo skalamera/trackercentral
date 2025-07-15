@@ -417,11 +417,32 @@ class TrackerApp {
         const form = document.getElementById('trackerForm');
         form.insertBefore(successMessage, form.firstChild);
 
-        // Increment the daily tracker count
+        // Increment the daily tracker count (with creator email)
         try {
             if (window.incrementTrackerCount && typeof window.incrementTrackerCount === 'function') {
-                window.incrementTrackerCount(this.trackerType);
-                console.log(`Incremented tracker count for template: ${this.trackerType}`);
+                // Get current user's email to track who created this tracker
+                this.client.data.get("loggedInUser").then(userData => {
+                    let creatorEmail = '';
+                    if (userData && userData.loggedInUser) {
+                        if (userData.loggedInUser.email) {
+                            creatorEmail = userData.loggedInUser.email;
+                        } else if (userData.loggedInUser.contact && userData.loggedInUser.contact.email) {
+                            creatorEmail = userData.loggedInUser.contact.email;
+                        } else if (userData.loggedInUser.primary_email) {
+                            creatorEmail = userData.loggedInUser.primary_email;
+                        } else if (userData.loggedInUser.user && userData.loggedInUser.user.email) {
+                            creatorEmail = userData.loggedInUser.user.email;
+                        }
+                    }
+
+                    console.log(`Creator email: ${creatorEmail}`);
+                    window.incrementTrackerCount(this.trackerType, ticketData.id, ticketData.subject, creatorEmail);
+                    console.log(`Incremented tracker count for template: ${this.trackerType}, ID: ${ticketData.id}, Subject: ${ticketData.subject}, Creator: ${creatorEmail}`);
+                }).catch(error => {
+                    console.error('Error getting logged in user:', error);
+                    // Call without email as fallback
+                    window.incrementTrackerCount(this.trackerType, ticketData.id, ticketData.subject, '');
+                });
             } else {
                 console.warn('incrementTrackerCount function not available');
             }

@@ -930,6 +930,21 @@
             console.log(`Processing ${trackers.length} trackers for analytics`);
             console.log(`Raw tracker data:`, trackers);
 
+            // Filter out trackers created by sskalamera@benchmarkeducation.com
+            const EXCLUDED_EMAIL = 'sskalamera@benchmarkeducation.com';
+            console.log('DEBUG ANALYTICS: All tracker data before filtering:', trackers);
+            
+            const filteredTrackers = trackers.filter(tracker => {
+                console.log(`DEBUG ANALYTICS: Checking tracker - ID: ${tracker.id}, creatorEmail: "${tracker.creatorEmail}", subject: ${tracker.subject}`);
+                const shouldExclude = tracker.creatorEmail === EXCLUDED_EMAIL;
+                if (shouldExclude) {
+                    console.log(`Excluding tracker from analytics created by ${EXCLUDED_EMAIL}: ${tracker.subject}`);
+                }
+                return !shouldExclude;
+            });
+
+            console.log(`Original trackers: ${trackers.length}, Filtered trackers for analytics: ${filteredTrackers.length}`);
+
             // Initialize template counts
             const templateCounts = {};
             Object.keys(TEMPLATE_CONFIG).forEach(template => {
@@ -937,7 +952,7 @@
             });
 
             // Count trackers by template type
-            trackers.forEach((tracker, index) => {
+            filteredTrackers.forEach((tracker, index) => {
                 const templateType = tracker.templateType;
                 console.log(`Processing tracker ${index + 1}: templateType="${templateType}", id="${tracker.id}", subject="${tracker.subject}"`);
 
@@ -958,7 +973,7 @@
 
             currentData = {
                 templateCounts,
-                totalTickets: trackers.length,
+                totalTickets: filteredTrackers.length,
                 timeRange
             };
 
