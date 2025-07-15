@@ -108,7 +108,6 @@ module.exports = {
 
         return description;
     },
-    // Add onLoad function to tag the source ticket with "ESCALATED TO ASSEMBLY"
     onLoad: function () {
         console.log("Assembly Rollover onLoad function executing");
 
@@ -449,109 +448,7 @@ module.exports = {
             console.log("Assembly Rollover: Stopped observing for description section");
         }, 10000);
 
-        // Try to get the source ticket ID from localStorage
-        let sourceTicketId = null;
-        try {
-            const ticketData = localStorage.getItem('ticketData');
-            if (ticketData) {
-                const parsedData = JSON.parse(ticketData);
-                if (parsedData && parsedData.id) {
-                    sourceTicketId = parsedData.id;
-                    console.log(`Found source ticket ID: ${sourceTicketId}`);
-                }
-            }
-        } catch (error) {
-            console.error("Error getting source ticket ID from localStorage:", error);
-        }
 
-        // If we have a source ticket ID, add the tag
-        if (sourceTicketId) {
-            console.log(`Adding "ESCALATED TO ASSEMBLY" tag to source ticket ${sourceTicketId}`);
-
-            // Function to update source ticket tags
-            const updateSourceTicketTags = async () => {
-                try {
-                    // First get the current ticket details to retrieve existing tags
-                    const response = await client.request.invokeTemplate("getTicketDetails", {
-                        context: { ticketId: sourceTicketId }
-                    });
-
-                    if (response && response.response) {
-                        const ticketDetails = JSON.parse(response.response);
-
-                        // Get existing tags and add the new one if it doesn't exist
-                        let tags = ticketDetails.tags || [];
-
-                        // Convert to array if it's not already
-                        if (!Array.isArray(tags)) {
-                            tags = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-                        }
-
-                        // Check if tag already exists
-                        if (!tags.includes("ESCALATED TO ASSEMBLY")) {
-                            tags.push("ESCALATED TO ASSEMBLY");
-
-                            // Prepare data for update
-                            const updateData = {
-                                tags: tags
-                            };
-
-                            try {
-                                // Use the updateTicket template instead of direct API call
-                                console.log(`Updating source ticket ${sourceTicketId} tags using updateTicket template`);
-                                await client.request.invokeTemplate("updateTicket", {
-                                    context: {
-                                        ticketId: sourceTicketId
-                                    },
-                                    body: JSON.stringify(updateData)
-                                });
-
-                                console.log("Source ticket successfully tagged with ESCALATED TO ASSEMBLY");
-
-                                // Add a private note about the escalation
-                                await client.request.invokeTemplate("addNoteToTicket", {
-                                    context: {
-                                        ticketId: sourceTicketId
-                                    },
-                                    body: JSON.stringify({
-                                        body: "This ticket has been escalated to Assembly. An Assembly tracker ticket has been created.",
-                                        private: true
-                                    })
-                                });
-
-                                console.log("Private note added to source ticket");
-                            } catch (error) {
-                                console.error("Error updating source ticket:", error);
-
-                                // Try to add at least a private note as fallback
-                                try {
-                                    console.log("Attempting to add private note as fallback");
-                                    await client.request.invokeTemplate("addNoteToTicket", {
-                                        context: {
-                                            ticketId: sourceTicketId
-                                        },
-                                        body: JSON.stringify({
-                                            body: "This ticket has been escalated to Assembly. An Assembly tracker ticket has been created. (Note: Unable to add ESCALATED TO ASSEMBLY tag automatically)",
-                                            private: true
-                                        })
-                                    });
-                                    console.log("Private note added to source ticket as fallback");
-                                } catch (noteError) {
-                                    console.error("Error adding private note:", noteError);
-                                }
-                            }
-                        } else {
-                            console.log("Source ticket already has ESCALATED TO ASSEMBLY tag");
-                        }
-                    }
-                } catch (error) {
-                    console.error("Error updating source ticket tags:", error);
-                }
-            };
-
-            // Execute the update
-            updateSourceTicketTags();
-        }
 
         // Add demo data functionality
         const demoDataHelper = new DemoDataHelper();
