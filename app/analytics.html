@@ -49,6 +49,29 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .debug-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .debug-controls .btn {
+            padding: 4px 8px;
+            font-size: 12px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .debug-controls .btn:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
         }
 
         .time-range-selector {
@@ -550,6 +573,20 @@
                         <option value="365">Last 365 days</option>
                     </select>
                 </div>
+                <div class="debug-controls">
+                    <button onclick="checkStorageHealth()" class="btn" title="Check storage health">
+                        🔍 Storage Check
+                    </button>
+                    <button onclick="validateStorageData()" class="btn" title="Run storage validation test">
+                        🧪 Storage Test
+                    </button>
+                    <button onclick="createTestTrackerData()" class="btn" title="Create test tracker data">
+                        ➕ Create Test Data
+                    </button>
+                    <button onclick="console.clear()" class="btn" title="Clear console">
+                        🗑️ Clear Console
+                    </button>
+                </div>
                 <div class="theme-toggle-container">
                     <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Dark Mode">
                         <i class="fas fa-sun"></i>
@@ -760,6 +797,13 @@
             const timeRange = currentTimeRange || document.getElementById('timeRange').value;
             console.log(`Loading analytics data for time range: ${timeRange}`);
 
+            // Show enhanced loading message for longer operations
+            if (timeRange !== 'today') {
+                const days = parseInt(timeRange);
+                const estimatedTime = Math.ceil(days / 10) * 2; // Rough estimate based on batch size
+                showRateLimitedLoadingMessage(days, estimatedTime);
+            }
+
             if (timeRange === 'today') {
                 // For today, use the same method as Today's Trackers widget
                 loadTodayTrackers();
@@ -768,6 +812,105 @@
                 // For date ranges, load data from multiple days
                 loadDateRangeTrackers(timeRange);
                 loadDateRangeBackloggedTrackers(timeRange);
+            }
+        }
+
+        // Show specialized loading message for rate-limited operations
+        function showRateLimitedLoadingMessage(days, estimatedTime) {
+            const chartContainer = document.querySelector('.analytics-stats');
+            if (chartContainer) {
+                // Create overlay instead of replacing content
+                const overlay = document.createElement('div');
+                overlay.id = 'batchLoadingOverlay';
+                overlay.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(255, 255, 255, 0.95);
+                    z-index: 1000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 12px;
+                `;
+
+                overlay.innerHTML = `
+                    <div class="rate-limit-loading" id="batchLoadingContainer" style="
+                        text-align: center;
+                        padding: 40px;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        border-radius: 12px;
+                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                        max-width: 400px;
+                        width: 90%;
+                    ">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
+                            <div class="loading-spinner" style="
+                                width: 24px;
+                                height: 24px;
+                                border: 3px solid rgba(255,255,255,0.3);
+                                border-top: 3px solid white;
+                                border-radius: 50%;
+                                animation: spin 1s linear infinite;
+                            "></div>
+                            <h3 id="loadingTitle" style="margin: 0; font-size: 18px;">Loading ${days} days of data...</h3>
+                        </div>
+                        <p id="loadingSubtitle" style="margin: 0 0 15px 0; opacity: 0.9; font-size: 14px;">
+                            Processing in batches to respect API rate limits
+                        </p>
+                        <div style="background: rgba(255,255,255,0.2); border-radius: 10px; height: 8px; margin: 15px 0;">
+                            <div id="progressBar" style="
+                                background: rgba(255,255,255,0.8);
+                                height: 100%;
+                                border-radius: 10px;
+                                width: 0%;
+                                transition: width 0.3s ease;
+                            "></div>
+                        </div>
+                        <p id="loadingDetails" style="margin: 0; opacity: 0.7; font-size: 12px;">
+                            Estimated time: ~${estimatedTime} seconds
+                        </p>
+                    </div>
+                    <style>
+                        @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                    </style>
+                `;
+
+                // Make the container relative for positioning
+                chartContainer.style.position = 'relative';
+                chartContainer.appendChild(overlay);
+            }
+        }
+
+        // Update loading progress during batch processing
+        function updateLoadingProgress(currentBatch, totalBatches, totalDays) {
+            const progressBar = document.getElementById('progressBar');
+            const loadingTitle = document.getElementById('loadingTitle');
+            const loadingSubtitle = document.getElementById('loadingSubtitle');
+            const loadingDetails = document.getElementById('loadingDetails');
+
+            if (progressBar && loadingTitle && loadingSubtitle && loadingDetails) {
+                const progressPercent = (currentBatch / totalBatches) * 100;
+
+                progressBar.style.width = `${progressPercent}%`;
+                loadingTitle.textContent = `Loading ${totalDays} days of data...`;
+                loadingSubtitle.textContent = `Processing batch ${currentBatch} of ${totalBatches}`;
+                loadingDetails.textContent = `${Math.round(progressPercent)}% complete`;
+            }
+        }
+
+        // Remove the loading overlay
+        function removeLoadingOverlay() {
+            const overlay = document.getElementById('batchLoadingOverlay');
+            if (overlay) {
+                overlay.remove();
+                console.log('✅ Loading overlay removed');
             }
         }
 
@@ -790,50 +933,147 @@
                 });
         }
 
-        // Load trackers for a date range
-        function loadDateRangeTrackers(timeRange) {
-            const days = parseInt(timeRange);
-            const promises = [];
+        // Load trackers for a date range with rate limit handling
+        async function loadDateRangeTrackers(timeRange) {
+            try {
+                const days = parseInt(timeRange);
+                console.log(`Loading tracker data for the last ${days} days`);
 
-            console.log(`Loading tracker data for the last ${days} days`);
+                // Rate limiting: Process requests in batches to avoid overwhelming the API
+                const BATCH_SIZE = 10; // Process 10 requests at a time
+                const DELAY_BETWEEN_BATCHES = 2000; // 2 second delay between batches
+                const MAX_RETRIES = 3;
 
-            // Create promises for each day in the range
-            for (let i = 0; i < days; i++) {
-                const date = new Date();
-                date.setDate(date.getDate() - i);
-                const dateString = getDateString(date);
-                const storageKey = `tracker-details-${dateString}`;
+                const allTrackers = [];
+                let totalRequests = 0;
+                let successfulRequests = 0;
+                let rateLimitedRequests = 0;
 
-                console.log(`Creating promise for ${dateString} with storage key: ${storageKey}`);
+                // Process dates in batches
+                for (let batchStart = 0; batchStart < days; batchStart += BATCH_SIZE) {
+                    const batchEnd = Math.min(batchStart + BATCH_SIZE, days);
+                    const batchPromises = [];
 
-                const promise = client.db.get(storageKey)
-                    .then(function (data) {
-                        const trackers = data?.trackers || [];
-                        console.log(`Found ${trackers.length} trackers for ${dateString}`, trackers);
-                        return trackers;
-                    })
-                    .catch(function (error) {
-                        console.log(`No tracker data for ${dateString}:`, error);
-                        return [];
-                    });
+                    const currentBatch = Math.floor(batchStart / BATCH_SIZE) + 1;
+                    const totalBatches = Math.ceil(days / BATCH_SIZE);
 
-                promises.push(promise);
+                    console.log(`🔄 Processing batch ${currentBatch}/${totalBatches} (days ${batchStart}-${batchEnd - 1})`);
+                    updateLoadingProgress(currentBatch, totalBatches, days);
+
+                    // Create promises for this batch
+                    for (let i = batchStart; i < batchEnd; i++) {
+                        const date = new Date();
+                        date.setDate(date.getDate() - i);
+                        const dateString = getDateString(date);
+                        const storageKey = `tracker-details-${dateString}`;
+
+                        const promise = loadTrackerDataWithRetry(storageKey, dateString, MAX_RETRIES);
+                        batchPromises.push(promise);
+                        totalRequests++;
+                    }
+
+                    // Wait for this batch to complete
+                    try {
+                        const batchResults = await Promise.all(batchPromises);
+                        batchResults.forEach(result => {
+                            if (result.success) {
+                                allTrackers.push(...result.trackers);
+                                successfulRequests++;
+                            } else if (result.rateLimited) {
+                                rateLimitedRequests++;
+                            }
+                        });
+
+                        console.log(`✅ Batch ${Math.floor(batchStart / BATCH_SIZE) + 1} completed. Found ${batchResults.reduce((sum, r) => sum + r.trackers.length, 0)} trackers.`);
+                    } catch (error) {
+                        console.error(`❌ Batch ${Math.floor(batchStart / BATCH_SIZE) + 1} failed:`, error);
+                    }
+
+                    // Add delay between batches (except for the last batch)
+                    if (batchEnd < days) {
+                        console.log(`⏱️ Waiting ${DELAY_BETWEEN_BATCHES}ms before next batch...`);
+                        await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_BATCHES));
+                    }
+                }
+
+                console.log(`📊 Data loading completed:`);
+                console.log(`   Total requests: ${totalRequests}`);
+                console.log(`   Successful: ${successfulRequests}`);
+                console.log(`   Rate limited: ${rateLimitedRequests}`);
+                console.log(`   Total trackers found: ${allTrackers.length}`);
+
+                // Remove loading overlay before processing data
+                removeLoadingOverlay();
+
+                processAnalyticsData(allTrackers, timeRange);
+            } catch (error) {
+                console.error('❌ Error during date range loading:', error);
+
+                // Make sure to remove loading overlay even on error
+                removeLoadingOverlay();
+
+                // Process empty data to clear any existing display
+                processAnalyticsData([], timeRange);
             }
+        }
 
-            // Wait for all promises to complete
-            Promise.all(promises)
-                .then(function (results) {
-                    console.log(`Promise.all results:`, results);
-                    // Flatten all tracker arrays into one
-                    const allTrackers = results.flat();
-                    console.log(`Total trackers found across ${days} days: ${allTrackers.length}`);
-                    console.log(`All trackers data:`, allTrackers);
-                    processAnalyticsData(allTrackers, timeRange);
-                })
-                .catch(function (error) {
-                    console.error('Error loading date range tracker data:', error);
-                    processAnalyticsData([], timeRange);
-                });
+        // Helper function to load tracker data with retry logic
+        async function loadTrackerDataWithRetry(storageKey, dateString, maxRetries) {
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                try {
+                    const data = await client.db.get(storageKey);
+                    const trackers = data?.trackers || [];
+
+                    if (trackers.length > 0) {
+                        console.log(`✅ ${dateString}: Found ${trackers.length} trackers`);
+                    }
+
+                    return {
+                        success: true,
+                        trackers: trackers,
+                        dateString: dateString,
+                        rateLimited: false
+                    };
+                } catch (error) {
+                    const isRateLimit = error.status === 429 || (error.message && error.message.includes('exceeded the limit'));
+
+                    if (isRateLimit) {
+                        console.warn(`⏳ ${dateString}: Rate limited (attempt ${attempt}/${maxRetries})`);
+
+                        if (attempt < maxRetries) {
+                            // Wait longer for rate limit recovery
+                            const waitTime = 1000 * Math.pow(2, attempt); // Exponential backoff
+                            console.log(`   Waiting ${waitTime}ms before retry...`);
+                            await new Promise(resolve => setTimeout(resolve, waitTime));
+                            continue;
+                        } else {
+                            console.error(`❌ ${dateString}: Max retries exceeded due to rate limiting`);
+                            return {
+                                success: false,
+                                trackers: [],
+                                dateString: dateString,
+                                rateLimited: true
+                            };
+                        }
+                    } else if (error.status === 404) {
+                        // 404 is normal - no data for this date
+                        return {
+                            success: true,
+                            trackers: [],
+                            dateString: dateString,
+                            rateLimited: false
+                        };
+                    } else {
+                        console.error(`❌ ${dateString}: Unexpected error:`, error);
+                        return {
+                            success: false,
+                            trackers: [],
+                            dateString: dateString,
+                            rateLimited: false
+                        };
+                    }
+                }
+            }
         }
 
         // Helper function to get today's date string (same format as Today's Trackers widget)
@@ -848,6 +1088,162 @@
                 String(date.getMonth() + 1).padStart(2, '0') + '-' +
                 String(date.getDate()).padStart(2, '0');
         }
+
+        // Debugging function to validate storage
+        function validateStorageData() {
+            console.log('🔍 STORAGE VALIDATION STARTED');
+
+            // Test saving and retrieving data
+            const testKey = 'analytics-test-key';
+            const testData = {
+                trackers: [{
+                    id: 'test-123',
+                    subject: 'Test Subject',
+                    templateType: 'test',
+                    timestamp: new Date().toISOString(),
+                    creatorEmail: 'test@example.com',
+                    xcodeUnknown: false
+                }]
+            };
+
+            console.log('Testing Freshdesk storage...');
+
+            client.db.set(testKey, testData)
+                .then(() => {
+                    console.log('✅ Test data saved successfully');
+
+                    // Try to retrieve it immediately
+                    return client.db.get(testKey);
+                })
+                .then((retrievedData) => {
+                    console.log('✅ Test data retrieved successfully:', retrievedData);
+
+                    if (JSON.stringify(retrievedData) === JSON.stringify(testData)) {
+                        console.log('✅ Data integrity confirmed - storage is working properly');
+                    } else {
+                        console.warn('⚠️ Data integrity issue - retrieved data differs from saved data');
+                        console.log('Expected:', testData);
+                        console.log('Actual:', retrievedData);
+                    }
+
+                    // Clean up test data
+                    return client.db.delete(testKey);
+                })
+                .then(() => {
+                    console.log('✅ Test data cleaned up');
+
+                    // Now check for actual tracker data in recent days
+                    console.log('📊 Checking for actual tracker data...');
+                    const promises = [];
+
+                    for (let i = 0; i < 7; i++) {
+                        const date = new Date();
+                        date.setDate(date.getDate() - i);
+                        const dateString = getDateString(date);
+                        const storageKey = `tracker-details-${dateString}`;
+
+                        const promise = client.db.get(storageKey)
+                            .then(data => ({ date: dateString, data: data, found: true }))
+                            .catch(error => ({ date: dateString, data: null, found: false, error: error }));
+
+                        promises.push(promise);
+                    }
+
+                    return Promise.all(promises);
+                })
+                .then((results) => {
+                    console.log('📊 Tracker data check results:');
+                    results.forEach(result => {
+                        if (result.found && result.data && result.data.trackers && result.data.trackers.length > 0) {
+                            console.log(`✅ ${result.date}: Found ${result.data.trackers.length} trackers`);
+                        } else if (result.found && result.data) {
+                            console.log(`⚠️ ${result.date}: Data exists but no trackers found`, result.data);
+                        } else {
+                            console.log(`❌ ${result.date}: No data found (${result.error?.status || 'unknown error'})`);
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.error('❌ Storage validation failed:', error);
+                });
+        }
+
+        // Function to manually trigger a storage check
+        function checkStorageHealth() {
+            validateStorageData();
+
+            // Also check localStorage for comparison
+            console.log('🔍 Checking localStorage for tracker data...');
+            const localKeys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('tracker-details-')) {
+                    localKeys.push(key);
+                }
+            }
+
+            console.log(`Found ${localKeys.length} tracker-related keys in localStorage:`, localKeys);
+            localKeys.forEach(key => {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    console.log(`${key}:`, data);
+                } catch (e) {
+                    console.error(`Error parsing ${key}:`, e);
+                }
+            });
+        }
+
+        // Function to create test tracker data for debugging
+        function createTestTrackerData() {
+            if (!window.client) {
+                console.error('Client not available for creating test data');
+                return;
+            }
+
+            const today = getTodayDateString();
+            const storageKey = `tracker-details-${today}`;
+
+            console.log('🧪 Creating test tracker data...');
+
+            const testTrackers = [
+                {
+                    id: 'debug-test-1',
+                    subject: 'Debug Test District | SEDCUST Content Issue',
+                    templateType: 'sedcust',
+                    timestamp: new Date().toISOString(),
+                    creatorEmail: 'debug@test.com',
+                    xcodeUnknown: false
+                },
+                {
+                    id: 'debug-test-2',
+                    subject: 'Debug Test District | Assembly Content Issue',
+                    templateType: 'assembly',
+                    timestamp: new Date().toISOString(),
+                    creatorEmail: 'debug@test.com',
+                    xcodeUnknown: true
+                }
+            ];
+
+            const testData = { trackers: testTrackers };
+
+            client.db.set(storageKey, testData)
+                .then(() => {
+                    console.log('✅ Test tracker data created successfully');
+                    console.log('📝 Test data:', testData);
+
+                    // Trigger a reload of analytics
+                    const currentTimeRange = document.getElementById('timeRange').value;
+                    loadAnalyticsData(currentTimeRange);
+                })
+                .catch(error => {
+                    console.error('❌ Failed to create test tracker data:', error);
+                });
+        }
+
+        // Make functions globally available for debugging
+        window.checkStorageHealth = checkStorageHealth;
+        window.validateStorageData = validateStorageData;
+        window.createTestTrackerData = createTestTrackerData;
 
         // Load today's backlogged trackers
         function loadTodayBackloggedTrackers() {
@@ -1084,12 +1480,22 @@
         // Update summary statistics
         function updateSummaryStats(templateCounts, totalTickets, timeRange, xcodeUnknownCount) {
             // Total trackers
-            document.getElementById('totalTrackers').textContent = totalTickets.toLocaleString();
+            const totalTrackersEl = document.getElementById('totalTrackers');
+            if (totalTrackersEl) {
+                totalTrackersEl.textContent = totalTickets.toLocaleString();
+            } else {
+                console.warn('totalTrackers element not found');
+            }
 
             // Daily average
             const days = timeRange === 'today' ? 1 : parseInt(timeRange);
             const dailyAverage = (totalTickets / days).toFixed(1);
-            document.getElementById('dailyAverage').textContent = dailyAverage;
+            const dailyAverageEl = document.getElementById('dailyAverage');
+            if (dailyAverageEl) {
+                dailyAverageEl.textContent = dailyAverage;
+            } else {
+                console.warn('dailyAverage element not found');
+            }
 
             // Most used template
             const mostUsed = Object.entries(templateCounts)
@@ -1097,14 +1503,29 @@
             const mostUsedName = mostUsed && mostUsed[1] > 0
                 ? (TEMPLATE_CONFIG[mostUsed[0]] ? TEMPLATE_CONFIG[mostUsed[0]].name : mostUsed[0])
                 : 'None';
-            document.getElementById('mostUsedTemplate').textContent = mostUsedName;
+            const mostUsedEl = document.getElementById('mostUsedTemplate');
+            if (mostUsedEl) {
+                mostUsedEl.textContent = mostUsedName;
+            } else {
+                console.warn('mostUsedTemplate element not found');
+            }
 
             // Active templates (templates with at least 1 ticket)
             const activeCount = Object.values(templateCounts).filter(count => count > 0).length;
-            document.getElementById('activeTemplates').textContent = activeCount;
+            const activeTemplatesEl = document.getElementById('activeTemplates');
+            if (activeTemplatesEl) {
+                activeTemplatesEl.textContent = activeCount;
+            } else {
+                console.warn('activeTemplates element not found');
+            }
 
             // Xcode Unknown usage count
-            document.getElementById('xcodeUnknownCount').textContent = (xcodeUnknownCount || 0).toLocaleString();
+            const xcodeUnknownEl = document.getElementById('xcodeUnknownCount');
+            if (xcodeUnknownEl) {
+                xcodeUnknownEl.textContent = (xcodeUnknownCount || 0).toLocaleString();
+            } else {
+                console.warn('xcodeUnknownCount element not found');
+            }
         }
 
         // Update bar chart
