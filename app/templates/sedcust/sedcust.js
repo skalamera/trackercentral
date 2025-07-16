@@ -17,6 +17,7 @@ module.exports = {
             icon: "fa-pencil-alt",
             fields: [
                 { id: "xcode", type: "text", label: "Xcode", required: true, placeholder: "e.g. X72525", hint: "Enter the XCODE of component where the issue is prevalent." },
+                { id: "xcodeUnknown", type: "checkbox", label: "Xcode Unknown", required: false, hint: "Check this if the Xcode is unknown. When checked, 'Xcode Unknown' will be used in the subject line." },
                 { id: "application", type: "text", label: "Program Name", required: true, placeholder: "e.g. Advance -c2022", hint: "Auto-populates from original ticket." },
                 {
                     id: "version",
@@ -325,8 +326,15 @@ module.exports = {
 
             // Sync XCODE to xcodeInfo if both fields exist
             if (xcodeField && xcodeInfoField) {
-                xcodeInfoField.value = xcodeField.value;
-                console.log("Synced XCODE to Xcode field in user info section");
+                // Check if xcodeUnknown checkbox is checked
+                const xcodeUnknownCheckbox = document.getElementById('xcodeUnknown');
+                if (xcodeUnknownCheckbox && xcodeUnknownCheckbox.checked) {
+                    xcodeInfoField.value = 'Xcode Unknown';
+                    console.log("Synced 'Xcode Unknown' to Xcode field in user info section");
+                } else {
+                    xcodeInfoField.value = xcodeField.value;
+                    console.log("Synced XCODE to Xcode field in user info section");
+                }
             }
 
             // Sync applicationName, resource and path to pathField if the fields exist
@@ -430,6 +438,7 @@ module.exports = {
             requiredFields: ['xcode', 'application', 'resource', 'path', 'specificIssue', 'districtName'],
             fields: {
                 xcode: 'xcode',
+                xcodeUnknown: 'xcodeUnknown',
                 application: 'application',
                 version: 'version',
                 versionState: 'versionState',
@@ -444,7 +453,62 @@ module.exports = {
         });
 
         // Initialize the template (sets up event listeners and formats subject)
-        templateBase.initialize();
+        templateBase.initializeSubjectLineFormatting();
+
+        // Schedule initial subject line update after fields are populated
+        setTimeout(() => templateBase.updateSubjectLine(), 500);
+
+        // Handle Xcode Unknown checkbox functionality
+        const xcodeUnknownCheckbox = document.getElementById('xcodeUnknown');
+
+        if (xcodeField && xcodeUnknownCheckbox) {
+            // Function to toggle xcode field state based on checkbox
+            function toggleXcodeField() {
+                const xcodeLabel = document.querySelector('label[for="xcode"]');
+
+                if (xcodeUnknownCheckbox.checked) {
+                    // Disable field and make it not required
+                    xcodeField.disabled = true;
+                    xcodeField.removeAttribute('required');
+                    xcodeField.style.backgroundColor = '#f5f5f5';
+                    xcodeField.style.color = '#999';
+                    xcodeField.style.cursor = 'not-allowed';
+
+                    // Remove required styling from label
+                    if (xcodeLabel) {
+                        xcodeLabel.classList.remove('required-field');
+                    }
+
+                    console.log("SEDCUST: Xcode field disabled - using 'Xcode Unknown'");
+                } else {
+                    // Enable field and make it required again
+                    xcodeField.disabled = false;
+                    xcodeField.setAttribute('required', 'required');
+                    xcodeField.style.backgroundColor = '';
+                    xcodeField.style.color = '';
+                    xcodeField.style.cursor = '';
+
+                    // Add required styling back to label
+                    if (xcodeLabel) {
+                        xcodeLabel.classList.add('required-field');
+                    }
+
+                    console.log("SEDCUST: Xcode field enabled");
+                }
+
+                // Trigger subject line update and field syncing
+                templateBase.updateSubjectLine();
+                syncFields();
+            }
+
+            // Add event listener to checkbox
+            xcodeUnknownCheckbox.addEventListener('change', toggleXcodeField);
+
+            // Initial state check
+            toggleXcodeField();
+
+            console.log("SEDCUST: Added Xcode Unknown checkbox functionality");
+        }
 
         // Ensure email field is populated before form submission
         function ensureEmailField() {
@@ -495,6 +559,15 @@ module.exports = {
             const requiredFields = ['xcode', 'application', 'resource', 'path', 'specificIssue', 'districtName'];
 
             requiredFields.forEach(fieldName => {
+                // Special case: skip xcode validation if xcodeUnknown is checked
+                if (fieldName === 'xcode') {
+                    const xcodeUnknownCheckbox = document.getElementById('xcodeUnknown');
+                    if (xcodeUnknownCheckbox && xcodeUnknownCheckbox.checked) {
+                        console.log(`SEDCUST: Skipping xcode validation - 'Xcode Unknown' is checked`);
+                        return;
+                    }
+                }
+
                 const field = document.getElementById(fieldName);
                 if (!field) {
                     errors.push(`Field element '${fieldName}' not found in DOM`);

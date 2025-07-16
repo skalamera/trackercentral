@@ -82,6 +82,14 @@ class TemplateBase {
      * Get field value with proper handling for custom inputs
      */
     getFieldValue(fieldName) {
+        // Special handling for xcode - check xcodeUnknown checkbox first
+        if (fieldName === 'xcode') {
+            const xcodeUnknownCheckbox = document.getElementById('xcodeUnknown');
+            if (xcodeUnknownCheckbox && xcodeUnknownCheckbox.checked) {
+                return 'Xcode Unknown';
+            }
+        }
+
         // Special handling for userRole - always check for checkboxes first
         if (fieldName === 'userRole') {
             const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="userRole"]');
@@ -438,7 +446,7 @@ class TemplateBase {
 
     /**
      * Format SEDCUST subject line
-     * Pattern: VIP|Standard District Name • District State | SEDCUST: Application Version State | xcode specific issue
+     * Pattern: xcode | [VIP if applicable] District Name • District State | SEDCUST: Application Version State | specific issue
      */
     formatSEDCUSTSubjectLine() {
         const parts = [];
@@ -458,16 +466,21 @@ class TemplateBase {
             console.log(`[SEDCUST] data-custom-value attribute: "${document.getElementById('versionState')?.getAttribute('data-custom-value')}"`);
         }
 
-        // First part: VIP/Standard District Name • District State
+        // First part: xcode
+        if (xcode) {
+            parts.push(xcode);
+        }
+
+        // Second part: VIP District Name • District State (only add VIP prefix if VIP is true)
         let districtPart = '';
         if (districtName && districtState) {
-            districtPart = isVIP ? `VIP ${districtName} • ${districtState}` : `Standard ${districtName} • ${districtState}`;
+            districtPart = isVIP ? `VIP ${districtName} • ${districtState}` : `${districtName} • ${districtState}`;
         } else if (districtName) {
-            districtPart = isVIP ? `VIP ${districtName}` : `Standard ${districtName}`;
+            districtPart = isVIP ? `VIP ${districtName}` : `${districtName}`;
         }
         if (districtPart) parts.push(districtPart);
 
-        // Second part: SEDCUST: Application Version State
+        // Third part: SEDCUST: Application Version State
         let sedcustPart = 'SEDCUST';
         if (application || version || versionState) {
             sedcustPart += ':';
@@ -479,12 +492,9 @@ class TemplateBase {
         }
         parts.push(sedcustPart);
 
-        // Third part: xcode specific issue
-        const issueParts = [];
-        if (xcode) issueParts.push(xcode);
-        if (specificIssue) issueParts.push(specificIssue);
-        if (issueParts.length > 0) {
-            parts.push(issueParts.join(' '));
+        // Fourth part: specific issue
+        if (specificIssue) {
+            parts.push(specificIssue);
         }
 
         return parts;
@@ -716,6 +726,21 @@ class TemplateBase {
                 }
             });
         }
+    }
+
+    /**
+     * Check if field validation should be skipped based on conditional logic
+     */
+    shouldSkipFieldValidation(fieldName) {
+        // Special case: skip xcode validation if xcodeUnknown checkbox is checked
+        if (fieldName === 'xcode') {
+            const xcodeUnknownCheckbox = document.getElementById('xcodeUnknown');
+            if (xcodeUnknownCheckbox && xcodeUnknownCheckbox.checked) {
+                console.log(`[${this.templateName}] Skipping xcode validation - 'Xcode Unknown' is checked`);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

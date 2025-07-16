@@ -17,6 +17,7 @@ module.exports = {
             icon: "fa-pencil-alt",
             fields: [
                 { id: "xcode", type: "text", label: "Xcode", required: true, hint: "Enter the Xcode of the impacted resource.<br>Ex: X72525", placeholder: "Ex: X72525" },
+                { id: "xcodeUnknown", type: "checkbox", label: "Xcode Unknown", required: false, hint: "Check this if the Xcode is unknown. When checked, 'Xcode Unknown' will be used in the subject line." },
                 { id: "hasMultipleXcodes", type: "select", label: "Multiple Xcodes", required: true, options: ["No", "Yes"], hint: "Select whether more than one Xcode is impacted.<br>Ex: Yes" },
                 { id: "application", type: "text", label: "Program Name", required: true, placeholder: "Ex: Advance -c2022", hint: "Auto-populates from original ticket." },
                 {
@@ -292,6 +293,7 @@ module.exports = {
             requiredFields: ['xcode', 'application', 'specificIssue', 'gradesImpacted', 'districtName', 'districtState'],
             fields: {
                 xcode: 'xcode',
+                xcodeUnknown: 'xcodeUnknown',
                 hasMultipleXcodes: 'hasMultipleXcodes',
                 isVIP: 'isVIP',
                 application: 'application',
@@ -308,7 +310,38 @@ module.exports = {
         // Initialize the template (sets up event listeners and formats subject)
         templateBase.initializeSubjectLineFormatting();
 
+        // Handle Xcode Unknown checkbox functionality
+        const xcodeField = document.getElementById('xcode');
+        const xcodeUnknownCheckbox = document.getElementById('xcodeUnknown');
 
+        if (xcodeField && xcodeUnknownCheckbox) {
+            // Function to toggle xcode field state based on checkbox
+            function toggleXcodeField() {
+                if (xcodeUnknownCheckbox.checked) {
+                    xcodeField.disabled = true;
+                    xcodeField.style.backgroundColor = '#f5f5f5';
+                    xcodeField.style.color = '#999';
+                    xcodeField.style.cursor = 'not-allowed';
+                    console.log("ASSEMBLY: Xcode field disabled - using 'Xcode Unknown'");
+                } else {
+                    xcodeField.disabled = false;
+                    xcodeField.style.backgroundColor = '';
+                    xcodeField.style.color = '';
+                    xcodeField.style.cursor = '';
+                    console.log("ASSEMBLY: Xcode field enabled");
+                }
+                // Trigger subject line update
+                templateBase.updateSubjectLine();
+            }
+
+            // Add event listener to checkbox
+            xcodeUnknownCheckbox.addEventListener('change', toggleXcodeField);
+
+            // Initial state check
+            toggleXcodeField();
+
+            console.log("ASSEMBLY: Added Xcode Unknown checkbox functionality");
+        }
 
         // Schedule initial subject line update after fields are populated
         setTimeout(() => templateBase.updateSubjectLine(), 500);

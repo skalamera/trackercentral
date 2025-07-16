@@ -661,8 +661,8 @@
 
                 html += `<div class="form-group"${initialStyle}>`;
 
-                // Add label if not a richtext editor with empty label
-                if (!(field.type === 'richtext' && field.label === '')) {
+                // Add label if not a richtext editor with empty label and not a checkbox (which has its own label)
+                if (!(field.type === 'richtext' && field.label === '') && field.type !== 'checkbox') {
                     html += `<label for="${field.id}" ${field.required ? 'class="required-field"' : ''}>${field.label}</label>`;
                 }
 
@@ -703,6 +703,15 @@
                             <div class="quill-editor-container">
                                 <div id="${field.id}Editor" style="min-height: 120px;"></div>
                                 <textarea id="${field.id}" name="${field.id}" style="display: none;"></textarea>
+                            </div>
+                        `;
+                        break;
+
+                    case 'checkbox':
+                        html += `
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="${field.id}" name="${field.id}" value="1" class="checkbox-input">
+                                <label for="${field.id}" class="checkbox-label">${field.label}</label>
                             </div>
                         `;
                         break;
