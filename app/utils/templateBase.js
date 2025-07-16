@@ -446,7 +446,7 @@ class TemplateBase {
 
     /**
      * Format SEDCUST subject line
-     * Pattern: xcode | [VIP if applicable] District Name • District State | SEDCUST: Application Version State | specific issue
+     * Pattern: xcode | [VIP if applicable] | District Name • District State | SEDCUST: Application Version State | specific issue
      */
     formatSEDCUSTSubjectLine() {
         const parts = [];
@@ -471,16 +471,21 @@ class TemplateBase {
             parts.push(xcode);
         }
 
-        // Second part: VIP District Name • District State (only add VIP prefix if VIP is true)
+        // Second part: VIP (only if VIP is true)
+        if (isVIP) {
+            parts.push('VIP');
+        }
+
+        // Third part: District Name • District State
         let districtPart = '';
         if (districtName && districtState) {
-            districtPart = isVIP ? `VIP ${districtName} • ${districtState}` : `${districtName} • ${districtState}`;
+            districtPart = `${districtName} • ${districtState}`;
         } else if (districtName) {
-            districtPart = isVIP ? `VIP ${districtName}` : `${districtName}`;
+            districtPart = `${districtName}`;
         }
         if (districtPart) parts.push(districtPart);
 
-        // Third part: SEDCUST: Application Version State
+        // Fourth part: SEDCUST: Application Version State
         let sedcustPart = 'SEDCUST';
         if (application || version || versionState) {
             sedcustPart += ':';
@@ -492,7 +497,7 @@ class TemplateBase {
         }
         parts.push(sedcustPart);
 
-        // Fourth part: specific issue
+        // Fifth part: specific issue
         if (specificIssue) {
             parts.push(specificIssue);
         }
