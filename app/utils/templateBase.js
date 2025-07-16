@@ -446,17 +446,17 @@ class TemplateBase {
 
     /**
      * Format SEDCUST subject line
-     * Pattern: xcode | [VIP if applicable] | District Name • District State | SEDCUST: Application Version State | specific issue
+     * Pattern: Xcode (or Xcode Unknown) | VIP (if VIP Customer is "Yes") | Program Name • Subscription Version State/National | Resource: Path - Specific Issue
      */
     formatSEDCUSTSubjectLine() {
         const parts = [];
         const isVIP = this.getFieldValue('isVIP') === 'Yes';
-        const districtName = this.getFieldValue('districtName');
-        const districtState = this.getFieldValue('districtState');
         const application = this.getFieldValue('application');
         const version = this.getFieldValue('version');
         const versionState = this.getFieldValue('versionState');
         const xcode = this.getFieldValue('xcode');
+        const resource = this.getFieldValue('resource');
+        const path = this.getFieldValue('path');
         const specificIssue = this.getFieldValue('specificIssue');
 
         // Debug logging for versionState
@@ -476,31 +476,34 @@ class TemplateBase {
             parts.push('VIP');
         }
 
-        // Third part: District Name • District State
-        let districtPart = '';
-        if (districtName && districtState) {
-            districtPart = `${districtName} • ${districtState}`;
-        } else if (districtName) {
-            districtPart = `${districtName}`;
-        }
-        if (districtPart) parts.push(districtPart);
+        // Third part: Program Name • Subscription Version State/National
+        let programPart = '';
+        if (application) {
+            programPart = application;
 
-        // Fourth part: SEDCUST: Application Version State
-        let sedcustPart = 'SEDCUST';
-        if (application || version || versionState) {
-            sedcustPart += ':';
-            const appParts = [];
-            if (application) appParts.push(application);
-            if (version) appParts.push(version);
-            if (versionState) appParts.push(versionState);
-            sedcustPart += ' ' + appParts.join(' ');
-        }
-        parts.push(sedcustPart);
+            // Add version and state if available
+            const versionParts = [];
+            if (version) versionParts.push(version);
+            if (versionState) versionParts.push(versionState);
 
-        // Fifth part: specific issue
-        if (specificIssue) {
-            parts.push(specificIssue);
+            if (versionParts.length > 0) {
+                programPart += ` • ${versionParts.join(' ')}`;
+            }
         }
+        if (programPart) parts.push(programPart);
+
+        // Fourth part: Resource: Path - Specific Issue
+        let resourcePart = '';
+        if (resource && path && specificIssue) {
+            resourcePart = `${resource}: ${path} - ${specificIssue}`;
+        } else if (resource && specificIssue) {
+            resourcePart = `${resource} - ${specificIssue}`;
+        } else if (path && specificIssue) {
+            resourcePart = `${path} - ${specificIssue}`;
+        } else if (specificIssue) {
+            resourcePart = specificIssue;
+        }
+        if (resourcePart) parts.push(resourcePart);
 
         return parts;
     }
