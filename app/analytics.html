@@ -588,6 +588,13 @@
                 </div>
                 <p class="stat-card-value" id="activeTemplates">-</p>
             </div>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <i class="fas fa-question-circle stat-card-icon"></i>
+                    <h3 class="stat-card-title">Xcode Unknown Usage</h3>
+                </div>
+                <p class="stat-card-value" id="xcodeUnknownCount">-</p>
+            </div>
         </div>
 
         <!-- Bar Chart -->
@@ -933,7 +940,7 @@
             // Filter out trackers created by sskalamera@benchmarkeducation.com
             const EXCLUDED_EMAIL = 'sskalamera@benchmarkeducation.com';
             console.log('DEBUG ANALYTICS: All tracker data before filtering:', trackers);
-            
+
             const filteredTrackers = trackers.filter(tracker => {
                 console.log(`DEBUG ANALYTICS: Checking tracker - ID: ${tracker.id}, creatorEmail: "${tracker.creatorEmail}", subject: ${tracker.subject}`);
                 const shouldExclude = tracker.creatorEmail === EXCLUDED_EMAIL;
@@ -945,17 +952,19 @@
 
             console.log(`Original trackers: ${trackers.length}, Filtered trackers for analytics: ${filteredTrackers.length}`);
 
-            // Initialize template counts
+            // Initialize template counts and Xcode Unknown counter
             const templateCounts = {};
             Object.keys(TEMPLATE_CONFIG).forEach(template => {
                 templateCounts[template] = 0;
             });
+            let xcodeUnknownCount = 0;
 
-            // Count trackers by template type
+            // Count trackers by template type and Xcode Unknown usage
             filteredTrackers.forEach((tracker, index) => {
                 const templateType = tracker.templateType;
-                console.log(`Processing tracker ${index + 1}: templateType="${templateType}", id="${tracker.id}", subject="${tracker.subject}"`);
+                console.log(`Processing tracker ${index + 1}: templateType="${templateType}", id="${tracker.id}", subject="${tracker.subject}", xcodeUnknown="${tracker.xcodeUnknown}"`);
 
+                // Count template usage
                 if (templateType && templateCounts.hasOwnProperty(templateType)) {
                     templateCounts[templateType]++;
                     console.log(`Incremented ${templateType} count to ${templateCounts[templateType]}`);
@@ -967,6 +976,12 @@
                 } else {
                     console.warn(`Tracker has no templateType:`, tracker);
                 }
+
+                // Count Xcode Unknown usage (only for SEDCUST and Assembly templates)
+                if ((templateType === 'sedcust' || templateType === 'assembly') && tracker.xcodeUnknown === true) {
+                    xcodeUnknownCount++;
+                    console.log(`Incremented Xcode Unknown count to ${xcodeUnknownCount} for tracker ${tracker.id}`);
+                }
             });
 
             console.log(`Final template counts:`, templateCounts);
@@ -974,6 +989,7 @@
             currentData = {
                 templateCounts,
                 totalTickets: filteredTrackers.length,
+                xcodeUnknownCount,
                 timeRange
             };
 
@@ -1053,10 +1069,10 @@
         function updateUI() {
             if (!currentData) return;
 
-            const { templateCounts, totalTickets, timeRange } = currentData;
+            const { templateCounts, totalTickets, xcodeUnknownCount, timeRange } = currentData;
 
             // Update summary statistics
-            updateSummaryStats(templateCounts, totalTickets, timeRange);
+            updateSummaryStats(templateCounts, totalTickets, timeRange, xcodeUnknownCount);
 
             // Update bar chart
             updateBarChart(templateCounts, totalTickets);
@@ -1066,7 +1082,7 @@
         }
 
         // Update summary statistics
-        function updateSummaryStats(templateCounts, totalTickets, timeRange) {
+        function updateSummaryStats(templateCounts, totalTickets, timeRange, xcodeUnknownCount) {
             // Total trackers
             document.getElementById('totalTrackers').textContent = totalTickets.toLocaleString();
 
@@ -1086,6 +1102,9 @@
             // Active templates (templates with at least 1 ticket)
             const activeCount = Object.values(templateCounts).filter(count => count > 0).length;
             document.getElementById('activeTemplates').textContent = activeCount;
+
+            // Xcode Unknown usage count
+            document.getElementById('xcodeUnknownCount').textContent = (xcodeUnknownCount || 0).toLocaleString();
         }
 
         // Update bar chart
@@ -1245,6 +1264,7 @@
             document.getElementById('dailyAverage').textContent = '-';
             document.getElementById('mostUsedTemplate').textContent = '-';
             document.getElementById('activeTemplates').textContent = '-';
+            document.getElementById('xcodeUnknownCount').textContent = '-';
         }
 
         // Show backlog loading state

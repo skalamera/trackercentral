@@ -436,12 +436,33 @@ class TrackerApp {
                     }
 
                     console.log(`Creator email: ${creatorEmail}`);
-                    window.incrementTrackerCount(this.trackerType, ticketData.id, ticketData.subject, creatorEmail);
-                    console.log(`Incremented tracker count for template: ${this.trackerType}, ID: ${ticketData.id}, Subject: ${ticketData.subject}, Creator: ${creatorEmail}`);
+
+                    // Check if Xcode Unknown checkbox is checked (for SEDCUST and Assembly templates)
+                    let xcodeUnknown = false;
+                    if (this.trackerType === 'sedcust' || this.trackerType === 'assembly') {
+                        const xcodeUnknownCheckbox = document.getElementById('xcodeUnknown');
+                        if (xcodeUnknownCheckbox) {
+                            xcodeUnknown = xcodeUnknownCheckbox.checked;
+                            console.log(`Xcode Unknown checkbox state: ${xcodeUnknown}`);
+                        }
+                    }
+
+                    window.incrementTrackerCount(this.trackerType, ticketData.id, ticketData.subject, creatorEmail, xcodeUnknown);
+                    console.log(`Incremented tracker count for template: ${this.trackerType}, ID: ${ticketData.id}, Subject: ${ticketData.subject}, Creator: ${creatorEmail}, Xcode Unknown: ${xcodeUnknown}`);
                 }).catch(error => {
                     console.error('Error getting logged in user:', error);
+
+                    // Check if Xcode Unknown checkbox is checked (for SEDCUST and Assembly templates)
+                    let xcodeUnknown = false;
+                    if (this.trackerType === 'sedcust' || this.trackerType === 'assembly') {
+                        const xcodeUnknownCheckbox = document.getElementById('xcodeUnknown');
+                        if (xcodeUnknownCheckbox) {
+                            xcodeUnknown = xcodeUnknownCheckbox.checked;
+                        }
+                    }
+
                     // Call without email as fallback
-                    window.incrementTrackerCount(this.trackerType, ticketData.id, ticketData.subject, '');
+                    window.incrementTrackerCount(this.trackerType, ticketData.id, ticketData.subject, '', xcodeUnknown);
                 });
             } else {
                 console.warn('incrementTrackerCount function not available');
