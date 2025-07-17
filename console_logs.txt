@@ -1,67 +1,187 @@
-Analytics page initialized successfully
-14:55:15.349 analytics.html:735 Initialized currentTimeRange to: 30
-14:55:15.349 analytics.html:798 Loading analytics data for time range: 30
-14:55:15.350 analytics.html:908 Loading tracker data for the last 30 days
-14:55:15.350 analytics.html:928 🔄 Processing batch 1/3 (days 0-9)
-14:55:15.350 analytics.html:1247 Loading backlogged trackers for the last 30 days
-1414:55:15.490 XHR finished loading: POST "<URL>".
-14:55:15.391 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-1714:55:15.411 XHR failed loading: POST "<URL>".
-14:55:15.392 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:15.394 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:15.398 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:15.398 analytics.html:984 ✅ 2025-07-16: Found 5 trackers
-14:55:15.406 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:15.424 analytics.html:984 ✅ 2025-07-15: Found 5 trackers
-14:55:15.449 analytics.html:984 ✅ 2025-07-08: Found 1 trackers
-14:55:15.449 analytics.html:984 ✅ 2025-07-09: Found 4 trackers
-14:55:15.449 analytics.html:984 ✅ 2025-07-07: Found 2 trackers
-14:55:15.449 analytics.html:955 ✅ Batch 1 completed. Found 17 trackers.
-14:55:15.449 analytics.html:962 ⏱️ Waiting 2000ms before next batch...
-14:55:15.888 analytics.html:1255 Date range backlog API response: {results: Array(14), total: 14}
-14:55:15.889 analytics.html:1277 Found 0 backlogged tracker tickets in the last 30 days
-14:55:15.889 analytics.html:1354 Processing 0 backlogged trackers
-14:55:16.651 heap.js:2 Fetch finished loading: POST "https://c.us.heap-api.com/api/capture/v2/track".
+Time range changed to: 7
+10:02:22.745 analytics.html:1324 Loading analytics data for time range: 7
+10:02:22.745 analytics.html:1466 Loading tracker data for the last 7 days
+10:02:22.745 analytics.html:1486 🔄 Processing batch 1/1 (days 0-6)
+10:02:22.746 analytics.html:1936 Loading backlogged trackers for the last 7 days
+10:02:22.763 analytics.html:1554 ✅ 2025-07-17: Found 2 trackers
+10:02:22.766 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490 XHR finished loading: POST "http://localhost:10001/dprouter?product=freshdesk".
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725
+10:02:22.818 analytics.html:1554 ✅ 2025-07-16: Found 5 trackers
+10:02:22.819 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490 XHR finished loading: POST "http://localhost:10001/dprouter?product=freshdesk".
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725
+10:02:22.819 analytics.html:1554 ✅ 2025-07-15: Found 5 trackers
+10:02:22.819 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725Understand this error
+10:02:22.819 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725Understand this error
+10:02:22.820 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490 XHR finished loading: POST "http://localhost:10001/dprouter?product=freshdesk".
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725
+10:02:22.820 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490 XHR failed loading: POST "http://localhost:10001/dprouter?product=freshdesk".
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725
+10:02:22.820 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490 XHR failed loading: POST "http://localhost:10001/dprouter?product=freshdesk".
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725
+10:02:22.820 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490 XHR failed loading: POST "http://localhost:10001/dprouter?product=freshdesk".
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725
+10:02:22.820 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725Understand this error
+10:02:22.820 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725Understand this error
+10:02:22.820 analytics.html:1513 ✅ Batch 1 completed. Found 12 trackers.
+10:02:22.821 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490 XHR failed loading: POST "http://localhost:10001/dprouter?product=freshdesk".
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25709
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725
+10:02:22.821 analytics.html:1525 📊 Data loading completed:
+10:02:22.821 analytics.html:1526    Total requests: 7
+10:02:22.821 analytics.html:1527    Successful: 7
+10:02:22.821 analytics.html:1528    Rate limited: 0
+10:02:22.821 analytics.html:1529    Total trackers found: 12
+10:02:22.821 analytics.html:1439 ✅ Loading overlay removed
+10:02:22.821 analytics.html:1978 Processing 12 trackers for analytics
+10:02:22.821 analytics.html:1979 Raw tracker data: (12) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+10:02:22.821 analytics.html:1983 DEBUG ANALYTICS: All tracker data before filtering: (12) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: debug-test-1, creatorEmail: "debug@test.com", subject: Debug Test District | SEDCUST Content Issue
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: debug-test-2, creatorEmail: "debug@test.com", subject: Debug Test District | Assembly Content Issue
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: 309950, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Xcode Unknown | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3
+10:02:22.821 analytics.html:1989 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Xcode Unknown | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: 309953, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Xcode Unknown | Benchmark Education Company • VA | SEDCUST: Advance -c2022 2.0 Virginia | Student's Status Not Updating
+10:02:22.821 analytics.html:1989 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Xcode Unknown | Benchmark Education Company • VA | SEDCUST: Advance -c2022 2.0 Virginia | Student's Status Not Updating
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: 309977, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Xcode Unknown | VIP | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating
+10:02:22.821 analytics.html:1989 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Xcode Unknown | VIP | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: 309978, creatorEmail: "jfields@benchmarkeducation.com", subject: Xcode Unknown | VIP | Advance - c2022 • 2.0 New Jersey | High-Frequency Word Videos: G3>U5>W1>L15 - Sample Issue
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: 309979, creatorEmail: "jfields@benchmarkeducation.com", subject: X56723 | VIP | Advance - c2022 • 2.0 New York | Student's Status Not Updating: Grade 3
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: 309742, creatorEmail: "undefined", subject: Benchmark Education Company • VA | Assembly Rollover
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: 309743, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company • VA | Assembly Rollover
+10:02:22.821 analytics.html:1989 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Benchmark Education Company • VA | Assembly Rollover
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: 309760, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company | Assembly Rollover
+10:02:22.821 analytics.html:1989 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Benchmark Education Company | Assembly Rollover
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: 309761, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company | Assembly Rollover
+10:02:22.821 analytics.html:1989 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Benchmark Education Company | Assembly Rollover
+10:02:22.821 analytics.html:1986 DEBUG ANALYTICS: Checking tracker - ID: 309762, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company | Assembly Rollover
+10:02:22.821 analytics.html:1989 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Benchmark Education Company | Assembly Rollover
+10:02:22.821 analytics.html:1994 Original trackers: 12, Filtered trackers for analytics: 5
+10:02:22.821 analytics.html:2010 Processing tracker 1: templateType="sedcust", id="debug-test-1", subject="Debug Test District | SEDCUST Content Issue", xcodeUnknown="false", creatorEmail="debug@test.com"
+10:02:22.821 analytics.html:2015 Incremented sedcust count to 1
+10:02:22.822 analytics.html:2048 Added new agent: debug@test.com (Debug)
+10:02:22.822 analytics.html:2010 Processing tracker 2: templateType="assembly", id="debug-test-2", subject="Debug Test District | Assembly Content Issue", xcodeUnknown="true", creatorEmail="debug@test.com"
+10:02:22.822 analytics.html:2015 Incremented assembly count to 1
+10:02:22.822 analytics.html:2028 Incremented Xcode Unknown count to 1 for tracker debug-test-2
+10:02:22.822 analytics.html:2010 Processing tracker 3: templateType="sedcust", id="309978", subject="Xcode Unknown | VIP | Advance - c2022 • 2.0 New Jersey | High-Frequency Word Videos: G3>U5>W1>L15 - Sample Issue", xcodeUnknown="true", creatorEmail="jfields@benchmarkeducation.com"
+10:02:22.822 analytics.html:2015 Incremented sedcust count to 2
+10:02:22.822 analytics.html:2028 Incremented Xcode Unknown count to 2 for tracker 309978
+10:02:22.822 analytics.html:2048 Added new agent: jfields@benchmarkeducation.com (Jfields)
+10:02:22.822 analytics.html:2010 Processing tracker 4: templateType="assembly", id="309979", subject="X56723 | VIP | Advance - c2022 • 2.0 New York | Student's Status Not Updating: Grade 3", xcodeUnknown="false", creatorEmail="jfields@benchmarkeducation.com"
+10:02:22.822 analytics.html:2015 Incremented assembly count to 2
+10:02:22.822 analytics.html:2010 Processing tracker 5: templateType="assembly-rollover", id="309742", subject="Benchmark Education Company • VA | Assembly Rollover", xcodeUnknown="undefined", creatorEmail="undefined"
+10:02:22.822 analytics.html:2015 Incremented assembly-rollover count to 1
+10:02:22.822 analytics.html:2062 Skipping tracker with invalid creatorEmail: "undefined" (ID: 309742)
+10:02:22.822 analytics.html:2066 Final template counts: {assembly: 2, assembly-rollover: 1, sedcust: 2, sim-assignment: 0, sim-assessment-reports: 0, …}
+10:02:22.822 analytics.html:2067 Final agent data: {debug@test.com: {…}, jfields@benchmarkeducation.com: {…}}
+10:02:22.822 analytics.html:2071 📊 Agent Summary: Found 2 agent(s)
+10:02:22.822 analytics.html:2073    👤 Debug (debug@test.com): 2 trackers
+10:02:22.822 analytics.html:2073    👤 Jfields (jfields@benchmarkeducation.com): 2 trackers
+10:02:22.822 analytics.html:2084 Setting currentData: {templateCounts: {…}, totalTickets: 5, xcodeUnknownCount: 2, timeRange: '7', agentData: {…}}
+10:02:22.823 analytics.html:2507 📊 Agent: Debug, Total: 2, Max: 2, Bar Width: 100%
+10:02:22.823 analytics.html:2523   📈 Template: Assembly, Count: 1, Segment Width: 50%
+10:02:22.823 analytics.html:2523   📈 Template: SEDCUST, Count: 1, Segment Width: 50%
+10:02:22.823 analytics.html:2534   📊 Total segment width: 100%
+10:02:22.823 analytics.html:2507 📊 Agent: Jfields, Total: 2, Max: 2, Bar Width: 100%
+10:02:22.823 analytics.html:2523   📈 Template: Assembly, Count: 1, Segment Width: 50%
+10:02:22.823 analytics.html:2523   📈 Template: SEDCUST, Count: 1, Segment Width: 50%
+10:02:22.823 analytics.html:2534   📊 Total segment width: 100%
+10:02:23.314 vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490 XHR finished loading: POST "http://localhost:10001/dprouter?product=freshdesk".
+send @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:490
+ajax @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:467
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25792
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+ajaxRequest @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25792
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25807
+(anonymous) @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+M @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:4696
+requestTemplateHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25807
+process @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25791
+requestHandler @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25731
+channel.port1.onmessage @ vendor-47704fa9dfdcf3414119a371c1e64a625fd513337109a8341e9d1f973f522c23.js:25725
+10:02:23.315 analytics.html:1944 Date range backlog API response: {results: Array(14), total: 14}
+10:02:23.315 analytics.html:1966 Found 0 backlogged tracker tickets in the last 7 days
+10:02:23.315 analytics.html:2091 Processing 0 backlogged trackers
+10:02:25.456 heap.js:2 Fetch finished loading: POST "https://c.us.heap-api.com/api/capture/v2/track".
 (anonymous) @ heap.js:2
 h @ heap.js:2
 (anonymous) @ heap.js:2
@@ -100,30 +220,6 @@ s @ heap.js:2
 (anonymous) @ heap.js:2
 (anonymous) @ heap.js:2
 (anonymous) @ heap.js:2
-value @ heap.js:2
-ef @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-(anonymous) @ heap.js:2
-setInterval
-Ul @ heap.js:2
-init @ heap.js:2
-fn @ heap_receiver.html:12
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-14:55:16.651 heap.js:2 Fetch finished loading: POST "https://c.us.heap-api.com/api/capture/v2/track".
 (anonymous) @ heap.js:2
 h @ heap.js:2
 (anonymous) @ heap.js:2
@@ -132,18 +228,8 @@ e @ heap.js:2
 s @ heap.js:2
 (anonymous) @ heap.js:2
 (anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
 (anonymous) @ heap.js:2
 h @ heap.js:2
 (anonymous) @ heap.js:2
@@ -161,120 +247,8 @@ e @ heap.js:2
 s @ heap.js:2
 (anonymous) @ heap.js:2
 (anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
+setTimeout
 value @ heap.js:2
-ef @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-(anonymous) @ heap.js:2
-setInterval
-Ul @ heap.js:2
-init @ heap.js:2
-fn @ heap_receiver.html:12
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-14:55:17.452 analytics.html:928 🔄 Processing batch 2/3 (days 10-19)
-14:55:17.477 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:17.477 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:17.480 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:17.492 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:17.494 analytics.html:984 ✅ 2025-07-02: Found 1 trackers
-14:55:17.495 analytics.html:984 ✅ 2025-07-01: Found 2 trackers
-14:55:17.498 analytics.html:984 ✅ 2025-06-30: Found 11 trackers
-14:55:17.501 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:17.505 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:17.507 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:17.508 analytics.html:955 ✅ Batch 2 completed. Found 14 trackers.
-14:55:17.508 analytics.html:962 ⏱️ Waiting 2000ms before next batch...
-14:55:18.666 heap.js:2 Fetch finished loading: POST "https://c.us.heap-api.com/api/capture/v2/track".
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
 (anonymous) @ heap.js:2
 h @ heap.js:2
 (anonymous) @ heap.js:2
@@ -292,516 +266,8 @@ e @ heap.js:2
 s @ heap.js:2
 (anonymous) @ heap.js:2
 (anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
+setTimeout
 value @ heap.js:2
-ef @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-(anonymous) @ heap.js:2
-setInterval
-Ul @ heap.js:2
-init @ heap.js:2
-fn @ heap_receiver.html:12
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-14:55:19.512 analytics.html:928 🔄 Processing batch 3/3 (days 20-29)
-14:55:19.530 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:19.535 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:19.539 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:19.546 analytics.html:984 ✅ 2025-06-23: Found 47 trackers
-14:55:19.547 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:19.551 analytics.html:984 ✅ 2025-06-21: Found 15 trackers
-14:55:19.554 analytics.html:984 ✅ 2025-06-20: Found 10 trackers
-14:55:19.556 analytics.html:984 ✅ 2025-06-19: Found 16 trackers
-14:55:19.561 vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490  POST http://localhost:10001/dprouter?product=freshdesk 404 (Not Found)
-send @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:490
-ajax @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:467
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-(anonymous) @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-M @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:4696
-process @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25709
-requestHandler @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25731
-channel.port1.onmessage @ vendor-392e5c1de4ac2097224cf116550288dc2283a1c4ed7b89a18a2569dd7ed577b8.js:25725Understand this error
-14:55:19.564 analytics.html:984 ✅ 2025-06-17: Found 12 trackers
-14:55:19.564 analytics.html:955 ✅ Batch 3 completed. Found 100 trackers.
-14:55:19.564 analytics.html:967 📊 Data loading completed:
-14:55:19.564 analytics.html:968    Total requests: 30
-14:55:19.564 analytics.html:969    Successful: 30
-14:55:19.564 analytics.html:970    Rate limited: 0
-14:55:19.564 analytics.html:971    Total trackers found: 131
-14:55:19.565 analytics.html:1289 Processing 131 trackers for analytics
-14:55:19.565 analytics.html:1290 Raw tracker data: (131) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, …]
-14:55:19.565 analytics.html:1294 DEBUG ANALYTICS: All tracker data before filtering: (131) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, …]
-14:55:19.565 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 309950, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Xcode Unknown | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3
-14:55:19.565 analytics.html:1300 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Xcode Unknown | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3
-14:55:19.565 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 309953, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Xcode Unknown | Benchmark Education Company • VA | SEDCUST: Advance -c2022 2.0 Virginia | Student's Status Not Updating
-14:55:19.565 analytics.html:1300 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Xcode Unknown | Benchmark Education Company • VA | SEDCUST: Advance -c2022 2.0 Virginia | Student's Status Not Updating
-14:55:19.565 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 309977, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Xcode Unknown | VIP | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating
-14:55:19.565 analytics.html:1300 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Xcode Unknown | VIP | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 309978, creatorEmail: "jfields@benchmarkeducation.com", subject: Xcode Unknown | VIP | Advance - c2022 • 2.0 New Jersey | High-Frequency Word Videos: G3>U5>W1>L15 - Sample Issue
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 309979, creatorEmail: "jfields@benchmarkeducation.com", subject: X56723 | VIP | Advance - c2022 • 2.0 New York | Student's Status Not Updating: Grade 3
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 309742, creatorEmail: "undefined", subject: Benchmark Education Company • VA | Assembly Rollover
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 309743, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company • VA | Assembly Rollover
-14:55:19.566 analytics.html:1300 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Benchmark Education Company • VA | Assembly Rollover
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 309760, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company | Assembly Rollover
-14:55:19.566 analytics.html:1300 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Benchmark Education Company | Assembly Rollover
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 309761, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company | Assembly Rollover
-14:55:19.566 analytics.html:1300 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Benchmark Education Company | Assembly Rollover
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 309762, creatorEmail: "sskalamera@benchmarkeducation.com", subject: Benchmark Education Company | Assembly Rollover
-14:55:19.566 analytics.html:1300 Excluding tracker from analytics created by sskalamera@benchmarkeducation.com: Benchmark Education Company | Assembly Rollover
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308975, creatorEmail: "undefined", subject: X98765 | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308976, creatorEmail: "undefined", subject: X98765 | Advance -c2022 • 2.0 Texas | TRS: G3>U5>W1>L15 - Student's Status Not Updating
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308977, creatorEmail: "undefined", subject: Benchmark Education Company • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308978, creatorEmail: "undefined", subject: Benchmark Education Company | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308894, creatorEmail: "undefined", subject: X98765 | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308781, creatorEmail: "undefined", subject: Benchmark Education Company | Assembly Rollover
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308822, creatorEmail: "undefined", subject: X56723 | VIP | Advance - c2022 • 2.0 Pennsylvania | Articulation Videos: G5>U1>W3 - Symbols Of Our Country Missing
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308578, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308441, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308442, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308334, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308335, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308336, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308337, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308338, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308339, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308340, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308341, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308342, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.566 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308343, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 308354, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307744, creatorEmail: "undefined", subject: VIP | Test Company 1 • MD | Assembly Rollover
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307745, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue for Students
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307747, creatorEmail: "undefined", subject: VIP | Test Company 1 • NY | Assembly Rollover
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307770, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New Jersey | Articulation Videos: G5>U1>W3 - Missing School Folder
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307775, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 Minnesota | Additional Materials Bank: G5>U1>W3 - Missing School Folder
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307866, creatorEmail: "undefined", subject: X98765 | Standard | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307867, creatorEmail: "undefined", subject: X98765 | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307868, creatorEmail: "undefined", subject: Standard Test Company 1 • VA | Assembly Rollover
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307869, creatorEmail: "undefined", subject: X98765 | Standard | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307870, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307871, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307877, creatorEmail: "undefined", subject: VIP* Test Company 1 • VA | Custom Achievement Levels
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307878, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307879, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307880, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307881, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307882, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307883, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307884, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307885, creatorEmail: "undefined", subject: Test Company 1 • VA | DPT • Customized eAssessments - District Admin
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307887, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Bookshelves • Option to Select Whole Class to Share Bookshelves for Students & Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307888, creatorEmail: "undefined", subject: X98765 | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307890, creatorEmail: "undefined", subject: X98765 | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307891, creatorEmail: "undefined", subject: X98765 | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307892, creatorEmail: "undefined", subject: Test Company 1 • VA | Assembly Rollover
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307893, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307894, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307895, creatorEmail: "undefined", subject: VIP* Test Company 1 • VA | Custom Achievement Levels
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307896, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307897, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin
-14:55:19.567 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307898, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307899, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307901, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307902, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307903, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for All Users
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307904, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307905, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307906, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307907, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307908, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307909, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307910, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307911, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for All Users
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307912, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307913, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for All Users
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307914, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307915, creatorEmail: "undefined", subject: Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307714, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Advance c2026 • 2.0 New Jersey | Letter Songs • Title Missing for Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307715, creatorEmail: "undefined", subject: VIP | Test Company 1 • MD | Assembly Rollover
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307716, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Advance c2026 • 2.0 California Advance | ePocket Chart • Title Missing for Students
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307717, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Advance c2026 • 2.6 North Carolina | Dashboard • Sample Issue for Students
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307718, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Advance c2026 • 2.6 California Advance | ePocket Chart • Missing School Folder for All Users
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307719, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Advance c2026 • 2.6 New Jersey | Reading Log • DFSDF for Students
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307720, creatorEmail: "undefined", subject: VIP* Test Company 1 • MD | Advance c2026 • 2.6 Georgia | ePocket Chart • Sample Issue for Students
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307721, creatorEmail: "undefined", subject: VIP* Test Company 1 • MD | Custom Achievement Levels
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307722, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Advance c2026 • 2.0 Florida | Sample Issue for Students
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307723, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Advance c2026 • 2.0 North Carolina | ORR: Reading Level Progress • Missing School Folder for Students
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307724, creatorEmail: "undefined", subject: X56723 | VIP | Advance c2026 • 2.6 California Adelante | Book Club Resources: G5>U1>W3 - Missing School Folder
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307725, creatorEmail: "undefined", subject: X56723 | VIP | Advance c2026 • 2.6 New Jersey | Missing School Folder: SDF
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307726, creatorEmail: "undefined", subject: VIP* Test Company 1 • MD | Custom Achievement Levels
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307727, creatorEmail: "undefined", subject: VIP* Test Company 1 • MD | Custom Achievement Levels
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307728, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Advance c2026 • 2.0 New Jersey | Plan & Teach • Missing School Folder for Students
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307601, creatorEmail: "undefined", subject: VIP | Test Company 1 • MD | Assembly Rollover
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307602, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307603, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307604, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307605, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307606, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307607, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307608, creatorEmail: "undefined", subject: VIP | Test Company 1 • MD | Assembly Rollover
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307609, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307610, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307558, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307559, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue for Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307560, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Advance c2026 • 2.6 Ohio | Missing School Folder for Teachers
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307561, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307562, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307563, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.568 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307564, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307566, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307567, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307568, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307569, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 Arkansas | Additional Materials Bank: G5>U1>W3 - test
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307592, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307593, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307594, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307599, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307600, creatorEmail: "undefined", subject: VIP | Test Company 1 • MD | Assembly Rollover
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307292, creatorEmail: "undefined", subject: VIP | Test Company 1 • MD | Advance c2026 • 2.0 Arkansas | Assignments: • sdfsdfsdf for Students
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307294, creatorEmail: "undefined", subject: VIP | Test Company 1 • MD | Advance c2026 • 2.0 Arkansas | Assignments: • sdfsdfsdf for Teachers
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307296, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307297, creatorEmail: "undefined", subject: X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307298, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue for Students
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307300, creatorEmail: "undefined", subject: VIP | Test Company 1 • MD | Advance c2026 • 2.0 Arkansas | Assignments: • sdfsdfsdf for Admin
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307302, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307305, creatorEmail: "undefined", subject: VIP | Test Company 1 • MD | Advance c2026 • 2.0 Arkansas | Assignments: • sdfsdfsdf for Teachers
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307307, creatorEmail: "undefined", subject: VIP | Test Company 1 • MD | Advance c2026 • 2.0 Arkansas | Assignments: • sdfsdfsdf for Admin
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307308, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue for Admin
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307309, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue for Admin
-14:55:19.569 analytics.html:1297 DEBUG ANALYTICS: Checking tracker - ID: 307310, creatorEmail: "undefined", subject: VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin
-14:55:19.569 analytics.html:1305 Original trackers: 131, Filtered trackers for analytics: 124
-14:55:19.569 analytics.html:1317 Processing tracker 1: templateType="sedcust", id="309978", subject="Xcode Unknown | VIP | Advance - c2022 • 2.0 New Jersey | High-Frequency Word Videos: G3>U5>W1>L15 - Sample Issue", xcodeUnknown="true"
-14:55:19.569 analytics.html:1322 Incremented sedcust count to 1
-14:55:19.569 analytics.html:1335 Incremented Xcode Unknown count to 1 for tracker 309978
-14:55:19.569 analytics.html:1317 Processing tracker 2: templateType="assembly", id="309979", subject="X56723 | VIP | Advance - c2022 • 2.0 New York | Student's Status Not Updating: Grade 3", xcodeUnknown="false"
-14:55:19.569 analytics.html:1322 Incremented assembly count to 1
-14:55:19.569 analytics.html:1317 Processing tracker 3: templateType="assembly-rollover", id="309742", subject="Benchmark Education Company • VA | Assembly Rollover", xcodeUnknown="undefined"
-14:55:19.569 analytics.html:1322 Incremented assembly-rollover count to 1
-14:55:19.569 analytics.html:1317 Processing tracker 4: templateType="assembly", id="308975", subject="X98765 | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3", xcodeUnknown="undefined"
-14:55:19.569 analytics.html:1322 Incremented assembly count to 2
-14:55:19.569 analytics.html:1317 Processing tracker 5: templateType="sedcust", id="308976", subject="X98765 | Advance -c2022 • 2.0 Texas | TRS: G3>U5>W1>L15 - Student's Status Not Updating", xcodeUnknown="undefined"
-14:55:19.569 analytics.html:1322 Incremented sedcust count to 2
-14:55:19.569 analytics.html:1317 Processing tracker 6: templateType="sim-fsa", id="308977", subject="Benchmark Education Company • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.569 analytics.html:1322 Incremented sim-fsa count to 1
-14:55:19.569 analytics.html:1317 Processing tracker 7: templateType="sim-assessment-reports", id="308978", subject="Benchmark Education Company | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.569 analytics.html:1322 Incremented sim-assessment-reports count to 1
-14:55:19.569 analytics.html:1317 Processing tracker 8: templateType="sedcust", id="308894", subject="X98765 | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating", xcodeUnknown="undefined"
-14:55:19.569 analytics.html:1322 Incremented sedcust count to 3
-14:55:19.569 analytics.html:1317 Processing tracker 9: templateType="assembly-rollover", id="308781", subject="Benchmark Education Company | Assembly Rollover", xcodeUnknown="undefined"
-14:55:19.569 analytics.html:1322 Incremented assembly-rollover count to 2
-14:55:19.569 analytics.html:1317 Processing tracker 10: templateType="sedcust", id="308822", subject="X56723 | VIP | Advance - c2022 • 2.0 Pennsylvania | Articulation Videos: G5>U1>W3 - Symbols Of Our Country Missing", xcodeUnknown="undefined"
-14:55:19.569 analytics.html:1322 Incremented sedcust count to 4
-14:55:19.570 analytics.html:1317 Processing tracker 11: templateType="sim-fsa", id="308578", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-fsa count to 2
-14:55:19.570 analytics.html:1317 Processing tracker 12: templateType="sim-fsa", id="308441", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-fsa count to 3
-14:55:19.570 analytics.html:1317 Processing tracker 13: templateType="sim-fsa", id="308442", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-fsa count to 4
-14:55:19.570 analytics.html:1317 Processing tracker 14: templateType="sim-library-view", id="308334", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-library-view count to 1
-14:55:19.570 analytics.html:1317 Processing tracker 15: templateType="sim-assignment", id="308335", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-assignment count to 1
-14:55:19.570 analytics.html:1317 Processing tracker 16: templateType="sim-assignment", id="308336", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-assignment count to 2
-14:55:19.570 analytics.html:1317 Processing tracker 17: templateType="sim-assignment", id="308337", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-assignment count to 3
-14:55:19.570 analytics.html:1317 Processing tracker 18: templateType="sim-assignment", id="308338", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-assignment count to 4
-14:55:19.570 analytics.html:1317 Processing tracker 19: templateType="sim-assessment-reports", id="308339", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-assessment-reports count to 2
-14:55:19.570 analytics.html:1317 Processing tracker 20: templateType="sim-assignment", id="308340", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-assignment count to 5
-14:55:19.570 analytics.html:1317 Processing tracker 21: templateType="sim-reading-log", id="308341", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-reading-log count to 1
-14:55:19.570 analytics.html:1317 Processing tracker 22: templateType="sim-assessment-reports", id="308342", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-assessment-reports count to 3
-14:55:19.570 analytics.html:1317 Processing tracker 23: templateType="sim-fsa", id="308343", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-fsa count to 5
-14:55:19.570 analytics.html:1317 Processing tracker 24: templateType="sim-fsa", id="308354", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-fsa count to 6
-14:55:19.570 analytics.html:1317 Processing tracker 25: templateType="assembly-rollover", id="307744", subject="VIP | Test Company 1 • MD | Assembly Rollover", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented assembly-rollover count to 3
-14:55:19.570 analytics.html:1317 Processing tracker 26: templateType="sim-plan-teach", id="307745", subject="VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue for Students", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-plan-teach count to 1
-14:55:19.570 analytics.html:1317 Processing tracker 27: templateType="assembly-rollover", id="307747", subject="VIP | Test Company 1 • NY | Assembly Rollover", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented assembly-rollover count to 4
-14:55:19.570 analytics.html:1317 Processing tracker 28: templateType="sedcust", id="307770", subject="X56723 | VIP | Bookshelves App • 2.0 New Jersey | Articulation Videos: G5>U1>W3 - Missing School Folder", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sedcust count to 5
-14:55:19.570 analytics.html:1317 Processing tracker 29: templateType="sedcust", id="307775", subject="X56723 | VIP | Bookshelves App • 2.0 Minnesota | Additional Materials Bank: G5>U1>W3 - Missing School Folder", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sedcust count to 6
-14:55:19.570 analytics.html:1317 Processing tracker 30: templateType="assembly", id="307866", subject="X98765 | Standard | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented assembly count to 3
-14:55:19.570 analytics.html:1317 Processing tracker 31: templateType="sedcust", id="307867", subject="X98765 | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sedcust count to 7
-14:55:19.570 analytics.html:1317 Processing tracker 32: templateType="assembly-rollover", id="307868", subject="Standard Test Company 1 • VA | Assembly Rollover", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented assembly-rollover count to 5
-14:55:19.570 analytics.html:1317 Processing tracker 33: templateType="assembly", id="307869", subject="X98765 | Standard | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented assembly count to 4
-14:55:19.570 analytics.html:1317 Processing tracker 34: templateType="sim-assignment", id="307870", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.570 analytics.html:1322 Incremented sim-assignment count to 6
-14:55:19.570 analytics.html:1317 Processing tracker 35: templateType="sim-assessment-reports", id="307871", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-assessment-reports count to 4
-14:55:19.571 analytics.html:1317 Processing tracker 36: templateType="sim-achievement-levels", id="307877", subject="VIP* Test Company 1 • VA | Custom Achievement Levels", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-achievement-levels count to 1
-14:55:19.571 analytics.html:1317 Processing tracker 37: templateType="sim-fsa", id="307878", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-fsa count to 7
-14:55:19.571 analytics.html:1317 Processing tracker 38: templateType="sim-library-view", id="307879", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-library-view count to 2
-14:55:19.571 analytics.html:1317 Processing tracker 39: templateType="sim-orr", id="307880", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-orr count to 1
-14:55:19.571 analytics.html:1317 Processing tracker 40: templateType="sim-plan-teach", id="307881", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-plan-teach count to 2
-14:55:19.571 analytics.html:1317 Processing tracker 41: templateType="sim-reading-log", id="307882", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-reading-log count to 2
-14:55:19.571 analytics.html:1317 Processing tracker 42: templateType="sim-dashboard", id="307883", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-dashboard count to 1
-14:55:19.571 analytics.html:1317 Processing tracker 43: templateType="sim-assignment", id="307884", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-assignment count to 7
-14:55:19.571 analytics.html:1317 Processing tracker 44: templateType="dpt", id="307885", subject="Test Company 1 • VA | DPT • Customized eAssessments - District Admin", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented dpt count to 1
-14:55:19.571 analytics.html:1317 Processing tracker 45: templateType="feature-request", id="307887", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | Bookshelves • Option to Select Whole Class to Share Bookshelves for Students & Teachers", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented feature-request count to 1
-14:55:19.571 analytics.html:1317 Processing tracker 46: templateType="sedcust", id="307888", subject="X98765 | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sedcust count to 8
-14:55:19.571 analytics.html:1317 Processing tracker 47: templateType="sedcust", id="307890", subject="X98765 | Advance -c2022 • 2.0 Virginia | TRS: G3>U5>W1>L15 - Student's Status Not Updating", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sedcust count to 9
-14:55:19.571 analytics.html:1317 Processing tracker 48: templateType="assembly", id="307891", subject="X98765 | Advance -c2022 • 2.0 Virginia | Student's Status Not Updating: Grade 3", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented assembly count to 5
-14:55:19.571 analytics.html:1317 Processing tracker 49: templateType="assembly-rollover", id="307892", subject="Test Company 1 • VA | Assembly Rollover", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented assembly-rollover count to 6
-14:55:19.571 analytics.html:1317 Processing tracker 50: templateType="sim-assignment", id="307893", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-assignment count to 8
-14:55:19.571 analytics.html:1317 Processing tracker 51: templateType="sim-assessment-reports", id="307894", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-assessment-reports count to 5
-14:55:19.571 analytics.html:1317 Processing tracker 52: templateType="sim-achievement-levels", id="307895", subject="VIP* Test Company 1 • VA | Custom Achievement Levels", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-achievement-levels count to 2
-14:55:19.571 analytics.html:1317 Processing tracker 53: templateType="sim-fsa", id="307896", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-fsa count to 8
-14:55:19.571 analytics.html:1317 Processing tracker 54: templateType="sim-library-view", id="307897", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-library-view count to 3
-14:55:19.571 analytics.html:1317 Processing tracker 55: templateType="sim-orr", id="307898", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-orr count to 2
-14:55:19.571 analytics.html:1317 Processing tracker 56: templateType="sim-plan-teach", id="307899", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-plan-teach count to 3
-14:55:19.571 analytics.html:1317 Processing tracker 57: templateType="sim-dashboard", id="307901", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-dashboard count to 2
-14:55:19.571 analytics.html:1317 Processing tracker 58: templateType="sim-dashboard", id="307902", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-dashboard count to 3
-14:55:19.571 analytics.html:1317 Processing tracker 59: templateType="sim-dashboard", id="307903", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for All Users", xcodeUnknown="undefined"
-14:55:19.571 analytics.html:1322 Incremented sim-dashboard count to 4
-14:55:19.571 analytics.html:1317 Processing tracker 60: templateType="sim-dashboard", id="307904", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 5
-14:55:19.572 analytics.html:1317 Processing tracker 61: templateType="sim-dashboard", id="307905", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 6
-14:55:19.572 analytics.html:1317 Processing tracker 62: templateType="sim-dashboard", id="307906", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 7
-14:55:19.572 analytics.html:1317 Processing tracker 63: templateType="sim-dashboard", id="307907", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 8
-14:55:19.572 analytics.html:1317 Processing tracker 64: templateType="sim-dashboard", id="307908", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 9
-14:55:19.572 analytics.html:1317 Processing tracker 65: templateType="sim-dashboard", id="307909", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 10
-14:55:19.572 analytics.html:1317 Processing tracker 66: templateType="sim-dashboard", id="307910", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Teachers & Admin", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 11
-14:55:19.572 analytics.html:1317 Processing tracker 67: templateType="sim-dashboard", id="307911", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for All Users", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 12
-14:55:19.572 analytics.html:1317 Processing tracker 68: templateType="sim-dashboard", id="307912", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 13
-14:55:19.572 analytics.html:1317 Processing tracker 69: templateType="sim-dashboard", id="307913", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for All Users", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 14
-14:55:19.572 analytics.html:1317 Processing tracker 70: templateType="sim-dashboard", id="307914", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 15
-14:55:19.572 analytics.html:1317 Processing tracker 71: templateType="sim-dashboard", id="307915", subject="Test Company 1 • VA | Advance -c2022 • 2.0 Virginia | ORR: Reading History • Student's Status Not Updating for Students & Teachers", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 16
-14:55:19.572 analytics.html:1317 Processing tracker 72: templateType="sim-orr", id="307714", subject="VIP * Test Company 1 • MD | Advance c2026 • 2.0 New Jersey | Letter Songs • Title Missing for Teachers", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-orr count to 3
-14:55:19.572 analytics.html:1317 Processing tracker 73: templateType="assembly-rollover", id="307715", subject="VIP | Test Company 1 • MD | Assembly Rollover", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented assembly-rollover count to 7
-14:55:19.572 analytics.html:1317 Processing tracker 74: templateType="sim-fsa", id="307716", subject="VIP * Test Company 1 • MD | Advance c2026 • 2.0 California Advance | ePocket Chart • Title Missing for Students", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-fsa count to 9
-14:55:19.572 analytics.html:1317 Processing tracker 75: templateType="sim-library-view", id="307717", subject="VIP * Test Company 1 • MD | Advance c2026 • 2.6 North Carolina | Dashboard • Sample Issue for Students", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-library-view count to 4
-14:55:19.572 analytics.html:1317 Processing tracker 76: templateType="sim-plan-teach", id="307718", subject="VIP * Test Company 1 • MD | Advance c2026 • 2.6 California Advance | ePocket Chart • Missing School Folder for All Users", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-plan-teach count to 4
-14:55:19.572 analytics.html:1317 Processing tracker 77: templateType="sim-reading-log", id="307719", subject="VIP * Test Company 1 • MD | Advance c2026 • 2.6 New Jersey | Reading Log • DFSDF for Students", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-reading-log count to 3
-14:55:19.572 analytics.html:1317 Processing tracker 78: templateType="sim-dashboard", id="307720", subject="VIP* Test Company 1 • MD | Advance c2026 • 2.6 Georgia | ePocket Chart • Sample Issue for Students", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-dashboard count to 17
-14:55:19.572 analytics.html:1317 Processing tracker 79: templateType="sim-achievement-levels", id="307721", subject="VIP* Test Company 1 • MD | Custom Achievement Levels", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-achievement-levels count to 3
-14:55:19.572 analytics.html:1317 Processing tracker 80: templateType="sim-assessment-reports", id="307722", subject="VIP * Test Company 1 • MD | Advance c2026 • 2.0 Florida | Sample Issue for Students", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-assessment-reports count to 6
-14:55:19.572 analytics.html:1317 Processing tracker 81: templateType="sim-assignment", id="307723", subject="VIP * Test Company 1 • MD | Advance c2026 • 2.0 North Carolina | ORR: Reading Level Progress • Missing School Folder for Students", xcodeUnknown="undefined"
-14:55:19.572 analytics.html:1322 Incremented sim-assignment count to 9
-14:55:19.572 analytics.html:1317 Processing tracker 82: templateType="sedcust", id="307724", subject="X56723 | VIP | Advance c2026 • 2.6 California Adelante | Book Club Resources: G5>U1>W3 - Missing School Folder", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented sedcust count to 10
-14:55:19.573 analytics.html:1317 Processing tracker 83: templateType="assembly", id="307725", subject="X56723 | VIP | Advance c2026 • 2.6 New Jersey | Missing School Folder: SDF", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented assembly count to 6
-14:55:19.573 analytics.html:1317 Processing tracker 84: templateType="sim-achievement-levels", id="307726", subject="VIP* Test Company 1 • MD | Custom Achievement Levels", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented sim-achievement-levels count to 4
-14:55:19.573 analytics.html:1317 Processing tracker 85: templateType="sim-achievement-levels", id="307727", subject="VIP* Test Company 1 • MD | Custom Achievement Levels", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented sim-achievement-levels count to 5
-14:55:19.573 analytics.html:1317 Processing tracker 86: templateType="sim-plan-teach", id="307728", subject="VIP * Test Company 1 • MD | Advance c2026 • 2.0 New Jersey | Plan & Teach • Missing School Folder for Students", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented sim-plan-teach count to 5
-14:55:19.573 analytics.html:1317 Processing tracker 87: templateType="assembly-rollover", id="307601", subject="VIP | Test Company 1 • MD | Assembly Rollover", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented assembly-rollover count to 8
-14:55:19.573 analytics.html:1317 Processing tracker 88: templateType="sedcust", id="307602", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented sedcust count to 11
-14:55:19.573 analytics.html:1317 Processing tracker 89: templateType="dpt", id="307603", subject="VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented dpt count to 2
-14:55:19.573 analytics.html:1317 Processing tracker 90: templateType="sedcust", id="307604", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented sedcust count to 12
-14:55:19.573 analytics.html:1317 Processing tracker 91: templateType="sedcust", id="307605", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented sedcust count to 13
-14:55:19.573 analytics.html:1317 Processing tracker 92: templateType="dpt", id="307606", subject="VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented dpt count to 3
-14:55:19.573 analytics.html:1317 Processing tracker 93: templateType="sedcust", id="307607", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented sedcust count to 14
-14:55:19.573 analytics.html:1317 Processing tracker 94: templateType="assembly-rollover", id="307608", subject="VIP | Test Company 1 • MD | Assembly Rollover", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented assembly-rollover count to 9
-14:55:19.573 analytics.html:1317 Processing tracker 95: templateType="dpt", id="307609", subject="VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin", xcodeUnknown="undefined"
-14:55:19.573 analytics.html:1322 Incremented dpt count to 4
-14:55:19.574 analytics.html:1317 Processing tracker 96: templateType="sim-plan-teach", id="307610", subject="VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sim-plan-teach count to 6
-14:55:19.574 analytics.html:1317 Processing tracker 97: templateType="sedcust", id="307558", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sedcust count to 15
-14:55:19.574 analytics.html:1317 Processing tracker 98: templateType="sim-plan-teach", id="307559", subject="VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue for Teachers", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sim-plan-teach count to 7
-14:55:19.574 analytics.html:1317 Processing tracker 99: templateType="sim-assessment-reports", id="307560", subject="VIP * Test Company 1 • MD | Advance c2026 • 2.6 Ohio | Missing School Folder for Teachers", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sim-assessment-reports count to 7
-14:55:19.574 analytics.html:1317 Processing tracker 100: templateType="sedcust", id="307561", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sedcust count to 16
-14:55:19.574 analytics.html:1317 Processing tracker 101: templateType="sedcust", id="307562", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sedcust count to 17
-14:55:19.574 analytics.html:1317 Processing tracker 102: templateType="sedcust", id="307563", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sedcust count to 18
-14:55:19.574 analytics.html:1317 Processing tracker 103: templateType="sedcust", id="307564", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sedcust count to 19
-14:55:19.574 analytics.html:1317 Processing tracker 104: templateType="sedcust", id="307566", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sedcust count to 20
-14:55:19.574 analytics.html:1317 Processing tracker 105: templateType="sedcust", id="307567", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sedcust count to 21
-14:55:19.574 analytics.html:1317 Processing tracker 106: templateType="sedcust", id="307568", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sedcust count to 22
-14:55:19.574 analytics.html:1317 Processing tracker 107: templateType="sedcust", id="307569", subject="X56723 | VIP | Bookshelves App • 2.0 Arkansas | Additional Materials Bank: G5>U1>W3 - test", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented sedcust count to 23
-14:55:19.574 analytics.html:1317 Processing tracker 108: templateType="dpt", id="307592", subject="VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin", xcodeUnknown="undefined"
-14:55:19.574 analytics.html:1322 Incremented dpt count to 5
-14:55:19.574 analytics.html:1317 Processing tracker 109: templateType="dpt", id="307593", subject="VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented dpt count to 6
-14:55:19.575 analytics.html:1317 Processing tracker 110: templateType="dpt", id="307594", subject="VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented dpt count to 7
-14:55:19.575 analytics.html:1317 Processing tracker 111: templateType="sedcust", id="307599", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented sedcust count to 24
-14:55:19.575 analytics.html:1317 Processing tracker 112: templateType="assembly-rollover", id="307600", subject="VIP | Test Company 1 • MD | Assembly Rollover", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented assembly-rollover count to 10
-14:55:19.575 analytics.html:1317 Processing tracker 113: templateType="feature-request", id="307292", subject="VIP | Test Company 1 • MD | Advance c2026 • 2.0 Arkansas | Assignments: • sdfsdfsdf for Students", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented feature-request count to 2
-14:55:19.575 analytics.html:1317 Processing tracker 114: templateType="feature-request", id="307294", subject="VIP | Test Company 1 • MD | Advance c2026 • 2.0 Arkansas | Assignments: • sdfsdfsdf for Teachers", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented feature-request count to 3
-14:55:19.575 analytics.html:1317 Processing tracker 115: templateType="sedcust", id="307296", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented sedcust count to 25
-14:55:19.575 analytics.html:1317 Processing tracker 116: templateType="sedcust", id="307297", subject="X56723 | VIP | Bookshelves App • 2.0 New York | ePocket Charts: G5>U1>W3 - Title Missing", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented sedcust count to 26
-14:55:19.575 analytics.html:1317 Processing tracker 117: templateType="sim-plan-teach", id="307298", subject="VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue for Students", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented sim-plan-teach count to 8
-14:55:19.575 analytics.html:1317 Processing tracker 118: templateType="feature-request", id="307300", subject="VIP | Test Company 1 • MD | Advance c2026 • 2.0 Arkansas | Assignments: • sdfsdfsdf for Admin", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented feature-request count to 4
-14:55:19.575 analytics.html:1317 Processing tracker 119: templateType="dpt", id="307302", subject="VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented dpt count to 8
-14:55:19.575 analytics.html:1317 Processing tracker 120: templateType="feature-request", id="307305", subject="VIP | Test Company 1 • MD | Advance c2026 • 2.0 Arkansas | Assignments: • sdfsdfsdf for Teachers", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented feature-request count to 5
-14:55:19.575 analytics.html:1317 Processing tracker 121: templateType="feature-request", id="307307", subject="VIP | Test Company 1 • MD | Advance c2026 • 2.0 Arkansas | Assignments: • sdfsdfsdf for Admin", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented feature-request count to 6
-14:55:19.575 analytics.html:1317 Processing tracker 122: templateType="sim-plan-teach", id="307308", subject="VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue for Admin", xcodeUnknown="undefined"
-14:55:19.575 analytics.html:1322 Incremented sim-plan-teach count to 9
-14:55:19.576 analytics.html:1317 Processing tracker 123: templateType="sim-plan-teach", id="307309", subject="VIP * Test Company 1 • MD | Bookshelves App • Other New York | Plan & Teach • Sample Issue for Admin", xcodeUnknown="undefined"
-14:55:19.576 analytics.html:1322 Incremented sim-plan-teach count to 10
-14:55:19.576 analytics.html:1317 Processing tracker 124: templateType="dpt", id="307310", subject="VIP * Test Company 1 • MD | DPT (Customized eAssessments) - District Admin", xcodeUnknown="undefined"
-14:55:19.576 analytics.html:1322 Incremented dpt count to 9
-14:55:19.576 analytics.html:1339 Final template counts: {assembly: 6, assembly-rollover: 10, sedcust: 26, sim-assignment: 9, sim-assessment-reports: 7, …}
-14:55:19.576 analytics.html:1348 Setting currentData: {templateCounts: {…}, totalTickets: 124, xcodeUnknownCount: 1, timeRange: '30'}
-14:55:19.577 analytics.html:1439 Uncaught (in promise) TypeError: Cannot set properties of null (setting 'textContent')
-    at updateSummaryStats (analytics.html:1439:66)
-    at updateUI (analytics.html:1427:13)
-    at processAnalyticsData (analytics.html:1349:13)
-    at loadDateRangeTrackers (analytics.html:973:13)
-updateSummaryStats @ analytics.html:1439
-updateUI @ analytics.html:1427
-processAnalyticsData @ analytics.html:1349
-loadDateRangeTrackers @ analytics.html:973
-await in loadDateRangeTrackers
-loadAnalyticsData @ analytics.html:813
-(anonymous) @ analytics.html:695
-Promise.then
-renderApp @ analytics.html:684
-document.onreadystatechange @ analytics.html:679Understand this error
-14:55:20.681 heap.js:2 Fetch finished loading: POST "https://c.us.heap-api.com/api/capture/v2/track".
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-h @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-e @ heap.js:2
-s @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
 (anonymous) @ heap.js:2
 h @ heap.js:2
 (anonymous) @ heap.js:2
@@ -819,39 +285,25 @@ e @ heap.js:2
 s @ heap.js:2
 (anonymous) @ heap.js:2
 (anonymous) @ heap.js:2
-(anonymous) @ heap.js:2
-value @ heap.js:2
-ef @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
-value @ heap.js:2
+setTimeout
 value @ heap.js:2
 (anonymous) @ heap.js:2
-setInterval
-Ul @ heap.js:2
-init @ heap.js:2
-fn @ heap_receiver.html:12
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
 (anonymous) @ heap.js:2
 (anonymous) @ heap.js:2
 (anonymous) @ heap.js:2
 (anonymous) @ heap.js:2
-14:55:37.103 4943.js:2 XHR finished loading: POST "https://wchat.freshchat.com/app/services/app/webchat/f85a28ef-098f-45e1-93a5-105bf9f31903/user/2df387db-c340-4515-8299-c2c553b6ce3f/heartbeat?widgetInfoTraceId=0f4c7c29-0017-4db4-a759-66341b796255".
-(anonymous) @ 4943.js:2
-e.exports @ 4943.js:2
-e.exports @ 4943.js:2
-Promise.then
-l.request @ 4943.js:2
-(anonymous) @ 4943.js:2
-value @ fd-messaging.ef018dfb8806d36103e8.js:1
-send @ action_support.js:22
-n @ index.js:446
-value @ fd-messaging.ef018dfb8806d36103e8.js:1
-14:55:40.780 4943.js:2 XHR finished loading: POST "
+h @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+e @ heap.js:2
+s @ heap.js:2
+(anonymous) @ heap.js:2
+(anonymous) @ heap.js:2
+setTimeout
+value @ heap.js:2
+(anonymous) @ heap.js:2

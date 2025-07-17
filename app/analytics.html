@@ -539,6 +539,445 @@
         .tooltip.show {
             opacity: 1;
         }
+
+        /* Agent Metrics Styles */
+
+        .agent-metrics-grid {
+            margin-top: 20px;
+        }
+
+        .agent-bar-chart {
+            width: 100%;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        .agent-bar-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .agent-bar-row:last-child {
+            border-bottom: none;
+        }
+
+        .agent-bar-label {
+            width: 200px;
+            font-size: 0.9em;
+            color: var(--text-color);
+            font-weight: 500;
+            padding-right: 15px;
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .agent-bar-container {
+            flex: 1;
+            height: 30px;
+            background-color: var(--bg-color);
+            border-radius: 15px;
+            position: relative;
+            margin-right: 15px;
+            overflow: hidden;
+        }
+
+        .agent-bar-fill {
+            height: 100%;
+            border-radius: 15px;
+            transition: width 0.8s ease-in-out;
+            position: relative;
+        }
+
+        /* Agent-specific colors */
+        .agent-bar-0 {
+            background: linear-gradient(90deg, #3498db, #5dade2);
+        }
+
+        .agent-bar-1 {
+            background: linear-gradient(90deg, #4caf50, #66bb6a);
+        }
+
+        .agent-bar-2 {
+            background: linear-gradient(90deg, #ff9800, #ffb74d);
+        }
+
+        .agent-bar-3 {
+            background: linear-gradient(90deg, #9c27b0, #ba68c8);
+        }
+
+        .agent-bar-4 {
+            background: linear-gradient(90deg, #f44336, #ef5350);
+        }
+
+        .agent-bar-5 {
+            background: linear-gradient(90deg, #00bcd4, #4dd0e1);
+        }
+
+        .agent-bar-6 {
+            background: linear-gradient(90deg, #795548, #a1887f);
+        }
+
+        .agent-bar-7 {
+            background: linear-gradient(90deg, #607d8b, #90a4ae);
+        }
+
+        .agent-bar-8 {
+            background: linear-gradient(90deg, #e91e63, #f06292);
+        }
+
+        .agent-bar-9 {
+            background: linear-gradient(90deg, #8bc34a, #aed581);
+        }
+
+        .agent-bar-value {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .agent-bar-count {
+            width: 60px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.9em;
+        }
+
+        /* Template segment colors - using existing template colors */
+        .segment-assembly {
+            background: linear-gradient(90deg, #e74c3c, #f39c12) !important;
+        }
+
+        .segment-assembly-rollover {
+            background: linear-gradient(90deg, #c0392b, #e67e22) !important;
+        }
+
+        .segment-sedcust {
+            background: linear-gradient(90deg, #9b59b6, #8e44ad) !important;
+        }
+
+        .segment-sim-assignment {
+            background: linear-gradient(90deg, #3498db, #5dade2) !important;
+        }
+
+        .segment-sim-assessment-reports {
+            background: linear-gradient(90deg, #2980b9, #3498db) !important;
+        }
+
+        .segment-sim-achievement-levels {
+            background: linear-gradient(90deg, #1abc9c, #48c9b0) !important;
+        }
+
+        .segment-sim-fsa {
+            background: linear-gradient(90deg, #16a085, #1abc9c) !important;
+        }
+
+        .segment-sim-library-view {
+            background: linear-gradient(90deg, #4caf50, #66bb6a) !important;
+        }
+
+        .segment-sim-orr {
+            background: linear-gradient(90deg, #4caf50, #81c784) !important;
+        }
+
+        .segment-sim-plan-teach {
+            background: linear-gradient(90deg, #f39c12, #f4d03f) !important;
+        }
+
+        .segment-sim-reading-log {
+            background: linear-gradient(90deg, #e67e22, #f8c471) !important;
+        }
+
+        .segment-sim-dashboard {
+            background: linear-gradient(90deg, #d35400, #e74c3c) !important;
+        }
+
+        .segment-feature-request {
+            background: linear-gradient(90deg, #8e44ad, #af7ac5) !important;
+        }
+
+        .segment-dpt {
+            background: linear-gradient(90deg, #34495e, #566573) !important;
+        }
+
+        .segment-timeout-extension {
+            background: linear-gradient(90deg, #7f8c8d, #95a5a6) !important;
+        }
+
+        .segment-help-article {
+            background: linear-gradient(90deg, #2c3e50, #34495e) !important;
+        }
+
+        /* Agent bar legend */
+        .agent-bar-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .agent-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85em;
+        }
+
+        .agent-legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+
+        .agent-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px var(--shadow-color);
+        }
+
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4caf50, #2196f3, #9c27b0);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .agent-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .agent-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .agent-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .agent-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--heading-color);
+            margin: 0 0 4px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .agent-email {
+            font-size: 0.85em;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .agent-total {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .agent-total-count {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4caf50;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .agent-total-label {
+            font-size: 0.75em;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin: 2px 0 0 0;
+        }
+
+        .template-breakdown {
+            margin-top: 16px;
+        }
+
+        .template-breakdown-title {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .template-breakdown-title i {
+            color: #2196f3;
+        }
+
+        .template-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .template-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, var(--tag-bg, #f8f9fa) 0%, var(--tag-bg-light, #e9ecef) 100%);
+            color: var(--tag-text, #495057);
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+            border: 1px solid var(--tag-border, #dee2e6);
+            transition: all 0.2s ease;
+        }
+
+        .template-tag:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .template-tag-count {
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--tag-text, #495057);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Template-specific tag colors */
+        .template-tag.tag-assembly {
+            --tag-bg: #ffebee;
+            --tag-bg-light: #ffcdd2;
+            --tag-text: #c62828;
+            --tag-border: #ef9a9a;
+        }
+
+        .template-tag.tag-assembly-rollover {
+            --tag-bg: #fff3e0;
+            --tag-bg-light: #ffe0b2;
+            --tag-text: #ef6c00;
+            --tag-border: #ffcc02;
+        }
+
+        .template-tag.tag-sedcust {
+            --tag-bg: #f3e5f5;
+            --tag-bg-light: #e1bee7;
+            --tag-text: #7b1fa2;
+            --tag-border: #ce93d8;
+        }
+
+        .template-tag.tag-sim-assignment,
+        .template-tag.tag-sim-assessment-reports,
+        .template-tag.tag-sim-achievement-levels,
+        .template-tag.tag-sim-fsa,
+        .template-tag.tag-sim-library-view,
+        .template-tag.tag-sim-orr,
+        .template-tag.tag-sim-plan-teach,
+        .template-tag.tag-sim-reading-log,
+        .template-tag.tag-sim-dashboard {
+            --tag-bg: #e3f2fd;
+            --tag-bg-light: #bbdefb;
+            --tag-text: #1565c0;
+            --tag-border: #90caf9;
+        }
+
+        .template-tag.tag-feature-request {
+            --tag-bg: #f3e5f5;
+            --tag-bg-light: #e1bee7;
+            --tag-text: #7b1fa2;
+            --tag-border: #ce93d8;
+        }
+
+        .template-tag.tag-dpt,
+        .template-tag.tag-timeout-extension,
+        .template-tag.tag-help-article {
+            --tag-bg: #fafafa;
+            --tag-bg-light: #f5f5f5;
+            --tag-text: #424242;
+            --tag-border: #bdbdbd;
+        }
+
+        .no-agents-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-color);
+            opacity: 0.6;
+        }
+
+        .no-agents-message i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+            color: #2196f3;
+        }
+
+        /* Responsive design for agent bars */
+        @media (max-width: 768px) {
+            .agent-bar-label {
+                width: 120px;
+                font-size: 0.8em;
+            }
+        }
     </style>
 </head>
 
@@ -565,15 +1004,15 @@
                     <label for="timeRange">Time Range:</label>
                     <select id="timeRange">
                         <option value="today">Today</option>
-                        <option value="7">Last 7 days</option>
+                        <option value="7" selected>Last 7 days</option>
                         <option value="14">Last 14 days</option>
-                        <option value="30" selected>Last 30 days</option>
+                        <option value="30">Last 30 days</option>
                         <option value="90">Last 90 days</option>
                         <option value="180">Last 180 days</option>
                         <option value="365">Last 365 days</option>
                     </select>
                 </div>
-                <div class="debug-controls">
+                <div class="debug-controls" style="display: none;">
                     <button onclick="checkStorageHealth()" class="btn" title="Check storage health">
                         🔍 Storage Check
                     </button>
@@ -657,14 +1096,36 @@
         <div class="chart-container">
             <div class="chart-header">
                 <div>
-                    <h2 class="chart-title">Backlogged Trackers Over Time</h2>
-                    <p class="chart-subtitle" id="backlogChartSubtitle">Trackers in backlog status</p>
+                    <h2 class="chart-title">Current Backlogged Trackers</h2>
+                    <p class="chart-subtitle" id="backlogChartSubtitle">Trackers currently in backlog status</p>
                 </div>
             </div>
             <div class="bar-chart" id="backlogChart">
                 <div class="loading-container">
                     <div class="loading-spinner"></div>
                     <p>Loading backlog data...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agent Metrics Section -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <div>
+                    <h2 class="chart-title">Agent Performance Metrics</h2>
+                    <p class="chart-subtitle" id="agentChartSubtitle">Tracker creation by agent
+                    </p>
+                </div>
+            </div>
+            <div class="agent-metrics-grid" id="agentMetricsGrid">
+                <div class="agent-bar-chart" id="agentBarChart">
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <p>Loading agent metrics...</p>
+                    </div>
+                </div>
+                <div class="agent-bar-legend" id="agentBarLegend" style="display: none;">
+                    <!-- Legend will be populated dynamically -->
                 </div>
             </div>
         </div>
@@ -725,7 +1186,7 @@
         };
 
         let currentData = null;
-        let currentTimeRange = '30';
+        let currentTimeRange = '7';
 
         // Initialize currentTimeRange from DOM on page load
         function initializeTimeRange() {
@@ -784,6 +1245,15 @@
                     currentTimeRange = this.value;
                     console.log(`Time range changed to: ${currentTimeRange}`);
                     loadAnalyticsData();
+                });
+            }
+
+            // Agent sort selector
+            const agentSortSelect = document.getElementById('agentSort');
+            if (agentSortSelect) {
+                agentSortSelect.addEventListener('change', function () {
+                    console.log(`Agent sort changed to: ${this.value}`);
+                    updateAgentMetrics(); // Re-sort and update agent display
                 });
             }
         }
@@ -1240,12 +1710,131 @@
                 });
         }
 
+        // Function to examine trackers from a specific date
+        function examineTrackersFromDate(daysAgo = 1) {
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() - daysAgo);
+            const dateString = getDateString(targetDate);
+            const storageKey = `tracker-details-${dateString}`;
+
+            console.log(`🔍 Examining trackers from ${dateString} (${daysAgo} days ago)`);
+            console.log(`Storage key: ${storageKey}`);
+
+            return client.db.get(storageKey)
+                .then(function (data) {
+                    const trackers = data?.trackers || [];
+                    console.log(`📊 Found ${trackers.length} trackers for ${dateString}`);
+
+                    if (trackers.length === 0) {
+                        console.log('❌ No trackers found for this date');
+                        return;
+                    }
+
+                    // Analyze creatorEmail values
+                    const emailCounts = {};
+                    const emailSamples = {};
+
+                    trackers.forEach((tracker, index) => {
+                        const email = tracker.creatorEmail;
+
+                        // Count occurrences
+                        emailCounts[email] = (emailCounts[email] || 0) + 1;
+
+                        // Store sample tracker for each email
+                        if (!emailSamples[email]) {
+                            emailSamples[email] = {
+                                id: tracker.id,
+                                subject: tracker.subject,
+                                templateType: tracker.templateType,
+                                timestamp: tracker.timestamp
+                            };
+                        }
+                    });
+
+                    console.log('\n📧 EMAIL ANALYSIS:');
+                    console.log('==================');
+
+                    Object.entries(emailCounts)
+                        .sort(([, a], [, b]) => b - a)
+                        .forEach(([email, count]) => {
+                            const sample = emailSamples[email];
+                            console.log(`\n📌 Email: "${email}"`);
+                            console.log(`   Count: ${count} trackers`);
+                            console.log(`   Sample ID: ${sample.id}`);
+                            console.log(`   Sample Subject: ${sample.subject}`);
+                            console.log(`   Template: ${sample.templateType}`);
+                        });
+
+                    console.log('\n🔍 RAW TRACKER DATA:');
+                    console.log('====================');
+                    trackers.slice(0, 5).forEach((tracker, index) => {
+                        console.log(`\nTracker ${index + 1}:`, {
+                            id: tracker.id,
+                            creatorEmail: tracker.creatorEmail,
+                            subject: tracker.subject?.substring(0, 60) + '...',
+                            templateType: tracker.templateType,
+                            timestamp: tracker.timestamp
+                        });
+                    });
+
+                    if (trackers.length > 5) {
+                        console.log(`\n... and ${trackers.length - 5} more trackers`);
+                    }
+
+                    return {
+                        date: dateString,
+                        totalTrackers: trackers.length,
+                        emailCounts,
+                        trackers: trackers
+                    };
+                })
+                .catch(function (error) {
+                    console.log(`❌ No data found for ${dateString}:`, error.message);
+                    return null;
+                });
+        }
+
+        // Function to examine multiple recent dates
+        function examineRecentTrackers(days = 7) {
+            console.log(`🔍 Examining trackers from the last ${days} days`);
+
+            const promises = [];
+            for (let i = 1; i <= days; i++) {
+                promises.push(examineTrackersFromDate(i));
+            }
+
+            return Promise.all(promises).then(results => {
+                console.log('\n📊 SUMMARY ACROSS DATES:');
+                console.log('=========================');
+
+                const allEmails = new Set();
+                let totalTrackers = 0;
+
+                results.forEach(result => {
+                    if (result) {
+                        totalTrackers += result.totalTrackers;
+                        Object.keys(result.emailCounts).forEach(email => allEmails.add(email));
+                        console.log(`${result.date}: ${result.totalTrackers} trackers, ${Object.keys(result.emailCounts).length} unique emails`);
+                    }
+                });
+
+                console.log(`\n📈 TOTALS:`);
+                console.log(`   Total Trackers: ${totalTrackers}`);
+                console.log(`   Unique Emails: ${allEmails.size}`);
+                console.log(`   Unique Emails List:`, Array.from(allEmails));
+
+                return results;
+            });
+        }
+
         // Make functions globally available for debugging
         window.checkStorageHealth = checkStorageHealth;
         window.validateStorageData = validateStorageData;
         window.createTestTrackerData = createTestTrackerData;
+        window.examineTrackersFromDate = examineTrackersFromDate;
+        window.examineRecentTrackers = examineRecentTrackers;
 
-        // Load today's backlogged trackers
+        // Load current backlogged trackers (same as date range - always shows current total)
         function loadTodayBackloggedTrackers() {
             if (!window.client) {
                 console.warn("Client not available for loading backlogged trackers");
@@ -1253,13 +1842,15 @@
                 return;
             }
 
+            console.log(`Loading current backlogged trackers (ignoring time range)`);
+
             client.request.invokeTemplate("getTicketsByFilter", {
                 context: {
                     filter: `tag:tracker AND status:27`
                 }
             }).then(function (response) {
                 const data = JSON.parse(response.response);
-                console.log("Today's backlog API response:", data);
+                console.log("Current backlog API response:", data);
 
                 // Handle different response formats
                 let tickets = [];
@@ -1271,15 +1862,15 @@
                     tickets = data;
                 }
 
-                console.log(`Found ${tickets.length} backlogged tracker tickets today`);
+                console.log(`Found ${tickets.length} currently backlogged tracker tickets`);
                 processBacklogData(tickets, 'today');
             }).catch(function (error) {
-                console.error("Error loading today's backlogged trackers:", error);
+                console.error("Error loading current backlogged trackers:", error);
                 processBacklogData([], 'today');
             });
         }
 
-        // Load backlogged trackers for a date range
+        // Load current backlogged trackers (always shows total regardless of time range)
         function loadDateRangeBackloggedTrackers(timeRange) {
             if (!window.client) {
                 console.warn("Client not available for loading backlogged trackers");
@@ -1287,8 +1878,7 @@
                 return;
             }
 
-            const days = parseInt(timeRange);
-            console.log(`Loading backlogged trackers for the last ${days} days`);
+            console.log(`Loading current backlogged trackers (ignoring time range)`);
 
             client.request.invokeTemplate("getTicketsByFilter", {
                 context: {
@@ -1296,7 +1886,7 @@
                 }
             }).then(function (response) {
                 const data = JSON.parse(response.response);
-                console.log("Date range backlog API response:", data);
+                console.log("Current backlog API response:", data);
 
                 // Handle different response formats
                 let tickets = [];
@@ -1308,20 +1898,10 @@
                     tickets = data;
                 }
 
-                // Filter tickets within the date range
-                const cutoffDate = new Date();
-                cutoffDate.setDate(cutoffDate.getDate() - days);
-
-                const filteredTickets = tickets.filter(ticket => {
-                    if (!ticket.created_at) return false;
-                    const ticketDate = new Date(ticket.created_at);
-                    return ticketDate >= cutoffDate;
-                });
-
-                console.log(`Found ${filteredTickets.length} backlogged tracker tickets in the last ${days} days`);
-                processBacklogData(filteredTickets, timeRange);
+                console.log(`Found ${tickets.length} currently backlogged tracker tickets`);
+                processBacklogData(tickets, timeRange);
             }).catch(function (error) {
-                console.error("Error loading date range backlogged trackers:", error);
+                console.error("Error loading current backlogged trackers:", error);
                 processBacklogData([], timeRange);
             });
         }
@@ -1355,10 +1935,14 @@
             });
             let xcodeUnknownCount = 0;
 
-            // Count trackers by template type and Xcode Unknown usage
+            // Initialize agent data
+            const agentData = {};
+
+            // Count trackers by template type, Xcode Unknown usage, and agent
             filteredTrackers.forEach((tracker, index) => {
                 const templateType = tracker.templateType;
-                console.log(`Processing tracker ${index + 1}: templateType="${templateType}", id="${tracker.id}", subject="${tracker.subject}", xcodeUnknown="${tracker.xcodeUnknown}"`);
+                const creatorEmail = tracker.creatorEmail;
+                console.log(`Processing tracker ${index + 1}: templateType="${templateType}", id="${tracker.id}", subject="${tracker.subject}", xcodeUnknown="${tracker.xcodeUnknown}", creatorEmail="${creatorEmail}"`);
 
                 // Count template usage
                 if (templateType && templateCounts.hasOwnProperty(templateType)) {
@@ -1378,19 +1962,63 @@
                     xcodeUnknownCount++;
                     console.log(`Incremented Xcode Unknown count to ${xcodeUnknownCount} for tracker ${tracker.id}`);
                 }
+
+                // Count trackers by agent (only for valid emails)
+                if (creatorEmail &&
+                    creatorEmail !== "undefined" &&
+                    creatorEmail !== null &&
+                    creatorEmail.includes('@')) {
+
+                    if (!agentData[creatorEmail]) {
+                        agentData[creatorEmail] = {
+                            email: creatorEmail,
+                            name: extractNameFromEmail(creatorEmail),
+                            totalTrackers: 0,
+                            templateCounts: {}
+                        };
+                        // Initialize template counts for this agent
+                        Object.keys(TEMPLATE_CONFIG).forEach(template => {
+                            agentData[creatorEmail].templateCounts[template] = 0;
+                        });
+                        console.log(`Added new agent: ${creatorEmail} (${agentData[creatorEmail].name})`);
+                    }
+
+                    agentData[creatorEmail].totalTrackers++;
+
+                    if (templateType && agentData[creatorEmail].templateCounts.hasOwnProperty(templateType)) {
+                        agentData[creatorEmail].templateCounts[templateType]++;
+                    } else if (templateType) {
+                        // Handle unknown template types for agents too
+                        agentData[creatorEmail].templateCounts[templateType] =
+                            agentData[creatorEmail].templateCounts[templateType] ?
+                                agentData[creatorEmail].templateCounts[templateType] + 1 : 1;
+                    }
+                } else {
+                    console.log(`Skipping tracker with invalid creatorEmail: "${creatorEmail}" (ID: ${tracker.id})`);
+                }
             });
 
             console.log(`Final template counts:`, templateCounts);
+            console.log(`Final agent data:`, agentData);
+
+            // Debug agent information
+            const agentCount = Object.keys(agentData).length;
+            console.log(`📊 Agent Summary: Found ${agentCount} agent(s)`);
+            Object.entries(agentData).forEach(([email, data]) => {
+                console.log(`   👤 ${data.name} (${email}): ${data.totalTrackers} trackers`);
+            });
 
             currentData = {
                 templateCounts,
                 totalTickets: filteredTrackers.length,
                 xcodeUnknownCount,
-                timeRange
+                timeRange,
+                agentData
             };
 
             console.log(`Setting currentData:`, currentData);
             updateUI();
+            updateAgentMetrics();
         }
 
         // Process backlog data and update the backlog chart
@@ -1622,13 +2250,9 @@
             const backlogChart = document.getElementById('backlogChart');
             const backlogSubtitle = document.getElementById('backlogChartSubtitle');
 
-            // Update subtitle
+            // Update subtitle - always shows current backlog regardless of time range
             if (backlogSubtitle) {
-                if (timeRange === 'today') {
-                    backlogSubtitle.textContent = `${totalBacklog} backlogged tracker${totalBacklog !== 1 ? 's' : ''} currently`;
-                } else {
-                    backlogSubtitle.textContent = `${totalBacklog} backlogged tracker${totalBacklog !== 1 ? 's' : ''} created in the last ${timeRange} days`;
-                }
+                backlogSubtitle.textContent = `${totalBacklog} backlogged tracker${totalBacklog !== 1 ? 's' : ''} currently`;
             }
 
             // Sort templates by count (descending)
@@ -1640,7 +2264,7 @@
                 backlogChart.innerHTML = `
                     <div class="no-data-message">
                         <i class="fas fa-clock"></i>
-                        <p>No backlogged trackers found for the selected time range.</p>
+                        <p>No trackers are currently backlogged.</p>
                     </div>
                 `;
                 return;
@@ -1680,6 +2304,21 @@
                 </div>
             `;
 
+            // Show agent metrics loading
+            const agentBarChart = document.getElementById('agentBarChart');
+            const agentBarLegend = document.getElementById('agentBarLegend');
+            if (agentBarChart) {
+                agentBarChart.innerHTML = `
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <p>Loading agent metrics...</p>
+                    </div>
+                `;
+            }
+            if (agentBarLegend) {
+                agentBarLegend.style.display = 'none';
+            }
+
             // Reset summary stats
             document.getElementById('totalTrackers').textContent = '-';
             document.getElementById('dailyAverage').textContent = '-';
@@ -1709,6 +2348,126 @@
                     <p>Please try refreshing the page or contact support if the problem persists.</p>
                 </div>
             `;
+        }
+
+        // Helper function to extract name from email (e.g., "John Doe <johndoe@example.com>" -> "John Doe")
+        function extractNameFromEmail(email) {
+            if (!email || email === "undefined" || !email.includes('@')) {
+                return 'Unknown Agent';
+            }
+
+            const match = email.match(/^(.+)<(.+)>$/);
+            if (match) {
+                return match[1].trim();
+            }
+
+            // Fallback to username part and make it more readable
+            const username = email.split('@')[0];
+            // Convert from formats like "jfields" to "J Fields" 
+            return username.charAt(0).toUpperCase() + username.slice(1).replace(/([a-z])([A-Z])/g, '$1 $2');
+        }
+
+        // Update agent metrics section
+        function updateAgentMetrics() {
+            const agentBarChart = document.getElementById('agentBarChart');
+            const agentBarLegend = document.getElementById('agentBarLegend');
+            const agentChartSubtitle = document.getElementById('agentChartSubtitle');
+
+            if (!agentBarChart || !agentBarLegend || !agentChartSubtitle) {
+                console.warn('Agent metrics elements not found.');
+                return;
+            }
+
+            const { agentData, timeRange } = currentData;
+
+            if (Object.keys(agentData).length === 0) {
+                agentBarChart.innerHTML = `
+                    <div class="no-data-message">
+                        <i class="fas fa-chart-bar"></i>
+                        <p>No agent data available for the selected time range.</p>
+                    </div>
+                `;
+                agentBarLegend.style.display = 'none';
+                agentChartSubtitle.textContent = `Tracker creation by agent`;
+                return;
+            }
+
+            // Sort agents by total trackers (descending) like the template chart
+            const sortedAgents = Object.values(agentData)
+                .sort((a, b) => b.totalTrackers - a.totalTrackers)
+                .filter(agent => agent.totalTrackers > 0); // Only show agents with trackers
+
+            // Find maximum tracker count for scaling
+            const maxTrackers = Math.max(...sortedAgents.map(agent => agent.totalTrackers));
+
+            let agentHTML = '';
+            sortedAgents.forEach((agent, index) => {
+                const totalTrackers = agent.totalTrackers;
+
+                // Extract username from email (part before @)
+                const username = agent.email.split('@')[0];
+
+                // Calculate bar width as percentage of max
+                const barWidth = maxTrackers > 0 ? (totalTrackers / maxTrackers) * 100 : 0;
+
+                // Assign color class based on agent index
+                const colorClass = `agent-bar-${index % 10}`; // Cycle through 10 colors
+
+                console.log(`📊 Agent: ${username}, Total: ${totalTrackers}, Max: ${maxTrackers}, Bar Width: ${barWidth}%, Color: ${colorClass}`);
+
+                agentHTML += `
+                    <div class="agent-bar-row">
+                        <div class="agent-bar-label" title="${agent.email}">${username}</div>
+                        <div class="agent-bar-container">
+                            <div class="agent-bar-fill ${colorClass}" style="width: ${barWidth}%">
+                                <span class="agent-bar-value">${totalTrackers}</span>
+                            </div>
+                        </div>
+                        <div class="agent-bar-count">${totalTrackers}</div>
+                    </div>
+                `;
+            });
+
+            agentBarChart.innerHTML = agentHTML;
+
+            // Hide legend since we're showing total counts only
+            agentBarLegend.style.display = 'none';
+
+            // Update subtitle
+            const agentCount = sortedAgents.length;
+            if (timeRange === 'today') {
+                agentChartSubtitle.textContent = `Tracker creation by ${agentCount} agent${agentCount !== 1 ? 's' : ''} for today`;
+            } else {
+                agentChartSubtitle.textContent = `Tracker creation by ${agentCount} agent${agentCount !== 1 ? 's' : ''} for the last ${timeRange} days`;
+            }
+        }
+
+        // Update agent legend
+        function updateAgentLegend(templates) {
+            const agentBarLegend = document.getElementById('agentBarLegend');
+            if (!agentBarLegend) return;
+
+            // Sort templates by name for consistent legend order
+            const sortedTemplates = templates.sort((a, b) => {
+                const nameA = TEMPLATE_CONFIG[a] ? TEMPLATE_CONFIG[a].name : a;
+                const nameB = TEMPLATE_CONFIG[b] ? TEMPLATE_CONFIG[b].name : b;
+                return nameA.localeCompare(nameB);
+            });
+
+            let legendHTML = '';
+            sortedTemplates.forEach(template => {
+                const config = TEMPLATE_CONFIG[template];
+                const templateName = config ? config.name : template;
+
+                legendHTML += `
+                    <div class="agent-legend-item">
+                        <div class="agent-legend-color segment-${template}"></div>
+                        <span>${templateName}</span>
+                    </div>
+                `;
+            });
+
+            agentBarLegend.innerHTML = legendHTML;
         }
     </script>
 </body>
