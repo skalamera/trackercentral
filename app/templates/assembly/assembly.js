@@ -334,13 +334,138 @@ module.exports = {
                 templateBase.updateSubjectLine();
             }
 
-            // Add event listener to checkbox
-            xcodeUnknownCheckbox.addEventListener('change', toggleXcodeField);
+            // Function to show custom confirmation modal
+            function showXcodeUnknownConfirmation(callback) {
+                // Prevent body scrolling
+                document.body.style.overflow = 'hidden';
+
+                // Create modal backdrop
+                const backdrop = document.createElement('div');
+                backdrop.className = 'xcode-unknown-modal-backdrop';
+                backdrop.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                    box-sizing: border-box;
+                `;
+
+                // Create modal content
+                const modal = document.createElement('div');
+                modal.className = 'xcode-unknown-confirmation-modal';
+                modal.style.cssText = `
+                    background: white;
+                    border-radius: 8px;
+                    max-width: 450px;
+                    width: 100%;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                    font-family: Arial, sans-serif;
+                    overflow: hidden;
+                `;
+
+                // Create modal content
+                const modalContent = document.createElement('div');
+                modalContent.style.cssText = `
+                    padding: 30px;
+                    text-align: center;
+                `;
+
+                modalContent.innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <i class="fas fa-question-circle" style="font-size: 48px; color: #f39c12; margin-bottom: 15px;"></i>
+                        <h3 style="color: #2c3e50; margin: 0; font-size: 20px;">Confirm Xcode Unknown</h3>
+                    </div>
+                    
+                    <p style="color: #555; margin-bottom: 25px; line-height: 1.5;">
+                        Are you sure the Xcode is unknown?
+                    </p>
+                    
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button id="confirmXcodeUnknownAssembly" style="
+                            background: #4caf50;
+                            color: white;
+                            border: none;
+                            padding: 12px 24px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-size: 14px;
+                            font-weight: 500;
+                        ">Yes, I'm sure</button>
+                        <button id="cancelXcodeUnknownAssembly" style="
+                            background: #e74c3c;
+                            color: white;
+                            border: none;
+                            padding: 12px 24px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-size: 14px;
+                            font-weight: 500;
+                        ">Cancel</button>
+                    </div>
+                `;
+
+                modal.appendChild(modalContent);
+                backdrop.appendChild(modal);
+                document.body.appendChild(backdrop);
+
+                // Function to close modal and restore body scrolling
+                const closeModal = (confirmed) => {
+                    document.body.style.overflow = ''; // Restore body scrolling
+                    document.body.removeChild(backdrop);
+                    callback(confirmed);
+                };
+
+                // Add event listeners
+                document.getElementById('confirmXcodeUnknownAssembly').addEventListener('click', () => {
+                    closeModal(true);
+                });
+
+                document.getElementById('cancelXcodeUnknownAssembly').addEventListener('click', () => {
+                    closeModal(false);
+                });
+
+                // Allow clicking backdrop to cancel
+                backdrop.addEventListener('click', (e) => {
+                    if (e.target === backdrop) {
+                        closeModal(false);
+                    }
+                });
+            }
+
+            // Function to handle checkbox change with confirmation
+            function handleXcodeUnknownChange(event) {
+                // If checkbox is being checked (not unchecked), show confirmation
+                if (event.target.checked) {
+                    showXcodeUnknownConfirmation((confirmed) => {
+                        if (confirmed) {
+                            // User confirmed, proceed with toggling
+                            toggleXcodeField();
+                        } else {
+                            // User cancelled, uncheck the checkbox
+                            event.target.checked = false;
+                            console.log("ASSEMBLY: User cancelled Xcode Unknown confirmation");
+                        }
+                    });
+                } else {
+                    // Checkbox is being unchecked, no confirmation needed
+                    toggleXcodeField();
+                }
+            }
+
+            // Add event listener to checkbox with confirmation
+            xcodeUnknownCheckbox.addEventListener('change', handleXcodeUnknownChange);
 
             // Initial state check
             toggleXcodeField();
 
-            console.log("ASSEMBLY: Added Xcode Unknown checkbox functionality");
+            console.log("ASSEMBLY: Added Xcode Unknown checkbox functionality with custom confirmation modal");
         }
 
         // Schedule initial subject line update after fields are populated
