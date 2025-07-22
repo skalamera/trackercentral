@@ -1241,440 +1241,346 @@
             }
         }
 
-        /* What's New Modal Styles */
-        .whats-new-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
+
+
+        /* Custom Status Widget Styles */
+        .status-widget-divider {
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
+            height: 1px;
+            background-color: var(--border-color, #e0e0e0);
+            margin: 40px 0 20px 0;
+        }
+
+
+
+
+
+        .status-widget-content {
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .whats-new-content {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 700px;
-            width: 90%;
-            max-height: 80vh;
-            overflow: hidden;
-            position: relative;
-            animation: slideUp 0.4s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        [data-theme="dark"] .whats-new-content {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-        }
-
-        .whats-new-header {
-            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
-            color: white;
-            padding: 24px 32px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .whats-new-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            animation: shimmer 3s ease-in-out infinite;
-        }
-
-        .whats-new-header h2 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 1;
-            color: white !important;
-        }
-
-        .whats-new-header i {
-            margin-right: 12px;
-            font-size: 32px;
-            color: #ffd700;
-            animation: sparkle 2s ease-in-out infinite;
-        }
-
-        .whats-new-close {
-            position: absolute;
-            top: 20px;
-            right: 24px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            font-size: 24px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 2;
-        }
-
-        .whats-new-close:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        .whats-new-carousel {
-            padding: 32px;
-            min-height: 300px;
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .carousel-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 12px;
-            background: var(--card-bg);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 24px;
-            z-index: 1;
-        }
-
-        .carousel-slide {
-            display: none;
-            padding: 32px;
-            text-align: center;
-            animation: slideIn 0.5s ease;
-        }
-
-        .carousel-slide.active {
-            display: block;
-        }
-
-        .slide-image {
-            margin-bottom: 24px;
-        }
-
-        .slide-image img {
-            max-width: 100%;
-            height: auto;
-            max-height: 160px;
-            object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .slide-content h3 {
-            font-size: 24px;
-            color: var(--text-color);
-            margin: 0 0 16px 0;
-            font-weight: 600;
-        }
-
-        .slide-content p {
-            font-size: 16px;
-            color: var(--secondary-text);
-            line-height: 1.6;
-            margin: 0 0 20px 0;
-        }
-
-        .slide-features {
-            display: flex;
-            flex-wrap: wrap;
             gap: 8px;
-            justify-content: center;
+            padding: 16px 20px;
+            margin: 0 auto 40px auto;
+            min-width: 300px;
+            max-width: 500px;
         }
 
-        .feature-tag {
-            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        .status-indicator {
+            display: inline-block;
+            margin-right: 12px;
+            vertical-align: middle;
         }
 
-        .carousel-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            margin-top: 20px;
-            width: 100%;
-            position: relative;
-            z-index: 10;
-            background: none;
-        }
-
-        .carousel-btn {
-            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
-            border: none;
-            color: white;
-            width: 44px;
-            height: 44px;
+        .status-dot {
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
+            position: relative;
+            animation: statusPulse 2s ease-in-out infinite;
+            background: #4caf50;
+            border: none;
+        }
+
+        /* Status-specific colors and animations */
+        .status-dot.operational {
+            background: #4caf50 !important;
+            box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.degraded {
+            background: #ff9800 !important;
+            box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7);
+            animation: statusPulse 1.5s ease-in-out infinite;
+        }
+
+        .status-dot.partial {
+            background: #ff5722 !important;
+            box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7);
+            animation: statusPulse 1s ease-in-out infinite;
+        }
+
+        .status-dot.major {
+            background: #f44336 !important;
+            box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7);
+            animation: statusPulse 0.8s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
+        }
+
+        .status-dot.degraded {
+            animation: statusPulseDegraded 1.5s ease-in-out infinite;
+        }
+
+        @keyframes statusPulseDegraded {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 152, 0, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 152, 0, 0);
+            }
+        }
+
+        .status-dot.partial {
+            animation: statusPulsePartial 1s ease-in-out infinite;
+        }
+
+        @keyframes statusPulsePartial {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 87, 34, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0);
+            }
+        }
+
+        .status-dot.major {
+            animation: statusPulseMajor 0.8s ease-in-out infinite;
+        }
+
+        @keyframes statusPulseMajor {
+            0% {
+                box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(244, 67, 54, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(244, 67, 54, 0);
+            }
+        }
+
+        .status-text {
+            display: inline-block;
+            vertical-align: middle;
+            flex: 1;
+        }
+
+        .status-refresh {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 0;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: none;
+            color: var(--text-color, #666);
             cursor: pointer;
-            font-size: 16px;
+            padding: 8px;
+            border-radius: 50%;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 2;
+            width: 32px;
+            height: 32px;
         }
 
-        .carousel-btn:hover {
+        .refresh-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: var(--text-color, #333);
             transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
         }
 
-        .carousel-btn:active {
+        .refresh-btn:active {
             transform: scale(0.95);
         }
 
-
-
-        .whats-new-footer {
-            background: #f8f9fa;
-            padding: 24px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-top: 1px solid #e9ecef;
-            min-height: 80px;
-            flex-shrink: 0;
+        .refresh-btn.refreshing {
+            animation: spin 1s linear infinite;
         }
 
-        [data-theme="dark"] .whats-new-footer {
-            background: #2d3748;
-            border-top: 1px solid #4a5568;
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        .dont-show-again {
-            display: flex;
-            align-items: center;
-            flex: 1;
+        /* Dark mode styles for refresh button */
+        [data-theme="dark"] .refresh-btn {
+            color: var(--text-color, #e0e0e0);
         }
 
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            font-size: 14px;
-            color: #333;
-            user-select: none;
-            padding: 4px 0;
-            font-weight: 500;
-            gap: 8px;
+        [data-theme="dark"] .refresh-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-color, #ffffff);
         }
 
-        [data-theme="dark"] .checkbox-container {
-            color: #ccc;
-        }
-
-        .checkbox-container input[type="checkbox"] {
-            display: none;
-        }
-
-        .checkmark {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            margin-right: 0px;
-            position: relative;
-            transition: all 0.3s ease;
-            background: white;
-            flex-shrink: 0;
-        }
-
-        [data-theme="dark"] .checkmark {
-            border-color: #666;
-            background: #333;
-        }
-
-        .checkbox-container input[type="checkbox"]:checked+.checkmark {
-            background: #4caf50;
-            border-color: #4caf50;
-        }
-
-        .checkbox-container input[type="checkbox"]:checked+.checkmark::after {
-            content: '';
-            position: absolute;
-            left: 6px;
-            top: 3px;
-            width: 6px;
-            height: 10px;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-        }
-
-        .checkbox-container:hover .checkmark {
-            border-color: #4caf50;
-            transform: scale(1.05);
-        }
-
-        .whats-new-close-btn {
-            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
-            border: none;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
+        .status-title {
             font-weight: 600;
-            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-color, #333);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .status-link {
+            color: inherit;
+            text-decoration: none;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            cursor: pointer;
         }
 
-        .whats-new-close-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+        .status-link:hover {
+            color: #4caf50;
+            text-decoration: underline;
         }
 
-        .whats-new-close-btn:active {
-            transform: translateY(0);
+        .status-link:active {
+            color: #45a049;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
+        /* Dark mode styles for status link */
+        [data-theme="dark"] .status-link:hover {
+            color: #66bb6a;
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        [data-theme="dark"] .status-link:active {
+            color: #4caf50;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .status-subtitle {
+            font-size: 12px;
+            color: var(--secondary-text, #666);
+            opacity: 0.8;
         }
 
-        @keyframes shimmer {
-
-            0%,
-            100% {
-                transform: translateX(-50%) translateY(-50%);
-            }
-
-            50% {
-                transform: translateX(-40%) translateY(-40%);
-            }
+        .status-details {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color, #e0e0e0);
+            max-height: 200px;
+            overflow-y: auto;
         }
 
-        @keyframes sparkle {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.2);
-            }
+        .status-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 13px;
         }
 
-        /* Mobile responsive styles for What's New modal */
+        .status-detail-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-detail-dot.operational {
+            background: #4caf50;
+            box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
+        }
+
+        .status-detail-dot.degraded {
+            background: #ff9800;
+            box-shadow: 0 0 4px rgba(255, 152, 0, 0.5);
+        }
+
+        .status-detail-dot.partial {
+            background: #ff5722;
+            box-shadow: 0 0 4px rgba(255, 87, 34, 0.5);
+        }
+
+        .status-detail-dot.major {
+            background: #f44336;
+            box-shadow: 0 0 4px rgba(244, 67, 54, 0.5);
+        }
+
+        .status-detail-text {
+            color: var(--text-color, #333);
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .status-detail-status {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-detail-status.operational {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .status-detail-status.degraded {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        .status-detail-status.partial {
+            background: rgba(255, 87, 34, 0.1);
+            color: #ff5722;
+        }
+
+        .status-detail-status.major {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        /* Mobile responsive */
         @media (max-width: 768px) {
-            .whats-new-content {
-                width: 95%;
-                max-height: 85vh;
+            .custom-status-widget {
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                transform: none;
+                min-width: auto;
+                max-width: none;
             }
 
-            .whats-new-header {
-                padding: 20px 24px;
+            .status-widget-content {
+                padding: 12px 16px;
+                min-width: 280px;
             }
 
-            .whats-new-header h2 {
-                font-size: 24px;
+            .refresh-btn {
+                width: 28px;
+                height: 28px;
+                padding: 6px;
             }
 
-            .whats-new-carousel {
-                padding: 24px 20px;
-                min-height: 300px;
-            }
-
-            .carousel-slide {
-                padding: 24px 20px;
-            }
-
-            .slide-content h3 {
-                font-size: 20px;
-            }
-
-            .slide-content p {
-                font-size: 14px;
-            }
-
-            .slide-features {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .feature-tag {
-                font-size: 11px;
-            }
-
-            .whats-new-footer {
-                padding: 20px 24px;
-                flex-direction: column;
-                gap: 16px;
-                background: #f8f9fa;
-            }
-
-            [data-theme="dark"] .whats-new-footer {
-                background: #2d3748;
-            }
-
-            .carousel-nav {
-                flex-wrap: wrap;
-                gap: 16px;
-                justify-content: space-between;
-                background: none;
-            }
-
-            .carousel-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 14px;
-                min-width: 40px;
-                min-height: 40px;
+            .status-refresh {
+                margin-left: -10px;
             }
         }
     </style>
@@ -2140,152 +2046,9 @@
             </div>
         </div>
 
-        <!-- WHAT'S NEW MODAL -->
-        <div id="whatsNewModal" class="whats-new-modal" style="display: none;">
-            <div class="whats-new-content">
-                <div class="whats-new-header">
-                    <h2><i class="fas fa-sparkles"></i> What's New in Tracker Central</h2>
-                    <button class="whats-new-close" id="closeWhatsNewModal">&times;</button>
-                </div>
 
-                <div class="whats-new-carousel">
-                    <div class="carousel-container">
-                        <!-- Slide 1: My Trackers Tab -->
-                        <div class="carousel-slide active" data-slide="0">
-                            <div class="slide-image">
-                                <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1752140987/mytracker_tab_tgrxyb.svg"
-                                    alt="My Trackers Tab">
-                            </div>
-                            <div class="slide-content">
-                                <h3>📋 Introducing myTrackers Tab</h3>
-                                <p>Your personalized tracker management hub! Access all your assigned tracker tickets in
-                                    one convenient location with a dedicated tab just for you.</p>
-                                <div class="slide-features">
-                                    <span class="feature-tag">🎯 Personal Dashboard</span>
-                                    <span class="feature-tag">📊 Real-time Updates</span>
-                                    <span class="feature-tag">⚡ Quick Access</span>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Slide 2: Status Overview -->
-                        <div class="carousel-slide" data-slide="1">
-                            <div class="slide-image">
-                                <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1752141295/status_overview_ihwtck.svg"
-                                    alt="Status Overview">
-                            </div>
-                            <div class="slide-content">
-                                <h3>📊 Real-time Status Overview</h3>
-                                <p>Get instant insights into your tracker workload with visual charts showing
-                                    the distribution of ticket statuses across your assigned trackers.</p>
-                                <div class="slide-features">
-                                    <span class="feature-tag">📈 Visual Charts</span>
-                                    <span class="feature-tag">📋 Status Breakdown</span>
-                                    <span class="feature-tag">🔍 At-a-Glance View</span>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Slide 3: Filter Group & Sort -->
-                        <div class="carousel-slide" data-slide="2">
-                            <div class="slide-image">
-                                <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1752145344/filter_yvpn34.svg"
-                                    alt="Filter and Sort">
-                            </div>
-                            <div class="slide-content">
-                                <h3>🔧 Advanced Filter, Group & Sort</h3>
-                                <p>Take control of your tracker list with powerful filtering, grouping, and sorting
-                                    options. Organize your work exactly how you need it.</p>
-                                <div class="slide-features">
-                                    <span class="feature-tag">🎯 Smart Filtering</span>
-                                    <span class="feature-tag">📝 Custom Grouping</span>
-                                    <span class="feature-tag">🔀 Flexible Sorting</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Slide 4: Support Review Notifications -->
-                        <div class="carousel-slide" data-slide="3">
-                            <div class="slide-image">
-                                <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1752146616/review_notif_fvexg6.svg"
-                                    alt="Support Review Notifications">
-                            </div>
-                            <div class="slide-content">
-                                <h3>
-                                    🔔 Smart Review Notifications
-                                    <span
-                                        style="font-size: 14px; color: #4caf50; margin-left: 10px; vertical-align: middle; font-weight: 600; background: rgba(76,175,80,0.08); border-radius: 6px; padding: 2px 8px;">
-                                        <br>
-                                        <span
-                                            style="display: inline-block; font-size: 14px; color: #4caf50; margin-top: 4px; vertical-align: middle; font-weight: 600; background: rgba(76,175,80,0.08); border-radius: 6px; padding: 2px 8px;">
-                                            <i class="fas fa-hammer" style="margin-right:4px;"></i>Work in Progress
-                                        </span>
-                                    </span>
-                                </h3>
-                                <p>Never miss important tickets! Get instant notifications when trackers need your
-                                    attention, especially those in Support Review status requiring immediate action.</p>
-                                <div class="slide-features">
-                                    <span class="feature-tag">⚠️ Priority Alerts</span>
-                                    <span class="feature-tag">🎯 Action Required</span>
-                                    <span class="feature-tag">⏱️ Real-time Updates</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Slide 5: Tracker Analytics -->
-                        <div class="carousel-slide" data-slide="4">
-                            <div class="slide-image">
-                                <img src="https://res.cloudinary.com/doznvxtja/image/upload/v1752147368/tracker_analytics_nvhghc.svg"
-                                    alt="Tracker Analytics">
-                            </div>
-                            <div class="slide-content">
-                                <h3>
-                                    📊 Tracker Analytics
-                                </h3>
-                                <div>
-                                    <span
-                                        style="display: inline-block; font-size: 14px; color: #4caf50; margin-top: 6px; vertical-align: middle; font-weight: 600; background: rgba(76,175,80,0.08); border-radius: 6px; padding: 2px 8px;">
-                                        <i class="fas fa-hammer" style="margin-right:4px;"></i>Work in Progress
-                                    </span>
-                                </div>
-                                <p style="margin-top: 8px;">Dive deep into your tracker performance with comprehensive
-                                    analytics! Access detailed
-                                    insights and visualizations from the navigation menu</p>
-                                <div class="slide-features">
-                                    <span class="feature-tag">📈 Performance Metrics</span>
-                                    <span class="feature-tag">📊 Visual Insights</span>
-                                    <span class="feature-tag">🔍 Trend Analysis</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Navigation Controls -->
-                    <div class="carousel-nav">
-                        <button class="carousel-btn carousel-prev" id="carouselPrev">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="carousel-btn carousel-next" id="carouselNext">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="whats-new-footer">
-                    <div class="dont-show-again">
-                        <label class="checkbox-container">
-                            <input type="checkbox" id="dontShowAgain">
-                            <span class="checkmark"></span>
-                            Don't show this again
-                        </label>
-                    </div>
-                    <button class="whats-new-close-btn" id="closeWhatsNewBtn">
-                        <i class="fas fa-check"></i>
-                        Got it!
-                    </button>
-                </div>
-            </div>
-        </div>
 
         <script>
             document.onreadystatechange = function () {
@@ -2313,9 +2076,7 @@
                         // Check and apply Independence Day theme
                         checkIndependenceDayTheme();
 
-                        // Initialize What's New modal
-                        setupWhatsNewEventListeners();
-                        initWhatsNewModal();
+
 
                         // Get current ticket details
                         client.data.get("ticket").then(function (ticketData) {
@@ -3723,148 +3484,7 @@
             // Make debug function globally accessible
             window.debugFindAllMyTrackers = debugFindAllMyTrackers;
 
-            // What's New Modal Functions
-            function initWhatsNewModal() {
-                // Check if user has disabled the modal
-                const dontShowAgain = localStorage.getItem('whatsNewModalDontShow');
-                if (dontShowAgain === 'true') {
-                    return;
-                }
 
-                // Show the modal after a short delay
-                setTimeout(() => {
-                    showWhatsNewModal();
-                }, 1000);
-            }
-
-            function showWhatsNewModal() {
-                const modal = document.getElementById('whatsNewModal');
-                if (modal) {
-                    modal.style.display = 'flex';
-                    document.body.style.overflow = 'hidden'; // Prevent background scrolling
-                }
-            }
-
-            function hideWhatsNewModal() {
-                const modal = document.getElementById('whatsNewModal');
-                if (modal) {
-                    modal.style.display = 'none';
-                    document.body.style.overflow = 'auto'; // Restore scrolling
-                }
-            }
-
-            function setupWhatsNewEventListeners() {
-                // Close button event listeners
-                const closeButtons = document.querySelectorAll('#closeWhatsNewModal, #closeWhatsNewBtn');
-                closeButtons.forEach(button => {
-                    button.addEventListener('click', function () {
-                        const dontShowCheckbox = document.getElementById('dontShowAgain');
-                        if (dontShowCheckbox && dontShowCheckbox.checked) {
-                            localStorage.setItem('whatsNewModalDontShow', 'true');
-                        }
-                        hideWhatsNewModal();
-                    });
-                });
-
-                // Carousel navigation
-                const prevBtn = document.getElementById('carouselPrev');
-                const nextBtn = document.getElementById('carouselNext');
-
-                if (prevBtn) {
-                    prevBtn.addEventListener('click', () => navigateCarousel('prev'));
-                }
-                if (nextBtn) {
-                    nextBtn.addEventListener('click', () => navigateCarousel('next'));
-                }
-
-                // Close modal when clicking outside
-                const modal = document.getElementById('whatsNewModal');
-                if (modal) {
-                    modal.addEventListener('click', function (e) {
-                        if (e.target === modal) {
-                            hideWhatsNewModal();
-                        }
-                    });
-                }
-
-                // Keyboard navigation
-                document.addEventListener('keydown', function (e) {
-                    const modal = document.getElementById('whatsNewModal');
-                    if (modal && modal.style.display === 'flex') {
-                        if (e.key === 'Escape') {
-                            hideWhatsNewModal();
-                        } else if (e.key === 'ArrowLeft') {
-                            navigateCarousel('prev');
-                        } else if (e.key === 'ArrowRight') {
-                            navigateCarousel('next');
-                        }
-                    }
-                });
-            }
-
-            function navigateCarousel(direction) {
-                const slides = document.querySelectorAll('.carousel-slide');
-                const currentSlide = document.querySelector('.carousel-slide.active');
-
-                if (!currentSlide) return;
-
-                const currentIndex = parseInt(currentSlide.getAttribute('data-slide'));
-                let newIndex;
-
-                if (direction === 'prev') {
-                    newIndex = currentIndex > 0 ? currentIndex - 1 : slides.length - 1;
-                } else {
-                    newIndex = currentIndex < slides.length - 1 ? currentIndex + 1 : 0;
-                }
-
-                goToSlide(newIndex);
-            }
-
-            function goToSlide(slideIndex) {
-                const slides = document.querySelectorAll('.carousel-slide');
-
-                // Remove active class from all slides
-                slides.forEach(slide => slide.classList.remove('active'));
-
-                // Add active class to target slide
-                const targetSlide = document.querySelector(`.carousel-slide[data-slide="${slideIndex}"]`);
-
-                if (targetSlide) {
-                    targetSlide.classList.add('active');
-                }
-            }
-
-            // Auto-advance carousel (optional)
-            function startCarouselAutoAdvance() {
-                const modal = document.getElementById('whatsNewModal');
-                if (!modal || modal.style.display !== 'flex') return;
-
-                const autoAdvanceInterval = setInterval(() => {
-                    const modal = document.getElementById('whatsNewModal');
-                    if (!modal || modal.style.display !== 'flex') {
-                        clearInterval(autoAdvanceInterval);
-                        return;
-                    }
-                    navigateCarousel('next');
-                }, 8000); // Auto-advance every 8 seconds
-
-                // Stop auto-advance on user interaction
-                const interactionElements = document.querySelectorAll('#carouselPrev, #carouselNext');
-                interactionElements.forEach(element => {
-                    element.addEventListener('click', () => {
-                        clearInterval(autoAdvanceInterval);
-                    });
-                });
-            }
-
-            // Function to reset "don't show again" preference (for testing)
-            function resetWhatsNewModal() {
-                localStorage.removeItem('whatsNewModalDontShow');
-                console.log('What\'s New modal preference reset. Refresh the page to see the modal again.');
-            }
-
-            // Make reset function globally accessible for testing
-            window.resetWhatsNewModal = resetWhatsNewModal;
 
             // Function to select a template and navigate to the dynamic template
             function selectTemplate(templateType) {
@@ -4976,17 +4596,434 @@
                     }
                 }
             }
+
+            // Status Widget Management
+            let componentStatuses = {};
+            let lastUpdateTime = new Date();
+
+            // Initialize status widget
+            function initStatusWidget() {
+                console.log('initStatusWidget called');
+
+                // Check if required elements exist
+                const statusDot = document.getElementById('mainStatusDot');
+                const statusTitle = document.getElementById('statusTitle');
+                const statusSubtitle = document.getElementById('statusSubtitle');
+
+                if (!statusDot || !statusTitle || !statusSubtitle) {
+                    console.error('Status widget elements not found:', {
+                        statusDot: !!statusDot,
+                        statusTitle: !!statusTitle,
+                        statusSubtitle: !!statusSubtitle
+                    });
+                    return;
+                }
+
+                console.log('Status widget elements found, proceeding with initialization');
+
+                if (typeof client !== 'undefined') {
+                    loadComponentStatuses();
+                } else {
+                    console.log('Client not available, using default statuses');
+                    // Use default operational statuses if client is not available
+                    componentStatuses = {
+                        'Assignments': 'operational',
+                        'Book Reviews': 'operational',
+                        'Bookshelves': 'operational',
+                        'Dashboard': 'operational',
+                        'eAssessments': 'operational',
+                        'eAssessments Reports': 'operational',
+                        'eBook Reader': 'operational',
+                        'ePlanner': 'operational',
+                        'ePocket Chart': 'operational',
+                        'Help System': 'operational',
+                        'Inbox': 'operational',
+                        'Interactive Learning Games': 'operational',
+                        'Manage Downloads': 'operational',
+                        'Manage Students': 'operational',
+                        'Mobile Library App': 'operational',
+                        'Onboarding/Rostering': 'operational',
+                        'Oral Reading Records (ORR)': 'operational',
+                        'Profile Settings': 'operational',
+                        'Reading Log': 'operational',
+                        'Grading': 'operational',
+                        'Resource Library': 'operational',
+                        'Sign In/Login Page': 'operational',
+                        'Single Sign On (SSO)': 'operational',
+                        'Teacher Resource System': 'operational',
+                        'Writer\'s Universe': 'operational',
+                        'Videos': 'operational'
+                    };
+                }
+
+                updateStatusWidget();
+                setupRefreshButton();
+
+                // Update timestamp every minute
+                setInterval(updateTimestamp, 60000);
+
+                console.log('Status widget initialization completed');
+            }
+
+            // Load component statuses from storage
+            function loadComponentStatuses() {
+                client.db.get('benchmarkUniverseStatuses')
+                    .then(function (storedStatuses) {
+                        console.log('Loaded component statuses from storage:', storedStatuses);
+                        if (storedStatuses) {
+                            componentStatuses = storedStatuses;
+                        } else {
+                            // Default all components to operational
+                            componentStatuses = {
+                                'Assignments': 'operational',
+                                'Book Reviews': 'operational',
+                                'Bookshelves': 'operational',
+                                'Dashboard': 'operational',
+                                'eAssessments': 'operational',
+                                'eAssessments Reports': 'operational',
+                                'eBook Reader': 'operational',
+                                'ePlanner': 'operational',
+                                'ePocket Chart': 'operational',
+                                'Help System': 'operational',
+                                'Inbox': 'operational',
+                                'Interactive Learning Games': 'operational',
+                                'Manage Downloads': 'operational',
+                                'Manage Students': 'operational',
+                                'Mobile Library App': 'operational',
+                                'Onboarding/Rostering': 'operational',
+                                'Oral Reading Records (ORR)': 'operational',
+                                'Profile Settings': 'operational',
+                                'Reading Log': 'operational',
+                                'Grading': 'operational',
+                                'Resource Library': 'operational',
+                                'Sign In/Login Page': 'operational',
+                                'Single Sign On (SSO)': 'operational',
+                                'Teacher Resource System': 'operational',
+                                'Writer\'s Universe': 'operational',
+                                'Videos': 'operational'
+                            };
+                            // Save default statuses
+                            client.db.set('benchmarkUniverseStatuses', componentStatuses);
+                        }
+                        updateStatusWidget();
+                    })
+                    .catch(function (error) {
+                        console.error('Error loading component statuses:', error);
+                        // Use default operational statuses
+                        componentStatuses = {
+                            'Assignments': 'operational',
+                            'Book Reviews': 'operational',
+                            'Bookshelves': 'operational',
+                            'Dashboard': 'operational',
+                            'eAssessments': 'operational',
+                            'eAssessments Reports': 'operational',
+                            'eBook Reader': 'operational',
+                            'ePlanner': 'operational',
+                            'ePocket Chart': 'operational',
+                            'Help System': 'operational',
+                            'Inbox': 'operational',
+                            'Interactive Learning Games': 'operational',
+                            'Manage Downloads': 'operational',
+                            'Manage Students': 'operational',
+                            'Mobile Library App': 'operational',
+                            'Onboarding/Rostering': 'operational',
+                            'Oral Reading Records (ORR)': 'operational',
+                            'Profile Settings': 'operational',
+                            'Reading Log': 'operational',
+                            'Grading': 'operational',
+                            'Resource Library': 'operational',
+                            'Sign In/Login Page': 'operational',
+                            'Single Sign On (SSO)': 'operational',
+                            'Teacher Resource System': 'operational',
+                            'Writer\'s Universe': 'operational',
+                            'Videos': 'operational'
+                        };
+                        updateStatusWidget();
+                    });
+            }
+
+            // Update the status widget display
+            function updateStatusWidget() {
+                const statusDot = document.getElementById('mainStatusDot');
+                const statusTitle = document.getElementById('statusTitle');
+                const statusSubtitle = document.getElementById('statusSubtitle');
+                const statusDetails = document.getElementById('statusDetails');
+
+                console.log('Updating status widget with component statuses:', componentStatuses);
+
+                // Determine overall status
+                let overallStatus = 'operational';
+                let affectedComponents = [];
+
+                // Check for any non-operational statuses
+                Object.entries(componentStatuses).forEach(([componentName, status]) => {
+                    console.log(`Checking component: ${componentName}, status: ${status}`);
+                    if (status !== 'operational') {
+                        affectedComponents.push({
+                            name: componentName,
+                            status: status
+                        });
+                    }
+                });
+
+                // Determine overall status based on most severe status
+                if (affectedComponents.length > 0) {
+                    // Define severity levels (higher number = more severe)
+                    // Severity ranking: degraded (1) < partial (2) < major (3)
+                    const severityLevels = {
+                        'degraded': 1,
+                        'partial': 2,
+                        'major': 3
+                    };
+
+                    // Find the most severe status among affected components
+                    let maxSeverity = 0;
+                    affectedComponents.forEach(component => {
+                        const severity = severityLevels[component.status] || 0;
+                        console.log(`Component ${component.name} has severity level ${severity} (${component.status})`);
+                        if (severity > maxSeverity) {
+                            maxSeverity = severity;
+                            overallStatus = component.status;
+                            console.log(`New most severe status: ${overallStatus} (level ${maxSeverity})`);
+                        }
+                    });
+
+                    console.log('Final most severe status:', overallStatus, 'with severity level:', maxSeverity);
+                }
+
+                console.log('Overall status:', overallStatus, 'Affected components:', affectedComponents);
+
+                // Update main status dot
+                statusDot.className = `status-dot ${overallStatus}`;
+
+                // Update status text
+                if (affectedComponents.length === 0) {
+                    statusTitle.innerHTML = '<a href="https://benchmarkeducation.freshstatus.io/" target="_blank" class="status-link">All Systems Operational</a>';
+                    statusDetails.style.display = 'none';
+                } else {
+                    // Show the most severe status in the title
+                    const statusLabels = {
+                        'degraded': 'Degraded Performance',
+                        'partial': 'Partial Outage',
+                        'major': 'Major Outage'
+                    };
+                    const statusLabel = statusLabels[overallStatus] || 'System Issues';
+
+                    if (affectedComponents.length === 1) {
+                        statusTitle.innerHTML = `<a href="https://benchmarkeducation.freshstatus.io/" target="_blank" class="status-link">${statusLabel}</a>`;
+                    } else {
+                        statusTitle.innerHTML = `<a href="https://benchmarkeducation.freshstatus.io/" target="_blank" class="status-link">${statusLabel} - ${affectedComponents.length} Components</a>`;
+                    }
+                    statusDetails.style.display = 'block';
+
+                    // Update affected components list
+                    statusDetails.innerHTML = '';
+                    affectedComponents.forEach(component => {
+                        const detailItem = document.createElement('div');
+                        detailItem.className = 'status-detail-item';
+                        detailItem.innerHTML = `
+                            <div class="status-detail-dot ${component.status}"></div>
+                            <div class="status-detail-text">${component.name}</div>
+                            <div class="status-detail-status ${component.status}">${component.status}</div>
+                        `;
+                        statusDetails.appendChild(detailItem);
+                    });
+                }
+
+                updateTimestamp();
+            }
+
+            // Update the timestamp
+            function updateTimestamp() {
+                const statusSubtitle = document.getElementById('statusSubtitle');
+                const now = new Date();
+                const timeDiff = Math.floor((now - lastUpdateTime) / 1000 / 60); // minutes
+
+                if (timeDiff < 1) {
+                    statusSubtitle.textContent = 'Updated less than a minute ago';
+                } else if (timeDiff === 1) {
+                    statusSubtitle.textContent = 'Updated 1 minute ago';
+                } else if (timeDiff < 60) {
+                    statusSubtitle.textContent = `Updated ${timeDiff} minutes ago`;
+                } else {
+                    const hours = Math.floor(timeDiff / 60);
+                    statusSubtitle.textContent = `Updated ${hours} hour${hours > 1 ? 's' : ''} ago`;
+                }
+            }
+
+            // Function to update component status (called from admin settings)
+            window.updateComponentStatus = function (componentName, status) {
+                componentStatuses[componentName] = status;
+                lastUpdateTime = new Date();
+
+                // Save to storage
+                client.db.set('benchmarkUniverseStatuses', componentStatuses)
+                    .then(() => {
+                        console.log(`Updated ${componentName} status to ${status}`);
+                        updateStatusWidget();
+                    })
+                    .catch(error => {
+                        console.error('Error saving component status:', error);
+                    });
+            };
+
+            // Function to refresh status widget (called from admin settings)
+            window.refreshStatusWidget = function () {
+                console.log('Manually refreshing status widget');
+                loadComponentStatuses();
+            };
+
+            // Initialize status widget when app is ready
+            if (typeof client !== 'undefined') {
+                console.log('Client available immediately, initializing status widget');
+                initStatusWidget();
+            } else {
+                console.log('Client not available, waiting for DOMContentLoaded');
+                // Wait for client to be available
+                document.addEventListener('DOMContentLoaded', function () {
+                    console.log('DOMContentLoaded fired, checking for client');
+                    if (typeof client !== 'undefined') {
+                        console.log('Client found after DOMContentLoaded, initializing status widget');
+                        initStatusWidget();
+                    } else {
+                        console.log('Client still not available after DOMContentLoaded');
+                    }
+                });
+            }
+
+            // Additional initialization attempt when the app is fully loaded
+            document.addEventListener('DOMContentLoaded', function () {
+                console.log('DOMContentLoaded - attempting status widget initialization');
+                setTimeout(() => {
+                    if (typeof client !== 'undefined') {
+                        console.log('Client available after timeout, initializing status widget');
+                        initStatusWidget();
+                    } else {
+                        console.log('Client still not available after timeout');
+                    }
+                }, 500);
+            });
+
+            // Fallback: Ensure refresh button is set up even if initStatusWidget fails
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(() => {
+                    const refreshBtn = document.getElementById('refreshStatusBtn');
+                    if (refreshBtn && !refreshBtn.hasAttribute('data-initialized')) {
+                        console.log('Fallback refresh button setup');
+                        setupRefreshButton();
+                        refreshBtn.setAttribute('data-initialized', 'true');
+                    }
+                }, 1000);
+            });
+
+            // Final fallback: Try to initialize status widget when page is fully loaded
+            window.addEventListener('load', function () {
+                console.log('Window load event fired, attempting status widget initialization');
+                setTimeout(() => {
+                    if (typeof client !== 'undefined') {
+                        console.log('Client available on window load, initializing status widget');
+                        initStatusWidget();
+                    } else {
+                        console.log('Client not available on window load, initializing with defaults');
+                        // Initialize without client
+                        initStatusWidget();
+                    }
+                }, 100);
+            });
+
+            // Alternative approach: Use event delegation for the refresh button
+            document.addEventListener('click', function (e) {
+                if (e.target && e.target.closest('#refreshStatusBtn')) {
+                    e.preventDefault();
+                    console.log('Refresh button clicked via event delegation!');
+
+                    const refreshBtn = e.target.closest('#refreshStatusBtn');
+
+                    // Add spinning animation
+                    refreshBtn.classList.add('refreshing');
+
+                    // Refresh the status
+                    loadComponentStatuses();
+
+                    // Remove spinning animation after a short delay
+                    setTimeout(() => {
+                        refreshBtn.classList.remove('refreshing');
+                    }, 1000);
+                }
+            });
+
+            // Setup refresh button functionality
+            function setupRefreshButton() {
+                const refreshBtn = document.getElementById('refreshStatusBtn');
+                console.log('Setting up refresh button, found element:', refreshBtn);
+
+                if (refreshBtn) {
+                    // Remove any existing event listeners to prevent duplicates
+                    const newRefreshBtn = refreshBtn.cloneNode(true);
+                    refreshBtn.parentNode.replaceChild(newRefreshBtn, refreshBtn);
+
+                    newRefreshBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        console.log('Refresh button clicked!');
+
+                        // Add spinning animation
+                        this.classList.add('refreshing');
+
+                        // Refresh the status
+                        loadComponentStatuses();
+
+                        // Remove spinning animation after a short delay
+                        setTimeout(() => {
+                            this.classList.remove('refreshing');
+                        }, 1000);
+                    });
+
+                    console.log('Refresh button event listener added successfully');
+                } else {
+                    console.error('Refresh button element not found!');
+                }
+            }
+
+            // Refresh status widget when page becomes visible (e.g., when returning from admin settings)
+            document.addEventListener('visibilitychange', function () {
+                if (!document.hidden && typeof client !== 'undefined') {
+                    console.log('Page became visible, refreshing status widget');
+                    loadComponentStatuses();
+                }
+            });
+
+            // Also refresh when window gains focus
+            window.addEventListener('focus', function () {
+                if (typeof client !== 'undefined') {
+                    console.log('Window gained focus, refreshing status widget');
+                    loadComponentStatuses();
+                }
+            });
         </script>
     </div>
-    <div
-        style="display: flex; justify-content: center; margin: 20px 0; border-top: 1px solid #e0e0e0; padding-top: 20px;">
-        <a href="https://benchmarkeducation.freshstatus.io" id="freshstatus-badge-root" data-banner-style="highlighted">
-            <img
-                src="https://public-api.freshstatus.io/v1/public/badge.svg/?badge=12d6fa47-c8f2-4305-b002-9314f34695f8" />
-        </a>
+
+    <!-- Horizontal Line -->
+    <div class="status-widget-divider"></div>
+
+    <!-- Custom Status Widget -->
+    <div class="status-widget-content">
+        <div class="status-indicator">
+            <div class="status-dot" id="mainStatusDot"></div>
+        </div>
+        <div class="status-text">
+            <div class="status-title" id="statusTitle">All Systems Operational</div>
+            <div class="status-subtitle" id="statusSubtitle">Updated less than a minute ago</div>
+        </div>
+        <div class="status-refresh">
+            <button class="refresh-btn" id="refreshStatusBtn" title="Refresh Status">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </div>
     </div>
-    <!-- Freshdesk Status Widget Script -->
-    <script type="module" src="https://cdn.freshstatus.io/widget/index.js"></script>
+    <div class="status-details" id="statusDetails" style="display: none;">
+        <!-- Affected components will be displayed here -->
+    </div>
+
 </body>
 
 </html>
