@@ -212,6 +212,7 @@ module.exports = {
                 { id: "BURCLink", type: "text", label: "BURC Link", required: true, placeholder: "Ex: https://onboarding-production.benchmarkuniverse.com/544931/manage-account/district/teachers/dlulgjuraj@benchmarkeducation.com", hint: "Paste the BURC Link of the impacted user." },
                 { id: "administrationUrl", type: "text", label: "Administration URL", required: true, placeholder: "Ex: https://bec-micro.benchmarkuniverse.com/?#/teacher-led-assessments/administration/16215085/228564/X89128/7604136", hint: "Paste the administered test URL.<br>Note: When the issue is related to administering the test to a student, provide the administration URL. This should be the URL displayed after the user has selected the administer button." },
                 { id: "device", type: "text", label: "Device", required: true, placeholder: "Ex: PC", hint: "Enter the impacted user's Device." },
+                { id: "browser", type: "text", label: "Browser", required: true, placeholder: "Ex: Chrome, Firefox, Safari, Edge", hint: "Enter the browser being used by the impacted user." },
                 {
                     id: "studentInternalId", type: "text", label: "Student Internal ID", required: true, placeholder: "Ex: 15665275",
                     hint: "Paste the Student Internal ID of the impacted user(s)."
@@ -300,6 +301,7 @@ module.exports = {
             description += `Administration URL: <a href="${adminUrl}" target="_blank">${fields.administrationUrl}</a><br>`;
         }
         if (fields.device) description += `Device: ${fields.device}<br>`;
+        if (fields.browser) description += `Browser: ${fields.browser}<br>`;
         if (fields.studentInternalId) description += `Student Internal ID: ${fields.studentInternalId}<br>`;
         if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported)}<br>`;
         if (fields.harFileAttached) {

@@ -185,6 +185,7 @@ module.exports = {
                 },
                 { id: "BURCLink", type: "text", label: "BURC Link", required: true, placeholder: "Ex: https://onboarding-production.benchmarkuniverse.com/544931/manage-account/district/teachers/dlulgjuraj@benchmarkeducation.com", hint: "Paste the BURC Link of the impacted user." },
                 { id: "device", type: "text", label: "Device", required: true, placeholder: "Ex: PC", hint: "Enter the impacted user's Device." },
+                { id: "browser", type: "text", label: "Browser", required: true, placeholder: "Ex: Chrome, Firefox, Safari, Edge", hint: "Enter the browser being used by the impacted user." },
                 {
                     id: "realm", type: "text", label: "Realm", required: true, placeholder: "Ex: msemail",
                     hint: "Enter the district's Realm."
@@ -264,6 +265,7 @@ module.exports = {
             description += `BURC Link: <a href="${techLink}" target="_blank">${fields.BURCLink}</a><br>`;
         }
         if (fields.device) description += `Device: ${fields.device}<br>`;
+        if (fields.browser) description += `Browser: ${fields.browser}<br>`;
         if (fields.realm) description += `Realm: ${fields.realm}<br>`;
         if (fields.dateReported) description += `Date Issue Reported: ${formatDate(fields.dateReported)}<br>`;
         if (fields.harFileAttached) {
