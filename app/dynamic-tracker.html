@@ -6729,9 +6729,14 @@
                                     // Create summary information
                                     analysisHtml = `
                                         <div class="har-analysis">
-                                            <div class="har-summary"><strong>HAR File Summary:</strong> ${harContent.log.entries.length} requests, ${harAnalysis.errorCount} errors</div>
-                                            ${harAnalysis.errorCount > 0 ? `<div class="har-errors"><strong>Error requests:</strong> ${harAnalysis.errorCount}</div>` : ''}
+                                            <div class="har-summary"><strong>HAR File Summary:</strong> ${harContent.log.entries.length} requests, ${harAnalysis.errorCount} total issues</div>
+                                            ${harAnalysis.errorCount > 0 ? `<div class="har-errors"><strong>Total Issues:</strong> ${harAnalysis.errorCount}</div>` : ''}
                                             ${harAnalysis.browserErrors && harAnalysis.browserErrors.count > 0 ? `<div class="har-errors"><strong>Browser-level errors:</strong> ${harAnalysis.browserErrors.count}</div>` : ''}
+                                            ${harAnalysis.scriptExternalLoadErrors && harAnalysis.scriptExternalLoadErrors.count > 0 ? `<div class="har-errors"><strong>Script Load Errors:</strong> ${harAnalysis.scriptExternalLoadErrors.count}</div>` : ''}
+                                            ${harAnalysis.chunkLoadErrors && harAnalysis.chunkLoadErrors.count > 0 ? `<div class="har-errors"><strong>Chunk Load Errors:</strong> ${harAnalysis.chunkLoadErrors.count}</div>` : ''}
+                                            ${harAnalysis.microserviceFailures && harAnalysis.microserviceFailures.count > 0 ? `<div class="har-errors"><strong>Microservice Failures:</strong> ${harAnalysis.microserviceFailures.count}</div>` : ''}
+                                            ${harAnalysis.performanceIssues && harAnalysis.performanceIssues.count > 0 ? `<div class="har-slow"><strong>Performance Issues:</strong> ${harAnalysis.performanceIssues.count}</div>` : ''}
+                                            ${harAnalysis.resourceBlocking && harAnalysis.resourceBlocking.count > 0 ? `<div class="har-slow"><strong>Resource Blocking:</strong> ${harAnalysis.resourceBlocking.count}</div>` : ''}
                                             ${harAnalysis.redirectCount > 0 ? `<div class="har-redirects"><strong>Redirects:</strong> ${harAnalysis.redirectCount}</div>` : ''}
                                             ${harAnalysis.slowRequests.length > 0 ? `<div class="har-slow"><strong>Slow requests:</strong> ${harAnalysis.slowRequests.length}</div>` : ''}
                                             <div class="har-browser"><strong>Browser:</strong> ${harAnalysis.browser}</div>
@@ -6786,7 +6791,7 @@
                                         
                                         <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
                                             <div style="font-size: 18px; font-weight: bold; color: ${harAnalysis.errorCount > 0 ? '#dc3545' : 'var(--text-color, #333)'};">${harAnalysis.errorCount}</div>
-                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Errors</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Total Issues</div>
                                         </div>
                                         
                                         <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
@@ -6810,6 +6815,41 @@
                                         <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
                                             <div style="font-size: 18px; font-weight: bold; color: #dc3545;">${harAnalysis.browserErrors.count}</div>
                                             <div style="font-size: 11px; color: var(--secondary-text, #666);">Browser Errors</div>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        ${harAnalysis.scriptExternalLoadErrors && harAnalysis.scriptExternalLoadErrors.count > 0 ? `
+                                        <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
+                                            <div style="font-size: 18px; font-weight: bold; color: #dc3545;">${harAnalysis.scriptExternalLoadErrors.count}</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Script Load Errors</div>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        ${harAnalysis.chunkLoadErrors && harAnalysis.chunkLoadErrors.count > 0 ? `
+                                        <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
+                                            <div style="font-size: 18px; font-weight: bold; color: #dc3545;">${harAnalysis.chunkLoadErrors.count}</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Chunk Load Errors</div>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        ${harAnalysis.microserviceFailures && harAnalysis.microserviceFailures.count > 0 ? `
+                                        <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
+                                            <div style="font-size: 18px; font-weight: bold; color: #dc3545;">${harAnalysis.microserviceFailures.count}</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Microservice Failures</div>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        ${harAnalysis.performanceIssues && harAnalysis.performanceIssues.count > 0 ? `
+                                        <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
+                                            <div style="font-size: 18px; font-weight: bold; color: #fd7e14;">${harAnalysis.performanceIssues.count}</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Performance Issues</div>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        ${harAnalysis.resourceBlocking && harAnalysis.resourceBlocking.count > 0 ? `
+                                        <div style="flex: 1; background-color: var(--card-bg, #f8f9fa); border-radius: 4px; padding: 10px; min-width: 80px; text-align: center; box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,0.05));">
+                                            <div style="font-size: 18px; font-weight: bold; color: #fd7e14;">${harAnalysis.resourceBlocking.count}</div>
+                                            <div style="font-size: 11px; color: var(--secondary-text, #666);">Resource Blocking</div>
                                         </div>
                                         ` : ''}
                                     </div>
@@ -6998,7 +7038,15 @@
                         // Add new field for browser level errors
                         browserErrors: { count: 0, items: [] },
                         // Add new field for whitelist issues
-                        whitelistIssues: { count: 0, items: [] }
+                        whitelistIssues: { count: 0, items: [] },
+                        // NEW: Enhanced error detection fields
+                        javascriptErrors: { count: 0, items: [] },
+                        scriptExternalLoadErrors: { count: 0, items: [] },
+                        chunkLoadErrors: { count: 0, items: [] },
+                        microserviceFailures: { count: 0, items: [] },
+                        performanceIssues: { count: 0, items: [] },
+                        resourceBlocking: { count: 0, items: [] },
+                        consoleErrors: { count: 0, items: [] }
                     };
 
                     // Define the whitelist patterns
@@ -7350,7 +7398,7 @@
                                 });
                             }
 
-                            // Check for slow requests (over 2 seconds)
+                            // Check for slow requests (over 2 seconds) - ENHANCED: Also check for performance issues over 500ms
                             if (entry.time && entry.time > 2000) {
                                 // Store slow request details (up to 5)
                                 if (analysis.slowRequests.length < 5) {
@@ -7371,6 +7419,145 @@
                                     }
                                 }
                             }
+
+                            // NEW: Check for performance issues (500ms - 2000ms)
+                            if (entry.time && entry.time > 500 && entry.time <= 2000) {
+                                analysis.performanceIssues.count++;
+                                if (analysis.performanceIssues.items.length < 10) {
+                                    try {
+                                        const urlParts = new URL(request.url);
+                                        const shortUrl = urlParts.pathname;
+                                        analysis.performanceIssues.items.push({
+                                            url: shortUrl,
+                                            time: Math.round(entry.time) + 'ms',
+                                            method: request.method
+                                        });
+                                    } catch (e) {
+                                        analysis.performanceIssues.items.push({
+                                            url: request.url,
+                                            time: Math.round(entry.time) + 'ms',
+                                            method: request.method
+                                        });
+                                    }
+                                }
+                            }
+
+                            // NEW: Check for resource blocking times
+                            if (entry.timings && entry.timings.blocked && entry.timings.blocked > 10) {
+                                analysis.resourceBlocking.count++;
+                                if (analysis.resourceBlocking.items.length < 10) {
+                                    try {
+                                        const urlParts = new URL(request.url);
+                                        const shortUrl = urlParts.pathname;
+                                        analysis.resourceBlocking.items.push({
+                                            url: shortUrl,
+                                            blocked: Math.round(entry.timings.blocked) + 'ms',
+                                            method: request.method
+                                        });
+                                    } catch (e) {
+                                        analysis.resourceBlocking.items.push({
+                                            url: request.url,
+                                            blocked: Math.round(entry.timings.blocked) + 'ms',
+                                            method: request.method
+                                        });
+                                    }
+                                }
+                            }
+
+                            // NEW: Check for JavaScript errors in response content
+                            if (response.content && response.content.text) {
+                                const content = response.content.text;
+
+                                // Check for ScriptExternalLoadError
+                                if (content.includes('ScriptExternalLoadError') || content.includes('scriptExternalLoadError')) {
+                                    analysis.scriptExternalLoadErrors.count++;
+                                    if (analysis.scriptExternalLoadErrors.items.length < 10) {
+                                        try {
+                                            const urlParts = new URL(request.url);
+                                            const shortUrl = urlParts.pathname;
+                                            analysis.scriptExternalLoadErrors.items.push({
+                                                url: shortUrl,
+                                                method: request.method,
+                                                error: 'ScriptExternalLoadError'
+                                            });
+                                        } catch (e) {
+                                            analysis.scriptExternalLoadErrors.items.push({
+                                                url: request.url,
+                                                method: request.method,
+                                                error: 'ScriptExternalLoadError'
+                                            });
+                                        }
+                                    }
+                                }
+
+                                // Check for ChunkLoadError
+                                if (content.includes('ChunkLoadError') || content.includes('chunkLoadError')) {
+                                    analysis.chunkLoadErrors.count++;
+                                    if (analysis.chunkLoadErrors.items.length < 10) {
+                                        try {
+                                            const urlParts = new URL(request.url);
+                                            const shortUrl = urlParts.pathname;
+                                            analysis.chunkLoadErrors.items.push({
+                                                url: shortUrl,
+                                                method: request.method,
+                                                error: 'ChunkLoadError'
+                                            });
+                                        } catch (e) {
+                                            analysis.chunkLoadErrors.items.push({
+                                                url: request.url,
+                                                method: request.method,
+                                                error: 'ChunkLoadError'
+                                            });
+                                        }
+                                    }
+                                }
+
+                                // Check for microservice failures (remoteEntry.js failures)
+                                if (request.url.includes('remoteEntry.js') && (response.status >= 400 || response._error)) {
+                                    analysis.microserviceFailures.count++;
+                                    if (analysis.microserviceFailures.items.length < 10) {
+                                        try {
+                                            const urlObj = new URL(request.url);
+                                            const serviceName = urlObj.hostname.split('.')[0];
+                                            analysis.microserviceFailures.items.push({
+                                                service: serviceName,
+                                                url: urlObj.pathname,
+                                                method: request.method,
+                                                status: response.status || 'Failed'
+                                            });
+                                        } catch (e) {
+                                            analysis.microserviceFailures.items.push({
+                                                service: 'Unknown',
+                                                url: request.url,
+                                                method: request.method,
+                                                status: response.status || 'Failed'
+                                            });
+                                        }
+                                    }
+                                }
+
+                                // Check for console.error patterns
+                                if (content.includes('console.error') || content.includes('console.error(')) {
+                                    analysis.consoleErrors.count++;
+                                    if (analysis.consoleErrors.items.length < 10) {
+                                        try {
+                                            const urlParts = new URL(request.url);
+                                            const shortUrl = urlParts.pathname;
+                                            analysis.consoleErrors.items.push({
+                                                url: shortUrl,
+                                                method: request.method,
+                                                type: 'Console Error'
+                                            });
+                                        } catch (e) {
+                                            analysis.consoleErrors.items.push({
+                                                url: request.url,
+                                                method: request.method,
+                                                type: 'Console Error'
+                                            });
+                                        }
+                                    }
+                                }
+                            }
                         } catch (e) {
                             console.error('Error analyzing HAR entry:', e);
                         }
@@ -7380,6 +7567,12 @@
                     if (analysis.totalRequests > 0) {
                         analysis.avgResponseTime = totalResponseTime / analysis.totalRequests;
                     }
+
+                    // NEW: Calculate total enhanced error count
+                    analysis.errorCount += analysis.scriptExternalLoadErrors.count +
+                        analysis.chunkLoadErrors.count +
+                        analysis.microserviceFailures.count +
+                        analysis.performanceIssues.count;
 
                     return analysis;
                 } catch (e) {
@@ -7409,7 +7602,14 @@
                         contentTypes: {},
                         largeResponses: [],
                         browserErrors: { count: 0, items: [] },
-                        whitelistIssues: { count: 0, items: [] }
+                        whitelistIssues: { count: 0, items: [] },
+                        javascriptErrors: { count: 0, items: [] },
+                        scriptExternalLoadErrors: { count: 0, items: [] },
+                        chunkLoadErrors: { count: 0, items: [] },
+                        microserviceFailures: { count: 0, items: [] },
+                        performanceIssues: { count: 0, items: [] },
+                        resourceBlocking: { count: 0, items: [] },
+                        consoleErrors: { count: 0, items: [] }
                     };
                 }
             }
@@ -9102,7 +9302,17 @@ Client Errors (4xx): ${analysis.statusCodes.clientError.count || 0}
 Server Errors (5xx): ${analysis.statusCodes.serverError.count || 0}
 Browser-Level Errors: ${analysis.browserErrors ? analysis.browserErrors.count : 0}
 Possible Whitelist Issues: ${analysis.whitelistIssues ? analysis.whitelistIssues.count : 0}
-Total Issues: ${(analysis.statusCodes.clientError.count || 0) + (analysis.statusCodes.serverError.count || 0) + (analysis.browserErrors ? analysis.browserErrors.count : 0) + (analysis.whitelistIssues ? analysis.whitelistIssues.count : 0)}
+
+ENHANCED ERROR DETECTION
+========================================
+Script External Load Errors: ${analysis.scriptExternalLoadErrors ? analysis.scriptExternalLoadErrors.count : 0}
+Chunk Load Errors: ${analysis.chunkLoadErrors ? analysis.chunkLoadErrors.count : 0}
+Microservice Failures: ${analysis.microserviceFailures ? analysis.microserviceFailures.count : 0}
+Performance Issues (500ms-2s): ${analysis.performanceIssues ? analysis.performanceIssues.count : 0}
+Resource Blocking Issues: ${analysis.resourceBlocking ? analysis.resourceBlocking.count : 0}
+Console Errors: ${analysis.consoleErrors ? analysis.consoleErrors.count : 0}
+
+Total Issues: ${(analysis.statusCodes.clientError.count || 0) + (analysis.statusCodes.serverError.count || 0) + (analysis.browserErrors ? analysis.browserErrors.count : 0) + (analysis.whitelistIssues ? analysis.whitelistIssues.count : 0) + (analysis.scriptExternalLoadErrors ? analysis.scriptExternalLoadErrors.count : 0) + (analysis.chunkLoadErrors ? analysis.chunkLoadErrors.count : 0) + (analysis.microserviceFailures ? analysis.microserviceFailures.count : 0) + (analysis.performanceIssues ? analysis.performanceIssues.count : 0)}
 
 PERFORMANCE METRICS
 ========================================
@@ -9110,6 +9320,7 @@ Average Response Time: ${Math.round(analysis.avgResponseTime || 0)}ms
 Max Response Time: ${Math.round(analysis.maxResponseTime.time || 0)}ms
 Total Request Time: ${Math.round(analysis.totalRequestTime || 0)}ms
 Slow Requests (>2s): ${analysis.slowRequests ? analysis.slowRequests.length : 0}
+Performance Issues (500ms-2s): ${analysis.performanceIssues ? analysis.performanceIssues.count : 0}
 Total Size: ${this.formatFileSize(analysis.totalSize || 0)}
 Browser: ${analysis.browser || 'Unknown'}
 `;
@@ -9170,6 +9381,83 @@ Browser: ${analysis.browser || 'Unknown'}
                             textReport += `${index + 1}. ${item.method} ${item.url}
    Time: ${item.time}
    Status: ${item.status || 'Unknown'}
+   ----------------------------------------\n`;
+                        });
+                    }
+
+                    // NEW: Add Script External Load Errors section if any
+                    if (analysis.scriptExternalLoadErrors && analysis.scriptExternalLoadErrors.count > 0 && analysis.scriptExternalLoadErrors.items.length > 0) {
+                        textReport += `\n\nSCRIPT EXTERNAL LOAD ERRORS (${analysis.scriptExternalLoadErrors.count})
+========================================
+These errors indicate that JavaScript modules failed to load from external sources.
+This is often related to microservice architecture failures in applications like Benchmark Universe.\n`;
+                        analysis.scriptExternalLoadErrors.items.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method} ${item.url}
+   Error Type: ${item.error}
+   ----------------------------------------\n`;
+                        });
+                    }
+
+                    // NEW: Add Chunk Load Errors section if any
+                    if (analysis.chunkLoadErrors && analysis.chunkLoadErrors.count > 0 && analysis.chunkLoadErrors.items.length > 0) {
+                        textReport += `\n\nCHUNK LOAD ERRORS (${analysis.chunkLoadErrors.count})
+========================================
+These errors indicate that JavaScript code chunks (bundles) failed to load.
+This can cause parts of the application to be non-functional.\n`;
+                        analysis.chunkLoadErrors.items.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method} ${item.url}
+   Error Type: ${item.error}
+   ----------------------------------------\n`;
+                        });
+                    }
+
+                    // NEW: Add Microservice Failures section if any
+                    if (analysis.microserviceFailures && analysis.microserviceFailures.count > 0 && analysis.microserviceFailures.items.length > 0) {
+                        textReport += `\n\nMICROSERVICE FAILURES (${analysis.microserviceFailures.count})
+========================================
+These failures indicate that microservices (remoteEntry.js files) failed to load.
+This is critical for applications using Webpack Module Federation architecture.\n`;
+                        analysis.microserviceFailures.items.forEach((item, index) => {
+                            textReport += `${index + 1}. Service: ${item.service}
+   URL: ${item.url}
+   Method: ${item.method}
+   Status: ${item.status}
+   ----------------------------------------\n`;
+                        });
+                    }
+
+                    // NEW: Add Performance Issues section if any
+                    if (analysis.performanceIssues && analysis.performanceIssues.count > 0 && analysis.performanceIssues.items.length > 0) {
+                        textReport += `\n\nPERFORMANCE ISSUES (500ms-2000ms) - ${analysis.performanceIssues.count} Total
+========================================
+These requests are taking longer than expected (500ms-2s) and may indicate performance problems.\n`;
+                        analysis.performanceIssues.items.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method} ${item.url}
+   Time: ${item.time}
+   ----------------------------------------\n`;
+                        });
+                    }
+
+                    // NEW: Add Resource Blocking section if any
+                    if (analysis.resourceBlocking && analysis.resourceBlocking.count > 0 && analysis.resourceBlocking.items.length > 0) {
+                        textReport += `\n\nRESOURCE BLOCKING ISSUES (${analysis.resourceBlocking.count})
+========================================
+These requests were blocked for significant periods, indicating resource contention.\n`;
+                        analysis.resourceBlocking.items.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method} ${item.url}
+   Blocked Time: ${item.blocked}
+   ----------------------------------------\n`;
+                        });
+                    }
+
+                    // NEW: Add Console Errors section if any
+                    if (analysis.consoleErrors && analysis.consoleErrors.count > 0 && analysis.consoleErrors.items.length > 0) {
+                        textReport += `\n\nCONSOLE ERRORS (${analysis.consoleErrors.count})
+========================================
+These indicate JavaScript console.error statements were found in the application.\n`;
+                        analysis.consoleErrors.items.forEach((item, index) => {
+                            textReport += `${index + 1}. ${item.method} ${item.url}
+   Type: ${item.type}
    ----------------------------------------\n`;
                         });
                     }
