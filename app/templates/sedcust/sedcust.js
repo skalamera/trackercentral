@@ -158,8 +158,9 @@ module.exports = {
                     hint: "Enter the Email of the user that the issue is affecting. Note: the username and email can be the same, but supply both."
                 },
                 {
-                    id: "userRole", type: "text", label: "Role", required: true, placeholder: "e.g. District Admin, School Admin, Teacher or Student",
-                    hint: "Enter the role of the user that the issue is affecting."
+                    id: "userRole", type: "select", label: "Role", required: true,
+                    options: ["", "District Admin", "School Admin", "Teacher", "Student"],
+                    hint: "Select the role of the user that the issue is affecting."
                 },
                 {
                     id: "productImpacted", type: "text", label: "Program Impacted", required: true, placeholder: "e.g. Advance • 2.8 Florida",

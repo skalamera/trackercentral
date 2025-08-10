@@ -284,6 +284,12 @@ function populateSedcustFields(formData) {
         console.log(`SEDCUST: Skipping cf_jira_state_district_variation - value is "Other"`);
     }
 
+    // 6. Role > cf_jira_user_role
+    if (formData.userRole && formData.userRole.trim() !== "") {
+        customFields.cf_jira_user_role = formData.userRole;
+        console.log(`SEDCUST: Set cf_jira_user_role to "${formData.userRole}"`);
+    }
+
     console.log("SEDCUST custom fields populated:", customFields);
     return customFields;
 }
