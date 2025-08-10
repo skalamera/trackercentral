@@ -93,6 +93,20 @@ module.exports = {
                 // This will be handled by setupSmartsheetUploader which creates the proper UI
                 { id: "dummyField", type: "hidden" } // Just a placeholder field
             ]
+        },
+        {
+            id: "screenshots",
+            title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
+            icon: "fa-images",
+            fields: [
+                {
+                    id: "screenshotsDescription",
+                    type: "richtext",
+                    label: "Screenshots and Supporting Materials",
+                    required: false,
+                    hint: "Click Upload Files to add any additional information that will be helpful."
+                }
+            ]
         }
     ],
     descriptionGenerator: function (fields) {
@@ -121,6 +135,13 @@ module.exports = {
         // Add content from Quill editor if available
         if (fields.smartsheetNotes && fields.smartsheetNotes.trim() !== '<p><br></p>') {
             description += `<div>${fields.smartsheetNotes}</div>`;
+        }
+
+        // Add screenshots section if content is provided
+        if (fields.screenshotsDescription && fields.screenshotsDescription.trim() !== '<p><br></p>') {
+            description += '<div style="margin-bottom: 20px;"></div>';
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS</span></div>';
+            description += `<div>${fields.screenshotsDescription}</div>`;
         }
 
         return description;

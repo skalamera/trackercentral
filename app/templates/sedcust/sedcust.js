@@ -291,6 +291,13 @@ module.exports = {
             }
         }
 
+        // Add screenshots section if content is provided
+        if (fields.screenshotsDescription && fields.screenshotsDescription.trim() !== '<p><br></p>') {
+            description += '<div style="margin-bottom: 20px;"></div>';
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS</span></div>';
+            description += `<div>${fields.screenshotsDescription}</div>`;
+        }
+
         return description;
     },
     // Add new onLoad function for SEDCUST to sync fields

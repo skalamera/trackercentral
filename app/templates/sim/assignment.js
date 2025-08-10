@@ -274,7 +274,15 @@ module.exports = {
             id: "screenshots",
             title: "SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS",
             icon: "fa-images",
-            fields: [] // Empty array since we handle this in setupCustomFileUploaders
+            fields: [
+                {
+                    id: "screenshotsDescription",
+                    type: "richtext",
+                    label: "Screenshots and Supporting Materials",
+                    required: false,
+                    hint: "Click Upload Files to add any additional information that will be helpful."
+                }
+            ]
         },
         {
             id: "expectedResults",
@@ -310,9 +318,11 @@ module.exports = {
         description += '<div style="margin-bottom: 20px;"></div>';
 
         // Screenshots and Videos
-        description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS and/or VIDEOS</span></div>';
-        description += '<div>(please include URL in screen capture)</div>';
-        description += '<div style="margin-bottom: 20px;"></div>';
+        if (fields.screenshotsDescription && fields.screenshotsDescription.trim() !== '<p><br></p>') {
+            description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">SCREENSHOTS, VIDEOS, & OTHER SUPPORTING FILE ATTACHMENTS</span></div>';
+            description += `<div>${fields.screenshotsDescription}</div>`;
+            description += '<div style="margin-bottom: 20px;"></div>';
+        }
 
         // Impacted User Info
         description += '<div style="color: #000000;"><span style="text-decoration: underline; background-color: #c1e9d9;">IMPACTED USER INFO</span></div>';
