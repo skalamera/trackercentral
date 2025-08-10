@@ -1,0 +1,161 @@
+Set the Program Name field in the Subject section of each template that requires it to the value of "cf_product" from the source (original) ticket.
+
+Special cases:
+1. Always remove "Benchmark" from "cf_product" and add the remainder. 
+
+Example:
+cf_product = Benchmark Advance California c2017
+
+Set the Program Name field in the Tracker templates to: Advance California c2017
+
+
+2. If "cf_product" = "Not Product Specific", then leave Program Name blank
+
+3. If "cf_product_type" = "Benchmark Advance" AND "cf_product" begins with a "-" or a "c" with 4 numbers immediately after, like "c2017", then Add the word "Advance" before the "cf_product" value and set it as the Program Name.
+
+Example 1:
+cf_product_type = Benchmark Advance
+cf_product = c2017
+
+Set the Program Name field in the Tracker templates to: c2017
+
+Example 2:
+cf_product_type = Benchmark Advance
+cf_product = - c2017
+
+Set the Program Name field in the Tracker templates to: - c2017
+
+4. If "cf_product_type" = "Benchmark Adelante" AND "cf_product" begins with a "-" or a "c" with 4 numbers immediately after, like "c2017", then Add the word "Adelante" before the "cf_product" value and set it as the Program Name.
+
+Example 1:
+cf_product_type = Benchmark Adelante
+cf_product = c2023
+
+Set the Program Name field in the Tracker templates to: c2023
+
+Example 2:
+cf_product_type = Benchmark Advance
+cf_product = - c2023
+
+Set the Program Name field in the Tracker templates to: - c2023
+
+
+5. If "cf_product_type" = "Listos Y Adelante" AND "cf_product" begins with a "-" or a "c" with 4 numbers immediately after, like "c2017", then Add the word "Listos Y Adelante" before the "cf_product" value and set it as the Program Name.
+
+Example 1:
+cf_product_type = Listos Y Adelante
+cf_product = c2022
+
+Set the Program Name field in the Tracker templates to: c2022
+
+Example 2:
+cf_product_type = Listos Y Adelante
+cf_product = - c2023
+
+Set the Program Name field in the Tracker templates to: - c2023
+
+
+6. IF the source (original) ticket "cf_product_type" = "Supplemental" AND "cf_product_subsection" of the source ticket IS NOT "null" THEN set the Program Name field in the tracker template to the "cf_product_subsection" value of the source (original) ticket. 
+
+Examples below of "cf_product_type",  "cf_product", and "cf_product_subsection" combo values of the source (original) ticket that would meet these requirements:
+
+Example 1:
+cf_product_type = Supplemental
+cf_product = Assessments
+cf_product_subsection = Comprehension Strategy Assessment
+
+*Correct value to set the Program Name field in the Subject section to: Comprehension Strategy Assessment
+
+Example 2:
+cf_product_type = Supplemental
+cf_product = Phonics Intervention
+cf_product_subsection = Phonics Intervention: Level 1
+
+*Correct value to set the Program Name field in the Subject section to: Phonics Intervention: Level 1
+
+
+
+7. IF the source (original) ticket "cf_product_type" = "Supplemental" AND "cf_product_subsection" of the source ticket IS "null" THEN set the Program Name field in the tracker template to the value of the "cf_product" field from the source (original) ticket. 
+
+
+Examples below of "cf_product_type",  "cf_product", and "cf_product_subsection" combo values of the source (original) ticket that would meet these requirements:
+
+Example 1:
+cf_product_type = Supplemental
+cf_product = Oral Reading Records
+cf_product_subsection = null
+
+*Correct value to set the Program Name field in the Subject section to: Oral Reading Records
+
+Example 2:
+cf_product_type = Supplemental
+cf_product = ACT Now!
+cf_product_subsection = null
+
+*Correct value to set the Program Name field in the Subject section to: ACT Now!
+
+
+8. IF the source (original) ticket "cf_product_type" IS NOT "Supplemental" AND both "cf_product" and "cf_product_subsection" fields are "null" THEN set the Program Name field in the tracker template to the value of "cf_product_type" from the source (original) ticket, removing "Benchmark" from "cf_product_type" if present.
+
+Examples below of "cf_product_type", "cf_product", and "cf_product_subsection" combo values of the source (original) ticket that would meet these requirements:
+
+Example 1:
+cf_product_type = Benchmark Advance
+cf_product = null
+cf_product_subsection = null
+
+*Correct value to set the Program Name field in the Subject section to: Advance
+
+Example 2:
+cf_product_type = Benchmark Adelante
+cf_product = null
+cf_product_subsection = null
+
+*Correct value to set the Program Name field in the Subject section to: Adelante
+
+Example 3:
+cf_product_type = Assess 360
+cf_product = null
+cf_product_subsection = null
+
+*Correct value to set the Program Name field in the Subject section to: Assess 360
+
+Example 4:
+cf_product_type = Ready To Advance
+cf_product = null
+cf_product_subsection = null
+
+*Correct value to set the Program Name field in the Subject section to: Ready To Advance
+
+9. IF the source (original) ticket "cf_product" is ONLY a copyright number (like "c2023" or "- c2023") THEN combine the "cf_product_type" value with the "cf_product" value, then remove "Benchmark" from the result if present.
+
+Examples below of "cf_product_type", "cf_product", and "cf_product_subsection" combo values of the source (original) ticket that would meet these requirements:
+
+Example 1:
+cf_product_type = Benchmark Advance
+cf_product = c2022
+cf_product_subsection = some subsection
+
+*Correct value to set the Program Name field in the Subject section to: Advance c2022
+
+Example 2:
+cf_product_type = Benchmark Adelante
+cf_product = c2023
+cf_product_subsection = some subsection
+
+*Correct value to set the Program Name field in the Subject section to: Adelante c2023
+
+Example 3:
+cf_product_type = Benchmark Advance
+cf_product = - c2022
+cf_product_subsection = some subsection
+
+*Correct value to set the Program Name field in the Subject section to: Advance - c2022
+
+Example 4:
+cf_product_type = Assess 360
+cf_product = c2023
+cf_product_subsection = some subsection
+
+*Correct value to set the Program Name field in the Subject section to: Assess 360 c2023
+

@@ -1,0 +1,12 @@
+District State > cf_jira_locale
+
+Digital and/or Print Impact > cf_jira_print_digital   
+	- For this one, only populate the custom field if the value is either "Digital" or "Print".
+
+Subscription Version > cf_jira_version
+	- For this one, treat a value of "Other" as blank. Only populate it if the value is a number (2.0, 2.5, etc.)
+
+Resource > cf_sedcust_jira_resource
+
+State/National > cf_jira_state_district_variation
+	- For this one, treat a value of "Other" as blank

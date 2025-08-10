@@ -179,7 +179,7 @@ module.exports = {
                 },
                 {
                     id: "impactType", type: "select", label: "Digital and/or Print Impact", required: true,
-                    options: ["", "Digital Only", "Print Only", "Both Digital and Print"],
+                    options: ["", "Digital", "Print", "Both Digital and Print"],
                     hint: "Identify if the issue only occurs on the digital platform or if it occurs in both digital and print."
                 },
                 {

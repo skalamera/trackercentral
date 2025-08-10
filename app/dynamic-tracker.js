@@ -171,6 +171,46 @@ class TrackerApp {
                     }
                 });
 
+                // Populate Jira custom fields based on rules
+                try {
+                    // Check if populateJiraFields function is available globally
+                    if (typeof populateJiraFields === 'function') {
+                        const jiraFields = populateJiraFields(sourceTicketData);
+
+                        if (jiraFields.cf_jira_copyright) {
+                            basicTicketData.custom_fields.cf_jira_copyright = jiraFields.cf_jira_copyright;
+                            console.log("Set Jira Copyright field:", jiraFields.cf_jira_copyright);
+                        }
+
+                        if (jiraFields.cf_jira_product_name) {
+                            basicTicketData.custom_fields.cf_jira_product_name = jiraFields.cf_jira_product_name;
+                            console.log("Set Jira Product Name field:", jiraFields.cf_jira_product_name);
+                        }
+                    } else {
+                        console.warn("populateJiraFields function not available, skipping Jira field population");
+                    }
+                } catch (error) {
+                    console.error("Error populating Jira fields:", error);
+                }
+
+                // Populate SEDCUST-specific custom fields based on field mapping
+                if (this.trackerType === 'sedcust') {
+                    try {
+                        // Check if populateSedcustFields function is available globally
+                        if (typeof populateSedcustFields === 'function') {
+                            const sedcustFields = populateSedcustFields(formData);
+                            
+                            // Add the SEDCUST custom fields to the ticket data
+                            Object.assign(basicTicketData.custom_fields, sedcustFields);
+                            console.log("SEDCUST custom fields added to ticket data");
+                        } else {
+                            console.warn("populateSedcustFields function not available, skipping SEDCUST field population");
+                        }
+                    } catch (error) {
+                        console.error("Error populating SEDCUST fields:", error);
+                    }
+                }
+
                 // Add district field if available
                 if (formData.districtField) {
                     basicTicketData.custom_fields.cf_district509811 = String(formData.districtField);
@@ -198,6 +238,24 @@ class TrackerApp {
                 else if (formData.districtName) {
                     basicTicketData.custom_fields.cf_district509811 = String(formData.districtName);
                     console.log("Setting district field from districtName without source ticket:", formData.districtName);
+                }
+
+                // Populate SEDCUST-specific custom fields even without source ticket data
+                if (this.trackerType === 'sedcust') {
+                    try {
+                        // Check if populateSedcustFields function is available globally
+                        if (typeof populateSedcustFields === 'function') {
+                            const sedcustFields = populateSedcustFields(formData);
+                            
+                            // Add the SEDCUST custom fields to the ticket data
+                            Object.assign(basicTicketData.custom_fields, sedcustFields);
+                            console.log("SEDCUST custom fields added to ticket data (no source ticket)");
+                        } else {
+                            console.warn("populateSedcustFields function not available, skipping SEDCUST field population");
+                        }
+                    } catch (error) {
+                        console.error("Error populating SEDCUST fields:", error);
+                    }
                 }
             }
 

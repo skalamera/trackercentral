@@ -1,0 +1,125 @@
+The following custom fields are nested ticket fields under "cf_product_type" ("id": 67000953193)
+
+	 "id": 67000001744,
+        "name": "cf_product"
+
+        "id": 67000001745,
+        "name": "cf_product_subsection"
+
+RULE 1:
+
+IF the source (original) ticket "cf_product_type" DOES NOT EQUAL "Supplemental" AND "cf_product" of the source ticket CONTAINS [a "c" with 4 numbers immediately following, such as "c####" or "- C####"] OR [a "-" and a space before the "c"] THEN set the custom field "cf_jira_copyright" on the newly created Tracker ticket to that c number or - c number. 
+
+Examples below of values that would meet these requirements:
+
+"c2026"
+"- c2022"
+"Benchmark Advance Florida c2026"
+"Benchmark Advance California c2017"
+
+What should be added to "cf_jira_copyright" on the newly created Tracker for each of the above examples:
+
+"c2026" : here you would add "c2026"
+"- c2022" : here you would add "- c2022"
+"Benchmark Advance Florida c2026" : here you would add "c2026"
+"Benchmark Advance California c2017" : here you would add "c2017"
+
+Alternatively, IF the source (original) ticket "cf_product_type" DOES NOT EQUAL "Supplemental" AND "cf_product" of the source ticket DOES NOT CONTAIN [a "c" with 4 numbers immediately following, such as "c####" or "- C####"] OR [a "-" and a space before the "c"] THEN leave the custom field "cf_jira_copyright" on the newly created Tracker ticket blank.
+
+
+RULE 2:
+
+IF the source (original) ticket "cf_product_type" DOES NOT EQUAL "Supplemental" AND "cf_product" of the source ticket  CONTAINS [a "c" with 4 numbers immediately following, such as "c####" or "- C####"] OR ["Pilots" or "Pilot"] THEN set the custom field "cf_jira_product_name" on the newly created Tracker ticket to the value of the custom field "cf_product_type" from the source (original) ticket.
+
+Examples below of "cf_product_type" and "cf_product" combo values of the source (original) ticket that would meet these requirements:
+
+Example 1:
+cf_product_type = Benchmark Advance
+cf_product = Benchmark Advance Florida c2026
+
+*Correct value to set "cf_jira_product_name" on the newly created Tracker ticket to: Benchmark Advance
+
+Example 2:
+cf_product_type = Benchmark Adelante
+cf_product = Benchmark Adelante California c2017
+
+*Correct value to set "cf_jira_product_name" on the newly created Tracker ticket to: Benchmark Adelante
+
+Example 3:
+cf_product_type = Benchmark Adelante
+cf_product = Benchmark Adelante Pilots
+
+*Correct value to set "cf_jira_product_name" on the newly created Tracker ticket to: Benchmark Adelante
+
+
+RULE 3:
+
+IF the source (original) ticket "cf_product_type" DOES NOT EQUAL "Supplemental" AND "cf_product" of the source ticket DOES NOT CONTAIN [a "c" with 4 numbers immediately following, such as "c####" or "- C####"] OR ["Pilots" or "Pilot"] THEN set the custom field "cf_jira_product_name" on the newly created Tracker ticket to the "cf_product" value of the source (original) ticket.
+
+Examples below of "cf_product_type" and "cf_product" combo values of the source (original) ticket that would meet these requirements:
+
+Example 1:
+cf_product_type = Benchmark Advance
+cf_product = Benchmark Advance Intervention Resources
+
+*Correct value to set "cf_jira_product_name" on the newly created Tracker ticket to: Benchmark Advance
+
+Example 2:
+cf_product_type = Benchmark Advance
+cf_product = Benchmark Advance Small Group eBooks
+
+*Correct value to set "cf_jira_product_name" on the newly created Tracker ticket to: Benchmark Advance
+
+Example 3:
+cf_product_type = Benchmark Adelante
+cf_product = Benchmark Adelante Florida
+
+*Correct value to set "cf_jira_product_name" on the newly created Tracker ticket to: Benchmark Adelante
+
+Example 4:
+cf_product_type = Benchmark Taller
+cf_product = Benchmark Taller del lector
+
+*Correct value to set "cf_jira_product_name" on the newly created Tracker ticket to: Benchmark Taller
+
+
+RULE 4:
+
+IF the source (original) ticket "cf_product_type" = "Supplemental" AND "cf_product_subsection" of the source ticket IS NOT "null" THEN set the custom field "cf_jira_product_name" on the newly created Tracker ticket to the "cf_product_subsection" value of the source (original) ticket. 
+
+Examples below of "cf_product_type",  "cf_product", and "cf_product_subsection" combo values of the source (original) ticket that would meet these requirements:
+
+Example 1:
+cf_product_type = Supplemental
+cf_product = Assessments
+cf_product_subsection = Comprehension Strategy Assessment
+
+*Correct value to set "cf_jira_product_name" on the newly created Tracker ticket to: Comprehension Strategy Assessment
+
+Example 2:
+cf_product_type = Supplemental
+cf_product = Phonics Intervention
+cf_product_subsection = Phonics Intervention: Level 1
+
+*Correct value to set "cf_jira_product_name" on the newly created Tracker ticket to: Phonics Intervention: Level 1
+
+
+RULE 5:
+
+IF the source (original) ticket "cf_product_type" = "Supplemental" AND "cf_product_subsection" of the source ticket IS "null" THEN set the custom field "cf_jira_product_name" on the newly created Tracker ticket to the "cf_product" value of the source (original) ticket. 
+
+Examples below of "cf_product_type",  "cf_product", and "cf_product_subsection" combo values of the source (original) ticket that would meet these requirements:
+
+Example 1:
+cf_product_type = Supplemental
+cf_product = Oral Reading Records
+cf_product_subsection = null
+
+*Correct value to set "cf_jira_product_name" on the newly created Tracker ticket to: Oral Reading Records
+
+Example 2:
+cf_product_type = Supplemental
+cf_product = ACT Now!
+cf_product_subsection = null
+
+*Correct value to set "cf_jira_product_name" on the newly created Tracker ticket to: ACT Now!
