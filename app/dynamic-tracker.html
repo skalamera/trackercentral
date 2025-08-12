@@ -4283,6 +4283,15 @@
                         continue;
                     }
 
+                    // Special case: skip xcode validation if xcodeUnknown checkbox is checked
+                    if (field.id === 'xcode') {
+                        const xcodeUnknownCheckbox = document.getElementById('xcodeUnknown');
+                        if (xcodeUnknownCheckbox && xcodeUnknownCheckbox.checked) {
+                            console.log("Form validation: Skipping xcode validation - 'Xcode Unknown' is checked");
+                            continue;
+                        }
+                    }
+
                     if (!field.value.trim()) {
                         isValid = false;
                         this.showFieldError(field, 'This field is required');
@@ -5976,7 +5985,7 @@
                                 // Check if populateSedcustFields function is available globally
                                 if (typeof populateSedcustFields === 'function') {
                                     const sedcustFields = populateSedcustFields(formData);
-                                    
+
                                     // Add the SEDCUST custom fields to the ticket data
                                     Object.assign(basicTicketData.custom_fields, sedcustFields);
                                     console.log("SEDCUST custom fields added to ticket data");
