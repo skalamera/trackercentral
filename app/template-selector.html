@@ -1248,7 +1248,7 @@
             width: 100%;
             height: 1px;
             background-color: var(--border-color, #e0e0e0);
-            margin: 40px 0 20px 0;
+            margin: 12px 0 12px 0;
         }
 
 
@@ -1261,9 +1261,14 @@
             justify-content: center;
             gap: 8px;
             padding: 16px 20px;
-            margin: 0 auto 40px auto;
+            margin: 0 auto 8px auto;
             min-width: 300px;
             max-width: 500px;
+        }
+
+        /* Reduce space below navbar above status widget */
+        .navbar {
+            margin-bottom: 8px;
         }
 
         .status-indicator {
@@ -1622,6 +1627,26 @@
                 </div>
             </div>
         </nav>
+
+        <!-- Benchmark Universe Status Widget (moved to top) -->
+        <div class="status-widget-content" id="statusWidgetContent" style="display: none;">
+            <div class="status-indicator">
+                <div class="status-dot" id="mainStatusDot"></div>
+            </div>
+            <div class="status-text">
+                <div class="status-title" id="statusTitle">All Systems Operational</div>
+                <div class="status-subtitle" id="statusSubtitle">Updated less than a minute ago</div>
+            </div>
+            <div class="status-refresh">
+                <button class="refresh-btn" id="refreshStatusBtn" title="Refresh Status">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+        <div class="status-details" id="statusDetails" style="display: none;">
+            <!-- Affected components will be displayed here -->
+        </div>
+        <div class="status-widget-divider" id="statusWidgetDivider" style="display: none;"></div>
 
         <!-- TAB NAVIGATION -->
         <div class="tab-navigation">
@@ -4748,6 +4773,8 @@
                 const statusTitle = document.getElementById('statusTitle');
                 const statusSubtitle = document.getElementById('statusSubtitle');
                 const statusDetails = document.getElementById('statusDetails');
+                const statusWidgetContent = document.getElementById('statusWidgetContent');
+                const statusWidgetDivider = document.getElementById('statusWidgetDivider');
 
                 console.log('Updating status widget with component statuses:', componentStatuses);
 
@@ -4792,6 +4819,17 @@
                 }
 
                 console.log('Overall status:', overallStatus, 'Affected components:', affectedComponents);
+
+                // Show/hide widget depending on issues
+                if (statusWidgetContent && statusWidgetDivider) {
+                    if (affectedComponents.length === 0) {
+                        statusWidgetContent.style.display = 'none';
+                        statusWidgetDivider.style.display = 'none';
+                    } else {
+                        statusWidgetContent.style.display = 'flex';
+                        statusWidgetDivider.style.display = 'block';
+                    }
+                }
 
                 // Update main status dot
                 statusDot.className = `status-dot ${overallStatus}`;
@@ -5002,27 +5040,7 @@
         </script>
     </div>
 
-    <!-- Horizontal Line -->
-    <div class="status-widget-divider"></div>
-
-    <!-- Custom Status Widget -->
-    <div class="status-widget-content">
-        <div class="status-indicator">
-            <div class="status-dot" id="mainStatusDot"></div>
-        </div>
-        <div class="status-text">
-            <div class="status-title" id="statusTitle">All Systems Operational</div>
-            <div class="status-subtitle" id="statusSubtitle">Updated less than a minute ago</div>
-        </div>
-        <div class="status-refresh">
-            <button class="refresh-btn" id="refreshStatusBtn" title="Refresh Status">
-                <i class="fas fa-sync-alt"></i>
-            </button>
-        </div>
-    </div>
-    <div class="status-details" id="statusDetails" style="display: none;">
-        <!-- Affected components will be displayed here -->
-    </div>
+    <!-- Status widget moved to top -->
 
 </body>
 
